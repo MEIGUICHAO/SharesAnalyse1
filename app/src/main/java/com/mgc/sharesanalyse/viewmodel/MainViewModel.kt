@@ -47,16 +47,21 @@ class MainViewModel : ViewModel() {
                 }
             }
             index = 0
-            resultArray.forEach {
-                it?.let {
-                    var result = it.await()
-                    val split = result.split(";")
-                    LogUtil.d("mgc", "!!!index:$index,result size:${split.size}")
-                    split.forEach{
-                        LogUtil.d("result:$it")
+            withContext(Dispatchers.Default){
+                resultArray.forEach {
+                    it?.let {
+                        LogUtil.d("!!!index:$index,result size:null")
+                        var result = it.await()
+                        LogUtil.d("!!!index:$index,result size contains:${result.contains(";")}")
+                        val split = result.split(";")
+                        LogUtil.d("!!!index:$index,result size:${split.size}")
+                        split.forEach{
+                            LogUtil.d("result:$it")
+                        }
                     }
+                    Thread.sleep(50)
+                    index++
                 }
-                index++
             }
             loadState.value = LoadState.Success()
 
