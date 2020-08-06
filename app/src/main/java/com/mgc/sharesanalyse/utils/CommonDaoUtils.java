@@ -169,4 +169,5 @@ public class CommonDaoUtils<T>
         QueryBuilder<T> queryBuilder = daoSession.queryBuilder(entityClass);
         return queryBuilder.where(cond, condMore).list();
     }
+
 }

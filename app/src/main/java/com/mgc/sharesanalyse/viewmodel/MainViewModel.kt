@@ -1,6 +1,8 @@
 package com.mgc.sharesanalyse.viewmodel
 
 import android.util.Log
+import android.util.SparseArray
+import androidx.core.util.isEmpty
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,11 +15,17 @@ import java.util.regex.Pattern
 
 
 class MainViewModel : ViewModel() {
-    val sharesDats = MutableLiveData<List<String>>()
+    val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
 
 
     fun requestData() {
+        if (sharesDats.value == null) {
+            sharesDats.value = SparseArray<String>()
+        } else {
+            sharesDats.value!!.clear()
+        }
+
         val urlArray = arrayOfNulls<String>(10)
         val splitArray = Datas.sharesList.split(")")
         Log.d("mgc", "splitArray size:${splitArray.size}")
@@ -50,13 +58,11 @@ class MainViewModel : ViewModel() {
             withContext(Dispatchers.Default){
                 resultArray.forEach {
                     it?.let {
-                        LogUtil.d("!!!index:$index,result size:null")
                         var result = it.await()
-                        LogUtil.d("!!!index:$index,result size contains:${result.contains(";")}")
-                        val split = result.split(";")
-                        LogUtil.d("!!!index:$index,result size:${split.size}")
-                        split.forEach{
-                            LogUtil.d("result:$it")
+                        if (result.contains(";")) {
+                            val split = result.split(";")
+                            LogUtil.d("!!!index:$index,result size:${split.size}")
+                            sharesDats.value!!.put(index,result)
                         }
                     }
                     Thread.sleep(50)
