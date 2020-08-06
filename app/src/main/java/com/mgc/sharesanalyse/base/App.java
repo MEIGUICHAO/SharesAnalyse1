@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.base;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
 import com.mgc.sharesanalyse.utils.DaoManager;
 
 public class App extends Application {
@@ -15,5 +16,6 @@ public class App extends Application {
     private void initGreenDao() {
         DaoManager mManager = DaoManager.getInstance();
         mManager.init(this);
+        Stetho.initializeWithDefaults(this);
     }
 }
