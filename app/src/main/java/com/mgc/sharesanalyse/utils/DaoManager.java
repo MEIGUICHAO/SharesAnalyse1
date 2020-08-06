@@ -3,15 +3,17 @@ package com.mgc.sharesanalyse.utils;
 import android.content.Context;
 
 import com.mgc.sharesanalyse.BuildConfig;
+import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-public class DaoManager
-{
+public class DaoManager {
     private static final String TAG = DaoManager.class.getSimpleName();
-    private static final String DB_NAME = "sharesDB_"+DateUtils.INSTANCE.format(System.currentTimeMillis(),FormatterEnum.YYYY_MM_DD);
+    //    greendaotest
+    private static final String DB_NAME = "greendaotest";
+//    private static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
 
     private Context context;
 
@@ -26,18 +28,15 @@ public class DaoManager
      *
      * @return
      */
-    public static DaoManager getInstance()
-    {
+    public static DaoManager getInstance() {
         return manager;
     }
 
-    private DaoManager()
-    {
+    private DaoManager() {
         setDebug();
     }
 
-    public void init(Context context)
-    {
+    public void init(Context context) {
         this.context = context;
     }
 
@@ -46,14 +45,20 @@ public class DaoManager
      *
      * @return
      */
-    public DaoMaster getDaoMaster()
-    {
-        if (sDaoMaster == null)
-        {
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
-            sDaoMaster = new DaoMaster(helper.getWritableDatabase());
+    public DaoMaster getDaoMaster() {
+        if (sDaoMaster == null) {
+            sHelper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
+            sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;
+    }
+
+    public void switchDB(String dbName) {
+        sHelper = new DaoMaster.DevOpenHelper(context, dbName, null);
+        sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
+        sDaoSession = null;
+        getDaoSession();
+        DaoUtilsStore.getInstance().resetDaoUtilsStore();
     }
 
     /**
@@ -61,12 +66,9 @@ public class DaoManager
      *
      * @return
      */
-    public DaoSession getDaoSession()
-    {
-        if (sDaoSession == null)
-        {
-            if (sDaoMaster == null)
-            {
+    public DaoSession getDaoSession() {
+        if (sDaoSession == null) {
+            if (sDaoMaster == null) {
                 sDaoMaster = getDaoMaster();
             }
             sDaoSession = sDaoMaster.newSession();
@@ -77,10 +79,8 @@ public class DaoManager
     /**
      * 打开输出日志，默认关闭
      */
-    public void setDebug()
-    {
-        if (BuildConfig.DEBUG)
-        {
+    public void setDebug() {
+        if (BuildConfig.DEBUG) {
             QueryBuilder.LOG_SQL = true;
             QueryBuilder.LOG_VALUES = true;
         }
@@ -89,25 +89,20 @@ public class DaoManager
     /**
      * 关闭所有的操作，数据库开启后，使用完毕要关闭
      */
-    public void closeConnection()
-    {
+    public void closeConnection() {
         closeHelper();
         closeDaoSession();
     }
 
-    public void closeHelper()
-    {
-        if (sHelper != null)
-        {
+    public void closeHelper() {
+        if (sHelper != null) {
             sHelper.close();
             sHelper = null;
         }
     }
 
-    public void closeDaoSession()
-    {
-        if (sDaoSession != null)
-        {
+    public void closeDaoSession() {
+        if (sDaoSession != null) {
             sDaoSession.clear();
             sDaoSession = null;
         }

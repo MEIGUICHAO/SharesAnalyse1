@@ -6,4 +6,16 @@ object Datas {
 
     var url = "http://hq.sinajs.cn"
 
+
+    var DBName = "sharesDB_"
+
+
+
+
+
+
+
+
+
+
 }
