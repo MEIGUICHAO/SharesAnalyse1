@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 queryAll.forEach {
                     var bean = it
-                    val replace = it.json.replace("var hq_str_sz002307=\"", "").replace("\"", "")
+                    val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
                     val split = replace.split(";")
                     split.forEach {
                         LogUtil.d("Classify json:$it")
@@ -91,7 +91,10 @@ class MainActivity : AppCompatActivity() {
     ) {
         val stocksBean = StocksBean()
         stocksBean.timeStamp = bean.timeStamp
-        stocksBean.stocksName = split[0]
+        val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+        stocksBean.stocksName = nameSplit[1]
+        stocksBean.stocksCode = nameSplit[0]
+        LogUtil.d("Classify stocksCode:${nameSplit[0]} stocksName:${nameSplit[1]}")
         stocksBean.openPrice = split[1]
         stocksBean.currentPrice = split[3]
         stocksBean.hightestPrice = split[4]

@@ -49,6 +49,8 @@ class MainViewModel : ViewModel() {
             loadState.value = LoadState.Loading()
             urlArray.forEach {
                 it?.let {
+                    val split = it.split(",")
+                    LogUtil.d("url array size:${split.size}")
                     LogUtil.d("mgc", "!!!!index$index,url:$it")
                     resultArray[index] = RetrofitManager.reqApi.getSharesDatas(it)
                     index++
