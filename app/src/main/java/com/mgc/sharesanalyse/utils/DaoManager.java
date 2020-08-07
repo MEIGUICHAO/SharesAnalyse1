@@ -13,8 +13,9 @@ import org.greenrobot.greendao.query.QueryBuilder;
 public class DaoManager {
     private static final String TAG = DaoManager.class.getSimpleName();
     //    greendaotest
-    public static final String DB_NAME = "greendaotest";
-//    public static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
+//    public static final String DB_NAME = "greendaotest";
+
+    public static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
 
     private Context context;
 
