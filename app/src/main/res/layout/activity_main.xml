@@ -18,5 +18,10 @@
         android:text="Classify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnCopyDB"
+        android:text="CopyDB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

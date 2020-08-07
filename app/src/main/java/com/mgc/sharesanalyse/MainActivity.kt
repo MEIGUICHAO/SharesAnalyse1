@@ -1,17 +1,14 @@
 package com.mgc.sharesanalyse
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.entity.Month8Data
 import com.mgc.sharesanalyse.entity.Month8DataDao
 import com.mgc.sharesanalyse.entity.StocksBean
 import com.mgc.sharesanalyse.net.LoadState
-import com.mgc.sharesanalyse.utils.DaoUtilsStore
-import com.mgc.sharesanalyse.utils.DateUtils
-import com.mgc.sharesanalyse.utils.FormatterEnum
-import com.mgc.sharesanalyse.utils.LogUtil
+import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -25,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.loadState.observe(this, Observer {
             when (it) {
-                is LoadState.Success->  {
+                is LoadState.Success -> {
                     for (index in 0..9) {
                         val data = viewModel.sharesDats.value?.get(index)
                         var month8Data = Month8Data()
@@ -38,26 +35,34 @@ class MainActivity : AppCompatActivity() {
                     }
 
 
-                    runBlocking {
-                        delay(1000 * 30)
-                        viewModel.requestData()
+                    GlobalScope.launch {
+
+                        withContext(Dispatchers.IO) {
+
+                            runBlocking {
+                                delay(1000 * 30)
+                                viewModel.requestData()
+                            }
+                        }
                     }
-                }
-                is LoadState.Fail ->  {
 
                 }
-                is LoadState.Loading ->  {
+                is LoadState.Fail -> {
+
+                }
+                is LoadState.Loading -> {
                     btnRequest.isClickable = false
                 }
             }
         })
-        btnRequest.setOnClickListener{
+        btnRequest.setOnClickListener {
             viewModel.requestData()
         }
-        btnClassify.setOnClickListener{
+        btnClassify.setOnClickListener {
             for (index in 0..9) {
-                val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.
-                queryByQueryBuilder(Month8DataDao.Properties.Name.eq(index.toString()))
+                val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
+                    Month8DataDao.Properties.Name.eq(index.toString())
+                )
                 queryAll.forEach {
                     var bean = it
                     val replace = it.json.replace("var hq_str_sz002307=\"", "").replace("\"", "")
@@ -66,12 +71,17 @@ class MainActivity : AppCompatActivity() {
                         LogUtil.d("Classify json:$it")
                         if (it.contains(",")) {
                             val split1 = it.split(",")
-                            setStcokBean(split1,bean)
+                            setStcokBean(split1, bean)
                         }
                     }
                 }
             }
 
+        }
+        btnCopyDB.setOnClickListener{
+            //databases文件夹目录
+            val path = "/data/data/" + getPackageName() + "/databases/"+ DaoManager.DB_NAME
+            FileUtil.copyAssets2Sdcard(this, "greendaotest", path)
         }
     }
 

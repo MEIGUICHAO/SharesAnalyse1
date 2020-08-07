@@ -6,21 +6,22 @@ import com.mgc.sharesanalyse.BuildConfig;
 import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
+import com.mgc.sharesanalyse.entity.Month8DataDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
 public class DaoManager {
     private static final String TAG = DaoManager.class.getSimpleName();
     //    greendaotest
-    private static final String DB_NAME = "greendaotest";
-//    private static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
+    public static final String DB_NAME = "greendaotest";
+//    public static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
 
     private Context context;
 
     //多线程中要被共享的使用volatile关键字修饰
     private volatile static DaoManager manager = new DaoManager();
     private static DaoMaster sDaoMaster;
-    private static DaoMaster.DevOpenHelper sHelper;
+    private static CommonOpenHelper sHelper;
     private static DaoSession sDaoSession;
 
     /**
@@ -47,14 +48,14 @@ public class DaoManager {
      */
     public DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
+            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;
     }
 
     public void switchDB(String dbName) {
-        sHelper = new DaoMaster.DevOpenHelper(context, dbName, null);
+        sHelper = new CommonOpenHelper(context, dbName, null);
         sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         sDaoSession = null;
         getDaoSession();
