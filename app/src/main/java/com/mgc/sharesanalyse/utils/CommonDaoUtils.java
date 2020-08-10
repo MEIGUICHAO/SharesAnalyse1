@@ -235,6 +235,8 @@ public class CommonDaoUtils<T>
         insertTableStringBuilder.append(TextUtils.join(",", properties));
         insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
         db.execSQL(insertTableStringBuilder.toString());
+        LogUtil.d("classifyTables insertTableStringBuilder:"+insertTableStringBuilder);
+
     }
 
     /**

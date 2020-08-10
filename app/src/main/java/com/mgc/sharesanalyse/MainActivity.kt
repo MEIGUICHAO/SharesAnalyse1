@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.Month8Data
 import com.mgc.sharesanalyse.entity.Month8DataDao
 import com.mgc.sharesanalyse.entity.StocksBean
@@ -115,8 +116,9 @@ class MainActivity : AppCompatActivity() {
                         LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
                         if (it.contains(",")) {
                             val split1 = it.split(",")
-                            val stcokBean = setStcokBean(split1, bean)
-                            if (filterStocks.contains(stcokBean.stocksCode)) {
+                            val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+                            if (filterStocks.contains(nameSplit[0])) {
+                                val stcokBean = setStcokBean(split1, bean)
                                 if (db == null) {
                                     db = DaoManager.getsHelper().getWritableDb()
                                 }
@@ -132,7 +134,8 @@ class MainActivity : AppCompatActivity() {
         btnCopyDB.setOnClickListener {
             //databases文件夹目录
             val path = "/data/data/" + getPackageName() + "/databases/" + DaoManager.DB_NAME
-            FileUtil.copyAssets2Sdcard(this, "database/greendaotest", path)
+
+            FileUtil.UnZipAssetsFolder(this, Datas.DBName + ".zip", path)
         }
     }
 
