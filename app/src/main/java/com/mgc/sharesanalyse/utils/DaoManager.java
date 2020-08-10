@@ -7,6 +7,7 @@ import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
+import com.mgc.sharesanalyse.entity.StocksBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -15,13 +16,22 @@ public class DaoManager {
     //    greendaotest
 //    public static final String DB_NAME = "greendaotest";
 
-    public static final String DB_NAME = Datas.INSTANCE.getDBName() + DateUtils.INSTANCE.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD);
+    public static final String DB_NAME = Datas.INSTANCE.getDBName();
 
     private Context context;
 
     //多线程中要被共享的使用volatile关键字修饰
     private volatile static DaoManager manager = new DaoManager();
     private static DaoMaster sDaoMaster;
+
+    public static CommonOpenHelper getsHelper() {
+        return sHelper;
+    }
+
+    public static void setsHelper(CommonOpenHelper sHelper) {
+        DaoManager.sHelper = sHelper;
+    }
+
     private static CommonOpenHelper sHelper;
     private static DaoSession sDaoSession;
 
@@ -49,14 +59,14 @@ public class DaoManager {
      */
     public DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class);
+            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;
     }
 
-    public void switchDB(String dbName) {
-        sHelper = new CommonOpenHelper(context, dbName, null);
+    public void switchDB(String dbName,Class... classes) {
+        sHelper = new CommonOpenHelper(context, dbName, null,classes);
         sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         sDaoSession = null;
         getDaoSession();

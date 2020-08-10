@@ -20,11 +20,11 @@ enum class FormatterEnum(val format: String) {
 object DateUtils {
 
     @SuppressLint("SimpleDateFormat")
-    fun parse(dateStr: String, formatter: FormatterEnum): String {
+    fun parse(dateStr: String, formatter: FormatterEnum): Long {
         val simpleDateFormat = SimpleDateFormat(formatter.format)
         val date: Date = simpleDateFormat.parse(dateStr)
         val ts = date.time
-        return  ts.toString()
+        return  ts
     }
 
     fun format(timestamp: Long, formatter: FormatterEnum): String {

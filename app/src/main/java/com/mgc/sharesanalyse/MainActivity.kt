@@ -12,8 +12,23 @@ import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import org.greenrobot.greendao.database.Database
 
 class MainActivity : AppCompatActivity() {
+    //    yyyyMMdd HH:mm:ss
+    var beginTime =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 09:30:00"
+    var endTime =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 15:00:00"
+    var noonBreakBegin =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 11:30:00"
+    var noonBreakEnd =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 13:00:00"
+
+    var db: Database? = null
+
+    var filterStocks = ""
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +46,25 @@ class MainActivity : AppCompatActivity() {
                         month8Data.timeStamp = System.currentTimeMillis()
                         month8Data.ymd =
                             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD)
-                        DaoUtilsStore.getInstance().month8DataDaoUtils.insert(month8Data)
+                        if ((System.currentTimeMillis() >= DateUtils.parse(
+                                beginTime,
+                                FormatterEnum.YYYYMMDD__HH_MM_SS
+                            ) &&
+                                    System.currentTimeMillis() <= DateUtils.parse(
+                                noonBreakBegin,
+                                FormatterEnum.YYYYMMDD__HH_MM_SS
+                            )) ||
+                            (System.currentTimeMillis() >= DateUtils.parse(
+                                noonBreakEnd,
+                                FormatterEnum.YYYYMMDD__HH_MM_SS
+                            ) &&
+                                    System.currentTimeMillis() <= DateUtils.parse(
+                                endTime,
+                                FormatterEnum.YYYYMMDD__HH_MM_SS
+                            ))
+                        ) {
+                            DaoUtilsStore.getInstance().month8DataDaoUtils.insert(month8Data)
+                        }
                     }
 
 
@@ -63,32 +96,64 @@ class MainActivity : AppCompatActivity() {
                 val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                     Month8DataDao.Properties.Name.eq(index.toString())
                 )
+                val replace = queryAll[queryAll.size-1].json.replace("var hq_str_sh\"", "").replace("\"", "")
+                val split = replace.split(";")
+                split.forEach {
+                    if (it.contains(",")) {
+                        val split1 = it.split(",")
+                        filterStocks(split1)
+                    }
+                }
+                LogUtil.d("filterStocks!!!:\n$filterStocks")
                 queryAll.forEach {
                     var bean = it
                     val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
                     val split = replace.split(";")
+                    var mProgress = 0
                     split.forEach {
                         LogUtil.d("Classify json:$it")
+                        LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
                         if (it.contains(",")) {
                             val split1 = it.split(",")
-                            setStcokBean(split1, bean)
+                            val stcokBean = setStcokBean(split1, bean)
+                            if (filterStocks.contains(stcokBean.stocksCode)) {
+                                if (db == null) {
+                                    db = DaoManager.getsHelper().getWritableDb()
+                                }
+                                CommonDaoUtils.classifyTables(db, "stock_" + stcokBean.stocksCode)
+                            }
                         }
+                        mProgress++
                     }
                 }
             }
 
         }
-        btnCopyDB.setOnClickListener{
+        btnCopyDB.setOnClickListener {
             //databases文件夹目录
-            val path = "/data/data/" + getPackageName() + "/databases/"+ DaoManager.DB_NAME
-            FileUtil.copyAssets2Sdcard(this, "greendaotest", path)
+            val path = "/data/data/" + getPackageName() + "/databases/" + DaoManager.DB_NAME
+            FileUtil.copyAssets2Sdcard(this, "database/greendaotest", path)
         }
+    }
+
+    private fun filterStocks(split: List<String>) {
+        val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+        var stocksCode = nameSplit[0]
+        split
+        LogUtil.d("filterStocks${split[4]}")
+        var hightestPrice = split[4].toDouble()
+        var lowestPrice = split[5].toDouble()
+        var currentPrice = split[3].toDouble()
+        if (BigDecimalUtils.div(BigDecimalUtils.sub(hightestPrice,lowestPrice),currentPrice)>=0.05){
+            filterStocks = filterStocks + "_" + stocksCode
+        }
+
     }
 
     private fun setStcokBean(
         split: List<String>,
         bean: Month8Data
-    ) {
+    ):StocksBean {
         val stocksBean = StocksBean()
         stocksBean.timeStamp = bean.timeStamp
         val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
@@ -123,7 +188,12 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4Nums = split[26]
         stocksBean.sale5 = split[29]
         stocksBean.sale5Nums = split[28]
+
+        if (DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryAll().size > 0) {
+            DaoUtilsStore.getInstance().stocksBeanDaoUtils.deleteAll()
+        }
         DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
+        return stocksBean
     }
 
 }

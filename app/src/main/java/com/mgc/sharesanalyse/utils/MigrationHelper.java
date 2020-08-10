@@ -123,7 +123,7 @@ public class MigrationHelper {
         }
     }
 
-    private static String getTypeByClass(Class<?> type) throws Exception {
+    public static String getTypeByClass(Class<?> type) throws Exception {
         if(type.equals(String.class)) {
             return "TEXT";
         }
@@ -138,7 +138,7 @@ public class MigrationHelper {
         throw exception;
     }
 
-    private static List<String> getColumns(Database db, String tableName) {
+    public static List<String> getColumns(Database db, String tableName) {
         List<String> columns = new ArrayList<>();
         Cursor cursor = null;
         try {

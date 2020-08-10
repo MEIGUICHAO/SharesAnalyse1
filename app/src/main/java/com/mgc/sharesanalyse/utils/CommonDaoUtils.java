@@ -1,14 +1,27 @@
 package com.mgc.sharesanalyse.utils;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoSession;
+import com.mgc.sharesanalyse.entity.StocksBean;
+import com.mgc.sharesanalyse.entity.StocksBeanDao;
 
 import org.greenrobot.greendao.AbstractDao;
+import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.validation.Schema;
 
 public class CommonDaoUtils<T>
 {
@@ -35,7 +48,6 @@ public class CommonDaoUtils<T>
     public boolean insert(T pEntity)
     {
         boolean flag = entityDao.insert(pEntity) == -1 ? false : true;
-        Log.i(TAG, "insert Meizi :" + flag + "-->" + pEntity.toString());
         return flag;
     }
 
@@ -169,5 +181,91 @@ public class CommonDaoUtils<T>
         QueryBuilder<T> queryBuilder = daoSession.queryBuilder(entityClass);
         return queryBuilder.where(cond, condMore).list();
     }
+
+
+
+    public static void classifyTables(Database db,String curTableName) {
+        DaoConfig daoConfig = new DaoConfig(db, StocksBeanDao.class);
+
+        String divider = "";
+        String tableName = daoConfig.tablename;
+        if (tabbleIsExist(curTableName)) {
+            return;
+        }
+        ArrayList<String> properties = new ArrayList<>();
+
+        StringBuilder createTableStringBuilder = new StringBuilder();
+
+        createTableStringBuilder.append("CREATE TABLE ").append(curTableName).append(" (");
+
+        for(int j = 0; j < daoConfig.properties.length; j++) {
+            String columnName = daoConfig.properties[j].columnName;
+
+            if(MigrationHelper.getColumns(db, tableName).contains(columnName)) {
+                properties.add(columnName);
+
+                String type = null;
+
+                try {
+                    type = MigrationHelper.getTypeByClass(daoConfig.properties[j].type);
+                } catch (Exception exception) {
+
+                }
+
+                createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
+
+                if(daoConfig.properties[j].primaryKey) {
+                    createTableStringBuilder.append(" PRIMARY KEY");
+                }
+
+                divider = ",";
+            }
+        }
+        createTableStringBuilder.append(");");
+
+        if (!tabbleIsExist(curTableName)) {
+            db.execSQL(createTableStringBuilder.toString());
+        }
+
+        StringBuilder insertTableStringBuilder = new StringBuilder();
+
+        insertTableStringBuilder.append("INSERT INTO ").append(curTableName).append(" (");
+        insertTableStringBuilder.append(TextUtils.join(",", properties));
+        insertTableStringBuilder.append(") SELECT ");
+        insertTableStringBuilder.append(TextUtils.join(",", properties));
+        insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
+        db.execSQL(insertTableStringBuilder.toString());
+    }
+
+    /**
+     * 判断某张表是否存在
+     * @return
+     */
+    public static boolean tabbleIsExist(String tableName){
+        boolean result = false;
+        if(tableName == null){
+            return false;
+        }
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = DaoManager.getsHelper().getReadableDatabase();
+            String sql = "select count(*) as c from Sqlite_master  where type ='table' and name ='"+tableName.trim()+"' ";
+            cursor = db.rawQuery(sql, null);
+            if(cursor.moveToNext()){
+                int count = cursor.getInt(0);
+                if(count>0){
+                    result = true;
+                }
+            }
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return result;
+    }
+
+
+
 
 }
