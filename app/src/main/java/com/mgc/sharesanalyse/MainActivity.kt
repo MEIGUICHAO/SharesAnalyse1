@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.Month8Data
 import com.mgc.sharesanalyse.entity.Month8DataDao
@@ -93,41 +94,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.requestData()
         }
         btnClassify.setOnClickListener {
-            for (index in 0..9) {
-                val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
-                    Month8DataDao.Properties.Name.eq(index.toString())
-                )
-                val replace = queryAll[queryAll.size-1].json.replace("var hq_str_sh\"", "").replace("\"", "")
-                val split = replace.split(";")
-                split.forEach {
-                    if (it.contains(",")) {
-                        val split1 = it.split(",")
-                        filterStocks(split1)
-                    }
-                }
-                LogUtil.d("filterStocks!!!:\n$filterStocks")
-                queryAll.forEach {
-                    var bean = it
-                    val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
-                    val split = replace.split(";")
-                    var mProgress = 0
-                    split.forEach {
-                        LogUtil.d("Classify json:$it")
-                        LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
-                        if (it.contains(",")) {
-                            val split1 = it.split(",")
-                            val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
-                            if (filterStocks.contains(nameSplit[0])) {
-                                val stcokBean = setStcokBean(split1, bean)
-                                if (db == null) {
-                                    db = DaoManager.getsHelper().getWritableDb()
-                                }
-                                CommonDaoUtils.classifyTables(db, "stock_" + stcokBean.stocksCode)
-                            }
-                        }
-                        mProgress++
-                    }
-                }
+            App.getSinglePool().execute {
+                classifyStocks()
             }
 
         }
@@ -136,6 +104,47 @@ class MainActivity : AppCompatActivity() {
             val path = "/data/data/" + getPackageName() + "/databases/" + DaoManager.DB_NAME
 
             FileUtil.UnZipAssetsFolder(this, Datas.DBName + ".zip", path)
+        }
+    }
+
+    private fun classifyStocks() {
+        for (index in 0..9) {
+            val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
+                Month8DataDao.Properties.Name.eq(index.toString())
+            )
+            val replace =
+                queryAll[queryAll.size - 1].json.replace("var hq_str_sh\"", "").replace("\"", "")
+            val split = replace.split(";")
+            split.forEach {
+                if (it.contains(",")) {
+                    val split1 = it.split(",")
+                    filterStocks(split1)
+                }
+            }
+            LogUtil.d("filterStocks!!!:\n$filterStocks")
+            queryAll.forEach {
+                var bean = it
+                val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
+                val split = replace.split(";")
+                var mProgress = 0
+                split.forEach {
+                    LogUtil.d("Classify json:$it")
+                    LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
+                    if (it.contains(",")) {
+                        val split1 = it.split(",")
+                        val nameSplit =
+                            split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+                        if (filterStocks.contains(nameSplit[0])) {
+                            val stcokBean = setStcokBean(split1, bean)
+                            if (db == null) {
+                                db = DaoManager.getsHelper().getWritableDb()
+                            }
+                            CommonDaoUtils.classifyTables(db, "stock_" + stcokBean.stocksCode)
+                        }
+                    }
+                    mProgress++
+                }
+            }
         }
     }
 
