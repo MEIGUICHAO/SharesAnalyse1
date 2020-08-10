@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         var hightestPrice = split[4].toDouble()
         var lowestPrice = split[5].toDouble()
         var currentPrice = split[3].toDouble()
-        if (BigDecimalUtils.div(BigDecimalUtils.sub(hightestPrice,lowestPrice),currentPrice)>=0.05){
+        if (BigDecimalUtils.div(BigDecimalUtils.sub(hightestPrice,lowestPrice),hightestPrice)>=0.05){
             filterStocks = filterStocks + "_" + stocksCode
         }
 
