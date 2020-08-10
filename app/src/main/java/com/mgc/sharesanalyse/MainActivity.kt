@@ -131,11 +131,11 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("Classify json:$it")
                     LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
                     if (it.contains(",")) {
-                        val split1 = it.split(",")
+                        val split3 = it.split(",")
                         val nameSplit =
                             split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
                         if (filterStocks.contains(nameSplit[0])) {
-                            val stcokBean = setStcokBean(split1, bean)
+                            val stcokBean = setStcokBean(split3, bean)
                             if (db == null) {
                                 db = DaoManager.getsHelper().getWritableDb()
                             }
