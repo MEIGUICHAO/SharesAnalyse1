@@ -112,13 +112,13 @@ class MainActivity : AppCompatActivity() {
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
-            val replace =
+            val replace1 =
                 queryAll[queryAll.size - 1].json.replace("var hq_str_sh\"", "").replace("\"", "")
-            val split = replace.split(";")
-            split.forEach {
+            val split1 = replace1.split(";")
+            split1.forEach {
                 if (it.contains(",")) {
-                    val split1 = it.split(",")
-                    filterStocks(split1)
+                    val split2 = it.split(",")
+                    filterStocks(split2)
                 }
             }
             LogUtil.d("filterStocks!!!:\n$filterStocks")
