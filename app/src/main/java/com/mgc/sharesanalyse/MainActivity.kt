@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     var beginTime =
         DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 09:30:00"
     var endTime =
-        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 15:01:00"
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 15:02:00"
     var noonBreakBegin =
         DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD) + " 11:30:00"
     var noonBreakEnd =

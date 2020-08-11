@@ -12,14 +12,18 @@ public class StocksBean {
     private String stocksCode;
     private String timeStamp;
     private String buy1;
-    private String buy2;
-    private String buy3;
-    private String buy4;
-    private String buy5;
     private String sale1;
+
+    private String buy2;
     private String sale2;
+
+    private String buy3;
     private String sale3;
+
+    private String buy4;
     private String sale4;
+
+    private String buy5;
     private String sale5;
     private String openPrice;
 
@@ -31,10 +35,10 @@ public class StocksBean {
 
     private String dealPerStocks;
     private String dealPerPrice;
-    @Generated(hash = 231019084)
+    @Generated(hash = 2019113556)
     public StocksBean(Long id, String stocksName, String stocksCode,
-            String timeStamp, String buy1, String buy2, String buy3, String buy4,
-            String buy5, String sale1, String sale2, String sale3, String sale4,
+            String timeStamp, String buy1, String sale1, String buy2, String sale2,
+            String buy3, String sale3, String buy4, String sale4, String buy5,
             String sale5, String openPrice, String currentPrice,
             String hightestPrice, String lowestPrice, String dealStocks,
             String dealAmount, String dealPerStocks, String dealPerPrice) {
@@ -43,14 +47,14 @@ public class StocksBean {
         this.stocksCode = stocksCode;
         this.timeStamp = timeStamp;
         this.buy1 = buy1;
-        this.buy2 = buy2;
-        this.buy3 = buy3;
-        this.buy4 = buy4;
-        this.buy5 = buy5;
         this.sale1 = sale1;
+        this.buy2 = buy2;
         this.sale2 = sale2;
+        this.buy3 = buy3;
         this.sale3 = sale3;
+        this.buy4 = buy4;
         this.sale4 = sale4;
+        this.buy5 = buy5;
         this.sale5 = sale5;
         this.openPrice = openPrice;
         this.currentPrice = currentPrice;
@@ -94,35 +98,17 @@ public class StocksBean {
     public void setBuy1(String buy1) {
         this.buy1 = buy1;
     }
-    public String getBuy2() {
-        return this.buy2;
-    }
-    public void setBuy2(String buy2) {
-        this.buy2 = buy2;
-    }
-    public String getBuy3() {
-        return this.buy3;
-    }
-    public void setBuy3(String buy3) {
-        this.buy3 = buy3;
-    }
-    public String getBuy4() {
-        return this.buy4;
-    }
-    public void setBuy4(String buy4) {
-        this.buy4 = buy4;
-    }
-    public String getBuy5() {
-        return this.buy5;
-    }
-    public void setBuy5(String buy5) {
-        this.buy5 = buy5;
-    }
     public String getSale1() {
         return this.sale1;
     }
     public void setSale1(String sale1) {
         this.sale1 = sale1;
+    }
+    public String getBuy2() {
+        return this.buy2;
+    }
+    public void setBuy2(String buy2) {
+        this.buy2 = buy2;
     }
     public String getSale2() {
         return this.sale2;
@@ -130,17 +116,35 @@ public class StocksBean {
     public void setSale2(String sale2) {
         this.sale2 = sale2;
     }
+    public String getBuy3() {
+        return this.buy3;
+    }
+    public void setBuy3(String buy3) {
+        this.buy3 = buy3;
+    }
     public String getSale3() {
         return this.sale3;
     }
     public void setSale3(String sale3) {
         this.sale3 = sale3;
     }
+    public String getBuy4() {
+        return this.buy4;
+    }
+    public void setBuy4(String buy4) {
+        this.buy4 = buy4;
+    }
     public String getSale4() {
         return this.sale4;
     }
     public void setSale4(String sale4) {
         this.sale4 = sale4;
+    }
+    public String getBuy5() {
+        return this.buy5;
+    }
+    public void setBuy5(String buy5) {
+        this.buy5 = buy5;
     }
     public String getSale5() {
         return this.sale5;
@@ -196,7 +200,5 @@ public class StocksBean {
     public void setDealPerPrice(String dealPerPrice) {
         this.dealPerPrice = dealPerPrice;
     }
-
-
 
 }
