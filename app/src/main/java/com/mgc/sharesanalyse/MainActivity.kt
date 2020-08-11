@@ -166,7 +166,8 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("Classify json progress index:$index all_size:${queryAll.size} mProgress:$mProgress")
                     if (it.contains(",")) {
                         val split3 = it.split(",")
-                        val nameSplit = split3[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+                        val nameSplit =
+                            split3[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
                         var stocksCode = nameSplit[0]
                         LogUtil.d("filterStocks${split3[4]}")
                         var hightestPrice = split3[4].toDouble()
@@ -176,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                             if (BigDecimalUtils.div(
                                     BigDecimalUtils.sub(hightestPrice, lowestPrice),
                                     openPrice
-                                ) > 0.05
+                                ) >= 0.05
                             ) {
                                 if (db == null) {
                                     db = DaoManager.getsHelper().getWritableDb()
@@ -218,36 +219,32 @@ class MainActivity : AppCompatActivity() {
         stocksBean.dealAmount = split[9].toDiv10000()
         stocksBean.dealStocks = split[8].toDiv100()
 
-        stocksBean.buy1 = split[11]
-        stocksBean.buy1Nums = split[12].toDiv100()
-        stocksBean.buy2 = split[13]
-        stocksBean.buy2Nums = split[14].toDiv100()
-        stocksBean.buy3 = split[15]
-        stocksBean.buy3Nums = split[16].toDiv100()
-        stocksBean.buy4 = split[17]
-        stocksBean.buy4Nums = split[18].toDiv100()
-        stocksBean.buy5 = split[19]
-        stocksBean.buy5Nums = split[20].toDiv100()
+        stocksBean.buy1 = split[11] + "_" + split[12].toDiv100()
+        stocksBean.buy2 = split[13] + "_" + split[14].toDiv100()
+        stocksBean.buy3 = split[15] + "_" + split[16].toDiv100()
+        stocksBean.buy4 = split[17] + "_" + split[18].toDiv100()
+        stocksBean.buy5 = split[19] + "_" + split[20].toDiv100()
 
-        stocksBean.sale1 = split[21]
-        stocksBean.sale1Nums = split[20].toDiv100()
-        stocksBean.sale2 = split[23]
-        stocksBean.sale2Nums = split[22].toDiv100()
-        stocksBean.sale3 = split[25]
-        stocksBean.sale3Nums = split[24].toDiv100()
-        stocksBean.sale4 = split[27]
-        stocksBean.sale4Nums = split[26].toDiv100()
-        stocksBean.sale5 = split[29]
-        stocksBean.sale5Nums = split[28].toDiv100()
+        stocksBean.sale1 = split[21] + "_" + split[20].toDiv100()
+        stocksBean.sale2 = split[23] + "_" + split[22].toDiv100()
+        stocksBean.sale3 = split[25] + "_" + split[24].toDiv100()
+        stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
+        stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
         if (db == null) {
             db = DaoManager.getsHelper().getWritableDb()
         }
         val lastStockBean = CommonDaoUtils.query(db, stocksBean.stocksCode)
         if (null != lastStockBean) {
-            stocksBean.dealPerStocks = BigDecimalUtils.sub(stocksBean.dealStocks.toDouble(),lastStockBean.dealStocks.toDouble()).toString()
+            stocksBean.dealPerStocks = BigDecimalUtils.sub(
+                stocksBean.dealStocks.toDouble(),
+                lastStockBean.dealStocks.toDouble()
+            ).toString()
             if (stocksBean.dealPerStocks.toDouble() > 0) {
                 stocksBean.dealPerPrice = BigDecimalUtils.div(
-                    BigDecimalUtils.sub(stocksBean.dealAmount.toDouble(),lastStockBean.dealAmount.toDouble()),
+                    BigDecimalUtils.sub(
+                        stocksBean.dealAmount.toDouble(),
+                        lastStockBean.dealAmount.toDouble()
+                    ),
                     stocksBean.dealPerStocks.toDouble()
                 ).toString()
             } else {
@@ -274,7 +271,6 @@ class MainActivity : AppCompatActivity() {
         }
         return stocksBean
     }
-
 
 
 }
