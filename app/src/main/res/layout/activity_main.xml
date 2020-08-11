@@ -15,7 +15,7 @@
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btnClassify"
-        android:text="Classify"
+        android:text="filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button

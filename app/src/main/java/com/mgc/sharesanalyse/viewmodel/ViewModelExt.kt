@@ -23,3 +23,12 @@ fun ViewModel.launch(
         }
     }
 }
+
+fun String.toDiv100():String{
+    return (this.toDouble()/100.0f).toString()
+}
+
+
+fun String.toDiv10000():String{
+    return (this.toDouble()/10000.0f).toString()
+}

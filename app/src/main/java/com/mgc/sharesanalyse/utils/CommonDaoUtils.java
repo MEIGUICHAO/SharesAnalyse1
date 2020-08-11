@@ -240,6 +240,11 @@ public class CommonDaoUtils<T>
 
     }
 
+    public static void dropTable(Database db,String tableName) {
+        String dropTable = "DROP TABLE IF EXISTS " + tableName;
+        db.execSQL(dropTable);
+    }
+
     /**
      * 判断某张表是否存在
      * @return

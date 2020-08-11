@@ -10,7 +10,7 @@ public class StocksBean {
     private Long id;
     private String stocksName;
     private String stocksCode;
-    private Long timeStamp;
+    private String timeStamp;
     private String buy1Nums;
     private String buy2Nums;
     private String buy3Nums;
@@ -33,53 +33,18 @@ public class StocksBean {
     private String sale5Nums;
     private String openPrice;
 
-    @Override
-    public String toString() {
-        return "(" +
-                ", stocksName='" + stocksName + '\'' +
-                ", stocksCode='" + stocksCode + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", buy1Nums='" + buy1Nums + '\'' +
-                ", buy2Nums='" + buy2Nums + '\'' +
-                ", buy3Nums='" + buy3Nums + '\'' +
-                ", buy4Nums='" + buy4Nums + '\'' +
-                ", buy5Nums='" + buy5Nums + '\'' +
-                ", buy1='" + buy1 + '\'' +
-                ", buy2='" + buy2 + '\'' +
-                ", buy3='" + buy3 + '\'' +
-                ", buy4='" + buy4 + '\'' +
-                ", buy5='" + buy5 + '\'' +
-                ", sale1='" + sale1 + '\'' +
-                ", sale2='" + sale2 + '\'' +
-                ", sale3='" + sale3 + '\'' +
-                ", sale4='" + sale4 + '\'' +
-                ", sale5='" + sale5 + '\'' +
-                ", sale1Nums='" + sale1Nums + '\'' +
-                ", sale2Nums='" + sale2Nums + '\'' +
-                ", sale3Nums='" + sale3Nums + '\'' +
-                ", sale4Nums='" + sale4Nums + '\'' +
-                ", sale5Nums='" + sale5Nums + '\'' +
-                ", openPrice='" + openPrice + '\'' +
-                ", currentPrice='" + currentPrice + '\'' +
-                ", hightestPrice='" + hightestPrice + '\'' +
-                ", lowestPrice='" + lowestPrice + '\'' +
-                ", dealStocks='" + dealStocks + '\'' +
-                ", dealAmount='" + dealAmount + '\'' +
-                '}';
-    }
-
     private String currentPrice;
     private String hightestPrice;
     private String lowestPrice;
     private String dealStocks;
     private String dealAmount;
-    @Generated(hash = 1819526517)
-    public StocksBean(Long id, String stocksName, String stocksCode, Long timeStamp,
-            String buy1Nums, String buy2Nums, String buy3Nums, String buy4Nums,
-            String buy5Nums, String buy1, String buy2, String buy3, String buy4,
-            String buy5, String sale1, String sale2, String sale3, String sale4,
-            String sale5, String sale1Nums, String sale2Nums, String sale3Nums,
-            String sale4Nums, String sale5Nums, String openPrice,
+    @Generated(hash = 1023008179)
+    public StocksBean(Long id, String stocksName, String stocksCode,
+            String timeStamp, String buy1Nums, String buy2Nums, String buy3Nums,
+            String buy4Nums, String buy5Nums, String buy1, String buy2, String buy3,
+            String buy4, String buy5, String sale1, String sale2, String sale3,
+            String sale4, String sale5, String sale1Nums, String sale2Nums,
+            String sale3Nums, String sale4Nums, String sale5Nums, String openPrice,
             String currentPrice, String hightestPrice, String lowestPrice,
             String dealStocks, String dealAmount) {
         this.id = id;
@@ -116,6 +81,12 @@ public class StocksBean {
     @Generated(hash = 1799937850)
     public StocksBean() {
     }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getStocksName() {
         return this.stocksName;
     }
@@ -128,11 +99,41 @@ public class StocksBean {
     public void setStocksCode(String stocksCode) {
         this.stocksCode = stocksCode;
     }
-    public Long getTimeStamp() {
+    public String getTimeStamp() {
         return this.timeStamp;
     }
-    public void setTimeStamp(Long timeStamp) {
+    public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+    public String getBuy1Nums() {
+        return this.buy1Nums;
+    }
+    public void setBuy1Nums(String buy1Nums) {
+        this.buy1Nums = buy1Nums;
+    }
+    public String getBuy2Nums() {
+        return this.buy2Nums;
+    }
+    public void setBuy2Nums(String buy2Nums) {
+        this.buy2Nums = buy2Nums;
+    }
+    public String getBuy3Nums() {
+        return this.buy3Nums;
+    }
+    public void setBuy3Nums(String buy3Nums) {
+        this.buy3Nums = buy3Nums;
+    }
+    public String getBuy4Nums() {
+        return this.buy4Nums;
+    }
+    public void setBuy4Nums(String buy4Nums) {
+        this.buy4Nums = buy4Nums;
+    }
+    public String getBuy5Nums() {
+        return this.buy5Nums;
+    }
+    public void setBuy5Nums(String buy5Nums) {
+        this.buy5Nums = buy5Nums;
     }
     public String getBuy1() {
         return this.buy1;
@@ -194,6 +195,36 @@ public class StocksBean {
     public void setSale5(String sale5) {
         this.sale5 = sale5;
     }
+    public String getSale1Nums() {
+        return this.sale1Nums;
+    }
+    public void setSale1Nums(String sale1Nums) {
+        this.sale1Nums = sale1Nums;
+    }
+    public String getSale2Nums() {
+        return this.sale2Nums;
+    }
+    public void setSale2Nums(String sale2Nums) {
+        this.sale2Nums = sale2Nums;
+    }
+    public String getSale3Nums() {
+        return this.sale3Nums;
+    }
+    public void setSale3Nums(String sale3Nums) {
+        this.sale3Nums = sale3Nums;
+    }
+    public String getSale4Nums() {
+        return this.sale4Nums;
+    }
+    public void setSale4Nums(String sale4Nums) {
+        this.sale4Nums = sale4Nums;
+    }
+    public String getSale5Nums() {
+        return this.sale5Nums;
+    }
+    public void setSale5Nums(String sale5Nums) {
+        this.sale5Nums = sale5Nums;
+    }
     public String getOpenPrice() {
         return this.openPrice;
     }
@@ -230,70 +261,6 @@ public class StocksBean {
     public void setDealAmount(String dealAmount) {
         this.dealAmount = dealAmount;
     }
-    public String getBuy1Nums() {
-        return this.buy1Nums;
-    }
-    public void setBuy1Nums(String buy1Nums) {
-        this.buy1Nums = buy1Nums;
-    }
-    public String getBuy2Nums() {
-        return this.buy2Nums;
-    }
-    public void setBuy2Nums(String buy2Nums) {
-        this.buy2Nums = buy2Nums;
-    }
-    public String getBuy3Nums() {
-        return this.buy3Nums;
-    }
-    public void setBuy3Nums(String buy3Nums) {
-        this.buy3Nums = buy3Nums;
-    }
-    public String getBuy4Nums() {
-        return this.buy4Nums;
-    }
-    public void setBuy4Nums(String buy4Nums) {
-        this.buy4Nums = buy4Nums;
-    }
-    public String getBuy5Nums() {
-        return this.buy5Nums;
-    }
-    public void setBuy5Nums(String buy5Nums) {
-        this.buy5Nums = buy5Nums;
-    }
-    public String getSale1Nums() {
-        return this.sale1Nums;
-    }
-    public void setSale1Nums(String sale1Nums) {
-        this.sale1Nums = sale1Nums;
-    }
-    public String getSale2Nums() {
-        return this.sale2Nums;
-    }
-    public void setSale2Nums(String sale2Nums) {
-        this.sale2Nums = sale2Nums;
-    }
-    public String getSale3Nums() {
-        return this.sale3Nums;
-    }
-    public void setSale3Nums(String sale3Nums) {
-        this.sale3Nums = sale3Nums;
-    }
-    public String getSale4Nums() {
-        return this.sale4Nums;
-    }
-    public void setSale4Nums(String sale4Nums) {
-        this.sale4Nums = sale4Nums;
-    }
-    public String getSale5Nums() {
-        return this.sale5Nums;
-    }
-    public void setSale5Nums(String sale5Nums) {
-        this.sale5Nums = sale5Nums;
-    }
-    public Long getId() {
-        return this.id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
+
+
 }

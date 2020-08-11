@@ -15,6 +15,8 @@ object Datas {
         FormatterEnum.YYYY_MM_DD
     )
 
+    var tableName = "stock_"
+
 
 
 
