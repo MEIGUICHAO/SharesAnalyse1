@@ -245,6 +245,28 @@ public class CommonDaoUtils<T>
         db.execSQL(dropTable);
     }
 
+    public static void renameTable(Database db,String tableName) {
+        if (tabbleIsExist(tableName)) {
+            String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + "AAA_" + tableName;
+            db.execSQL(dropTable);
+        }
+    }
+
+
+    public static StocksBean query(Database db,String tableName) {
+        StocksBean stocksBean = null;
+        if (tabbleIsExist(tableName)) {
+            stocksBean = new StocksBean();
+            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+            cursor.moveToLast();
+            String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
+            String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
+            stocksBean.setDealStocks(deal_stocks);
+            stocksBean.setDealAmount(deal_amount);
+        }
+        return stocksBean;
+    }
+
     /**
      * 判断某张表是否存在
      * @return

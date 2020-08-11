@@ -38,7 +38,11 @@ public class StocksBean {
     private String lowestPrice;
     private String dealStocks;
     private String dealAmount;
-    @Generated(hash = 1023008179)
+
+    private String dealPerStocks;
+    private String dealPerPrice;
+
+    @Generated(hash = 792309357)
     public StocksBean(Long id, String stocksName, String stocksCode,
             String timeStamp, String buy1Nums, String buy2Nums, String buy3Nums,
             String buy4Nums, String buy5Nums, String buy1, String buy2, String buy3,
@@ -46,7 +50,8 @@ public class StocksBean {
             String sale4, String sale5, String sale1Nums, String sale2Nums,
             String sale3Nums, String sale4Nums, String sale5Nums, String openPrice,
             String currentPrice, String hightestPrice, String lowestPrice,
-            String dealStocks, String dealAmount) {
+            String dealStocks, String dealAmount, String dealPerStocks,
+            String dealPerPrice) {
         this.id = id;
         this.stocksName = stocksName;
         this.stocksCode = stocksCode;
@@ -77,6 +82,8 @@ public class StocksBean {
         this.lowestPrice = lowestPrice;
         this.dealStocks = dealStocks;
         this.dealAmount = dealAmount;
+        this.dealPerStocks = dealPerStocks;
+        this.dealPerPrice = dealPerPrice;
     }
     @Generated(hash = 1799937850)
     public StocksBean() {
@@ -260,6 +267,18 @@ public class StocksBean {
     }
     public void setDealAmount(String dealAmount) {
         this.dealAmount = dealAmount;
+    }
+    public String getDealPerStocks() {
+        return this.dealPerStocks;
+    }
+    public void setDealPerStocks(String dealPerStocks) {
+        this.dealPerStocks = dealPerStocks;
+    }
+    public String getDealPerPrice() {
+        return this.dealPerPrice;
+    }
+    public void setDealPerPrice(String dealPerPrice) {
+        this.dealPerPrice = dealPerPrice;
     }
 
 

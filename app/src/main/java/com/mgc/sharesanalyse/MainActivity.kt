@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.Month8Data
 import com.mgc.sharesanalyse.entity.Month8DataDao
@@ -177,19 +176,14 @@ class MainActivity : AppCompatActivity() {
                             if (BigDecimalUtils.div(
                                     BigDecimalUtils.sub(hightestPrice, lowestPrice),
                                     openPrice
-                                ) < 0.05
+                                ) > 0.05
                             ) {
                                 if (db == null) {
                                     db = DaoManager.getsHelper().getWritableDb()
                                 }
-                                CommonDaoUtils.dropTable(db, Datas.tableName + stocksCode)
+                                CommonDaoUtils.renameTable(db, Datas.tableName + stocksCode)
                                 filterStocks = filterStocks + "_" + stocksCode
                             }
-                        } else {
-                            if (db == null) {
-                                db = DaoManager.getsHelper().getWritableDb()
-                            }
-                            CommonDaoUtils.dropTable(db, Datas.tableName + stocksCode)
                         }
                     }
                     mProgress++
@@ -245,6 +239,32 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4Nums = split[26].toDiv100()
         stocksBean.sale5 = split[29]
         stocksBean.sale5Nums = split[28].toDiv100()
+        if (db == null) {
+            db = DaoManager.getsHelper().getWritableDb()
+        }
+        val lastStockBean = CommonDaoUtils.query(db, stocksBean.stocksCode)
+        if (null != lastStockBean) {
+            stocksBean.dealPerStocks = BigDecimalUtils.sub(stocksBean.dealStocks.toDouble(),lastStockBean.dealStocks.toDouble()).toString()
+            if (stocksBean.dealPerStocks.toDouble() > 0) {
+                stocksBean.dealPerPrice = BigDecimalUtils.div(
+                    BigDecimalUtils.sub(stocksBean.dealAmount.toDouble(),lastStockBean.dealAmount.toDouble()),
+                    stocksBean.dealPerStocks.toDouble()
+                ).toString()
+            } else {
+                stocksBean.dealPerPrice = 0.toString()
+            }
+        } else {
+            stocksBean.dealPerStocks = stocksBean.dealStocks
+            if (stocksBean.dealStocks.toDouble() > 0) {
+                stocksBean.dealPerPrice = BigDecimalUtils.div(
+                    stocksBean.dealAmount.toDouble(),
+                    stocksBean.dealStocks.toDouble()
+                ).toString()
+            } else {
+                stocksBean.dealPerPrice = 0.toString()
+            }
+        }
+
         if (queryAll.size > 0) {
             val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
             LogUtil.d("insertTableStringBuilder update:" + update)
@@ -254,5 +274,7 @@ class MainActivity : AppCompatActivity() {
         }
         return stocksBean
     }
+
+
 
 }
