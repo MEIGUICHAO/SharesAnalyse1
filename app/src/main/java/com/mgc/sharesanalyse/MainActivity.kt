@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     var filterStocks = ""
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,43 +39,43 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {
-                    for (index in 0..9) {
-                        val data = viewModel.sharesDats.value?.get(index)
-                        var month8Data = Month8Data()
-                        month8Data.json = data
-                        month8Data.name = index.toString()
-                        month8Data.timeStamp = System.currentTimeMillis()
-                        month8Data.ymd =
-                            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD)
-                        if ((System.currentTimeMillis() >= DateUtils.parse(
-                                beginTime,
-                                FormatterEnum.YYYYMMDD__HH_MM_SS
-                            ) &&
-                                    System.currentTimeMillis() <= DateUtils.parse(
-                                noonBreakBegin,
-                                FormatterEnum.YYYYMMDD__HH_MM_SS
-                            )) ||
-                            (System.currentTimeMillis() >= DateUtils.parse(
-                                noonBreakEnd,
-                                FormatterEnum.YYYYMMDD__HH_MM_SS
-                            ) &&
-                                    System.currentTimeMillis() <= DateUtils.parse(
-                                endTime,
-                                FormatterEnum.YYYYMMDD__HH_MM_SS
-                            ))
-                        ) {
+                    if ((System.currentTimeMillis() >= DateUtils.parse(
+                            beginTime,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ) &&
+                                System.currentTimeMillis() <= DateUtils.parse(
+                            noonBreakBegin,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        )) ||
+                        (System.currentTimeMillis() >= DateUtils.parse(
+                            noonBreakEnd,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ) &&
+                                System.currentTimeMillis() <= DateUtils.parse(
+                            endTime,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ))
+                    ) {
+                        for (index in 0..9) {
+                            val data = viewModel.sharesDats.value?.get(index)
+                            var month8Data = Month8Data()
+                            month8Data.json = data
+                            month8Data.name = index.toString()
+                            month8Data.timeStamp = System.currentTimeMillis()
+                            month8Data.ymd =
+                                DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD)
                             DaoUtilsStore.getInstance().month8DataDaoUtils.insert(month8Data)
                         }
+                        classifyStocks()
                     }
-
 
                     GlobalScope.launch {
 
                         withContext(Dispatchers.IO) {
 
                             runBlocking {
-                                delay(1000 * 30)
-                                viewModel.requestData()
+                                delay(1000 * 25)
+                                requestDatas(viewModel)
                             }
                         }
                     }
@@ -91,11 +90,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
         btnRequest.setOnClickListener {
-            viewModel.requestData()
+            requestDatas(viewModel)
         }
         btnClassify.setOnClickListener {
             App.getSinglePool().execute {
-                classifyStocks()
             }
 
         }
@@ -107,21 +105,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestDatas(viewModel: MainViewModel) {
+        val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryAll()
+        if (queryAll.size > 0) {
+            DaoUtilsStore.getInstance().month8DataDaoUtils.deleteAll()
+        }
+        viewModel.requestData()
+    }
+
     private fun classifyStocks() {
         for (index in 0..9) {
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
-            val replace1 =
-                queryAll[queryAll.size - 1].json.replace("var hq_str_sh\"", "").replace("\"", "")
-            val split1 = replace1.split(";")
-            split1.forEach {
-                if (it.contains(",")) {
-                    val split2 = it.split(",")
-                    filterStocks(split2)
-                }
-            }
-            LogUtil.d("filterStocks!!!:\n$filterStocks")
             queryAll.forEach {
                 var bean = it
                 val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
@@ -129,18 +125,15 @@ class MainActivity : AppCompatActivity() {
                 var mProgress = 0
                 split.forEach {
                     LogUtil.d("Classify json:$it")
-                    LogUtil.d("Classify json progress index:$index index:$index all_size:${queryAll.size} mProgress:$mProgress")
+                    LogUtil.d("Classify json progress index:$index all_size:${queryAll.size} mProgress:$mProgress")
                     if (it.contains(",")) {
                         val split3 = it.split(",")
-                        val nameSplit =
-                            split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
-                        if (filterStocks.contains(nameSplit[0])) {
-                            val stcokBean = setStcokBean(split3, bean)
-                            if (db == null) {
-                                db = DaoManager.getsHelper().getWritableDb()
-                            }
-                            CommonDaoUtils.classifyTables(db, "stock_" + stcokBean.stocksCode)
+                        val stcokBean = setStcokBean(split3, bean)
+                        if (db == null) {
+                            db = DaoManager.getsHelper().getWritableDb()
                         }
+                        LogUtil.d("insertTableStringBuilder classifyTables")
+                        CommonDaoUtils.classifyTables(db, "stock_" + stcokBean.stocksCode)
                     }
                     mProgress++
                 }
@@ -156,7 +149,11 @@ class MainActivity : AppCompatActivity() {
         var hightestPrice = split[4].toDouble()
         var lowestPrice = split[5].toDouble()
         var currentPrice = split[3].toDouble()
-        if (BigDecimalUtils.div(BigDecimalUtils.sub(hightestPrice,lowestPrice),hightestPrice)>=0.05){
+        if (BigDecimalUtils.div(
+                BigDecimalUtils.sub(hightestPrice, lowestPrice),
+                hightestPrice
+            ) >= 0.05
+        ) {
             filterStocks = filterStocks + "_" + stocksCode
         }
 
@@ -165,8 +162,14 @@ class MainActivity : AppCompatActivity() {
     private fun setStcokBean(
         split: List<String>,
         bean: Month8Data
-    ):StocksBean {
-        val stocksBean = StocksBean()
+    ): StocksBean {
+        var stocksBean: StocksBean
+        val queryAll = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryAll()
+        if (queryAll.size > 0) {
+            stocksBean = queryAll[0]
+        } else {
+            stocksBean = StocksBean()
+        }
         stocksBean.timeStamp = bean.timeStamp
         val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
         stocksBean.stocksName = nameSplit[1]
@@ -200,11 +203,13 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4Nums = split[26]
         stocksBean.sale5 = split[29]
         stocksBean.sale5Nums = split[28]
-
-        if (DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryAll().size > 0) {
-            DaoUtilsStore.getInstance().stocksBeanDaoUtils.deleteAll()
+        if (queryAll.size > 0) {
+            val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
+            LogUtil.d("insertTableStringBuilder update:" + update)
+        } else {
+            val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
+            LogUtil.d("insertTableStringBuilder insert:" + insert)
         }
-        DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
         return stocksBean
     }
 

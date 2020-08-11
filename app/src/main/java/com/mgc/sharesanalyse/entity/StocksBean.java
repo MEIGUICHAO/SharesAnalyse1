@@ -32,6 +32,42 @@ public class StocksBean {
     private String sale4Nums;
     private String sale5Nums;
     private String openPrice;
+
+    @Override
+    public String toString() {
+        return "(" +
+                ", stocksName='" + stocksName + '\'' +
+                ", stocksCode='" + stocksCode + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", buy1Nums='" + buy1Nums + '\'' +
+                ", buy2Nums='" + buy2Nums + '\'' +
+                ", buy3Nums='" + buy3Nums + '\'' +
+                ", buy4Nums='" + buy4Nums + '\'' +
+                ", buy5Nums='" + buy5Nums + '\'' +
+                ", buy1='" + buy1 + '\'' +
+                ", buy2='" + buy2 + '\'' +
+                ", buy3='" + buy3 + '\'' +
+                ", buy4='" + buy4 + '\'' +
+                ", buy5='" + buy5 + '\'' +
+                ", sale1='" + sale1 + '\'' +
+                ", sale2='" + sale2 + '\'' +
+                ", sale3='" + sale3 + '\'' +
+                ", sale4='" + sale4 + '\'' +
+                ", sale5='" + sale5 + '\'' +
+                ", sale1Nums='" + sale1Nums + '\'' +
+                ", sale2Nums='" + sale2Nums + '\'' +
+                ", sale3Nums='" + sale3Nums + '\'' +
+                ", sale4Nums='" + sale4Nums + '\'' +
+                ", sale5Nums='" + sale5Nums + '\'' +
+                ", openPrice='" + openPrice + '\'' +
+                ", currentPrice='" + currentPrice + '\'' +
+                ", hightestPrice='" + hightestPrice + '\'' +
+                ", lowestPrice='" + lowestPrice + '\'' +
+                ", dealStocks='" + dealStocks + '\'' +
+                ", dealAmount='" + dealAmount + '\'' +
+                '}';
+    }
+
     private String currentPrice;
     private String hightestPrice;
     private String lowestPrice;

@@ -96,6 +96,7 @@ public class CommonDaoUtils<T>
         }
         catch (Exception e)
         {
+            LogUtil.d("insertTableStringBuilder e:" + e.toString());
             e.printStackTrace();
         }
         return false;
@@ -189,43 +190,42 @@ public class CommonDaoUtils<T>
 
         String divider = "";
         String tableName = daoConfig.tablename;
-        if (tabbleIsExist(curTableName)) {
-            return;
-        }
         ArrayList<String> properties = new ArrayList<>();
 
         StringBuilder createTableStringBuilder = new StringBuilder();
 
         createTableStringBuilder.append("CREATE TABLE ").append(curTableName).append(" (");
-
+        LogUtil.d("insertTableStringBuilder classifyTables length:" + daoConfig.properties.length);
         for(int j = 0; j < daoConfig.properties.length; j++) {
             String columnName = daoConfig.properties[j].columnName;
 
-            if(MigrationHelper.getColumns(db, tableName).contains(columnName)) {
-                properties.add(columnName);
+            if (!columnName.equals("_id")) {
+                if(MigrationHelper.getColumns(db, tableName).contains(columnName)) {
+                    properties.add(columnName);
 
-                String type = null;
+                    String type = null;
 
-                try {
-                    type = MigrationHelper.getTypeByClass(daoConfig.properties[j].type);
-                } catch (Exception exception) {
+                    try {
+                        type = MigrationHelper.getTypeByClass(daoConfig.properties[j].type);
+                    } catch (Exception exception) {
 
+                    }
+
+                    createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
+
+                    if(daoConfig.properties[j].primaryKey) {
+                        createTableStringBuilder.append(" PRIMARY KEY");
+                    }
+
+                    divider = ",";
                 }
-
-                createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
-
-                if(daoConfig.properties[j].primaryKey) {
-                    createTableStringBuilder.append(" PRIMARY KEY");
-                }
-
-                divider = ",";
             }
         }
         createTableStringBuilder.append(");");
-
         if (!tabbleIsExist(curTableName)) {
             db.execSQL(createTableStringBuilder.toString());
         }
+        LogUtil.d("insertTableStringBuilder classifyTables tabbleIsExist:" + tabbleIsExist(curTableName));
 
         StringBuilder insertTableStringBuilder = new StringBuilder();
 
@@ -234,8 +234,9 @@ public class CommonDaoUtils<T>
         insertTableStringBuilder.append(") SELECT ");
         insertTableStringBuilder.append(TextUtils.join(",", properties));
         insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
-        db.execSQL(insertTableStringBuilder.toString());
         LogUtil.d("classifyTables insertTableStringBuilder:"+insertTableStringBuilder);
+        db.execSQL(insertTableStringBuilder.toString());
+        LogUtil.d("classifyTables insertTableStringBuilder!!!:"+insertTableStringBuilder);
 
     }
 
