@@ -249,6 +249,7 @@ public class CommonDaoUtils<T>
         if (tabbleIsExist(tableName)) {
             String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + "AAA_" + tableName;
             db.execSQL(dropTable);
+            LogUtil.d("renameTable:" + dropTable);
         }
     }
 

@@ -246,6 +246,10 @@ class MainActivity : AppCompatActivity() {
                 stocksBean.dealStocks.toDouble(),
                 lastStockBean.dealStocks.toDouble()
             ).toString()
+            stocksBean.perAmount = BigDecimalUtils.sub(
+                stocksBean.dealAmount.toDouble(),
+                lastStockBean.dealAmount.toDouble()
+            ).toString()
             if (stocksBean.perStocks.toDouble() > 0) {
                 stocksBean.perPrice = BigDecimalUtils.mul(
                     BigDecimalUtils.div(

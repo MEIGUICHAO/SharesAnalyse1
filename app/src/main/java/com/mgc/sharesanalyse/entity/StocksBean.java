@@ -23,22 +23,24 @@ public class StocksBean {
 
     private String buy5;
     private String sale5;
-    private String open;
 
-    private String current;
-    private String hightest;
-    private String lowest;
     private String dealStocks;
     private String dealAmount;
-
     private String PerStocks;
+    private String PerAmount;
+
+    private String open;
+    private String current;
     private String PerPrice;
-    @Generated(hash = 1678141241)
+
+    private String hightest;
+    private String lowest;
+    @Generated(hash = 1901716618)
     public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
             String sale2, String buy3, String sale3, String buy4, String sale4,
-            String buy5, String sale5, String open, String current, String hightest,
-            String lowest, String dealStocks, String dealAmount, String PerStocks,
-            String PerPrice) {
+            String buy5, String sale5, String dealStocks, String dealAmount,
+            String PerStocks, String PerAmount, String open, String current,
+            String PerPrice, String hightest, String lowest) {
         this.id = id;
         this.time = time;
         this.buy1 = buy1;
@@ -51,14 +53,15 @@ public class StocksBean {
         this.sale4 = sale4;
         this.buy5 = buy5;
         this.sale5 = sale5;
-        this.open = open;
-        this.current = current;
-        this.hightest = hightest;
-        this.lowest = lowest;
         this.dealStocks = dealStocks;
         this.dealAmount = dealAmount;
         this.PerStocks = PerStocks;
+        this.PerAmount = PerAmount;
+        this.open = open;
+        this.current = current;
         this.PerPrice = PerPrice;
+        this.hightest = hightest;
+        this.lowest = lowest;
     }
     @Generated(hash = 1799937850)
     public StocksBean() {
@@ -135,30 +138,6 @@ public class StocksBean {
     public void setSale5(String sale5) {
         this.sale5 = sale5;
     }
-    public String getOpen() {
-        return this.open;
-    }
-    public void setOpen(String open) {
-        this.open = open;
-    }
-    public String getCurrent() {
-        return this.current;
-    }
-    public void setCurrent(String current) {
-        this.current = current;
-    }
-    public String getHightest() {
-        return this.hightest;
-    }
-    public void setHightest(String hightest) {
-        this.hightest = hightest;
-    }
-    public String getLowest() {
-        return this.lowest;
-    }
-    public void setLowest(String lowest) {
-        this.lowest = lowest;
-    }
     public String getDealStocks() {
         return this.dealStocks;
     }
@@ -177,10 +156,41 @@ public class StocksBean {
     public void setPerStocks(String PerStocks) {
         this.PerStocks = PerStocks;
     }
+    public String getPerAmount() {
+        return this.PerAmount;
+    }
+    public void setPerAmount(String PerAmount) {
+        this.PerAmount = PerAmount;
+    }
+    public String getOpen() {
+        return this.open;
+    }
+    public void setOpen(String open) {
+        this.open = open;
+    }
+    public String getCurrent() {
+        return this.current;
+    }
+    public void setCurrent(String current) {
+        this.current = current;
+    }
     public String getPerPrice() {
         return this.PerPrice;
     }
     public void setPerPrice(String PerPrice) {
         this.PerPrice = PerPrice;
     }
+    public String getHightest() {
+        return this.hightest;
+    }
+    public void setHightest(String hightest) {
+        this.hightest = hightest;
+    }
+    public String getLowest() {
+        return this.lowest;
+    }
+    public void setLowest(String lowest) {
+        this.lowest = lowest;
+    }
+
 }
