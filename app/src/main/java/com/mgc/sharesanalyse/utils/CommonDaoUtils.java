@@ -255,12 +255,15 @@ public class CommonDaoUtils<T>
 
     public static StocksBean query(Database db,String tableName) {
         StocksBean stocksBean = null;
+        LogUtil.d("query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
         if (tabbleIsExist(tableName)) {
             stocksBean = new StocksBean();
             Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
             cursor.moveToLast();
             String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
             String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
+            LogUtil.d("query deal_stocks:" + deal_stocks);
+            LogUtil.d("query deal_amount:" + deal_amount);
             stocksBean.setDealStocks(deal_stocks);
             stocksBean.setDealAmount(deal_amount);
         }

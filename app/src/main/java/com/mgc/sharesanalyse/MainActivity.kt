@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     var filterStocks = ""
 
+    var stocksCode = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +72,12 @@ class MainActivity : AppCompatActivity() {
                         ))
                     ) {
                         classifyStocks()
+                    }
+                    if (System.currentTimeMillis() <= DateUtils.parse(
+                            endTime,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        )
+                    ) {
                         GlobalScope.launch {
 
                             withContext(Dispatchers.IO) {
@@ -134,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                             db = DaoManager.getsHelper().getWritableDb()
                         }
                         LogUtil.d("insertTableStringBuilder classifyTables")
-                        CommonDaoUtils.classifyTables(db, Datas.tableName + stcokBean.stocksCode)
+                        CommonDaoUtils.classifyTables(db, Datas.tableName + stocksCode)
                     }
                     mProgress++
                 }
@@ -207,15 +215,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             stocksBean = StocksBean()
         }
-        stocksBean.timeStamp = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        stocksBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
         val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
-        stocksBean.stocksName = nameSplit[1]
-        stocksBean.stocksCode = nameSplit[0]
+        stocksCode = nameSplit[0]
         LogUtil.d("Classify stocksCode:${nameSplit[0]} stocksName:${nameSplit[1]}")
-        stocksBean.openPrice = split[1]
-        stocksBean.currentPrice = split[3]
-        stocksBean.hightestPrice = split[4]
-        stocksBean.lowestPrice = split[5]
+        stocksBean.open = split[1]
+        stocksBean.current = split[3]
+        stocksBean.hightest = split[4]
+        stocksBean.lowest = split[5]
         stocksBean.dealAmount = split[9].toDiv10000()
         stocksBean.dealStocks = split[8].toDiv100()
 
@@ -233,32 +240,34 @@ class MainActivity : AppCompatActivity() {
         if (db == null) {
             db = DaoManager.getsHelper().getWritableDb()
         }
-        val lastStockBean = CommonDaoUtils.query(db, stocksBean.stocksCode)
+        val lastStockBean = CommonDaoUtils.query(db, Datas.tableName + stocksCode)
         if (null != lastStockBean) {
-            stocksBean.dealPerStocks = BigDecimalUtils.sub(
+            stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
                 lastStockBean.dealStocks.toDouble()
             ).toString()
-            if (stocksBean.dealPerStocks.toDouble() > 0) {
-                stocksBean.dealPerPrice = BigDecimalUtils.div(
-                    BigDecimalUtils.sub(
-                        stocksBean.dealAmount.toDouble(),
-                        lastStockBean.dealAmount.toDouble()
-                    ),
-                    stocksBean.dealPerStocks.toDouble()
+            if (stocksBean.perStocks.toDouble() > 0) {
+                stocksBean.perPrice = BigDecimalUtils.mul(
+                    BigDecimalUtils.div(
+                        BigDecimalUtils.sub(
+                            stocksBean.dealAmount.toDouble(),
+                            lastStockBean.dealAmount.toDouble()
+                        ),
+                        stocksBean.perStocks.toDouble()
+                    ), 100.toDouble(), 3
                 ).toString()
             } else {
-                stocksBean.dealPerPrice = 0.toString()
+                stocksBean.perPrice = 0.toString()
             }
         } else {
-            stocksBean.dealPerStocks = stocksBean.dealStocks
+            stocksBean.perStocks = stocksBean.dealStocks
             if (stocksBean.dealStocks.toDouble() > 0) {
-                stocksBean.dealPerPrice = BigDecimalUtils.div(
+                stocksBean.perPrice = BigDecimalUtils.div(
                     stocksBean.dealAmount.toDouble(),
                     stocksBean.dealStocks.toDouble()
                 ).toString()
             } else {
-                stocksBean.dealPerPrice = 0.toString()
+                stocksBean.perPrice = 0.toString()
             }
         }
 

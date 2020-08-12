@@ -8,9 +8,7 @@ import org.greenrobot.greendao.annotation.Id;
 public class StocksBean {
     @Id
     private Long id;
-    private String stocksName;
-    private String stocksCode;
-    private String timeStamp;
+    private String time;
     private String buy1;
     private String sale1;
 
@@ -25,27 +23,24 @@ public class StocksBean {
 
     private String buy5;
     private String sale5;
-    private String openPrice;
+    private String open;
 
-    private String currentPrice;
-    private String hightestPrice;
-    private String lowestPrice;
+    private String current;
+    private String hightest;
+    private String lowest;
     private String dealStocks;
     private String dealAmount;
 
-    private String dealPerStocks;
-    private String dealPerPrice;
-    @Generated(hash = 2019113556)
-    public StocksBean(Long id, String stocksName, String stocksCode,
-            String timeStamp, String buy1, String sale1, String buy2, String sale2,
-            String buy3, String sale3, String buy4, String sale4, String buy5,
-            String sale5, String openPrice, String currentPrice,
-            String hightestPrice, String lowestPrice, String dealStocks,
-            String dealAmount, String dealPerStocks, String dealPerPrice) {
+    private String PerStocks;
+    private String PerPrice;
+    @Generated(hash = 1678141241)
+    public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
+            String sale2, String buy3, String sale3, String buy4, String sale4,
+            String buy5, String sale5, String open, String current, String hightest,
+            String lowest, String dealStocks, String dealAmount, String PerStocks,
+            String PerPrice) {
         this.id = id;
-        this.stocksName = stocksName;
-        this.stocksCode = stocksCode;
-        this.timeStamp = timeStamp;
+        this.time = time;
         this.buy1 = buy1;
         this.sale1 = sale1;
         this.buy2 = buy2;
@@ -56,14 +51,14 @@ public class StocksBean {
         this.sale4 = sale4;
         this.buy5 = buy5;
         this.sale5 = sale5;
-        this.openPrice = openPrice;
-        this.currentPrice = currentPrice;
-        this.hightestPrice = hightestPrice;
-        this.lowestPrice = lowestPrice;
+        this.open = open;
+        this.current = current;
+        this.hightest = hightest;
+        this.lowest = lowest;
         this.dealStocks = dealStocks;
         this.dealAmount = dealAmount;
-        this.dealPerStocks = dealPerStocks;
-        this.dealPerPrice = dealPerPrice;
+        this.PerStocks = PerStocks;
+        this.PerPrice = PerPrice;
     }
     @Generated(hash = 1799937850)
     public StocksBean() {
@@ -74,23 +69,11 @@ public class StocksBean {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getStocksName() {
-        return this.stocksName;
+    public String getTime() {
+        return this.time;
     }
-    public void setStocksName(String stocksName) {
-        this.stocksName = stocksName;
-    }
-    public String getStocksCode() {
-        return this.stocksCode;
-    }
-    public void setStocksCode(String stocksCode) {
-        this.stocksCode = stocksCode;
-    }
-    public String getTimeStamp() {
-        return this.timeStamp;
-    }
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTime(String time) {
+        this.time = time;
     }
     public String getBuy1() {
         return this.buy1;
@@ -152,29 +135,29 @@ public class StocksBean {
     public void setSale5(String sale5) {
         this.sale5 = sale5;
     }
-    public String getOpenPrice() {
-        return this.openPrice;
+    public String getOpen() {
+        return this.open;
     }
-    public void setOpenPrice(String openPrice) {
-        this.openPrice = openPrice;
+    public void setOpen(String open) {
+        this.open = open;
     }
-    public String getCurrentPrice() {
-        return this.currentPrice;
+    public String getCurrent() {
+        return this.current;
     }
-    public void setCurrentPrice(String currentPrice) {
-        this.currentPrice = currentPrice;
+    public void setCurrent(String current) {
+        this.current = current;
     }
-    public String getHightestPrice() {
-        return this.hightestPrice;
+    public String getHightest() {
+        return this.hightest;
     }
-    public void setHightestPrice(String hightestPrice) {
-        this.hightestPrice = hightestPrice;
+    public void setHightest(String hightest) {
+        this.hightest = hightest;
     }
-    public String getLowestPrice() {
-        return this.lowestPrice;
+    public String getLowest() {
+        return this.lowest;
     }
-    public void setLowestPrice(String lowestPrice) {
-        this.lowestPrice = lowestPrice;
+    public void setLowest(String lowest) {
+        this.lowest = lowest;
     }
     public String getDealStocks() {
         return this.dealStocks;
@@ -188,17 +171,16 @@ public class StocksBean {
     public void setDealAmount(String dealAmount) {
         this.dealAmount = dealAmount;
     }
-    public String getDealPerStocks() {
-        return this.dealPerStocks;
+    public String getPerStocks() {
+        return this.PerStocks;
     }
-    public void setDealPerStocks(String dealPerStocks) {
-        this.dealPerStocks = dealPerStocks;
+    public void setPerStocks(String PerStocks) {
+        this.PerStocks = PerStocks;
     }
-    public String getDealPerPrice() {
-        return this.dealPerPrice;
+    public String getPerPrice() {
+        return this.PerPrice;
     }
-    public void setDealPerPrice(String dealPerPrice) {
-        this.dealPerPrice = dealPerPrice;
+    public void setPerPrice(String PerPrice) {
+        this.PerPrice = PerPrice;
     }
-
 }
