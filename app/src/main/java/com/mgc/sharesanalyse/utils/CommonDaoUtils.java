@@ -30,6 +30,7 @@ public class CommonDaoUtils<T>
     private DaoSession daoSession;
     private Class<T> entityClass;
     private AbstractDao<T, Long> entityDao;
+    private static Database db;
 
     public CommonDaoUtils(Class<T> pEntityClass, AbstractDao<T, Long> pEntityDao)
     {
@@ -269,6 +270,38 @@ public class CommonDaoUtils<T>
             stocksBean.setDealAmount(deal_amount);
         }
         return stocksBean;
+    }
+
+    public static ArrayList<StocksBean> queryPerAmount(String tableName) {
+
+        if (db == null) {
+            db = DaoManager.getsHelper().getWritableDb();
+        }
+        ArrayList<StocksBean> list = new ArrayList<>();
+        if (tabbleIsExist(tableName)) {
+            StocksBean stocksBean = new StocksBean();
+            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+            cursor.moveToLast();
+            String PER_AMOUNT = cursor.getString(cursor.getColumnIndex("PER_AMOUNT"));
+            String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
+            stocksBean.setPerAmount(PER_AMOUNT);
+            stocksBean.setTime(TIME);
+            LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT);
+            list.add(stocksBean);
+        }
+        return list;
+    }
+
+    public static ArrayList<String> queryPerStocks(Database db,String tableName) {
+        ArrayList<String> list = new ArrayList<>();
+        if (tabbleIsExist(tableName)) {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+            cursor.moveToLast();
+            String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
+            LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
+            list.add(PER_STOCKS);
+        }
+        return list;
     }
 
     /**

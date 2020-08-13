@@ -1,8 +1,10 @@
 package com.mgc.sharesanalyse
 
 import android.os.Bundle
+import android.util.SparseArray
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.forEach
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.Datas
@@ -32,20 +34,29 @@ class MainActivity : AppCompatActivity() {
     var db: Database? = null
 
     var filterStocks = ""
+    var filterPerAmountStocks = ""
 
     var stocksCode = ""
+
+    var viewModel:MainViewModel? = null
+    var PA10TimesSpareArray = SparseArray<String>()
+    var PAGe100MillionSpareArray = SparseArray<String>()
+    var PAGe50MillionSpareArray = SparseArray<String>()
+    var PAGe20MillionSpareArray = SparseArray<String>()
+    var PAGe10MillionSpareArray = SparseArray<String>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.loadState.observe(this, Observer {
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel!!.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {
 
                     for (index in 0..9) {
-                        val data = viewModel.sharesDats.value?.get(index)
+                        val data = viewModel!!.sharesDats.value?.get(index)
                         var month8Data = Month8Data()
                         month8Data.json = data
                         month8Data.name = index.toString()
@@ -84,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 
                                 runBlocking {
                                     delay(1000 * 25)
-                                    requestDatas(viewModel)
+                                    requestDatas(viewModel!!)
                                 }
                             }
                         }
@@ -101,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         btnRequest.setOnClickListener {
-            requestDatas(viewModel)
+            requestDatas(viewModel!!)
         }
         btnClassify.setOnClickListener {
             filterStocks()
@@ -147,6 +158,75 @@ class MainActivity : AppCompatActivity() {
                     mProgress++
                 }
             }
+        }
+    }
+
+
+    private fun analysePerAmount() {
+        if (System.currentTimeMillis() < DateUtils.parse(
+                endTime,
+
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            )
+        ) {
+            Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        PA10TimesSpareArray.clear()
+        PAGe100MillionSpareArray.clear()
+        PAGe50MillionSpareArray.clear()
+        PAGe20MillionSpareArray.clear()
+        PA10TimesSpareArray.clear()
+        filterPerAmountStocks = ""
+        for (index in 0..9) {
+            val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
+                Month8DataDao.Properties.Name.eq(index.toString())
+            )
+            queryAll.forEach {
+                val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
+                val split = replace.split(";")
+                var mProgress = 0
+                split.forEach {
+                    LogUtil.d("analysePerAmount json:$it")
+                    LogUtil.d("analysePerAmount json progress index:$index all_size:${queryAll.size} mProgress:$mProgress")
+                    if (it.contains(",")) {
+                        val split3 = it.split(",")
+                        val nameSplit =
+                            split3[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
+                        var stocksCode = nameSplit[0]
+                        val queryPerAmount =
+                            CommonDaoUtils.queryPerAmount(Datas.tableName + stocksCode)
+                        var lastPerAmount = 0.toDouble()
+                        queryPerAmount.forEach{
+                            if (lastPerAmount > 0) {
+                                if (BigDecimalUtils.div(it.perAmount.toDouble(),lastPerAmount)>10) {
+                                    if (!filterPerAmountStocks.contains(stocksCode)) {
+                                        filterPerAmountStocks =
+                                            filterPerAmountStocks + "_" + stocksCode
+                                    }
+                                    var str = "(${it.time},perAmount:${it.perAmount},lastPerAmount:$lastPerAmount)"
+                                    if (PA10TimesSpareArray[stocksCode.toInt()].isNullOrEmpty()) {
+                                        PA10TimesSpareArray.put(stocksCode.toInt(), str)
+                                    } else {
+                                        PA10TimesSpareArray.put(stocksCode.toInt(), PA10TimesSpareArray[stocksCode.toInt()]+" " +str)
+                                    }
+
+
+                                }
+
+                            }
+                            lastPerAmount = it.perAmount.toDouble()
+                        }
+                    }
+                }
+            }
+            LogUtil.d("filterPerAmountStocks:$filterPerAmountStocks")
+
+        }
+        val shCodeList = viewModel!!.getShCodeList()
+        shCodeList.forEach {
+
         }
     }
 

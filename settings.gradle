@@ -1,2 +1,2 @@
 rootProject.name='SharesAnalyse'
-include ':app'
+include ':app', ':stetho'

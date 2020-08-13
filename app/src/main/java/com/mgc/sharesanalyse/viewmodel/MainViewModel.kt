@@ -57,14 +57,14 @@ class MainViewModel : ViewModel() {
                 }
             }
             index = 0
-            withContext(Dispatchers.Default){
+            withContext(Dispatchers.Default) {
                 resultArray.forEach {
                     it?.let {
                         var result = it.await()
                         if (result.contains(";")) {
                             val split = result.split(";")
                             LogUtil.d("!!!index:$index,result size:${split.size}")
-                            sharesDats.value!!.put(index,result)
+                            sharesDats.value!!.put(index, result)
                         }
                     }
                     Thread.sleep(50)
@@ -73,7 +73,7 @@ class MainViewModel : ViewModel() {
             }
             loadState.value = LoadState.Success()
 
-        },{
+        }, {
             loadState.value = LoadState.Fail(it.message ?: "加载失败")
 
         })
@@ -89,5 +89,21 @@ class MainViewModel : ViewModel() {
         }
         return newString.toString()
     }
+
+    fun getShCodeList():ArrayList<String> {
+        val splitArray = Datas.sharesList.split(")")
+        val codeList = ArrayList<String>()
+        for (index in 0..splitArray.size) {
+            if (index < 1000) {
+                codeList.add(
+                    keepDigital(
+                        splitArray[index]
+                    )
+                )
+            }
+        }
+        return codeList;
+    }
+
 
 }
