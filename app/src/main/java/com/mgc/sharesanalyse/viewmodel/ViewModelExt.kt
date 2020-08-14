@@ -1,14 +1,12 @@
 package com.mgc.sharesanalyse.viewmodel
 
+import android.util.SparseArray
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.sql.Timestamp
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 fun ViewModel.launch(
     block: suspend CoroutineScope.() -> Unit,
@@ -31,4 +29,9 @@ fun String.toDiv100():String{
 
 fun String.toDiv10000():String{
     return (this.toDouble()/10000.0f).toString()
+}
+
+fun SparseArray<String>.getDBValue(key: Int): String {
+    var str = if(this[key].isNullOrEmpty())  "" else  this[key]
+    return str
 }

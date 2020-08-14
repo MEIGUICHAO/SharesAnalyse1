@@ -93,14 +93,12 @@ class MainViewModel : ViewModel() {
     fun getShCodeList():ArrayList<String> {
         val splitArray = Datas.sharesList.split(")")
         val codeList = ArrayList<String>()
-        for (index in 0..splitArray.size) {
-            if (index < 1000) {
-                codeList.add(
-                    keepDigital(
-                        splitArray[index]
-                    )
+        for (index in 0..splitArray.size-1) {
+            codeList.add(
+                keepDigital(
+                    splitArray[index]
                 )
-            }
+            )
         }
         return codeList;
     }

@@ -23,8 +23,7 @@ import java.util.List;
 
 import javax.xml.validation.Schema;
 
-public class CommonDaoUtils<T>
-{
+public class CommonDaoUtils<T> {
     private static final String TAG = CommonDaoUtils.class.getSimpleName();
 
     private DaoSession daoSession;
@@ -32,8 +31,7 @@ public class CommonDaoUtils<T>
     private AbstractDao<T, Long> entityDao;
     private static Database db;
 
-    public CommonDaoUtils(Class<T> pEntityClass, AbstractDao<T, Long> pEntityDao)
-    {
+    public CommonDaoUtils(Class<T> pEntityClass, AbstractDao<T, Long> pEntityDao) {
         DaoManager mManager = DaoManager.getInstance();
         daoSession = mManager.getDaoSession();
         entityClass = pEntityClass;
@@ -46,8 +44,7 @@ public class CommonDaoUtils<T>
      * @param pEntity
      * @return
      */
-    public boolean insert(T pEntity)
-    {
+    public boolean insert(T pEntity) {
         boolean flag = entityDao.insert(pEntity) == -1 ? false : true;
         return flag;
     }
@@ -58,25 +55,18 @@ public class CommonDaoUtils<T>
      * @param pEntityList
      * @return
      */
-    public boolean insertMulti(final List<T> pEntityList)
-    {
-        try
-        {
-            daoSession.runInTx(new Runnable()
-            {
+    public boolean insertMulti(final List<T> pEntityList) {
+        try {
+            daoSession.runInTx(new Runnable() {
                 @Override
-                public void run()
-                {
-                    for (T meizi : pEntityList)
-                    {
+                public void run() {
+                    for (T meizi : pEntityList) {
                         daoSession.insertOrReplace(meizi);
                     }
                 }
             });
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -88,15 +78,11 @@ public class CommonDaoUtils<T>
      * @param pEntity
      * @return
      */
-    public boolean update(T pEntity)
-    {
-        try
-        {
+    public boolean update(T pEntity) {
+        try {
             daoSession.update(pEntity);
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LogUtil.d("insertTableStringBuilder e:" + e.toString());
             e.printStackTrace();
         }
@@ -109,16 +95,12 @@ public class CommonDaoUtils<T>
      * @param pEntity
      * @return
      */
-    public boolean delete(T pEntity)
-    {
-        try
-        {
+    public boolean delete(T pEntity) {
+        try {
             //按照id删除
             daoSession.delete(pEntity);
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -129,16 +111,12 @@ public class CommonDaoUtils<T>
      *
      * @return
      */
-    public boolean deleteAll()
-    {
-        try
-        {
+    public boolean deleteAll() {
+        try {
             //按照id删除
             daoSession.deleteAll(entityClass);
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -149,8 +127,7 @@ public class CommonDaoUtils<T>
      *
      * @return
      */
-    public List<T> queryAll()
-    {
+    public List<T> queryAll() {
         return daoSession.loadAll(entityClass);
     }
 
@@ -160,16 +137,14 @@ public class CommonDaoUtils<T>
      * @param key
      * @return
      */
-    public T queryById(long key)
-    {
+    public T queryById(long key) {
         return daoSession.load(entityClass, key);
     }
 
     /**
      * 使用native sql进行查询操作
      */
-    public List<T> queryByNativeSql(String sql, String[] conditions)
-    {
+    public List<T> queryByNativeSql(String sql, String[] conditions) {
         return daoSession.queryRaw(entityClass, sql, conditions);
     }
 
@@ -178,15 +153,13 @@ public class CommonDaoUtils<T>
      *
      * @return
      */
-    public List<T> queryByQueryBuilder(WhereCondition cond, WhereCondition... condMore)
-    {
+    public List<T> queryByQueryBuilder(WhereCondition cond, WhereCondition... condMore) {
         QueryBuilder<T> queryBuilder = daoSession.queryBuilder(entityClass);
         return queryBuilder.where(cond, condMore).list();
     }
 
 
-
-    public static void classifyTables(Database db,String curTableName) {
+    public static void classifyTables(Database db, String curTableName) {
         DaoConfig daoConfig = new DaoConfig(db, StocksBeanDao.class);
 
         String divider = "";
@@ -197,11 +170,11 @@ public class CommonDaoUtils<T>
 
         createTableStringBuilder.append("CREATE TABLE ").append(curTableName).append(" (");
         LogUtil.d("insertTableStringBuilder classifyTables length:" + daoConfig.properties.length);
-        for(int j = 0; j < daoConfig.properties.length; j++) {
+        for (int j = 0; j < daoConfig.properties.length; j++) {
             String columnName = daoConfig.properties[j].columnName;
 
             if (!columnName.equals("_id")) {
-                if(MigrationHelper.getColumns(db, tableName).contains(columnName)) {
+                if (MigrationHelper.getColumns(db, tableName).contains(columnName)) {
                     properties.add(columnName);
 
                     String type = null;
@@ -214,7 +187,7 @@ public class CommonDaoUtils<T>
 
                     createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
 
-                    if(daoConfig.properties[j].primaryKey) {
+                    if (daoConfig.properties[j].primaryKey) {
                         createTableStringBuilder.append(" PRIMARY KEY");
                     }
 
@@ -235,18 +208,18 @@ public class CommonDaoUtils<T>
         insertTableStringBuilder.append(") SELECT ");
         insertTableStringBuilder.append(TextUtils.join(",", properties));
         insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
-        LogUtil.d("classifyTables insertTableStringBuilder:"+insertTableStringBuilder);
+        LogUtil.d("classifyTables insertTableStringBuilder:" + insertTableStringBuilder);
         db.execSQL(insertTableStringBuilder.toString());
-        LogUtil.d("classifyTables insertTableStringBuilder!!!:"+insertTableStringBuilder);
+        LogUtil.d("classifyTables insertTableStringBuilder!!!:" + insertTableStringBuilder);
 
     }
 
-    public static void dropTable(Database db,String tableName) {
+    public static void dropTable(Database db, String tableName) {
         String dropTable = "DROP TABLE IF EXISTS " + tableName;
         db.execSQL(dropTable);
     }
 
-    public static void renameTable(Database db,String tableName) {
+    public static void renameTable(Database db, String tableName) {
         if (tabbleIsExist(tableName)) {
             String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + "AAA_" + tableName;
             db.execSQL(dropTable);
@@ -255,7 +228,7 @@ public class CommonDaoUtils<T>
     }
 
 
-    public static StocksBean query(Database db,String tableName) {
+    public static StocksBean query(Database db, String tableName) {
         StocksBean stocksBean = null;
         LogUtil.d("query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
         if (tabbleIsExist(tableName)) {
@@ -272,56 +245,60 @@ public class CommonDaoUtils<T>
         return stocksBean;
     }
 
-    public static ArrayList<StocksBean> queryPerAmount(String tableName) {
-
+    public static ArrayList<StocksBean> queryStocks(String tableName) {
+        LogUtil.d("query queryPerAmount:" + tableName);
         if (db == null) {
             db = DaoManager.getsHelper().getWritableDb();
         }
         ArrayList<StocksBean> list = new ArrayList<>();
         if (tabbleIsExist(tableName)) {
-            StocksBean stocksBean = new StocksBean();
             Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-            cursor.moveToLast();
-            String PER_AMOUNT = cursor.getString(cursor.getColumnIndex("PER_AMOUNT"));
-            String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
-            stocksBean.setPerAmount(PER_AMOUNT);
-            stocksBean.setTime(TIME);
-            LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT);
-            list.add(stocksBean);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    StocksBean stocksBean = new StocksBean();
+                    String PER_AMOUNT = cursor.getString(cursor.getColumnIndex("PER_AMOUNT"));
+                    String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
+                    String CURRENT = cursor.getString(cursor.getColumnIndex("CURRENT"));
+                    String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
+                    stocksBean.setPerAmount(PER_AMOUNT);
+                    stocksBean.setTime(TIME);
+                    String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
+                    String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
+                    LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
+                    LogUtil.d("query BUY1:" + BUY1);
+                    stocksBean.setBuy1(BUY1);
+                    stocksBean.setPerStocks(PER_STOCKS);
+                    stocksBean.setCurrent(CURRENT);
+                    stocksBean.setOpen(OPEN);
+                    LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
+                    list.add(stocksBean);
+                } while (cursor.moveToNext());
+            }
+
         }
         return list;
     }
 
-    public static ArrayList<String> queryPerStocks(Database db,String tableName) {
-        ArrayList<String> list = new ArrayList<>();
-        if (tabbleIsExist(tableName)) {
-            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-            cursor.moveToLast();
-            String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
-            LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
-            list.add(PER_STOCKS);
-        }
-        return list;
-    }
 
     /**
      * 判断某张表是否存在
+     *
      * @return
      */
-    public static boolean tabbleIsExist(String tableName){
+    public static boolean tabbleIsExist(String tableName) {
         boolean result = false;
-        if(tableName == null){
+        if (tableName == null) {
             return false;
         }
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
             db = DaoManager.getsHelper().getReadableDatabase();
-            String sql = "select count(*) as c from Sqlite_master  where type ='table' and name ='"+tableName.trim()+"' ";
+            String sql = "select count(*) as c from Sqlite_master  where type ='table' and name ='" + tableName.trim() + "' ";
             cursor = db.rawQuery(sql, null);
-            if(cursor.moveToNext()){
+            if (cursor.moveToNext()) {
                 int count = cursor.getInt(0);
-                if(count>0){
+                if (count > 0) {
                     result = true;
                 }
             }
@@ -331,8 +308,6 @@ public class CommonDaoUtils<T>
         }
         return result;
     }
-
-
 
 
 }

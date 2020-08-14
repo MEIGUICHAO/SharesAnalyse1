@@ -8,6 +8,34 @@ import org.greenrobot.greendao.annotation.Id;
 public class StocksBean {
     @Id
     private Long id;
+
+    @Override
+    public String toString() {
+        return "StocksBean{" +
+                "id=" + id +
+                ", time='" + time + '\'' +
+                ", buy1='" + buy1 + '\'' +
+                ", sale1='" + sale1 + '\'' +
+                ", buy2='" + buy2 + '\'' +
+                ", sale2='" + sale2 + '\'' +
+                ", buy3='" + buy3 + '\'' +
+                ", sale3='" + sale3 + '\'' +
+                ", buy4='" + buy4 + '\'' +
+                ", sale4='" + sale4 + '\'' +
+                ", buy5='" + buy5 + '\'' +
+                ", sale5='" + sale5 + '\'' +
+                ", dealStocks='" + dealStocks + '\'' +
+                ", dealAmount='" + dealAmount + '\'' +
+                ", PerStocks='" + PerStocks + '\'' +
+                ", PerAmount='" + PerAmount + '\'' +
+                ", open='" + open + '\'' +
+                ", current='" + current + '\'' +
+                ", PerPrice='" + PerPrice + '\'' +
+                ", hightest='" + hightest + '\'' +
+                ", lowest='" + lowest + '\'' +
+                '}';
+    }
+
     private String time;
     private String buy1;
     private String sale1;

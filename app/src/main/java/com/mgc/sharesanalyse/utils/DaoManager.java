@@ -18,13 +18,16 @@ public class DaoManager {
 
     public static final String DB_NAME = Datas.INSTANCE.getDBName();
 
-    private Context context;
+    private static Context context;
 
     //多线程中要被共享的使用volatile关键字修饰
     private volatile static DaoManager manager = new DaoManager();
     private static DaoMaster sDaoMaster;
 
     public static CommonOpenHelper getsHelper() {
+        if (null == sHelper) {
+            getDaoMaster();
+        }
         return sHelper;
     }
 
@@ -57,7 +60,7 @@ public class DaoManager {
      *
      * @return
      */
-    public DaoMaster getDaoMaster() {
+    public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
             sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());

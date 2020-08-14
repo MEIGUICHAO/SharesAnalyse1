@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.forEach
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.entity.Month8Data
-import com.mgc.sharesanalyse.entity.Month8DataDao
-import com.mgc.sharesanalyse.entity.StocksBean
+import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.MainViewModel
+import com.mgc.sharesanalyse.viewmodel.getDBValue
 import com.mgc.sharesanalyse.viewmodel.toDiv100
 import com.mgc.sharesanalyse.viewmodel.toDiv10000
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,17 +33,19 @@ class MainActivity : AppCompatActivity() {
     var db: Database? = null
 
     var filterStocks = ""
-    var filterPerAmountStocks = ""
+    var filterAnalyseStocks = ""
 
     var stocksCode = ""
 
-    var viewModel:MainViewModel? = null
+    var viewModel: MainViewModel? = null
     var PA10TimesSpareArray = SparseArray<String>()
     var PAGe100MillionSpareArray = SparseArray<String>()
     var PAGe50MillionSpareArray = SparseArray<String>()
     var PAGe20MillionSpareArray = SparseArray<String>()
     var PAGe10MillionSpareArray = SparseArray<String>()
 
+    var PSGe1000MillionSpareArray = SparseArray<String>()
+    var PSGe100MillionSpareArray = SparseArray<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +124,11 @@ class MainActivity : AppCompatActivity() {
 
             FileUtil.UnZipAssetsFolder(this, Datas.DBName + ".zip", path)
         }
+        btnAnalyse.setOnClickListener {
+            App.getSinglePool().execute({
+                analyseAll()
+            })
+        }
     }
 
     private fun requestDatas(viewModel: MainViewModel) {
@@ -149,9 +155,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.contains(",")) {
                         val split3 = it.split(",")
                         val stcokBean = setStcokBean(split3, bean)
-                        if (db == null) {
-                            db = DaoManager.getsHelper().getWritableDb()
-                        }
+                        getDB()
                         LogUtil.d("insertTableStringBuilder classifyTables")
                         CommonDaoUtils.classifyTables(db, Datas.tableName + stocksCode)
                     }
@@ -162,71 +166,145 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun analysePerAmount() {
-        if (System.currentTimeMillis() < DateUtils.parse(
-                endTime,
-
-                FormatterEnum.YYYYMMDD__HH_MM_SS
-            )
-        ) {
-            Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
-            return
-        }
+    private fun analyseAll() {
+        if (analyseNeedReturn()) return
 
         PA10TimesSpareArray.clear()
         PAGe100MillionSpareArray.clear()
         PAGe50MillionSpareArray.clear()
         PAGe20MillionSpareArray.clear()
         PA10TimesSpareArray.clear()
-        filterPerAmountStocks = ""
-        for (index in 0..9) {
-            val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
-                Month8DataDao.Properties.Name.eq(index.toString())
-            )
-            queryAll.forEach {
-                val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
-                val split = replace.split(";")
-                var mProgress = 0
-                split.forEach {
-                    LogUtil.d("analysePerAmount json:$it")
-                    LogUtil.d("analysePerAmount json progress index:$index all_size:${queryAll.size} mProgress:$mProgress")
-                    if (it.contains(",")) {
-                        val split3 = it.split(",")
-                        val nameSplit =
-                            split3[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
-                        var stocksCode = nameSplit[0]
-                        val queryPerAmount =
-                            CommonDaoUtils.queryPerAmount(Datas.tableName + stocksCode)
-                        var lastPerAmount = 0.toDouble()
-                        queryPerAmount.forEach{
-                            if (lastPerAmount > 0) {
-                                if (BigDecimalUtils.div(it.perAmount.toDouble(),lastPerAmount)>10) {
-                                    if (!filterPerAmountStocks.contains(stocksCode)) {
-                                        filterPerAmountStocks =
-                                            filterPerAmountStocks + "_" + stocksCode
-                                    }
-                                    var str = "(${it.time},perAmount:${it.perAmount},lastPerAmount:$lastPerAmount)"
-                                    if (PA10TimesSpareArray[stocksCode.toInt()].isNullOrEmpty()) {
-                                        PA10TimesSpareArray.put(stocksCode.toInt(), str)
-                                    } else {
-                                        PA10TimesSpareArray.put(stocksCode.toInt(), PA10TimesSpareArray[stocksCode.toInt()]+" " +str)
-                                    }
+        PSGe1000MillionSpareArray.clear()
+        PSGe100MillionSpareArray.clear()
+        filterAnalyseStocks = ""
+//        val shCodeList = listOf("600127")
+        val shCodeList = viewModel!!.getShCodeList()
+        shCodeList.forEach {
+            var stocksCode = it
+            val queryPerAmount =
+                CommonDaoUtils.queryStocks(Datas.tableName + stocksCode)
+            LogUtil.d("analysePerAmount queryPerAmount size:${queryPerAmount.size}")
 
-
-                                }
-
-                            }
-                            lastPerAmount = it.perAmount.toDouble()
+            var lastPerAmount = 0.toDouble()
+            queryPerAmount.forEach {
+                if (it.perAmount != null) {
+                    LogUtil.d("analysePerAmount json:${it.toString()} lastPerAmount:$lastPerAmount")
+                    if (lastPerAmount > 100) {
+                        if (BigDecimalUtils.div(it.perAmount.toDouble(), lastPerAmount) > 10) {
+                            var str =
+                                "(${it.time},perAmount:${it.perAmount},lastPerAmount:$lastPerAmount)"
+                            setSpareArrayData(PA10TimesSpareArray, stocksCode, str)
                         }
+                    }
+                    lastPerAmount = it.perAmount.toDouble()
+                    LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= 1000:${it.perAmount.toDouble() >= 1000}")
+
+                    if (it.perAmount.toDouble() >= 10000) {
+                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
+                    } else if (it.perAmount.toDouble() >= 5000) {
+                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
+                    } else if (it.perAmount.toDouble() >= 2000) {
+                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
+                    } else if (it.perAmount.toDouble() >= 1000) {
+                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
+                    }
+
+
+                    val buy1Stocks = it.buy1.split("_")[1]
+                    val buy1StocksValue = buy1Stocks.toDoubleOrNull()
+                    var bean = it
+                    buy1StocksValue?.let {
+                        if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > 1000) {
+                            if (BigDecimalUtils.div(
+                                    bean.perStocks.toDouble(),
+                                    buy1StocksValue.toDouble()
+                                ) >= 1000
+                            ) {
+                                var str =
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue,current:${bean.current},open:${bean.open})"
+                                setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
+                            } else if (BigDecimalUtils.div(
+                                    bean.perStocks.toDouble(),
+                                    buy1StocksValue.toDouble()
+                                ) >= 100
+                            ) {
+                                var str =
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue,current:${bean.current},open:${bean.open})"
+                                setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
+                            }
+                        }
+
                     }
                 }
             }
-            LogUtil.d("filterPerAmountStocks:$filterPerAmountStocks")
-
         }
-        val shCodeList = viewModel!!.getShCodeList()
+        DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.deleteAll()
+        DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.deleteAll()
         shCodeList.forEach {
+            LogUtil.d("----code:$it-----")
+            LogUtil.d("------------------------------------------------")
+            if (it.isEmpty()) return@forEach
+            if (!PA10TimesSpareArray[it.toInt()].isNullOrEmpty() || !PAGe100MillionSpareArray[it.toInt()].isNullOrEmpty()
+                || !PAGe50MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe20MillionSpareArray[it.toInt()].isNullOrEmpty()
+                || !PAGe10MillionSpareArray[it.toInt()].isNullOrEmpty()
+            ) {
+                val analysePerAmountBean = AnalysePerAmountBean()
+                analysePerAmountBean.code = it.toInt()
+                analysePerAmountBean.tenTimesLast = PA10TimesSpareArray.getDBValue(it.toInt())
+                analysePerAmountBean.ge100million = PAGe100MillionSpareArray.getDBValue(it.toInt())
+                analysePerAmountBean.ge50million = PAGe50MillionSpareArray.getDBValue(it.toInt())
+                analysePerAmountBean.ge20million = PAGe20MillionSpareArray.getDBValue(it.toInt())
+                analysePerAmountBean.ge10million = PAGe10MillionSpareArray.getDBValue(it.toInt())
+                DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.insert(analysePerAmountBean)
+            }
+            if (!PSGe1000MillionSpareArray[it.toInt()].isNullOrEmpty() || !PSGe100MillionSpareArray[it.toInt()].isNullOrEmpty()) {
+                val analysePerStocksBean = AnalysePerStocksBean()
+                analysePerStocksBean.code = it.toInt()
+                analysePerStocksBean.gt1000times = PSGe1000MillionSpareArray.getDBValue(it.toInt())
+                analysePerStocksBean.gt100times = PSGe100MillionSpareArray.getDBValue(it.toInt())
+                DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(analysePerStocksBean)
+            }
+            LogUtil.d("=======================================================")
+        }
+        LogUtil.d("filterAnalyseStocks:" + filterAnalyseStocks)
+    }
 
+
+    private fun analyseNeedReturn(): Boolean {
+        getDB()
+        val toDayStr = DateUtils.format(
+            System.currentTimeMillis(),
+            FormatterEnum.YYYY_MM_DD
+        )
+        DaoManager.DB_NAME
+        if (System.currentTimeMillis() < DateUtils.parse(
+                endTime,
+
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            ) && DaoManager.DB_NAME.contains(toDayStr)
+        ) {
+            Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
+            return true
+        }
+        return false
+    }
+
+    private fun setSpareArrayData(map: SparseArray<String>, stocksCode: String, str: String) {
+        if (!filterAnalyseStocks.contains(stocksCode)) {
+            filterAnalyseStocks =
+                filterAnalyseStocks + "_" + stocksCode
+        }
+        if (map[stocksCode.toInt()].isNullOrEmpty()) {
+            map.put(stocksCode.toInt(), str)
+        } else {
+            map.put(
+                stocksCode.toInt(),
+                map[stocksCode.toInt()] + "####" + str
+            )
         }
     }
 
@@ -267,9 +345,7 @@ class MainActivity : AppCompatActivity() {
                                     openPrice
                                 ) >= 0.05
                             ) {
-                                if (db == null) {
-                                    db = DaoManager.getsHelper().getWritableDb()
-                                }
+                                getDB()
                                 CommonDaoUtils.renameTable(db, Datas.tableName + stocksCode)
                                 filterStocks = filterStocks + "_" + stocksCode
                             }
@@ -317,9 +393,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale3 = split[25] + "_" + split[24].toDiv100()
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
-        if (db == null) {
-            db = DaoManager.getsHelper().getWritableDb()
-        }
+        getDB()
         val lastStockBean = CommonDaoUtils.query(db, Datas.tableName + stocksCode)
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
@@ -363,6 +437,12 @@ class MainActivity : AppCompatActivity() {
             LogUtil.d("insertTableStringBuilder insert:" + insert)
         }
         return stocksBean
+    }
+
+    private fun getDB() {
+        if (db == null) {
+            db = DaoManager.getsHelper().getWritableDb()
+        }
     }
 
 
