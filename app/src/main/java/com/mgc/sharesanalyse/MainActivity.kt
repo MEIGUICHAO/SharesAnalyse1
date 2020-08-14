@@ -142,35 +142,31 @@ class MainActivity : AppCompatActivity() {
         shCodeList.forEach {
             val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(it))
             val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(it))
-            if (perAmountList.size > 0) {
-                perAmountList.forEach {
-                    var tag = "logResult_" + it.code.toString()
-                    if (!filterAnalyseStocks.contains(it.code.toString())) {
-                        filterAnalyseStocks =
-                            filterAnalyseStocks + "_" + it.code.toString()
-                    }
-                    LogUtil.d(tag, "----code:${it.code}-----")
-                    LogUtil.d(tag, "------------------------------------------------")
-                    logBySplite(it.tenTimesLast, tag, "perAmount_tenTimesLast")
-                    logBySplite(it.ge100million, tag, "perAmount_ge100million")
-                    logBySplite(it.ge50million, tag, "perAmount_ge50million")
-                    logBySplite(it.ge20million, tag, "perAmount_ge20million")
-                    logBySplite(it.ge10million, tag, "perAmount_ge10million")
+            perAmountList.forEach {
+                var tag = "logResult_" + it.code.toString()
+                if (!filterAnalyseStocks.contains(it.code.toString())) {
+                    filterAnalyseStocks =
+                        filterAnalyseStocks + "_" + it.code.toString()
+                }
+                LogUtil.d(tag, "----code:${it.code}-----")
+                LogUtil.d(tag, "------------------------------------------------")
+                logBySplite(it.tenTimesLast, tag, "perAmount_tenTimesLast")
+                logBySplite(it.ge100million, tag, "perAmount_ge100million")
+                logBySplite(it.ge50million, tag, "perAmount_ge50million")
+                logBySplite(it.ge20million, tag, "perAmount_ge20million")
+                logBySplite(it.ge10million, tag, "perAmount_ge10million")
 
-                }
             }
-            if (perStockList.size > 0) {
-                perStockList.forEach {
-                    var tag = "logResult_" + it.code.toString()
-                    if (!filterAnalyseStocks.contains(it.code.toString())) {
-                        filterAnalyseStocks =
-                            filterAnalyseStocks + "_" + it.code.toString()
-                    }
-                    LogUtil.d(tag, "——————————————————————————————————————————————————")
-                    logBySplite(it.gt1000times, tag, "perStock_gt1000times")
-                    logBySplite(it.gt100times, tag, "perStock_gt100times")
-                    LogUtil.d(tag, "=======================================================")
+            perStockList.forEach {
+                var tag = "logResult_" + it.code.toString()
+                if (!filterAnalyseStocks.contains(it.code.toString())) {
+                    filterAnalyseStocks =
+                        filterAnalyseStocks + "_" + it.code.toString()
                 }
+                LogUtil.d(tag, "——————————————————————————————————————————————————")
+                logBySplite(it.gt1000times, tag, "perStock_gt1000times")
+                logBySplite(it.gt100times, tag, "perStock_gt100times")
+                LogUtil.d(tag, "=======================================================")
             }
         }
         LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
@@ -178,7 +174,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun logBySplite(it: String?, tag: String, key: String) {
         it?.let {
-            if (it.contains(splitStr)) {
+            if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
                 Log.d(tag, "$key size:${temTimesLastList.size}")
                 temTimesLastList.forEach {
