@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse
 
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     var filterAnalyseStocks = ""
 
     var stocksCode = ""
+    var splitStr = "####"
 
     var viewModel: MainViewModel? = null
     var PA10TimesSpareArray = SparseArray<String>()
@@ -129,6 +131,54 @@ class MainActivity : AppCompatActivity() {
                 analyseAll()
             })
         }
+        btnLogResult.setOnClickListener{
+            logResult()
+        }
+    }
+
+    private fun logResult() {
+        filterAnalyseStocks = ""
+        val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryAll()
+        val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryAll()
+        perAmountList.forEach {
+            var tag = "logResult_" + it.code.toString()
+            if (!filterAnalyseStocks.contains(it.code.toString())) {
+                filterAnalyseStocks =
+                    filterAnalyseStocks + "_" + it.code.toString()
+            }
+            LogUtil.d(tag,"----code:${it.code}-----")
+            LogUtil.d(tag,"------------------------------------------------")
+            logBySplite(it.tenTimesLast, tag,"perAmount_tenTimesLast")
+            logBySplite(it.ge100million, tag,"perAmount_ge100million")
+            logBySplite(it.ge50million, tag,"perAmount_ge50million")
+            logBySplite(it.ge20million, tag,"perAmount_ge20million")
+            logBySplite(it.ge10million, tag,"perAmount_ge10million")
+
+        }
+        perStockList.forEach {
+            var tag = "logResult_" + it.code.toString()
+            if (!filterAnalyseStocks.contains(it.code.toString())) {
+                filterAnalyseStocks =
+                    filterAnalyseStocks + "_" + it.code.toString()
+            }
+            LogUtil.d(tag,"——————————————————————————————————————————————————")
+            logBySplite(it.gt1000times, tag,"perStock_gt1000times")
+            logBySplite(it.gt100times, tag,"perStock_gt100times")
+            LogUtil.d(tag,"=======================================================")
+        }
+        LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
+    }
+
+    private fun logBySplite(it: String?, tag: String,key:String) {
+        it?.let {
+            if (it.contains(splitStr)) {
+                val temTimesLastList = it.split(splitStr)
+                Log.d(tag,"$key size:${temTimesLastList.size}")
+                temTimesLastList.forEach {
+                    Log.d(tag, "$key:$it")
+                }
+            }
+        }
     }
 
     private fun requestDatas(viewModel: MainViewModel) {
@@ -200,16 +250,16 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= 1000:${it.perAmount.toDouble() >= 1000}")
 
                     if (it.perAmount.toDouble() >= 10000) {
-                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 5000) {
-                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 2000) {
-                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 1000) {
-                        var str = "(${it.time},perAmount:${it.perAmount},current:${it.current},open:${it.open})"
+                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
                     }
 
@@ -225,7 +275,7 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 1000
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue,current:${bean.current},open:${bean.open})"
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(bean)})"
                                 setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
                             } else if (BigDecimalUtils.div(
                                     bean.perStocks.toDouble(),
@@ -233,7 +283,7 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 100
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue,current:${bean.current},open:${bean.open})"
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(bean)})"
                                 setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
                             }
                         }
@@ -273,6 +323,9 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("filterAnalyseStocks:" + filterAnalyseStocks)
     }
 
+    private fun getAddLog(it: StocksBean) =
+        ",current:${it.current},open:${it.open},hightest:${it.hightest},lowest:${it.lowest}"
+
 
     private fun analyseNeedReturn(): Boolean {
         getDB()
@@ -303,7 +356,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             map.put(
                 stocksCode.toInt(),
-                map[stocksCode.toInt()] + "####" + str
+                map[stocksCode.toInt()] + splitStr + str
             )
         }
     }

@@ -25,7 +25,12 @@
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btnAnalyse"
-        android:text="AnalysePerAmount"
+        android:text="Analyse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnLogResult"
+        android:text="LogResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

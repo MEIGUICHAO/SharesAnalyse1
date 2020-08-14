@@ -260,6 +260,8 @@ public class CommonDaoUtils<T> {
                     String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
                     String CURRENT = cursor.getString(cursor.getColumnIndex("CURRENT"));
                     String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
+                    String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
+                    String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
                     stocksBean.setPerAmount(PER_AMOUNT);
                     stocksBean.setTime(TIME);
                     String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
@@ -270,6 +272,8 @@ public class CommonDaoUtils<T> {
                     stocksBean.setPerStocks(PER_STOCKS);
                     stocksBean.setCurrent(CURRENT);
                     stocksBean.setOpen(OPEN);
+                    stocksBean.setHightest(HIGHTEST);
+                    stocksBean.setLowest(LOWEST);
                     LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
                     list.add(stocksBean);
                 } while (cursor.moveToNext());
