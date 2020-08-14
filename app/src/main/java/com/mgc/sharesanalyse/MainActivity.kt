@@ -131,49 +131,56 @@ class MainActivity : AppCompatActivity() {
                 analyseAll()
             })
         }
-        btnLogResult.setOnClickListener{
+        btnLogResult.setOnClickListener {
             logResult()
         }
     }
 
     private fun logResult() {
         filterAnalyseStocks = ""
-        val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryAll()
-        val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryAll()
-        perAmountList.forEach {
-            var tag = "logResult_" + it.code.toString()
-            if (!filterAnalyseStocks.contains(it.code.toString())) {
-                filterAnalyseStocks =
-                    filterAnalyseStocks + "_" + it.code.toString()
-            }
-            LogUtil.d(tag,"----code:${it.code}-----")
-            LogUtil.d(tag,"------------------------------------------------")
-            logBySplite(it.tenTimesLast, tag,"perAmount_tenTimesLast")
-            logBySplite(it.ge100million, tag,"perAmount_ge100million")
-            logBySplite(it.ge50million, tag,"perAmount_ge50million")
-            logBySplite(it.ge20million, tag,"perAmount_ge20million")
-            logBySplite(it.ge10million, tag,"perAmount_ge10million")
+        val shCodeList = viewModel!!.getShCodeList()
+        shCodeList.forEach {
+            val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(it))
+            val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(it))
+            if (perAmountList.size > 0) {
+                perAmountList.forEach {
+                    var tag = "logResult_" + it.code.toString()
+                    if (!filterAnalyseStocks.contains(it.code.toString())) {
+                        filterAnalyseStocks =
+                            filterAnalyseStocks + "_" + it.code.toString()
+                    }
+                    LogUtil.d(tag, "----code:${it.code}-----")
+                    LogUtil.d(tag, "------------------------------------------------")
+                    logBySplite(it.tenTimesLast, tag, "perAmount_tenTimesLast")
+                    logBySplite(it.ge100million, tag, "perAmount_ge100million")
+                    logBySplite(it.ge50million, tag, "perAmount_ge50million")
+                    logBySplite(it.ge20million, tag, "perAmount_ge20million")
+                    logBySplite(it.ge10million, tag, "perAmount_ge10million")
 
-        }
-        perStockList.forEach {
-            var tag = "logResult_" + it.code.toString()
-            if (!filterAnalyseStocks.contains(it.code.toString())) {
-                filterAnalyseStocks =
-                    filterAnalyseStocks + "_" + it.code.toString()
+                }
             }
-            LogUtil.d(tag,"——————————————————————————————————————————————————")
-            logBySplite(it.gt1000times, tag,"perStock_gt1000times")
-            logBySplite(it.gt100times, tag,"perStock_gt100times")
-            LogUtil.d(tag,"=======================================================")
+            if (perStockList.size > 0) {
+                perStockList.forEach {
+                    var tag = "logResult_" + it.code.toString()
+                    if (!filterAnalyseStocks.contains(it.code.toString())) {
+                        filterAnalyseStocks =
+                            filterAnalyseStocks + "_" + it.code.toString()
+                    }
+                    LogUtil.d(tag, "——————————————————————————————————————————————————")
+                    logBySplite(it.gt1000times, tag, "perStock_gt1000times")
+                    logBySplite(it.gt100times, tag, "perStock_gt100times")
+                    LogUtil.d(tag, "=======================================================")
+                }
+            }
         }
         LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
     }
 
-    private fun logBySplite(it: String?, tag: String,key:String) {
+    private fun logBySplite(it: String?, tag: String, key: String) {
         it?.let {
             if (it.contains(splitStr)) {
                 val temTimesLastList = it.split(splitStr)
-                Log.d(tag,"$key size:${temTimesLastList.size}")
+                Log.d(tag, "$key size:${temTimesLastList.size}")
                 temTimesLastList.forEach {
                     Log.d(tag, "$key:$it")
                 }
@@ -219,14 +226,7 @@ class MainActivity : AppCompatActivity() {
     private fun analyseAll() {
         if (analyseNeedReturn()) return
 
-        PA10TimesSpareArray.clear()
-        PAGe100MillionSpareArray.clear()
-        PAGe50MillionSpareArray.clear()
-        PAGe20MillionSpareArray.clear()
-        PA10TimesSpareArray.clear()
-        PSGe1000MillionSpareArray.clear()
-        PSGe100MillionSpareArray.clear()
-        filterAnalyseStocks = ""
+        resetSpareArray()
 //        val shCodeList = listOf("600127")
         val shCodeList = viewModel!!.getShCodeList()
         shCodeList.forEach {
@@ -275,7 +275,9 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 1000
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(bean)})"
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                                        bean
+                                    )})"
                                 setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
                             } else if (BigDecimalUtils.div(
                                     bean.perStocks.toDouble(),
@@ -283,7 +285,9 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 100
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(bean)})"
+                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                                        bean
+                                    )})"
                                 setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
                             }
                         }
@@ -321,6 +325,17 @@ class MainActivity : AppCompatActivity() {
             LogUtil.d("=======================================================")
         }
         LogUtil.d("filterAnalyseStocks:" + filterAnalyseStocks)
+    }
+
+    private fun resetSpareArray() {
+        PA10TimesSpareArray.clear()
+        PAGe100MillionSpareArray.clear()
+        PAGe50MillionSpareArray.clear()
+        PAGe20MillionSpareArray.clear()
+        PA10TimesSpareArray.clear()
+        PSGe1000MillionSpareArray.clear()
+        PSGe100MillionSpareArray.clear()
+        filterAnalyseStocks = ""
     }
 
     private fun getAddLog(it: StocksBean) =
@@ -489,7 +504,122 @@ class MainActivity : AppCompatActivity() {
             val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
             LogUtil.d("insertTableStringBuilder insert:" + insert)
         }
+        updatePA(lastStockBean, stocksBean)
+        updatePS(stocksBean)
+
         return stocksBean
+    }
+
+    private fun updatePA(
+        lastStockBean: StocksBean?,
+        stocksBean: StocksBean
+    ) {
+        if (null != lastStockBean && null != lastStockBean.perAmount.toDoubleOrNull() && null != stocksBean.perAmount.toDoubleOrNull()) {
+            val PAList =
+                DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
+                    AnalysePerAmountBeanDao.Properties.Code.eq(stocksCode.toInt())
+                )
+            var PABean: AnalysePerAmountBean
+            if (PAList.size > 0) {
+                PABean = PAList[0]
+            } else {
+                PABean = AnalysePerAmountBean()
+                PABean.code = stocksCode.toInt()
+            }
+            var lastPerAmount = lastStockBean.perAmount.toDouble()
+            if (lastPerAmount > 100) {
+                if (BigDecimalUtils.div(stocksBean.perAmount.toDouble(), lastPerAmount) > 10) {
+                    var str =
+                        "(${stocksBean.time},perAmount:${stocksBean.perAmount},lastPerAmount:$lastPerAmount)"
+                    PABean.tenTimesLast =
+                        if (PABean.tenTimesLast.isNullOrEmpty()) str else PABean.tenTimesLast + splitStr + str
+                }
+            }
+            LogUtil.d("analysePerAmount it.perAmount:${stocksBean.perAmount},it.perAmount.toDouble() >= 1000:${stocksBean.perAmount.toDouble() >= 1000}")
+
+            if (stocksBean.perAmount.toDouble() >= 10000) {
+                var str =
+                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                PABean.ge100million =
+                    if (PABean.ge100million.isNullOrEmpty()) str else PABean.ge100million + splitStr + str
+            } else if (stocksBean.perAmount.toDouble() >= 5000) {
+                var str =
+                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                PABean.ge50million =
+                    if (PABean.ge50million.isNullOrEmpty()) str else PABean.ge50million + splitStr + str
+            } else if (stocksBean.perAmount.toDouble() >= 2000) {
+                var str =
+                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                PABean.ge20million =
+                    if (PABean.ge20million.isNullOrEmpty()) str else PABean.ge20million + splitStr + str
+            } else if (stocksBean.perAmount.toDouble() >= 1000) {
+                var str =
+                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                PABean.ge10million =
+                    if (PABean.ge10million.isNullOrEmpty()) str else PABean.ge10million + splitStr + str
+            }
+            if (PAList.size > 0) {
+                val update = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.update(PABean)
+                LogUtil.d("insert analysePerAmountBeanDaoUtils update:" + update)
+            } else {
+                val insert = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.insert(PABean)
+                LogUtil.d("insert analysePerAmountBeanDaoUtils insert:" + insert)
+            }
+
+        }
+    }
+
+
+    private fun updatePS(it: StocksBean) {
+
+        val PSList =
+            DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(
+                AnalysePerStocksBeanDao.Properties.Code.eq(stocksCode.toInt())
+            )
+        var PSBean: AnalysePerStocksBean
+        if (PSList.size > 0) {
+            PSBean = PSList[0]
+        } else {
+            PSBean = AnalysePerStocksBean()
+            PSBean.code = stocksCode.toInt()
+        }
+
+        val buy1Stocks = it.buy1.split("_")[1]
+        val buy1StocksValue = buy1Stocks.toDoubleOrNull()
+        var bean = it
+        buy1StocksValue?.let {
+            if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > 1000) {
+                if (BigDecimalUtils.div(
+                        bean.perStocks.toDouble(),
+                        buy1StocksValue.toDouble()
+                    ) >= 1000
+                ) {
+                    var str =
+                        "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                            bean
+                        )})"
+                    setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
+                } else if (BigDecimalUtils.div(
+                        bean.perStocks.toDouble(),
+                        buy1StocksValue.toDouble()
+                    ) >= 100
+                ) {
+                    var str =
+                        "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                            bean
+                        )})"
+                    setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
+                }
+            }
+
+        }
+        if (PSList.size > 0) {
+            val update = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.update(PSBean)
+            LogUtil.d("insert analysePerStocksBeanDaoUtils update:" + update)
+        } else {
+            val insert = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(PSBean)
+            LogUtil.d("insert analysePerStocksBeanDaoUtils insert:" + insert)
+        }
     }
 
     private fun getDB() {
