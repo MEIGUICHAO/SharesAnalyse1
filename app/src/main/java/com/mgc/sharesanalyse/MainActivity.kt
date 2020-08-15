@@ -179,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                 logBySplite(it.gt100times, tag, "ps_gt100times")
             }
             if (logStrList.size >= Datas.limitSize || !needJudeSize) {
-                Log.d(tag, "---code:${code}---name:$name---size:${logStrList.size}---open:${lastBean.open}---close:${lastBean.current}!!!")
+                Log.d(tag, "---code:${code}---name:$name---size:${logStrList.size}---open:${lastBean.open}---close:${lastBean.current}---p:${getCurPercent(lastBean.current,lastBean.open)}!!!")
                 logStrList.forEach {
                     Log.d(tag, it)
                 }
