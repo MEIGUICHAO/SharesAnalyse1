@@ -237,10 +237,28 @@ public class CommonDaoUtils<T> {
             cursor.moveToLast();
             String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
             String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
-            LogUtil.d("query deal_stocks:" + deal_stocks);
-            LogUtil.d("query deal_amount:" + deal_amount);
+
+            String PER_AMOUNT = cursor.getString(cursor.getColumnIndex("PER_AMOUNT"));
+            String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
+            String CURRENT = cursor.getString(cursor.getColumnIndex("CURRENT"));
+            String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
+            String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
+            String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
+            String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
+            String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
             stocksBean.setDealStocks(deal_stocks);
             stocksBean.setDealAmount(deal_amount);
+            stocksBean.setBuy1(BUY1);
+            stocksBean.setPerStocks(PER_STOCKS);
+            stocksBean.setCurrent(CURRENT);
+            stocksBean.setOpen(OPEN);
+            stocksBean.setHightest(HIGHTEST);
+            stocksBean.setLowest(LOWEST);
+            stocksBean.setPerAmount(PER_AMOUNT);
+            stocksBean.setTime(TIME);
+
+            LogUtil.d("query deal_stocks:" + deal_stocks);
+            LogUtil.d("query deal_amount:" + deal_amount);
         }
         return stocksBean;
     }
@@ -262,8 +280,6 @@ public class CommonDaoUtils<T> {
                     String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
                     String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
                     String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
-                    stocksBean.setPerAmount(PER_AMOUNT);
-                    stocksBean.setTime(TIME);
                     String PER_STOCKS = cursor.getString(cursor.getColumnIndex("PER_STOCKS"));
                     String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
                     LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
@@ -274,6 +290,8 @@ public class CommonDaoUtils<T> {
                     stocksBean.setOpen(OPEN);
                     stocksBean.setHightest(HIGHTEST);
                     stocksBean.setLowest(LOWEST);
+                    stocksBean.setPerAmount(PER_AMOUNT);
+                    stocksBean.setTime(TIME);
                     LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
                     list.add(stocksBean);
                 } while (cursor.moveToNext());

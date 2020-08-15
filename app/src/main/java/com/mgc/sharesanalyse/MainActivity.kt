@@ -19,6 +19,7 @@ import com.mgc.sharesanalyse.viewmodel.toDiv10000
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
+import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity() {
     //    yyyyMMdd HH:mm:ss
@@ -150,11 +151,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 LogUtil.d(tag, "----code:${it.code}-----")
                 LogUtil.d(tag, "------------------------------------------------")
-                logBySplite(it.tenTimesLast, tag, "perAmount_tenTimesLast")
-                logBySplite(it.ge100million, tag, "perAmount_ge100million")
-                logBySplite(it.ge50million, tag, "perAmount_ge50million")
-                logBySplite(it.ge20million, tag, "perAmount_ge20million")
-                logBySplite(it.ge10million, tag, "perAmount_ge10million")
+                logBySplite(it.tenTimesLast, tag, "pa_10Last")
+                logBySplite(it.ge100million, tag, "pa_ge100m")
+                logBySplite(it.ge50million, tag, "pa_ge50m")
+                logBySplite(it.ge20million, tag, "pa_ge20m")
+                logBySplite(it.ge10million, tag, "pa_ge10m")
 
             }
             perStockList.forEach {
@@ -164,8 +165,8 @@ class MainActivity : AppCompatActivity() {
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
                 LogUtil.d(tag, "——————————————————————————————————————————————————")
-                logBySplite(it.gt1000times, tag, "perStock_gt1000times")
-                logBySplite(it.gt100times, tag, "perStock_gt100times")
+                logBySplite(it.gt1000times, tag, "ps_gt1000times")
+                logBySplite(it.gt100times, tag, "ps_gt100times")
                 LogUtil.d(tag, "=======================================================")
             }
         }
@@ -238,7 +239,7 @@ class MainActivity : AppCompatActivity() {
                     if (lastPerAmount > 100) {
                         if (BigDecimalUtils.div(it.perAmount.toDouble(), lastPerAmount) > 10) {
                             var str =
-                                "(${it.time},perAmount:${it.perAmount},lastPerAmount:$lastPerAmount)"
+                                "(${it.time},pa:${it.perAmount},lastPerAmount:$lastPerAmount)"
                             setSpareArrayData(PA10TimesSpareArray, stocksCode, str)
                         }
                     }
@@ -246,16 +247,16 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= 1000:${it.perAmount.toDouble() >= 1000}")
 
                     if (it.perAmount.toDouble() >= 10000) {
-                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
+                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 5000) {
-                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
+                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 2000) {
-                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
+                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= 1000) {
-                        var str = "(${it.time},perAmount:${it.perAmount}${getAddLog(it)})"
+                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
                     }
 
@@ -271,7 +272,7 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 1000
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
                                         bean
                                     )})"
                                 setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
@@ -281,7 +282,7 @@ class MainActivity : AppCompatActivity() {
                                 ) >= 100
                             ) {
                                 var str =
-                                    "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
                                         bean
                                     )})"
                                 setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
@@ -335,7 +336,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAddLog(it: StocksBean) =
-        ",current:${it.current},open:${it.open},hightest:${it.hightest},lowest:${it.lowest}"
+        ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(it.current,it.open)},h/l:${getHLPercent(it.hightest,it.lowest)},sp:${getStopPrices(it.open)}"
+
+    private fun getStopPrices(open: String?): String {
+        val open = open?.toDoubleOrNull()
+        if (null != open) {
+            return  BigDecimalUtils.add(open,BigDecimalUtils.mul(open,0.1,2)).toString()
+        } else return "0"
+    }
+
+    private fun getHLPercent(hightest: String?, lowest: String?): String {
+        val hightest = hightest?.toDoubleOrNull()
+        val lowest = lowest?.toDoubleOrNull()
+        if (null != hightest && null != lowest&&lowest>0) {
+            val df = DecimalFormat("#.00")
+            return df.format(BigDecimalUtils.div(BigDecimalUtils.sub(hightest,lowest),lowest)*100)+"%"
+        } else return "0"
+    }
+
+    private fun getCurPercent(current: String?, open: String?): String {
+        val current = current?.toDoubleOrNull()
+        val open = open?.toDoubleOrNull()
+        if (null != current && null != open&&open>0) {
+            val df = DecimalFormat("#.00")
+            return df.format((BigDecimalUtils.div(BigDecimalUtils.sub(current,open),open)*100))+"%"
+        } else return "0"
+    }
 
 
     private fun analyseNeedReturn(): Boolean {
@@ -535,22 +561,22 @@ class MainActivity : AppCompatActivity() {
 
             if (stocksBean.perAmount.toDouble() >= 10000) {
                 var str =
-                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                    "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge100million =
                     if (PABean.ge100million.isNullOrEmpty()) str else PABean.ge100million + splitStr + str
             } else if (stocksBean.perAmount.toDouble() >= 5000) {
                 var str =
-                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                    "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge50million =
                     if (PABean.ge50million.isNullOrEmpty()) str else PABean.ge50million + splitStr + str
             } else if (stocksBean.perAmount.toDouble() >= 2000) {
                 var str =
-                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                    "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge20million =
                     if (PABean.ge20million.isNullOrEmpty()) str else PABean.ge20million + splitStr + str
             } else if (stocksBean.perAmount.toDouble() >= 1000) {
                 var str =
-                    "(${stocksBean.time},perAmount:${stocksBean.perAmount}${getAddLog(stocksBean)})"
+                    "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge10million =
                     if (PABean.ge10million.isNullOrEmpty()) str else PABean.ge10million + splitStr + str
             }
@@ -591,7 +617,7 @@ class MainActivity : AppCompatActivity() {
                     ) >= 1000
                 ) {
                     var str =
-                        "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                        "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
                             bean
                         )})"
                     setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
@@ -601,7 +627,7 @@ class MainActivity : AppCompatActivity() {
                     ) >= 100
                 ) {
                     var str =
-                        "(${bean.time},perStocks:${bean.perStocks},buy1StocksValue:$buy1StocksValue${getAddLog(
+                        "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
                             bean
                         )})"
                     setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)

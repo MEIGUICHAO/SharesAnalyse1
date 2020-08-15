@@ -18,6 +18,6 @@ object BigDecimalUtils {
     fun mul(d1:Double,d2: Double,decimalPoint:Int):Double = BigDecimal(d1).multiply(BigDecimal(d2)).setScale(decimalPoint,BigDecimal.ROUND_DOWN).toDouble()
 
     // 除法运算
-    fun div(d1:Double,d2: Double):Double = BigDecimal(d1).divide(BigDecimal(d2),DECIMAL_POINT_NUMBER,BigDecimal.ROUND_HALF_UP).toDouble()
+    fun div(d1:Double,d2: Double):Double = BigDecimal(d1).divide(BigDecimal(d2) ,2, BigDecimal.ROUND_HALF_UP).setScale(DECIMAL_POINT_NUMBER, BigDecimal.ROUND_HALF_UP).toDouble()
 
 }
