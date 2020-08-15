@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     var filterStocks = ""
     var filterAnalyseStocks = ""
+    var logStrList = ArrayList<String>()
 
     var stocksCode = ""
     var splitStr = "####"
@@ -141,16 +142,16 @@ class MainActivity : AppCompatActivity() {
         filterAnalyseStocks = ""
         val shCodeList = viewModel!!.getShCodeList()
         shCodeList.forEach {
+            logStrList.clear()
+            var tag = "logResult_" + it
             val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(it))
             val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(it))
             perAmountList.forEach {
-                var tag = "logResult_" + it.code.toString()
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
                     filterAnalyseStocks =
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
-                LogUtil.d(tag, "----code:${it.code}-----")
-                LogUtil.d(tag, "------------------------------------------------")
+                logStrList.add("------------------------------------------------------------------------------------------------")
                 logBySplite(it.tenTimesLast, tag, "pa_10Last")
                 logBySplite(it.ge100million, tag, "pa_ge100m")
                 logBySplite(it.ge50million, tag, "pa_ge50m")
@@ -159,27 +160,32 @@ class MainActivity : AppCompatActivity() {
 
             }
             perStockList.forEach {
-                var tag = "logResult_" + it.code.toString()
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
                     filterAnalyseStocks =
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
-                LogUtil.d(tag, "——————————————————————————————————————————————————")
+                logStrList.add("————————————————————————————————————————————————————————————————————————————————————————————————————")
                 logBySplite(it.gt1000times, tag, "ps_gt1000times")
                 logBySplite(it.gt100times, tag, "ps_gt100times")
-                LogUtil.d(tag, "=======================================================")
+                logStrList.add("==============================================================================================================")
+            }
+            if (logStrList.size >= 100) {
+                Log.d(tag,"----code:${it}-----size:${logStrList.size}-----")
+                logStrList.forEach {
+                    Log.d(tag,it)
+                }
             }
         }
-        LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
+//        LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
     }
 
     private fun logBySplite(it: String?, tag: String, key: String) {
         it?.let {
             if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
-                Log.d(tag, "$key size:${temTimesLastList.size}")
+                logStrList.add("$key:${temTimesLastList.size}")
                 temTimesLastList.forEach {
-                    Log.d(tag, "$key:$it")
+                    logStrList.add("$key:$it")
                 }
             }
         }
