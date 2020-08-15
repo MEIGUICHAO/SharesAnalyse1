@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     var filterStocks = ""
     var filterAnalyseStocks = ""
     var logStrList = ArrayList<String>()
+    var needJudeSize = true
 
     var stocksCode = ""
     var splitStr = "####"
@@ -146,6 +147,7 @@ class MainActivity : AppCompatActivity() {
             var code = it.split(splitStr)[0]
             var name = it.split(splitStr)[1]
             logStrList.clear()
+            needJudeSize = true
             var tag = "logResult_" + code
             val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(code))
             val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(code))
@@ -157,8 +159,11 @@ class MainActivity : AppCompatActivity() {
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
                 logStrList.add("------------------------------------------------------------------------------------------------")
-                logBySplite(it.tenTimesLast, tag, "pa_10Last")
                 logBySplite(it.ge100million, tag, "pa_ge100m")
+                if (logStrList.size > 1) {
+                    needJudeSize = false
+                }
+                logBySplite(it.tenTimesLast, tag, "pa_10Last")
                 logBySplite(it.ge50million, tag, "pa_ge50m")
                 logBySplite(it.ge20million, tag, "pa_ge20m")
                 logBySplite(it.ge10million, tag, "pa_ge10m")
@@ -173,13 +178,16 @@ class MainActivity : AppCompatActivity() {
                 logBySplite(it.gt1000times, tag, "ps_gt1000times")
                 logBySplite(it.gt100times, tag, "ps_gt100times")
             }
-            if (logStrList.size >= 100) {
-                Log.d(tag,"----code:${code}-----name:$name-----size:${logStrList.size}-----")
+            if (logStrList.size >= Datas.limitSize || !needJudeSize) {
+                Log.d(tag, "----code:${code}-----name:$name-----size:${logStrList.size}-----")
                 logStrList.forEach {
-                    Log.d(tag,it)
+                    Log.d(tag, it)
                 }
-                Log.d(tag,"----close prices-----:${lastBean.current}!!!")
-                Log.d(tag,"==============================================================================================================")
+                Log.d(tag, "----close prices-----:${lastBean.current}!!!")
+                Log.d(
+                    tag,
+                    "=============================================================================================================="
+                )
             }
         }
 //        LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")

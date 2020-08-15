@@ -12,9 +12,10 @@ object Datas {
         FormatterEnum.YYYY_MM_DD
     )
 
-//    var DBName = "sharesDB_2020-08-13"
+//    var DBName = "sharesDB_2020-08-14"
 
     var tableName = "stock_"
+    var limitSize = 60
 
 
 
