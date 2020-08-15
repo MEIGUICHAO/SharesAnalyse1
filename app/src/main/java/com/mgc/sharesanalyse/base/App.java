@@ -10,13 +10,19 @@ import java.util.concurrent.Executors;
 
 public class App extends Application {
     static ExecutorService singlePool;
-
+    private static App context;
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         initGreenDao();
     }
-
+    /**
+     * 获取App对象
+     */
+    public static App getContext() {
+        return context;
+    }
 
     public static ExecutorService getSinglePool() {
         if (null == singlePool || singlePool.isShutdown() || singlePool.isTerminated()) {

@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 is LoadState.Success -> {
 
-                    for (index in 0..9) {
+                    LogUtil.d("viewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
+                    for (index in 0..viewModel!!.sharesDats.value!!.size()-1) {
                         val data = viewModel!!.sharesDats.value?.get(index)
                         var month8Data = Month8Data()
                         month8Data.json = data
@@ -140,14 +141,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun logResult() {
         filterAnalyseStocks = ""
-        val shCodeList = viewModel!!.getShCodeList()
+        val shCodeList = ResUtil.getSArray(R.array.stocks_code_name)
         shCodeList.forEach {
+            var code = it.split(splitStr)[0]
+            var name = it.split(splitStr)[1]
             logStrList.clear()
-            var tag = "logResult_" + it
-            val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(it))
-            val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(it))
+            var tag = "logResult_" + code
+            val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(code))
+            val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(code))
             getDB()
-            val lastBean = CommonDaoUtils.queryLast(db, Datas.tableName + it)
+            val lastBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
             perAmountList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
                     filterAnalyseStocks =
@@ -171,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 logBySplite(it.gt100times, tag, "ps_gt100times")
             }
             if (logStrList.size >= 100) {
-                Log.d(tag,"----code:${it}-----size:${logStrList.size}-----")
+                Log.d(tag,"----code:${code}-----name:$name-----size:${logStrList.size}-----")
                 logStrList.forEach {
                     Log.d(tag,it)
                 }
@@ -203,10 +206,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun classifyStocks() {
-        for (index in 0..9) {
+        LogUtil.d("Classify stocksArray.size:${viewModel!!.sharesDats.value!!.size()-1}")
+        for (index in 0..(viewModel!!.sharesDats.value!!.size()-1)) {
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
+            LogUtil.d("Classify queryAll.size:${queryAll.size}")
             queryAll.forEach {
                 var bean = it
                 val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
@@ -226,6 +231,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        LogUtil.d("classifyStocks complete!!!")
     }
 
 
@@ -234,7 +240,7 @@ class MainActivity : AppCompatActivity() {
 
         resetSpareArray()
 //        val shCodeList = listOf("600127")
-        val shCodeList = viewModel!!.getShCodeList()
+        val shCodeList = ResUtil.getSArray(R.array.stocks_code)
         shCodeList.forEach {
             var stocksCode = it
             val queryPerAmount =
@@ -418,7 +424,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         filterStocks = ""
-        for (index in 0..9) {
+        for (index in 0..viewModel!!.stocksArray.size / 100) {
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
@@ -528,6 +534,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        LogUtil.d("updatePA")
+        if (null != lastStockBean) {
+            updatePA(lastStockBean, stocksBean)
+        }
+        LogUtil.d("updatePS")
+        updatePS(stocksBean)
+
         if (queryAll.size > 0) {
             val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
             LogUtil.d("insertTableStringBuilder update:" + update)
@@ -535,17 +548,15 @@ class MainActivity : AppCompatActivity() {
             val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
             LogUtil.d("insertTableStringBuilder insert:" + insert)
         }
-        updatePA(lastStockBean, stocksBean)
-        updatePS(stocksBean)
-
         return stocksBean
     }
 
     private fun updatePA(
-        lastStockBean: StocksBean?,
+        lastStockBean: StocksBean,
         stocksBean: StocksBean
     ) {
-        if (null != lastStockBean && null != lastStockBean.perAmount.toDoubleOrNull() && null != stocksBean.perAmount.toDoubleOrNull()) {
+        if (!lastStockBean.perAmount.isNullOrEmpty() && !stocksBean.perAmount.isNullOrEmpty()) {
+            LogUtil.d("updatePA")
             val PAList =
                 DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
                     AnalysePerAmountBeanDao.Properties.Code.eq(stocksCode.toInt())

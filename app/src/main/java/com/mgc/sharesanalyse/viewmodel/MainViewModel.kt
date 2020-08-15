@@ -7,9 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.R
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.LogUtil
+import com.mgc.sharesanalyse.utils.ResUtil
 import kotlinx.coroutines.*
 import java.util.regex.Pattern
 
@@ -17,7 +19,7 @@ import java.util.regex.Pattern
 class MainViewModel : ViewModel() {
     val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
-
+    val stocksArray = ResUtil.getSArray(R.array.stocks_code)
 
     fun requestData() {
         if (sharesDats.value == null) {
@@ -26,23 +28,16 @@ class MainViewModel : ViewModel() {
             sharesDats.value!!.clear()
         }
 
-        val urlArray = arrayOfNulls<String>(10)
-        val splitArray = Datas.sharesList.split(")")
-        Log.d("mgc", "splitArray size:${splitArray.size}")
+        val urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
+        Log.d("mgc", "splitArray size:${stocksArray.size}")
 
-        for (index in 0..splitArray.size) {
-            if (index < 1000) {
-                val keepDigital =
-                    (if (urlArray[index / 100].isNullOrEmpty()) "sh" else ",sh") + keepDigital(
-                        splitArray[index]
-                    )
-                Log.d("mgc", "keepDigital:$keepDigital")
-                urlArray[index / 100] =
-                    (if (urlArray[index / 100].isNullOrEmpty()) "" else urlArray[index / 100]) + keepDigital
-            }
+        for (index in 0..stocksArray.size-1) {
+            Log.d("mgc", "splitArray index:${index / 100}")
+            urlArray[index / 100] =
+                (if (urlArray[index / 100].isNullOrEmpty()) "sh${stocksArray[index]}" else urlArray[index / 100]) + ",sh${stocksArray[index]}"
         }
 
-        var resultArray = arrayOfNulls<Deferred<String>>(10)
+        var resultArray = arrayOfNulls<Deferred<String>>(stocksArray.size / 100 + 1)
         var index = 0
 
         launch({
@@ -81,27 +76,8 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun keepDigital(oldString: String): String {
-        val newString = StringBuffer()
-        val matcher = Pattern.compile("\\d").matcher(oldString)
-        while (matcher.find()) {
-            newString.append(matcher.group())
-        }
-        return newString.toString()
-    }
 
-    fun getShCodeList():ArrayList<String> {
-        val splitArray = Datas.sharesList.split(")")
-        val codeList = ArrayList<String>()
-        for (index in 0..splitArray.size-1) {
-            codeList.add(
-                keepDigital(
-                    splitArray[index]
-                )
-            )
-        }
-        return codeList;
-    }
+
 
 
 }
