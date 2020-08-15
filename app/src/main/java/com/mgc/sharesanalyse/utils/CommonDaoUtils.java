@@ -228,7 +228,7 @@ public class CommonDaoUtils<T> {
     }
 
 
-    public static StocksBean query(Database db, String tableName) {
+    public static StocksBean queryLast(Database db, String tableName) {
         StocksBean stocksBean = null;
         LogUtil.d("query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
         if (tabbleIsExist(tableName)) {

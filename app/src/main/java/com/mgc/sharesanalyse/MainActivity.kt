@@ -146,6 +146,8 @@ class MainActivity : AppCompatActivity() {
             var tag = "logResult_" + it
             val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(it))
             val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(it))
+            getDB()
+            val lastBean = CommonDaoUtils.queryLast(db, Datas.tableName + it)
             perAmountList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
                     filterAnalyseStocks =
@@ -167,13 +169,14 @@ class MainActivity : AppCompatActivity() {
                 logStrList.add("————————————————————————————————————————————————————————————————————————————————————————————————————")
                 logBySplite(it.gt1000times, tag, "ps_gt1000times")
                 logBySplite(it.gt100times, tag, "ps_gt100times")
-                logStrList.add("==============================================================================================================")
             }
             if (logStrList.size >= 100) {
                 Log.d(tag,"----code:${it}-----size:${logStrList.size}-----")
                 logStrList.forEach {
                     Log.d(tag,it)
                 }
+                Log.d(tag,"----close prices-----:${lastBean.current}!!!")
+                Log.d(tag,"==============================================================================================================")
             }
         }
 //        LogUtil.d("logResult_filterAnalyseStocks:$filterAnalyseStocks")
@@ -490,7 +493,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
         getDB()
-        val lastStockBean = CommonDaoUtils.query(db, Datas.tableName + stocksCode)
+        val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + stocksCode)
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
