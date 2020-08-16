@@ -197,7 +197,7 @@ class MainActivity : AppCompatActivity() {
         it?.let {
             if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
-                logStrList.add("$key:${temTimesLastList.size}")
+                logStrList.add("$key size:${temTimesLastList.size}")
                 temTimesLastList.forEach {
                     logStrList.add("$key:$it")
                 }
