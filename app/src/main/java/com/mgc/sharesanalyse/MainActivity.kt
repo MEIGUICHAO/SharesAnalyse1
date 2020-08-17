@@ -457,6 +457,10 @@ class MainActivity : AppCompatActivity() {
     private fun getAddLog(it: StocksBean) =
         ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(it.current,it.open)},h/l:${getHLPercent(it.hightest,it.lowest)},sp:${getStopPrices(it.open)}"
 
+
+    private fun getSimpleAddLog(it: StocksBean) =
+        ",cur:${it.current},open:${it.open},p:${getCurPercent(it.current,it.open)},sp:${getStopPrices(it.open)}"
+
     private fun getStopPrices(open: Double?): String {
         if (null != open) {
             return  BigDecimalUtils.add(open,BigDecimalUtils.mul(open,0.1,2)).toString()
@@ -896,7 +900,7 @@ class MainActivity : AppCompatActivity() {
         size = size + 1
         sizeBean.countSize = sizeBean.countSize + size
         var originalStr = tenTimesSizeStr
-        var str = "(${stocksBean.time},${tag}:$size,countSize:${sizeBean.countSize})"
+        var str = "(${stocksBean.time},${tag}:$size,countSize:${sizeBean.countSize}${getSimpleAddLog(stocksBean)})"
         originalStr = if (originalStr.isNullOrEmpty()) originalStr else originalStr + splitStr + str
         return Triple(sizeBean.countSize,size, originalStr)
     }
