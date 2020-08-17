@@ -6,35 +6,7 @@ import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class StocksBean {
-    @Id
-    private Long id;
 
-    @Override
-    public String toString() {
-        return "StocksBean{" +
-                "id=" + id +
-                ", time='" + time + '\'' +
-                ", buy1='" + buy1 + '\'' +
-                ", sale1='" + sale1 + '\'' +
-                ", buy2='" + buy2 + '\'' +
-                ", sale2='" + sale2 + '\'' +
-                ", buy3='" + buy3 + '\'' +
-                ", sale3='" + sale3 + '\'' +
-                ", buy4='" + buy4 + '\'' +
-                ", sale4='" + sale4 + '\'' +
-                ", buy5='" + buy5 + '\'' +
-                ", sale5='" + sale5 + '\'' +
-                ", dealStocks='" + dealStocks + '\'' +
-                ", dealAmount='" + dealAmount + '\'' +
-                ", PerStocks='" + PerStocks + '\'' +
-                ", PerAmount='" + PerAmount + '\'' +
-                ", open='" + open + '\'' +
-                ", current='" + current + '\'' +
-                ", PerPrice='" + PerPrice + '\'' +
-                ", hightest='" + hightest + '\'' +
-                ", lowest='" + lowest + '\'' +
-                '}';
-    }
 
     private String time;
     private String buy1;
@@ -54,22 +26,21 @@ public class StocksBean {
 
     private String dealStocks;
     private String dealAmount;
-    private String PerStocks;
-    private String PerAmount;
+    private Double PerStocks;
+    private Double PerAmount;
 
     private String open;
-    private String current;
-    private String PerPrice;
+    private Double current;
+    private Double PerPrice;
 
     private String hightest;
     private String lowest;
-    @Generated(hash = 1901716618)
-    public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
+    @Generated(hash = 2099982130)
+    public StocksBean(String time, String buy1, String sale1, String buy2,
             String sale2, String buy3, String sale3, String buy4, String sale4,
             String buy5, String sale5, String dealStocks, String dealAmount,
-            String PerStocks, String PerAmount, String open, String current,
-            String PerPrice, String hightest, String lowest) {
-        this.id = id;
+            Double PerStocks, Double PerAmount, String open, Double current,
+            Double PerPrice, String hightest, String lowest) {
         this.time = time;
         this.buy1 = buy1;
         this.sale1 = sale1;
@@ -93,12 +64,6 @@ public class StocksBean {
     }
     @Generated(hash = 1799937850)
     public StocksBean() {
-    }
-    public Long getId() {
-        return this.id;
-    }
-    public void setId(Long id) {
-        this.id = id;
     }
     public String getTime() {
         return this.time;
@@ -178,16 +143,16 @@ public class StocksBean {
     public void setDealAmount(String dealAmount) {
         this.dealAmount = dealAmount;
     }
-    public String getPerStocks() {
+    public Double getPerStocks() {
         return this.PerStocks;
     }
-    public void setPerStocks(String PerStocks) {
+    public void setPerStocks(Double PerStocks) {
         this.PerStocks = PerStocks;
     }
-    public String getPerAmount() {
+    public Double getPerAmount() {
         return this.PerAmount;
     }
-    public void setPerAmount(String PerAmount) {
+    public void setPerAmount(Double PerAmount) {
         this.PerAmount = PerAmount;
     }
     public String getOpen() {
@@ -196,16 +161,16 @@ public class StocksBean {
     public void setOpen(String open) {
         this.open = open;
     }
-    public String getCurrent() {
+    public Double getCurrent() {
         return this.current;
     }
-    public void setCurrent(String current) {
+    public void setCurrent(Double current) {
         this.current = current;
     }
-    public String getPerPrice() {
+    public Double getPerPrice() {
         return this.PerPrice;
     }
-    public void setPerPrice(String PerPrice) {
+    public void setPerPrice(Double PerPrice) {
         this.PerPrice = PerPrice;
     }
     public String getHightest() {

@@ -2,6 +2,8 @@ package com.mgc.sharesanalyse.utils;
 
 import com.mgc.sharesanalyse.entity.AnalysePerAmountBean;
 import com.mgc.sharesanalyse.entity.AnalysePerAmountBeanDao;
+import com.mgc.sharesanalyse.entity.AnalysePerPricesBean;
+import com.mgc.sharesanalyse.entity.AnalysePerPricesBeanDao;
 import com.mgc.sharesanalyse.entity.AnalysePerStocksBean;
 import com.mgc.sharesanalyse.entity.AnalysePerStocksBeanDao;
 import com.mgc.sharesanalyse.entity.Month8Data;
@@ -15,6 +17,12 @@ public class DaoUtilsStore {
     private CommonDaoUtils<StocksBean> StocksBeanDaoUtils;
     private CommonDaoUtils<AnalysePerAmountBean> AnalysePerAmountBeanDaoUtils;
     private CommonDaoUtils<AnalysePerStocksBean> AnalysePerStocksBeanDaoUtils;
+
+    public CommonDaoUtils<AnalysePerPricesBean> getAnalysePerPricesBeanDaoUtils() {
+        return AnalysePerPricesBeanDaoUtils;
+    }
+
+    private CommonDaoUtils<AnalysePerPricesBean> AnalysePerPricesBeanDaoUtils;
 
 
 
@@ -35,10 +43,12 @@ public class DaoUtilsStore {
         StocksBeanDao stocksBeanDao = mManager.getDaoSession().getStocksBeanDao();
         AnalysePerAmountBeanDao analysePerAmountBeanDao = mManager.getDaoSession().getAnalysePerAmountBeanDao();
         AnalysePerStocksBeanDao analysePerStocksBeanDao = mManager.getDaoSession().getAnalysePerStocksBeanDao();
+        AnalysePerPricesBeanDao analysePerPricesBeanDao = mManager.getDaoSession().getAnalysePerPricesBeanDao();
         Month8DataDaoUtils = new CommonDaoUtils(Month8Data.class, month8DataDao);
         StocksBeanDaoUtils = new CommonDaoUtils(StocksBean.class, stocksBeanDao);
         AnalysePerAmountBeanDaoUtils = new CommonDaoUtils(AnalysePerAmountBean.class, analysePerAmountBeanDao);
         AnalysePerStocksBeanDaoUtils = new CommonDaoUtils(AnalysePerStocksBean.class, analysePerStocksBeanDao);
+        AnalysePerPricesBeanDaoUtils = new CommonDaoUtils(AnalysePerPricesBean.class, analysePerPricesBeanDao);
     }
 
     public void resetDaoUtilsStore() {
