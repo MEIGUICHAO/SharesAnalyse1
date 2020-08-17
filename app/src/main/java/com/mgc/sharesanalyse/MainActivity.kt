@@ -163,8 +163,8 @@ class MainActivity : AppCompatActivity() {
                 FormatterEnum.YYYYMMDD__HH_MM_SS
             )}"
         )
-        sizeCount = 0
         shCodeList.forEach {
+            sizeCount = 0
             var code = it.split(splitStr)[0]
             var name = it.split(splitStr)[1]
             logStrList.clear()
@@ -215,9 +215,9 @@ class MainActivity : AppCompatActivity() {
                     FileLogUtil.d("logResult", it)
                     Log.d(tag, it)
                 }
-                FileLogUtil.d(tag, "----close prices-----:${lastBean.current}!!!")
+                FileLogUtil.d("logResult", "----close prices-----:${lastBean.current}!!!")
                 FileLogUtil.d(
-                    tag,
+                    "logResult",
                     "=============================================================================================================="
                 )
                 LogUtil.d(
