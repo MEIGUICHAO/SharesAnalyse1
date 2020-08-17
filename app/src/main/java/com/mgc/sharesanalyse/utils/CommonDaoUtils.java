@@ -219,9 +219,9 @@ public class CommonDaoUtils<T> {
         db.execSQL(dropTable);
     }
 
-    public static void renameTable(Database db, String tableName) {
+    public static void renameTable(Database db, String tableName,String newName) {
         if (tabbleIsExist(tableName)) {
-            String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + "AAA_" + tableName;
+            String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + newName + tableName;
             db.execSQL(dropTable);
             LogUtil.d("renameTable:" + dropTable);
         }
@@ -241,7 +241,7 @@ public class CommonDaoUtils<T> {
             Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
             String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
             Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-            String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
+            Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
             String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
             String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
             Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
@@ -277,7 +277,7 @@ public class CommonDaoUtils<T> {
                     Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
                     String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
                     Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-                    String OPEN = cursor.getString(cursor.getColumnIndex("OPEN"));
+                    Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
                     String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
                     String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
                     Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));

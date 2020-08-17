@@ -12,19 +12,33 @@ public class AnalysePerAmountBean {
     private String Ge50million;
     private String Ge20million;
     private String Ge10million;
-    @Generated(hash = 1863364381)
+    private String Ge5million;
+
+    @Generated(hash = 1521608068)
     public AnalysePerAmountBean(int code, String TenTimesLast, String Ge100million,
-            String Ge50million, String Ge20million, String Ge10million) {
+            String Ge50million, String Ge20million, String Ge10million,
+            String Ge5million) {
         this.code = code;
         this.TenTimesLast = TenTimesLast;
         this.Ge100million = Ge100million;
         this.Ge50million = Ge50million;
         this.Ge20million = Ge20million;
         this.Ge10million = Ge10million;
+        this.Ge5million = Ge5million;
     }
+
     @Generated(hash = 1702331977)
     public AnalysePerAmountBean() {
     }
+
+    public String getGe5million() {
+        return Ge5million;
+    }
+
+    public void setGe5million(String ge5million) {
+        Ge5million = ge5million;
+    }
+
     public int getCode() {
         return this.code;
     }

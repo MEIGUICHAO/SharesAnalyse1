@@ -29,17 +29,17 @@ public class StocksBean {
     private Double PerStocks;
     private Double PerAmount;
 
-    private String open;
+    private Double open;
     private Double current;
     private Double PerPrice;
 
     private String hightest;
     private String lowest;
-    @Generated(hash = 2099982130)
+    @Generated(hash = 2033036649)
     public StocksBean(String time, String buy1, String sale1, String buy2,
             String sale2, String buy3, String sale3, String buy4, String sale4,
             String buy5, String sale5, String dealStocks, String dealAmount,
-            Double PerStocks, Double PerAmount, String open, Double current,
+            Double PerStocks, Double PerAmount, Double open, Double current,
             Double PerPrice, String hightest, String lowest) {
         this.time = time;
         this.buy1 = buy1;
@@ -155,10 +155,10 @@ public class StocksBean {
     public void setPerAmount(Double PerAmount) {
         this.PerAmount = PerAmount;
     }
-    public String getOpen() {
+    public Double getOpen() {
         return this.open;
     }
-    public void setOpen(String open) {
+    public void setOpen(Double open) {
         this.open = open;
     }
     public Double getCurrent() {

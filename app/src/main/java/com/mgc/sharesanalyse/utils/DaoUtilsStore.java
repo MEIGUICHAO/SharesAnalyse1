@@ -6,6 +6,8 @@ import com.mgc.sharesanalyse.entity.AnalysePerPricesBean;
 import com.mgc.sharesanalyse.entity.AnalysePerPricesBeanDao;
 import com.mgc.sharesanalyse.entity.AnalysePerStocksBean;
 import com.mgc.sharesanalyse.entity.AnalysePerStocksBeanDao;
+import com.mgc.sharesanalyse.entity.AnalyseSizeBean;
+import com.mgc.sharesanalyse.entity.AnalyseSizeBeanDao;
 import com.mgc.sharesanalyse.entity.Month8Data;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
 import com.mgc.sharesanalyse.entity.StocksBean;
@@ -17,6 +19,11 @@ public class DaoUtilsStore {
     private CommonDaoUtils<StocksBean> StocksBeanDaoUtils;
     private CommonDaoUtils<AnalysePerAmountBean> AnalysePerAmountBeanDaoUtils;
     private CommonDaoUtils<AnalysePerStocksBean> AnalysePerStocksBeanDaoUtils;
+    private CommonDaoUtils<AnalyseSizeBean> AnalyseSizeBeanDaoUtils;
+
+    public CommonDaoUtils<AnalyseSizeBean> getAnalyseSizeBeanDaoUtils() {
+        return AnalyseSizeBeanDaoUtils;
+    }
 
     public CommonDaoUtils<AnalysePerPricesBean> getAnalysePerPricesBeanDaoUtils() {
         return AnalysePerPricesBeanDaoUtils;
@@ -44,11 +51,13 @@ public class DaoUtilsStore {
         AnalysePerAmountBeanDao analysePerAmountBeanDao = mManager.getDaoSession().getAnalysePerAmountBeanDao();
         AnalysePerStocksBeanDao analysePerStocksBeanDao = mManager.getDaoSession().getAnalysePerStocksBeanDao();
         AnalysePerPricesBeanDao analysePerPricesBeanDao = mManager.getDaoSession().getAnalysePerPricesBeanDao();
+        AnalyseSizeBeanDao analyseSizeBeanDao = mManager.getDaoSession().getAnalyseSizeBeanDao();
         Month8DataDaoUtils = new CommonDaoUtils(Month8Data.class, month8DataDao);
         StocksBeanDaoUtils = new CommonDaoUtils(StocksBean.class, stocksBeanDao);
         AnalysePerAmountBeanDaoUtils = new CommonDaoUtils(AnalysePerAmountBean.class, analysePerAmountBeanDao);
         AnalysePerStocksBeanDaoUtils = new CommonDaoUtils(AnalysePerStocksBean.class, analysePerStocksBeanDao);
         AnalysePerPricesBeanDaoUtils = new CommonDaoUtils(AnalysePerPricesBean.class, analysePerPricesBeanDao);
+        AnalyseSizeBeanDaoUtils = new CommonDaoUtils(AnalyseSizeBean.class, analyseSizeBeanDao);
     }
 
     public void resetDaoUtilsStore() {

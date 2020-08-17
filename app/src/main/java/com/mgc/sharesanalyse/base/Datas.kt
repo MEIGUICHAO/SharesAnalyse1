@@ -16,6 +16,7 @@ object Datas {
 
     var tableName = "stock_"
     var limitSize = 60
+    var limitPerAmount = 500
 
 
 

@@ -2,3 +2,17 @@
 2、compare to history peramount larger
 3、perstock much gt buy1 e.g 1000 times，100 time
 4、peramount gt 100 million、50 million、20 million、10 million
+
+
+
+
+    private String tenTimesSizeStr;
+    private String ge100mSizeStr;
+    private String ge50mSizeStr;
+    private String ge20mSizeStr;
+    private String ge10mSizeStr;
+    private String ge5mSizeStr;
+    private String gt1000TimesSizeStr;
+    private String gt100TimesSizeStr;
+    private String PPGtCurSizeStr;
+    private String CurGtPPSizeStr;
