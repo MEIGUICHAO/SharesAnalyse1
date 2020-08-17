@@ -526,8 +526,12 @@ class MainActivity : AppCompatActivity() {
     private fun filterStocks() {
         if (System.currentTimeMillis() < DateUtils.parse(
                 endTime,
-
                 FormatterEnum.YYYYMMDD__HH_MM_SS
+            ) && Datas.DBName.contains(
+                DateUtils.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM_DD
+                )
             )
         ) {
             Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
@@ -537,8 +541,12 @@ class MainActivity : AppCompatActivity() {
         filterStocks = ""
         shCodeList.forEach {
             val code = it.split(splitStr)[0]
+            val name = it.split(splitStr)[1]
             getDB()
             val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
+            if (null == lastStockBean){
+                return@forEach
+            }
             if (lastStockBean.open > 0) {
                 val div = BigDecimalUtils.div(
                     BigDecimalUtils.sub(
@@ -546,20 +554,35 @@ class MainActivity : AppCompatActivity() {
                         lastStockBean.open.toDouble()
                     ), lastStockBean.open.toDouble()
                 )
+                LogUtil.d("filterStocks div:$div")
                 if (div >= 0.1) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "AAA_10")
+                    LogUtil.d("filterStocks!!! AAA_10 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","AAA_10 name:$name,code:$code")
                 } else if (div >= 0.9) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "BBB_9")
-                } else if (div >= 0.8) {
+                    LogUtil.d("filterStocks!!! BBB_9 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","BBB_9 name:$name,code:$code")
+                } else if (div >= 0.08) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "CCC_8")
-                } else if (div >= 0.7) {
+                    LogUtil.d("filterStocks!!! CCC_8 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","CCC_8 name:$name,code:$code")
+                } else if (div >= 0.07) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "DDD_7")
-                } else if (div >= 0.6) {
+                    LogUtil.d("filterStocks!!! DDD_7 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","DDD_7 name:$name,code:$code")
+                } else if (div >= 0.06) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "EEE_6")
-                } else if (div >= 0.5) {
+                    LogUtil.d("filterStocks!!! EEE_6 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","EEE_6 name:$name,code:$code")
+                } else if (div >= 0.05) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "FFF_5")
+                    LogUtil.d("filterStocks!!! FFF_5 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","FFF_5 name:$name,code:$code")
                 } else if (div <= -0.1) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "HHHH_-10")
+                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "HHHH_neg10")
+                    LogUtil.d("filterStocks!!! HHHH_neg10 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks","HHHH_neg10 name:$name,code:$code")
                 }
             }
         }
