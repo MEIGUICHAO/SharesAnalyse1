@@ -35,3 +35,7 @@ fun SparseArray<String>.getDBValue(key: Int): String {
     var str = if(this[key].isNullOrEmpty())  "" else  this[key]
     return str
 }
+
+fun Int.toLog(tag:String):String {
+    return if (this>0) "$tag:${this}"  else ""
+}

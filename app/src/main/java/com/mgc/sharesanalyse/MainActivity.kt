@@ -12,10 +12,7 @@ import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
-import com.mgc.sharesanalyse.viewmodel.MainViewModel
-import com.mgc.sharesanalyse.viewmodel.getDBValue
-import com.mgc.sharesanalyse.viewmodel.toDiv100
-import com.mgc.sharesanalyse.viewmodel.toDiv10000
+import com.mgc.sharesanalyse.viewmodel.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
@@ -201,14 +198,7 @@ class MainActivity : AppCompatActivity() {
                 CurGtPPSize = logBySplite(it.curGtPerPrices,  "ps_curGtPerPrices")
             }
             if (logStrList.size >= Datas.limitSize || !needJudeSize) {
-                Log.d(tag, "---c:${code}---n:$name,s:${logStrList.size},10ts:$tenTimesSize,100ms:${ge100mSize},50ms:${ge50mSize},20ms:${ge20mSize},10ms:${ge10mSize}" +
-                        ",1000ts:${gt1000TimesSize},100ts:${gt100TimesSize},ppGt:${PPGtCurSize},curGt:${CurGtPPSize}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(lastBean.current,lastBean.open)}!!!")
-                Log.d("mgc_alone", "---c:${code}---n:$name,s:${logStrList.size},10ts:$tenTimesSize,100ms:${ge100mSize},50ms:${ge50mSize},20ms:${ge20mSize},10ms:${ge10mSize}" +
-                        ",1000ts:${gt1000TimesSize},100ts:${gt100TimesSize},ppGt:${PPGtCurSize},curGt:${CurGtPPSize}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(lastBean.current,lastBean.open)}!!!")
-                FileLogUtil.d("logResult", "---c:${code}---n:$name,s:${logStrList.size},10ts:$tenTimesSize,100ms:${ge100mSize},50ms:${ge50mSize},20ms:${ge20mSize},10ms:${ge10mSize}" +
-                        ",1000ts:${gt1000TimesSize},100ts:${gt100TimesSize},ppGt:${PPGtCurSize},curGt:${CurGtPPSize}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(lastBean.current,lastBean.open)}!!!")
-                FileLogUtil.d("mgc_alone", "---c:${code}---n:$name,s:${logStrList.size},10ts:$tenTimesSize,100ms:${ge100mSize},50ms:${ge50mSize},20ms:${ge20mSize},10ms:${ge10mSize}" +
-                        ",1000ts:${gt1000TimesSize},100ts:${gt100TimesSize},ppGt:${PPGtCurSize},curGt:${CurGtPPSize}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(lastBean.current,lastBean.open)}!!!")
+                logSize(tag, code, name, lastBean)
                 logStrList.forEach {
                     FileLogUtil.d("logResult", it)
                     Log.d(tag, it)
@@ -221,6 +211,46 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun logSize(
+        tag: String,
+        code: String,
+        name: String,
+        lastBean: StocksBean
+    ) {
+        Log.d(
+            tag,
+            "---c:${code}---n:$name,s:${logStrList.size},${tenTimesSize.toLog("10ts")},${ge100mSize.toLog("100ms")},${ge50mSize.toLog("50ms")},${ge20mSize.toLog("20ms")},${ge10mSize.toLog("10ms")}" +
+                    ",${gt1000TimesSize.toLog("1000ts")},${gt100TimesSize.toLog("100ts")},${PPGtCurSize.toLog("ppGt")},${CurGtPPSize.toLog("curGt")}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(
+                        lastBean.current,
+                        lastBean.open
+                    )}!!!"
+        )
+        Log.d(
+            "mgc_alone",
+            "---c:${code}---n:$name,s:${logStrList.size},${tenTimesSize.toLog("10ts")},${ge100mSize.toLog("100ms")},${ge50mSize.toLog("50ms")},${ge20mSize.toLog("20ms")},${ge10mSize.toLog("10ms")}" +
+                    ",${gt1000TimesSize.toLog("1000ts")},${gt100TimesSize.toLog("100ts")},${PPGtCurSize.toLog("ppGt")},${CurGtPPSize.toLog("curGt")}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(
+                        lastBean.current,
+                        lastBean.open
+                    )}!!!"
+        )
+        FileLogUtil.d(
+            "logResult",
+            "---c:${code}---n:$name,s:${logStrList.size},${tenTimesSize.toLog("10ts")},${ge100mSize.toLog("100ms")},${ge50mSize.toLog("50ms")},${ge20mSize.toLog("20ms")},${ge10mSize.toLog("10ms")}" +
+                    ",${gt1000TimesSize.toLog("1000ts")},${gt100TimesSize.toLog("100ts")},${PPGtCurSize.toLog("ppGt")},${CurGtPPSize.toLog("curGt")}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(
+                        lastBean.current,
+                        lastBean.open
+                    )}!!!"
+        )
+        FileLogUtil.d(
+            "logAlone",
+            "---c:${code}---n:$name,s:${logStrList.size},${tenTimesSize.toLog("10ts")},${ge100mSize.toLog("100ms")},${ge50mSize.toLog("50ms")},${ge20mSize.toLog("20ms")},${ge10mSize.toLog("10ms")}" +
+                    ",${gt1000TimesSize.toLog("1000ts")},${gt100TimesSize.toLog("100ts")},${PPGtCurSize.toLog("ppGt")},${CurGtPPSize.toLog("curGt")}，o:${lastBean.open},c:${lastBean.current}，p:${getCurPercent(
+                        lastBean.current,
+                        lastBean.open
+                    )}!!!"
+        )
     }
 
     private fun logBySplite(it: String?,  key: String): Int {
