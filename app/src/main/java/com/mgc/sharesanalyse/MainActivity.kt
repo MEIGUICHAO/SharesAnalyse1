@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
 import java.text.DecimalFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     //    yyyyMMdd HH:mm:ss
@@ -206,7 +208,9 @@ class MainActivity : AppCompatActivity() {
             })
         }
         btnLogResult.setOnClickListener {
-            logResult()
+            App.getSinglePool().execute({
+                logResult()
+            })
         }
     }
 
@@ -250,6 +254,7 @@ class MainActivity : AppCompatActivity() {
                 FormatterEnum.YYYYMMDD__HH_MM_SS
             )}"
         )
+        var logALoneList = ArrayList<String>()
         shCodeList.forEach {
             sizeCount = 0
             var code = it.split(splitStr)[0]
@@ -305,8 +310,10 @@ class MainActivity : AppCompatActivity() {
                 PPGtCurSize = logBySplite(it.perPricesGtCur, "pp_perPricesGtCur")
                 CurGtPPSize = logBySplite(it.curGtPerPrices, "ps_curGtPerPrices")
             }
-            if (sizeCount >= Datas.limitSize || !needJudeSize) {
-                logSize(code, name, lastBean)
+
+
+                if (sizeCount >= Datas.limitSize || !needJudeSize) {
+                logSize(code, name, lastBean,logALoneList)
                 logStrList.forEach {
                     FileLogUtil.d("logResult", it)
                     Log.d(tag, it)
@@ -323,12 +330,25 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        Collections.sort(logALoneList, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return p1.toLogCompare().compareTo(p0.toLogCompare())
+            }
+        })
+        logALoneList.forEach {
+            FileLogUtil.d(
+                "logAlone",
+                it
+            )
+        }
     }
 
     private fun logSize(
         code: String,
         name: String,
-        lastBean: StocksBean
+        lastBean: StocksBean,
+        logALoneList: ArrayList<String>
     ) {
         FileLogUtil.d(
             "logResult",
@@ -344,8 +364,7 @@ class MainActivity : AppCompatActivity() {
                         lastBean.open
                     )}!!!"
         )
-        FileLogUtil.d(
-            "logAlone",
+        logALoneList.add(
             "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
                 ",100ms"
             )}${ge50mSize.toLog(",50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(
@@ -356,8 +375,7 @@ class MainActivity : AppCompatActivity() {
                     )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.open
-                    )}!!!"
-        )
+                    )}!!!")
     }
 
     private fun logBySplite(it: String?, key: String): Int {

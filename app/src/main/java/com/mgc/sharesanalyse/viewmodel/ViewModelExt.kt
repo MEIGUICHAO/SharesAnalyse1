@@ -39,3 +39,7 @@ fun SparseArray<String>.getDBValue(key: Int): String {
 fun Int.toLog(tag:String):String {
     return if (this>0) "$tag:${this}"  else ""
 }
+
+fun String.toLogCompare():Int {
+    return this.substringAfter("s:").split(",")[0].toInt()
+}
