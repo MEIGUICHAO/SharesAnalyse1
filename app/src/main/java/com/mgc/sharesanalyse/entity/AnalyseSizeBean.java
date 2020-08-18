@@ -10,6 +10,7 @@ public class AnalyseSizeBean {
     @Id
     private Long id;
     private int Code;
+    private Double percent;
     private int countSize;
     private int tenTimesSize;
     private int ge100mSize;
@@ -31,16 +32,18 @@ public class AnalyseSizeBean {
     private String gt100TimesSizeStr;
     private String PPGtCurSizeStr;
     private String CurGtPPSizeStr;
-    @Generated(hash = 975442464)
-    public AnalyseSizeBean(Long id, int Code, int countSize, int tenTimesSize,
-            int ge100mSize, int ge50mSize, int ge20mSize, int ge10mSize,
-            int ge5mSize, int gt1000TimesSize, int gt100TimesSize, int PPGtCurSize,
-            int CurGtPPSize, String tenTimesSizeStr, String ge100mSizeStr,
-            String ge50mSizeStr, String ge20mSizeStr, String ge10mSizeStr,
-            String ge5mSizeStr, String gt1000TimesSizeStr, String gt100TimesSizeStr,
-            String PPGtCurSizeStr, String CurGtPPSizeStr) {
+    @Generated(hash = 1978869661)
+    public AnalyseSizeBean(Long id, int Code, Double percent, int countSize,
+            int tenTimesSize, int ge100mSize, int ge50mSize, int ge20mSize,
+            int ge10mSize, int ge5mSize, int gt1000TimesSize, int gt100TimesSize,
+            int PPGtCurSize, int CurGtPPSize, String tenTimesSizeStr,
+            String ge100mSizeStr, String ge50mSizeStr, String ge20mSizeStr,
+            String ge10mSizeStr, String ge5mSizeStr, String gt1000TimesSizeStr,
+            String gt100TimesSizeStr, String PPGtCurSizeStr,
+            String CurGtPPSizeStr) {
         this.id = id;
         this.Code = Code;
+        this.percent = percent;
         this.countSize = countSize;
         this.tenTimesSize = tenTimesSize;
         this.ge100mSize = ge100mSize;
@@ -203,5 +206,11 @@ public class AnalyseSizeBean {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+    public Double getPercent() {
+        return this.percent;
+    }
+    public void setPercent(Double percent) {
+        this.percent = percent;
     }
 }

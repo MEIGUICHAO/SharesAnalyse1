@@ -488,6 +488,17 @@ class MainActivity : AppCompatActivity() {
         } else return "0"
     }
 
+    private fun getCurPercentDouble(current: Double, open: Double): Double {
+        if (open == 0.toDouble()) {
+            return 0.toDouble()
+        }
+        val result = BigDecimalUtils.div(
+            BigDecimalUtils.sub(current, open),
+            open
+        ) * 100
+        return  result
+    }
+
 
     private fun analyseNeedReturn(): Boolean {
         getDB()
@@ -675,17 +686,17 @@ class MainActivity : AppCompatActivity() {
             sizeBean.code = stocksCode.toInt()
         }
         var sizeRecord = sizeBean.countSize
-        LogUtil.d("updatePA")
         if (null != lastStockBean) {
             updatePA(lastStockBean, stocksBean,sizeBean)
+            LogUtil.d("updatePA")
+            updatePP(stocksBean,sizeBean)
+            LogUtil.d("updatePP")
         }
-        LogUtil.d("updatePS")
         updatePS(stocksBean,sizeBean)
         LogUtil.d("updatePS")
-        updatePP(stocksBean,sizeBean)
-        LogUtil.d("updatePP")
 
         if (sizeBean.countSize > sizeRecord) {
+            sizeBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.open)
             updateOrInsertSizeBean(sizeBeanList,sizeBean)
         }
         if (queryAll.size > 0) {
@@ -702,15 +713,12 @@ class MainActivity : AppCompatActivity() {
         bean: StocksBean,
         sizeBean: AnalyseSizeBean
     ) {
-        LogUtil.d("updatePA")
         val PPList =
             DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.queryByQueryBuilder(
                 AnalysePerPricesBeanDao.Properties.Code.eq(stocksCode.toInt())
             )
-        LogUtil.d("updatePA PPList size:${PPList.size}")
 
         var PPBean: AnalysePerPricesBean
-        LogUtil.d("updatePA")
 
         if (PPList.size > 0) {
             PPBean = PPList[0]
@@ -718,29 +726,12 @@ class MainActivity : AppCompatActivity() {
             PPBean = AnalysePerPricesBean()
             PPBean.code = stocksCode.toInt()
         }
-        LogUtil.d("updatePA")
-        LogUtil.d("updatePA 1:${bean.perPrice > bean.current}")
-        LogUtil.d("updatePA limitPerAmount:${Datas.limitPerAmount}")
-        LogUtil.d("updatePA perAmount:${bean.perAmount}")
-        LogUtil.d("updatePA 1:${ bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
-        }}")
-        LogUtil.d("updatePA 2:${BigDecimalUtils.sub(
-            bean.perPrice,
-            bean.current
-        )}")
-
-        LogUtil.d("updatePA  666${bean.perPrice > bean.current && BigDecimalUtils.sub(
-            bean.perPrice,
-            bean.current
-        ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
-        }")
 
         if (bean.perPrice > bean.current && BigDecimalUtils.sub(
                 bean.perPrice,
                 bean.current
             ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
         ) {
-            LogUtil.d("updatePA")
 
             var str =
                 "(${bean.time},pp>cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(bean.perPrice,bean.current)})"
@@ -763,7 +754,6 @@ class MainActivity : AppCompatActivity() {
                 bean.perPrice
             ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount
         ) {
-            LogUtil.d("updatePA")
 
             var str =
                 "(${bean.time},pp<cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(bean.current,bean.perPrice)})"
@@ -940,16 +930,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAnalyseSize(
         sizeBean: AnalyseSizeBean,
-        tenTimesSize: Int,
-        tenTimesSizeStr: String?,
+        attributeSize: Int,
+        attributeSizeStr: String?,
         stocksBean: StocksBean,
         tag: String
     ): Triple<Int,Int, String?> {
 
-        var size = tenTimesSize
+        var size = attributeSize
         size = size + 1
-        sizeBean.countSize = sizeBean.countSize + size
-        var originalStr = tenTimesSizeStr
+        sizeBean.countSize = sizeBean.countSize + 1
+        var originalStr = attributeSizeStr
         var str = "(${stocksBean.time},${tag}:$size,countSize:${sizeBean.countSize}${getSimpleAddLog(stocksBean)})"
         originalStr = if (originalStr.isNullOrEmpty()) str else originalStr + splitStr + str
         return Triple(sizeBean.countSize,size, originalStr)
@@ -974,13 +964,11 @@ class MainActivity : AppCompatActivity() {
         it: StocksBean,
         sizeBean: AnalyseSizeBean
     ) {
-        LogUtil.d("updatePS")
 
         val PSList =
             DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(
                 AnalysePerStocksBeanDao.Properties.Code.eq(stocksCode.toInt())
             )
-        LogUtil.d("updatePS")
 
         var PSBean: AnalysePerStocksBean
         if (PSList.size > 0) {
@@ -989,12 +977,10 @@ class MainActivity : AppCompatActivity() {
             PSBean = AnalysePerStocksBean()
             PSBean.code = stocksCode.toInt()
         }
-        LogUtil.d("updatePS")
 
         val buy1Stocks = it.buy1.split("_")[1]
         val buy1StocksValue = buy1Stocks.toDoubleOrNull()
         var bean = it
-        LogUtil.d("updatePS")
 
         buy1StocksValue?.let {
             if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > Datas.limitPerAmount && bean.perPrice > bean.current) {
