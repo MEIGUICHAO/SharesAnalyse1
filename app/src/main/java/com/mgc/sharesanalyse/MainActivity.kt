@@ -177,7 +177,9 @@ class MainActivity : AppCompatActivity() {
             requestDatas(viewModel!!)
         }
         btnClassify.setOnClickListener {
-            filterStocks()
+            App.getSinglePool().execute{
+                filterStocks()
+            }
         }
         btnCopyDB.setOnClickListener {
             //databases文件夹目录
@@ -233,6 +235,7 @@ class MainActivity : AppCompatActivity() {
         }
         LogUtil.d("spinner size:${fileNameList!!.size}")
         spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
+        spinner.setSelection(0)
     }
 
     private fun logResult() {
@@ -680,7 +683,7 @@ class MainActivity : AppCompatActivity() {
             if (null == lastStockBean) {
                 return@forEach
             }
-            if (lastStockBean.open > 0) {
+            if (null != lastStockBean.open && lastStockBean.open > 0) {
                 val div = BigDecimalUtils.div(
                     BigDecimalUtils.sub(
                         lastStockBean.current,

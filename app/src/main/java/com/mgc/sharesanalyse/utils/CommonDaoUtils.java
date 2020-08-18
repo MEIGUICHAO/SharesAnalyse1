@@ -228,37 +228,46 @@ public class CommonDaoUtils<T> {
     }
 
 
+
     public static StocksBean queryLast(Database db, String tableName) {
         StocksBean stocksBean = null;
-        LogUtil.d("query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
-        if (tabbleIsExist(tableName)) {
-            stocksBean = new StocksBean();
-            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-            cursor.moveToLast();
-            String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
-            String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
+        LogUtil.d("dbName:"+Datas.INSTANCE.getDBName()+"query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
+        Cursor cursor = null;
+        try {
+            if (tabbleIsExist(tableName)) {
+                stocksBean = new StocksBean();
+                cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+                cursor.moveToLast();
+                String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
+                String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
 
-            Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
-            String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
-            Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-            Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
-            String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
-            String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
-            Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
-            String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
-            stocksBean.setDealStocks(deal_stocks);
-            stocksBean.setDealAmount(deal_amount);
-            stocksBean.setBuy1(BUY1);
-            stocksBean.setPerStocks(PER_STOCKS);
-            stocksBean.setCurrent(CURRENT);
-            stocksBean.setOpen(OPEN);
-            stocksBean.setHightest(HIGHTEST);
-            stocksBean.setLowest(LOWEST);
-            stocksBean.setPerAmount(PER_AMOUNT);
-            stocksBean.setTime(TIME);
+                Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
+                String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
+                Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
+                Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
+                String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
+                String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
+                Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
+                String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
+                stocksBean.setDealStocks(deal_stocks);
+                stocksBean.setDealAmount(deal_amount);
+                stocksBean.setBuy1(BUY1);
+                stocksBean.setPerStocks(PER_STOCKS);
+                stocksBean.setCurrent(CURRENT);
+                stocksBean.setOpen(OPEN);
+                stocksBean.setHightest(HIGHTEST);
+                stocksBean.setLowest(LOWEST);
+                stocksBean.setPerAmount(PER_AMOUNT);
+                stocksBean.setTime(TIME);
+                LogUtil.d("query deal_stocks:" + deal_stocks);
+                LogUtil.d("query deal_amount:" + deal_amount);
+            }
+        } catch (Exception e) {
 
-            LogUtil.d("query deal_stocks:" + deal_stocks);
-            LogUtil.d("query deal_amount:" + deal_amount);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return stocksBean;
     }
@@ -269,36 +278,45 @@ public class CommonDaoUtils<T> {
             db = DaoManager.getsHelper().getWritableDb();
         }
         ArrayList<StocksBean> list = new ArrayList<>();
-        if (tabbleIsExist(tableName)) {
-            Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    StocksBean stocksBean = new StocksBean();
-                    Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
-                    String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
-                    Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-                    Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
-                    String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
-                    String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
-                    Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
-                    String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
-                    Double PER_PRICE = cursor.getDouble(cursor.getColumnIndex("PER_PRICE"));
-                    LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
-                    LogUtil.d("query BUY1:" + BUY1);
-                    stocksBean.setBuy1(BUY1);
-                    stocksBean.setPerStocks(PER_STOCKS);
-                    stocksBean.setCurrent(CURRENT);
-                    stocksBean.setOpen(OPEN);
-                    stocksBean.setHightest(HIGHTEST);
-                    stocksBean.setLowest(LOWEST);
-                    stocksBean.setPerAmount(PER_AMOUNT);
-                    stocksBean.setPerPrice(PER_PRICE);
-                    stocksBean.setTime(TIME);
-                    LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
-                    list.add(stocksBean);
-                } while (cursor.moveToNext());
-            }
+        Cursor cursor = null;
+        try {
+            if (tabbleIsExist(tableName)) {
+                cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    do {
+                        StocksBean stocksBean = new StocksBean();
+                        Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
+                        String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
+                        Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
+                        Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
+                        String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
+                        String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
+                        Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
+                        String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
+                        Double PER_PRICE = cursor.getDouble(cursor.getColumnIndex("PER_PRICE"));
+                        LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
+                        LogUtil.d("query BUY1:" + BUY1);
+                        stocksBean.setBuy1(BUY1);
+                        stocksBean.setPerStocks(PER_STOCKS);
+                        stocksBean.setCurrent(CURRENT);
+                        stocksBean.setOpen(OPEN);
+                        stocksBean.setHightest(HIGHTEST);
+                        stocksBean.setLowest(LOWEST);
+                        stocksBean.setPerAmount(PER_AMOUNT);
+                        stocksBean.setPerPrice(PER_PRICE);
+                        stocksBean.setTime(TIME);
+                        LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
+                        list.add(stocksBean);
+                    } while (cursor.moveToNext());
+                }
 
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return list;
     }
@@ -329,6 +347,10 @@ public class CommonDaoUtils<T> {
 
         } catch (Exception e) {
             // TODO: handle exception
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return result;
     }
