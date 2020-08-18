@@ -91,6 +91,8 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("spinner :${fileNameList!![position]}")
                 }
                 if (!isInit) {
+                    db = null
+                    CommonDaoUtils.db = null
                     App.getmManager().switchDB(
                         fileNameList!![position],
                         Month8DataDao::class.java,

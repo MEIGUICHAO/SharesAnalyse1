@@ -29,7 +29,7 @@ public class CommonDaoUtils<T> {
     private DaoSession daoSession;
     private Class<T> entityClass;
     private AbstractDao<T, Long> entityDao;
-    private static Database db;
+    public static Database db;
 
     public CommonDaoUtils(Class<T> pEntityClass, AbstractDao<T, Long> pEntityDao) {
         DaoManager mManager = DaoManager.getInstance();
