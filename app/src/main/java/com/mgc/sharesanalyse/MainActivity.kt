@@ -3,12 +3,15 @@ package com.mgc.sharesanalyse
 import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.base.SpinnerAdapter
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
@@ -62,20 +65,59 @@ class MainActivity : AppCompatActivity() {
     var PPGtCurSize = 0
     var CurGtPPSize = 0
     var sizeCount = 0
-
-
+    var fileNameList: ArrayList<String>? = null
+    var isInit = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        refreshSpinner()
+        btnRefreshSpinner.setOnClickListener {
+            refreshSpinner()
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                fileNameList?.let {
+                    LogUtil.d("spinner :${fileNameList!![position]}")
+                }
+                if (!isInit) {
+                    App.getmManager().switchDB(
+                        fileNameList!![position],
+                        Month8DataDao::class.java,
+                        StocksBeanDao::class.java,
+                        AnalyseSizeBeanDao::class.java,
+                        AnalysePerPricesBeanDao::class.java,
+                        AnalysePerStocksBeanDao::class.java,
+                        AnalysePerAmountBeanDao::class.java
+                    )
+                } else {
+                    isInit = false
+                }
+
+            }
+
+        }
+//        spinner.setOnItemClickListener { parent, view, position, id ->
+//
+//        }
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel!!.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {
 
                     LogUtil.d("viewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
-                    for (index in 0..viewModel!!.sharesDats.value!!.size()-1) {
+                    for (index in 0..viewModel!!.sharesDats.value!!.size() - 1) {
                         val data = viewModel!!.sharesDats.value?.get(index)
                         var month8Data = Month8Data()
                         month8Data.json = data
@@ -139,9 +181,20 @@ class MainActivity : AppCompatActivity() {
         }
         btnCopyDB.setOnClickListener {
             //databases文件夹目录
-            val path = "/data/data/" + getPackageName() + "/databases/" + DaoManager.DB_NAME
-
-            FileUtil.UnZipAssetsFolder(this, Datas.DBName + ".zip", path)
+            App.getSinglePool().execute{
+                var zipList = ArrayList<String>()
+                var listpath = assets.list("")
+                listpath!!.forEach {
+                    if (it.contains(".zip")) {
+                        LogUtil.d("listpath:$it")
+                        zipList.add(it)
+                    }
+                }
+                if (zipList.size > 0) {
+                    unzipForeach(zipList,0)
+                }
+                LogUtil.d("unzipForeach zip copy complete!!")
+            }
         }
         btnAnalyse.setOnClickListener {
             App.getSinglePool().execute({
@@ -151,6 +204,35 @@ class MainActivity : AppCompatActivity() {
         btnLogResult.setOnClickListener {
             logResult()
         }
+    }
+
+    private fun unzipForeach(zipList: ArrayList<String>,index:Int) {
+        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index).replace(".zip","")
+        LogUtil.d("unzipForeach:$path")
+        FileUtil.UnZipAssetsFolder(this, index, zipList.get(index), path, object :
+            FileUtil.UnZipListener {
+
+            override fun unzipFinish(index: Int) {
+                if (index < zipList.size) {
+                    unzipForeach(zipList,index)
+                }
+            }
+
+        })
+    }
+
+    private fun refreshSpinner() {
+        var path = "/data/data/" + getPackageName() + "/databases"
+        fileNameList = FileUtil.getFileNameList(path, "journal")
+        var dbName ="sharesDB_" + DateUtils.format(
+            System.currentTimeMillis(),
+            FormatterEnum.YYYY_MM_DD
+        )
+        if (!fileNameList!!.contains(dbName)) {
+            fileNameList!!.add(0,dbName)
+        }
+        LogUtil.d("spinner size:${fileNameList!!.size}")
+        spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
     }
 
     private fun logResult() {
@@ -170,9 +252,18 @@ class MainActivity : AppCompatActivity() {
             logStrList.clear()
             needJudeSize = true
             var tag = "logResult_" + code
-            val perAmountList = DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(AnalysePerAmountBeanDao.Properties.Code.eq(code))
-            val perStockList = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(AnalysePerStocksBeanDao.Properties.Code.eq(code))
-            val perPricesList = DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.queryByQueryBuilder(AnalysePerPricesBeanDao.Properties.Code.eq(code))
+            val perAmountList =
+                DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
+                    AnalysePerAmountBeanDao.Properties.Code.eq(code)
+                )
+            val perStockList =
+                DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(
+                    AnalysePerStocksBeanDao.Properties.Code.eq(code)
+                )
+            val perPricesList =
+                DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.queryByQueryBuilder(
+                    AnalysePerPricesBeanDao.Properties.Code.eq(code)
+                )
             getDB()
             val lastBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
             perAmountList.forEach {
@@ -181,15 +272,15 @@ class MainActivity : AppCompatActivity() {
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
                 logStrList.add("------------------------------------------------------------------------------------------------")
-                ge100mSize = logBySplite(it.ge100million,  "pa_ge100m")
+                ge100mSize = logBySplite(it.ge100million, "pa_ge100m")
                 if (logStrList.size > 1) {
                     needJudeSize = false
                 }
-                tenTimesSize = logBySplite(it.tenTimesLast,  "pa_10Last")
-                ge50mSize = logBySplite(it.ge50million,  "pa_ge50m")
-                ge20mSize = logBySplite(it.ge20million,  "pa_ge20m")
-                ge10mSize = logBySplite(it.ge10million,  "pa_ge10m")
-                ge5mSize = logBySplite(it.ge5million,  "pa_ge5m")
+                tenTimesSize = logBySplite(it.tenTimesLast, "pa_10Last")
+                ge50mSize = logBySplite(it.ge50million, "pa_ge50m")
+                ge20mSize = logBySplite(it.ge20million, "pa_ge20m")
+                ge10mSize = logBySplite(it.ge10million, "pa_ge10m")
+                ge5mSize = logBySplite(it.ge5million, "pa_ge5m")
             }
             perStockList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
@@ -197,8 +288,8 @@ class MainActivity : AppCompatActivity() {
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
                 logStrList.add("————————————————————————————————————————————————————————————————————————————————————————————————————")
-                gt1000TimesSize = logBySplite(it.gt1000times,  "ps_gt1000times")
-                gt100TimesSize = logBySplite(it.gt100times,  "ps_gt100times")
+                gt1000TimesSize = logBySplite(it.gt1000times, "ps_gt1000times")
+                gt100TimesSize = logBySplite(it.gt100times, "ps_gt100times")
             }
             perPricesList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
@@ -206,8 +297,8 @@ class MainActivity : AppCompatActivity() {
                         filterAnalyseStocks + "_" + it.code.toString()
                 }
                 logStrList.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                PPGtCurSize = logBySplite(it.perPricesGtCur,  "pp_perPricesGtCur")
-                CurGtPPSize = logBySplite(it.curGtPerPrices,  "ps_curGtPerPrices")
+                PPGtCurSize = logBySplite(it.perPricesGtCur, "pp_perPricesGtCur")
+                CurGtPPSize = logBySplite(it.curGtPerPrices, "ps_curGtPerPrices")
             }
             if (sizeCount >= Datas.limitSize || !needJudeSize) {
                 logSize(code, name, lastBean)
@@ -236,23 +327,35 @@ class MainActivity : AppCompatActivity() {
     ) {
         FileLogUtil.d(
             "logResult",
-            "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(",100ms")},${ge50mSize.toLog("50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(",5ms")}" +
-                    "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(",ppGt")}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
+            "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
+                ",100ms"
+            )},${ge50mSize.toLog("50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(
+                ",5ms"
+            )}" +
+                    "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
+                        ",ppGt"
+                    )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.open
                     )}!!!"
         )
         FileLogUtil.d(
             "logAlone",
-            "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(",100ms")}${ge50mSize.toLog(",50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(",5ms")}" +
-                    "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(",ppGt")}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
+            "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
+                ",100ms"
+            )}${ge50mSize.toLog(",50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(
+                ",5ms"
+            )}" +
+                    "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
+                        ",ppGt"
+                    )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.open
                     )}!!!"
         )
     }
 
-    private fun logBySplite(it: String?,  key: String): Int {
+    private fun logBySplite(it: String?, key: String): Int {
         it?.let {
             if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
@@ -276,8 +379,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun classifyStocks() {
-        LogUtil.d("Classify stocksArray.size:${viewModel!!.sharesDats.value!!.size()-1}")
-        for (index in 0..(viewModel!!.sharesDats.value!!.size()-1)) {
+        LogUtil.d("Classify stocksArray.size:${viewModel!!.sharesDats.value!!.size() - 1}")
+        for (index in 0..(viewModel!!.sharesDats.value!!.size() - 1)) {
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
@@ -343,7 +446,7 @@ class MainActivity : AppCompatActivity() {
                     } else if (it.perAmount.toDouble() >= 1000) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
-                    }else if (it.perAmount.toDouble() >= 500) {
+                    } else if (it.perAmount.toDouble() >= 500) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe5MillionSpareArray, stocksCode, str)
                     }
@@ -381,19 +484,25 @@ class MainActivity : AppCompatActivity() {
                     if (it.perPrice > it.current && BigDecimalUtils.sub(
                             it.perPrice,
                             it.current
-                        ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount
+                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
                     ) {
                         var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(it.perPrice,it.current)})"
+                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
+                                it.perPrice,
+                                it.current
+                            )})"
                         setSpareArrayData(PerPricesGtCurSpareArray, stocksCode, str)
                     }
                     if (it.current > it.perPrice && BigDecimalUtils.sub(
                             it.current,
                             it.perPrice
-                        ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount
+                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
                     ) {
                         var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(it.current,it.perPrice)})"
+                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
+                                it.current,
+                                it.perPrice
+                            )})"
                         setSpareArrayData(CurGtPerPricesSpareArray, stocksCode, str)
                     }
                 }
@@ -408,7 +517,7 @@ class MainActivity : AppCompatActivity() {
             if (it.isEmpty()) return@forEach
             if (!PA10TimesSpareArray[it.toInt()].isNullOrEmpty() || !PAGe100MillionSpareArray[it.toInt()].isNullOrEmpty()
                 || !PAGe50MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe20MillionSpareArray[it.toInt()].isNullOrEmpty()
-                || !PAGe10MillionSpareArray[it.toInt()].isNullOrEmpty()|| !PAGe5MillionSpareArray[it.toInt()].isNullOrEmpty()
+                || !PAGe10MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe5MillionSpareArray[it.toInt()].isNullOrEmpty()
             ) {
                 val analysePerAmountBean = AnalysePerAmountBean()
                 analysePerAmountBean.code = it.toInt()
@@ -427,11 +536,13 @@ class MainActivity : AppCompatActivity() {
                 analysePerStocksBean.gt100times = PSGe100MillionSpareArray.getDBValue(it.toInt())
                 DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(analysePerStocksBean)
             }
-            if (!PerPricesGtCurSpareArray[it.toInt()].isNullOrEmpty()||!CurGtPerPricesSpareArray[it.toInt()].isNullOrEmpty()) {
+            if (!PerPricesGtCurSpareArray[it.toInt()].isNullOrEmpty() || !CurGtPerPricesSpareArray[it.toInt()].isNullOrEmpty()) {
                 val analysePerPricesBean = AnalysePerPricesBean()
                 analysePerPricesBean.code = it.toInt()
-                analysePerPricesBean.perPricesGtCur = PerPricesGtCurSpareArray.getDBValue(it.toInt())
-                analysePerPricesBean.curGtPerPrices = CurGtPerPricesSpareArray.getDBValue(it.toInt())
+                analysePerPricesBean.perPricesGtCur =
+                    PerPricesGtCurSpareArray.getDBValue(it.toInt())
+                analysePerPricesBean.curGtPerPrices =
+                    CurGtPerPricesSpareArray.getDBValue(it.toInt())
                 DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.insert(analysePerPricesBean)
             }
             LogUtil.d("=======================================================")
@@ -455,24 +566,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAddLog(it: StocksBean) =
-        ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(it.current,it.open)},h/l:${getHLPercent(it.hightest,it.lowest)},sp:${getStopPrices(it.open)}"
+        ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(
+            it.current,
+            it.open
+        )},h/l:${getHLPercent(it.hightest, it.lowest)},sp:${getStopPrices(it.open)}"
 
 
     private fun getSimpleAddLog(it: StocksBean) =
-        ",cur:${it.current},open:${it.open},p:${getCurPercent(it.current,it.open)},sp:${getStopPrices(it.open)}"
+        ",cur:${it.current},open:${it.open},p:${getCurPercent(
+            it.current,
+            it.open
+        )},sp:${getStopPrices(it.open)}"
 
     private fun getStopPrices(open: Double?): String {
         if (null != open) {
-            return  BigDecimalUtils.add(open,BigDecimalUtils.mul(open,0.1,2)).toString()
+            return BigDecimalUtils.add(open, BigDecimalUtils.mul(open, 0.1, 2)).toString()
         } else return "0"
     }
 
     private fun getHLPercent(hightest: String?, lowest: String?): String {
         val hightest = hightest?.toDoubleOrNull()
         val lowest = lowest?.toDoubleOrNull()
-        if (null != hightest && null != lowest&&lowest>0) {
+        if (null != hightest && null != lowest && lowest > 0) {
             val df = DecimalFormat("#.00")
-            return df.format(BigDecimalUtils.div(BigDecimalUtils.sub(hightest,lowest),lowest)*100)+"%"
+            return df.format(
+                BigDecimalUtils.div(
+                    BigDecimalUtils.sub(hightest, lowest),
+                    lowest
+                ) * 100
+            ) + "%"
         } else return "0"
     }
 
@@ -496,7 +618,7 @@ class MainActivity : AppCompatActivity() {
             BigDecimalUtils.sub(current, open),
             open
         ) * 100
-        return  result
+        return result
     }
 
 
@@ -555,7 +677,7 @@ class MainActivity : AppCompatActivity() {
             val name = it.split(splitStr)[1]
             getDB()
             val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
-            if (null == lastStockBean){
+            if (null == lastStockBean) {
                 return@forEach
             }
             if (lastStockBean.open > 0) {
@@ -569,31 +691,31 @@ class MainActivity : AppCompatActivity() {
                 if (div >= 0.1) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "AAA_10")
                     LogUtil.d("filterStocks!!! AAA_10 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","AAA_10 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "AAA_10 name:$name,code:$code")
                 } else if (div >= 0.9) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "BBB_9")
                     LogUtil.d("filterStocks!!! BBB_9 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","BBB_9 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "BBB_9 name:$name,code:$code")
                 } else if (div >= 0.08) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "CCC_8")
                     LogUtil.d("filterStocks!!! CCC_8 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","CCC_8 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "CCC_8 name:$name,code:$code")
                 } else if (div >= 0.07) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "DDD_7")
                     LogUtil.d("filterStocks!!! DDD_7 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","DDD_7 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "DDD_7 name:$name,code:$code")
                 } else if (div >= 0.06) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "EEE_6")
                     LogUtil.d("filterStocks!!! EEE_6 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","EEE_6 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "EEE_6 name:$name,code:$code")
                 } else if (div >= 0.05) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "FFF_5")
                     LogUtil.d("filterStocks!!! FFF_5 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","FFF_5 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "FFF_5 name:$name,code:$code")
                 } else if (div <= -0.1) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "HHHH_neg10")
                     LogUtil.d("filterStocks!!! HHHH_neg10 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks","HHHH_neg10 name:$name,code:$code")
+                    FileLogUtil.d("filterStocks", "HHHH_neg10 name:$name,code:$code")
                 }
             }
         }
@@ -665,10 +787,12 @@ class MainActivity : AppCompatActivity() {
             stocksBean.perStocks = stocksBean.dealStocks.toDouble()
             stocksBean.perAmount = stocksBean.dealAmount.toDouble()
             if (stocksBean.dealStocks.toDouble() > 0) {
-                stocksBean.perPrice = BigDecimalUtils.mul(BigDecimalUtils.div(
-                    stocksBean.dealAmount.toDouble(),
-                    stocksBean.dealStocks.toDouble()
-                ),100.toDouble(),3)
+                stocksBean.perPrice = BigDecimalUtils.mul(
+                    BigDecimalUtils.div(
+                        stocksBean.dealAmount.toDouble(),
+                        stocksBean.dealStocks.toDouble()
+                    ), 100.toDouble(), 3
+                )
             } else {
                 stocksBean.perPrice = 0.toDouble()
             }
@@ -687,17 +811,17 @@ class MainActivity : AppCompatActivity() {
         }
         var sizeRecord = sizeBean.countSize
         if (null != lastStockBean) {
-            updatePA(lastStockBean, stocksBean,sizeBean)
+            updatePA(lastStockBean, stocksBean, sizeBean)
             LogUtil.d("updatePA")
-            updatePP(stocksBean,sizeBean)
+            updatePP(stocksBean, sizeBean)
             LogUtil.d("updatePP")
         }
-        updatePS(stocksBean,sizeBean)
+        updatePS(stocksBean, sizeBean)
         LogUtil.d("updatePS")
 
         if (sizeBean.countSize > sizeRecord) {
             sizeBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.open)
-            updateOrInsertSizeBean(sizeBeanList,sizeBean)
+            updateOrInsertSizeBean(sizeBeanList, sizeBean)
         }
         if (queryAll.size > 0) {
             val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
@@ -730,12 +854,16 @@ class MainActivity : AppCompatActivity() {
         if (bean.perPrice > bean.current && BigDecimalUtils.sub(
                 bean.perPrice,
                 bean.current
-            ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
+            ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
         ) {
 
             var str =
-                "(${bean.time},pp>cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(bean.perPrice,bean.current)})"
-            PPBean.perPricesGtCur = if (PPBean.perPricesGtCur.isNullOrEmpty()) str else PPBean.perPricesGtCur + splitStr + str
+                "(${bean.time},pp>cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(
+                    bean.perPrice,
+                    bean.current
+                )})"
+            PPBean.perPricesGtCur =
+                if (PPBean.perPricesGtCur.isNullOrEmpty()) str else PPBean.perPricesGtCur + splitStr + str
             updateOrInsertBean(PPList, PPBean)
 
             val analyseSize = setAnalyseSize(
@@ -752,12 +880,16 @@ class MainActivity : AppCompatActivity() {
         if (bean.current > bean.perPrice && BigDecimalUtils.sub(
                 bean.current,
                 bean.perPrice
-            ) >= 0.2&& bean.perAmount.toDouble() > Datas.limitPerAmount
+            ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
         ) {
 
             var str =
-                "(${bean.time},pp<cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(bean.current,bean.perPrice)})"
-            PPBean.curGtPerPrices = if (PPBean.curGtPerPrices.isNullOrEmpty()) str else PPBean.curGtPerPrices + splitStr + str
+                "(${bean.time},pp<cur:${bean.perPrice},pa:${bean.perAmount},cur:${bean.current},dif:${BigDecimalUtils.sub(
+                    bean.current,
+                    bean.perPrice
+                )})"
+            PPBean.curGtPerPrices =
+                if (PPBean.curGtPerPrices.isNullOrEmpty()) str else PPBean.curGtPerPrices + splitStr + str
             updateOrInsertBean(PPList, PPBean)
 
             val analyseSize = setAnalyseSize(
@@ -808,7 +940,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean: StocksBean,
         sizeBean: AnalyseSizeBean
     ) {
-        if (lastStockBean.perAmount>0 && stocksBean.perAmount>0) {
+        if (lastStockBean.perAmount > 0 && stocksBean.perAmount > 0) {
             LogUtil.d("updatePA")
             val PAList =
                 DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
@@ -934,15 +1066,18 @@ class MainActivity : AppCompatActivity() {
         attributeSizeStr: String?,
         stocksBean: StocksBean,
         tag: String
-    ): Triple<Int,Int, String?> {
+    ): Triple<Int, Int, String?> {
 
         var size = attributeSize
         size = size + 1
         sizeBean.countSize = sizeBean.countSize + 1
         var originalStr = attributeSizeStr
-        var str = "(${stocksBean.time},${tag}:$size,countSize:${sizeBean.countSize}${getSimpleAddLog(stocksBean)})"
+        var str =
+            "(${stocksBean.time},${tag}:$size,countSize:${sizeBean.countSize}${getSimpleAddLog(
+                stocksBean
+            )})"
         originalStr = if (originalStr.isNullOrEmpty()) str else originalStr + splitStr + str
-        return Triple(sizeBean.countSize,size, originalStr)
+        return Triple(sizeBean.countSize, size, originalStr)
     }
 
 

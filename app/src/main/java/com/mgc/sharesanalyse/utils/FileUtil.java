@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse.utils;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,9 +23,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -501,8 +504,8 @@ public class FileUtil {
      * @param outPathString 要解压缩路径
      * @throws Exception
      */
-    public static void UnZipAssetsFolder(Context context, String zipFileString, String
-            outPathString) throws Exception {
+    public static void UnZipAssetsFolder(Context context,int index ,String zipFileString, String
+            outPathString,UnZipListener listener) throws Exception {
         ZipInputStream inZip = new ZipInputStream(context.getAssets().open(zipFileString));
         ZipEntry zipEntry;
         while ((zipEntry = inZip.getNextEntry()) != null) {
@@ -530,7 +533,13 @@ public class FileUtil {
             }
         }
         inZip.close();
+        listener.unzipFinish(index+1);
     }
+
+    public interface UnZipListener {
+        void unzipFinish(int index);
+    }
+
 
 
     /**
@@ -771,7 +780,8 @@ public class FileUtil {
         return dirPath;
     }
 
-    //创建文件
+
+        //创建文件
     public static void createFile(File file) throws IOException {
         if (file.getParentFile().exists()) {
             file.createNewFile();
@@ -796,5 +806,32 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<String> getFileNameList(String fileDir,String...limit) {
+        ArrayList<String> pathList = new ArrayList<>();
+        File file = new File(fileDir);
+        File[] subFile = file.listFiles();
+
+        if (null != subFile) {
+
+            for (int iFileLength = 0; iFileLength < subFile.length; iFileLength++) {
+                // 判断是否为文件夹
+                if (!subFile[iFileLength].isDirectory()) {
+                    String filename = subFile[iFileLength].getName();
+                    boolean isAdd = false;
+                    for (int i = 0; i < limit.length; i++) {
+                        if (!filename.trim().toLowerCase().endsWith(limit[i])) {
+                            isAdd = true;
+                        }
+                    }
+                    if (isAdd) {
+                        pathList.add(filename);
+                    }
+
+                }
+            }
+        }
+        return pathList;
     }
 }

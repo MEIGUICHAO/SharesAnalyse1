@@ -11,6 +11,13 @@ import java.util.concurrent.Executors;
 public class App extends Application {
     static ExecutorService singlePool;
     private static App context;
+
+    public static DaoManager getmManager() {
+        return mManager;
+    }
+
+    private static DaoManager mManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,7 +38,7 @@ public class App extends Application {
         return singlePool;
     }
     private void initGreenDao() {
-        DaoManager mManager = DaoManager.getInstance();
+        mManager = DaoManager.getInstance();
         mManager.init(this);
         Stetho.initializeWithDefaults(this);
     }

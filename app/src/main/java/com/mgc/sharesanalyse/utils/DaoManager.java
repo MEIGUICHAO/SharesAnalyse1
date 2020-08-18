@@ -4,6 +4,10 @@ import android.content.Context;
 
 import com.mgc.sharesanalyse.BuildConfig;
 import com.mgc.sharesanalyse.base.Datas;
+import com.mgc.sharesanalyse.entity.AnalysePerAmountBeanDao;
+import com.mgc.sharesanalyse.entity.AnalysePerPricesBeanDao;
+import com.mgc.sharesanalyse.entity.AnalysePerStocksBeanDao;
+import com.mgc.sharesanalyse.entity.AnalyseSizeBeanDao;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
@@ -16,7 +20,7 @@ public class DaoManager {
     //    greendaotest
 //    public static final String DB_NAME = "greendaotest";
 
-    public static final String DB_NAME = Datas.INSTANCE.getDBName();
+    public static String DB_NAME = Datas.INSTANCE.getDBName();
 
     private static Context context;
 
@@ -62,7 +66,8 @@ public class DaoManager {
      */
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class);
+            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class, AnalyseSizeBeanDao.class, AnalysePerPricesBeanDao.class,
+                    AnalysePerStocksBeanDao.class, AnalysePerAmountBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;
@@ -71,6 +76,8 @@ public class DaoManager {
     public void switchDB(String dbName,Class... classes) {
         sHelper = new CommonOpenHelper(context, dbName, null,classes);
         sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
+        Datas.INSTANCE.setDBName(dbName);
+        LogUtil.d("spinner Datas DBName:"+Datas.INSTANCE.getDBName());
         sDaoSession = null;
         getDaoSession();
         DaoUtilsStore.getInstance().resetDaoUtilsStore();
