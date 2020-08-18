@@ -2,17 +2,21 @@ package com.mgc.sharesanalyse.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class AnalysePerPricesBean {
 
+    @Id
+    private Long id;
     private int code;
     private String perPricesGtCur;
     private String curGtPerPrices;
 
-    @Generated(hash = 1274347093)
-    public AnalysePerPricesBean(int code, String perPricesGtCur,
+    @Generated(hash = 1572290376)
+    public AnalysePerPricesBean(Long id, int code, String perPricesGtCur,
             String curGtPerPrices) {
+        this.id = id;
         this.code = code;
         this.perPricesGtCur = perPricesGtCur;
         this.curGtPerPrices = curGtPerPrices;
@@ -44,6 +48,14 @@ public class AnalysePerPricesBean {
 
     public void setPerPricesGtCur(String perPricesGtCur) {
         this.perPricesGtCur = perPricesGtCur;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 

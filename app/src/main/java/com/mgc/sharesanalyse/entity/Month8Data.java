@@ -7,6 +7,8 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Month8Data {
 
+    @Id
+    private Long id;
 
     private String YMD;
 
@@ -18,8 +20,10 @@ public class Month8Data {
 
 
 
-    @Generated(hash = 61164633)
-    public Month8Data(String YMD, Long timeStamp, String name, String json) {
+    @Generated(hash = 1808485077)
+    public Month8Data(Long id, String YMD, Long timeStamp, String name,
+            String json) {
+        this.id = id;
         this.YMD = YMD;
         this.timeStamp = timeStamp;
         this.name = name;
@@ -62,6 +66,14 @@ public class Month8Data {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

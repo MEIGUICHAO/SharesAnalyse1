@@ -7,7 +7,8 @@ import org.greenrobot.greendao.annotation.Id;
 @Entity
 public class StocksBean {
 
-
+    @Id
+    private Long id;
     private String time;
     private String buy1;
     private String sale1;
@@ -35,12 +36,13 @@ public class StocksBean {
 
     private String hightest;
     private String lowest;
-    @Generated(hash = 2033036649)
-    public StocksBean(String time, String buy1, String sale1, String buy2,
+    @Generated(hash = 1342048069)
+    public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
             String sale2, String buy3, String sale3, String buy4, String sale4,
             String buy5, String sale5, String dealStocks, String dealAmount,
             Double PerStocks, Double PerAmount, Double open, Double current,
             Double PerPrice, String hightest, String lowest) {
+        this.id = id;
         this.time = time;
         this.buy1 = buy1;
         this.sale1 = sale1;
@@ -184,6 +186,12 @@ public class StocksBean {
     }
     public void setLowest(String lowest) {
         this.lowest = lowest;
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

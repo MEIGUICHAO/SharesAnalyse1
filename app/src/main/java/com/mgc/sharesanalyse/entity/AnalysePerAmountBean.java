@@ -6,6 +6,9 @@ import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class AnalysePerAmountBean {
+
+    @Id
+    private Long id;
     private int code;
     private String TenTimesLast;
     private String Ge100million;
@@ -14,10 +17,11 @@ public class AnalysePerAmountBean {
     private String Ge10million;
     private String Ge5million;
 
-    @Generated(hash = 1521608068)
-    public AnalysePerAmountBean(int code, String TenTimesLast, String Ge100million,
-            String Ge50million, String Ge20million, String Ge10million,
-            String Ge5million) {
+    @Generated(hash = 206746714)
+    public AnalysePerAmountBean(Long id, int code, String TenTimesLast,
+            String Ge100million, String Ge50million, String Ge20million,
+            String Ge10million, String Ge5million) {
+        this.id = id;
         this.code = code;
         this.TenTimesLast = TenTimesLast;
         this.Ge100million = Ge100million;
@@ -74,5 +78,13 @@ public class AnalysePerAmountBean {
     }
     public void setGe10million(String Ge10million) {
         this.Ge10million = Ge10million;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -2,9 +2,13 @@ package com.mgc.sharesanalyse.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class AnalyseSizeBean {
+
+    @Id
+    private Long id;
     private int Code;
     private int countSize;
     private int tenTimesSize;
@@ -27,14 +31,15 @@ public class AnalyseSizeBean {
     private String gt100TimesSizeStr;
     private String PPGtCurSizeStr;
     private String CurGtPPSizeStr;
-    @Generated(hash = 1064625509)
-    public AnalyseSizeBean(int Code, int countSize, int tenTimesSize,
+    @Generated(hash = 975442464)
+    public AnalyseSizeBean(Long id, int Code, int countSize, int tenTimesSize,
             int ge100mSize, int ge50mSize, int ge20mSize, int ge10mSize,
             int ge5mSize, int gt1000TimesSize, int gt100TimesSize, int PPGtCurSize,
             int CurGtPPSize, String tenTimesSizeStr, String ge100mSizeStr,
             String ge50mSizeStr, String ge20mSizeStr, String ge10mSizeStr,
             String ge5mSizeStr, String gt1000TimesSizeStr, String gt100TimesSizeStr,
             String PPGtCurSizeStr, String CurGtPPSizeStr) {
+        this.id = id;
         this.Code = Code;
         this.countSize = countSize;
         this.tenTimesSize = tenTimesSize;
@@ -192,5 +197,11 @@ public class AnalyseSizeBean {
     }
     public void setCode(int Code) {
         this.Code = Code;
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 }
