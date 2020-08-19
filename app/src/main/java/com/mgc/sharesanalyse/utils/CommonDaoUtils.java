@@ -231,7 +231,7 @@ public class CommonDaoUtils<T> {
 
     public static StocksBean queryLast(Database db, String tableName) {
         StocksBean stocksBean = null;
-        LogUtil.d("dbName:"+Datas.INSTANCE.getDBName()+"query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
+        LogUtil.d("dbName:"+DaoManager.getDbName()+"query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
         Cursor cursor = null;
         try {
             if (tabbleIsExist(tableName)) {
@@ -262,7 +262,9 @@ public class CommonDaoUtils<T> {
                 LogUtil.d("query deal_stocks:" + deal_stocks);
                 LogUtil.d("query deal_amount:" + deal_amount);
             }
+            LogUtil.d("queryLast @！！！");
         } catch (Exception e) {
+            LogUtil.d("queryLast e:" + e.toString());
 
         } finally {
             if (cursor != null) {

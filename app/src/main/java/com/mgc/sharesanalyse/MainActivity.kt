@@ -1,5 +1,6 @@
 package com.mgc.sharesanalyse
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.App
@@ -19,6 +21,8 @@ import com.mgc.sharesanalyse.viewmodel.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
+import java.security.Permission
+import java.security.Permissions
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -69,12 +73,14 @@ class MainActivity : AppCompatActivity() {
     var sizeCount = 0
     var fileNameList: ArrayList<String>? = null
     var isInit = true
+    var intervalTime = 15.toLong()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         refreshSpinner()
+        ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE) , 0);
         btnRefreshSpinner.setOnClickListener {
             refreshSpinner()
         }
@@ -160,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                             withContext(Dispatchers.IO) {
 
                                 runBlocking {
-                                    delay(1000 * 25)
+                                    delay(1000 * intervalTime)
                                     requestDatas(viewModel!!)
                                 }
                             }
@@ -237,12 +243,14 @@ class MainActivity : AppCompatActivity() {
             FormatterEnum.YYYY_MM_DD
         )
         if (!fileNameList!!.contains(dbName)) {
-            fileNameList!!.add(0,dbName)
+            fileNameList!!.add(fileNameList!!.size-1,dbName)
         }
         LogUtil.d("spinner size:${fileNameList!!.size}")
         spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
-        spinner.setSelection(0)
+        spinner.setSelection(fileNameList!!.size-1)
+        DaoManager.setDbName(fileNameList!![fileNameList!!.size-1])
     }
+
 
     private fun logResult() {
         filterAnalyseStocks = ""
@@ -683,7 +691,7 @@ class MainActivity : AppCompatActivity() {
         if (System.currentTimeMillis() < DateUtils.parse(
                 endTime,
                 FormatterEnum.YYYYMMDD__HH_MM_SS
-            ) && Datas.DBName.contains(
+            ) && DaoManager.DB_NAME.contains(
                 DateUtils.format(
                     System.currentTimeMillis(),
                     FormatterEnum.YYYY_MM_DD
@@ -784,6 +792,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
         getDB()
         val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + stocksCode)
+        LogUtil.d("setStcokBean")
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
@@ -807,8 +816,10 @@ class MainActivity : AppCompatActivity() {
                 stocksBean.perPrice = 0.toDouble()
             }
         } else {
+            LogUtil.d("setStcokBean")
             stocksBean.perStocks = stocksBean.dealStocks.toDouble()
             stocksBean.perAmount = stocksBean.dealAmount.toDouble()
+            LogUtil.d("setStcokBean")
             if (stocksBean.dealStocks.toDouble() > 0) {
                 stocksBean.perPrice = BigDecimalUtils.mul(
                     BigDecimalUtils.div(
@@ -821,10 +832,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        LogUtil.d("setStcokBean")
         val sizeBeanList =
             DaoUtilsStore.getInstance().analyseSizeBeanDaoUtils.queryByQueryBuilder(
                 AnalyseSizeBeanDao.Properties.Code.eq(stocksCode.toInt())
             )
+        LogUtil.d("setStcokBean size:${sizeBeanList.size}")
+
         var sizeBean: AnalyseSizeBean
         if (sizeBeanList.size > 0) {
             sizeBean = sizeBeanList[0]
@@ -832,6 +846,7 @@ class MainActivity : AppCompatActivity() {
             sizeBean = AnalyseSizeBean()
             sizeBean.code = stocksCode.toInt()
         }
+        LogUtil.d("setStcokBean")
         var sizeRecord = sizeBean.countSize
         if (null != lastStockBean) {
             updatePA(lastStockBean, stocksBean, sizeBean)

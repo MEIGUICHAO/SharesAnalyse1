@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.mgc.sharesanalyse.BuildConfig;
 import com.mgc.sharesanalyse.base.Datas;
@@ -20,7 +21,20 @@ public class DaoManager {
     //    greendaotest
 //    public static final String DB_NAME = "greendaotest";
 
-    public static String DB_NAME = Datas.INSTANCE.getDBName();
+    public static String DB_NAME ;
+
+    public static String getDbName() {
+        if (TextUtils.isEmpty(DB_NAME)) {
+            DB_NAME = "sharesDB_" + DateUtils.INSTANCE.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM_DD);
+        }
+        return DB_NAME;
+    }
+
+    public static void setDbName(String dbName) {
+        DB_NAME = dbName;
+    }
 
     private static Context context;
 
@@ -76,8 +90,8 @@ public class DaoManager {
     public void switchDB(String dbName,Class... classes) {
         sHelper = new CommonOpenHelper(context, dbName, null,classes);
         sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
-        Datas.INSTANCE.setDBName(dbName);
-        LogUtil.d("spinner Datas DBName:"+Datas.INSTANCE.getDBName());
+        DB_NAME = dbName;
+        LogUtil.d("spinner Datas DBName:"+DB_NAME);
         sDaoSession = null;
         getDaoSession();
         DaoUtilsStore.getInstance().resetDaoUtilsStore();
