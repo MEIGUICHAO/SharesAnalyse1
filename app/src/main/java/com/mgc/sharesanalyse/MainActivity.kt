@@ -21,8 +21,6 @@ import com.mgc.sharesanalyse.viewmodel.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
-import java.security.Permission
-import java.security.Permissions
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -74,6 +72,8 @@ class MainActivity : AppCompatActivity() {
     var fileNameList: ArrayList<String>? = null
     var isInit = true
     var intervalTime = 15.toLong()
+    var logRecordStr = splitStr
+    var logAloneStr = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,6 +183,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+        btnLogSum.setOnClickListener{
+            //logRecordSum.txt,logAloneSum.txt
+            App.getSinglePool().execute{
+                var logAloneList = FileUtil.getFileNameList(FileLogUtil.FilePath, "logResult.txt","logRecordSum.txt","logAloneSum.txt")
+                var logRecordSumList = FileUtil.getFileNameList(FileLogUtil.FilePath, "Result.txt","logAlone.txt","logAloneSum.txt")
+                var logAloneSumList = FileUtil.getFileNameList(FileLogUtil.FilePath, "Result.txt","logAlone.txt","logRecordSum.txt")
+                LogUtil.d("foreachIOString logAloneList size${logAloneList.size}, logRecordSumList size${logRecordSumList.size}, logAloneSumList size${logAloneSumList.size},")
+                var logRecordStr = splitStr
+                if (logRecordSumList.size > 0) {
+                    logRecordStr
+                } else {
+                    foreachIOString(0, logAloneList)
+                }
+            }
+        }
         btnRequest.setOnClickListener {
             requestDatas(viewModel!!)
         }
@@ -218,6 +233,26 @@ class MainActivity : AppCompatActivity() {
                 logResult()
             })
         }
+    }
+
+    interface IOForeachListener {
+        fun foreachFinish(result: String)
+    }
+
+    private fun foreachIOString(index: Int, logList: java.util.ArrayList<String>) {
+        if (logList.size > 0) {
+            FileUtil.getStringByFile(FileLogUtil.FilePath+"/"+logList.get(index), index, object :
+                FileUtil.IOStringListener {
+                override fun finish(index: Int, content: String) {
+                    LogUtil.d("foreachIOString $index size${logList.size}:$content")
+                    if (index < logList.size) {
+                        foreachIOString(index, logList)
+                    }
+                }
+
+            })
+        }
+
     }
 
     private fun unzipForeach(zipList: ArrayList<String>,index:Int) {

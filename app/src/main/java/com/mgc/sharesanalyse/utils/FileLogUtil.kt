@@ -19,8 +19,8 @@ import java.util.concurrent.ArrayBlockingQueue
  */
 object FileLogUtil {
     private const val isDebug = true
-    private val FilePath =
-        Environment.getExternalStorageDirectory().toString() + "/mgc/"
+    val FilePath =
+        Environment.getExternalStorageDirectory().toString() + "/mgc"
     private val mLogQueue = ArrayBlockingQueue<Triple<Long,String, String>>(100000)
 
     init {
@@ -31,7 +31,7 @@ object FileLogUtil {
                     try {
                         val path = File(FilePath)
                         if (!path.exists()) path.mkdir()
-                        val file = File("$FilePath${(DaoManager.getDbName().replace("sharesDB_","")+take.second)}.txt")
+                        val file = File("$FilePath/${(DaoManager.getDbName().replace("sharesDB_","")+take.second)}.txt")
                         if (!file.exists())file.createNewFile()
                         val out = FileOutputStream(file, true)
                         val newLine = System.getProperty("line.separator")

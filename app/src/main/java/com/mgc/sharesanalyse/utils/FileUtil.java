@@ -1,10 +1,8 @@
 package com.mgc.sharesanalyse.utils;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -404,6 +401,25 @@ public class FileUtil {
         return null;
     }
 
+    public static void getStringByFile(String fileName, int index, IOStringListener listener) {
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String str = null;
+                String result = "";
+                while ((str = reader.readLine()) != null) {
+                    result += str;
+                }
+                reader.close();
+                listener.finish(index+1,result);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        listener.finish(index+1,"");
+    }
+
     // 写到文件
     public static void writeToFile(String content, String dir,
                                    String fileName) {
@@ -538,6 +554,10 @@ public class FileUtil {
 
     public interface UnZipListener {
         void unzipFinish(int index);
+    }
+
+    public interface IOStringListener {
+        void finish(int index,String content);
     }
 
 
@@ -812,18 +832,20 @@ public class FileUtil {
         ArrayList<String> pathList = new ArrayList<>();
         File file = new File(fileDir);
         File[] subFile = file.listFiles();
-
+        LogUtil.d("---------------------------------------------------------");
         if (null != subFile) {
 
             for (int iFileLength = 0; iFileLength < subFile.length; iFileLength++) {
                 // 判断是否为文件夹
                 if (!subFile[iFileLength].isDirectory()) {
                     String filename = subFile[iFileLength].getName();
-                    boolean isAdd = false;
+                    boolean isAdd = true;
                     for (int i = 0; i < limit.length; i++) {
-                        if (!filename.trim().toLowerCase().endsWith(limit[i])) {
-                            isAdd = true;
+                        LogUtil.d("getFileNameList filename:" + filename.trim().toLowerCase() + ",limit:" + limit[i].toLowerCase());
+                        if (filename.trim().toLowerCase().endsWith(limit[i].toLowerCase())) {
+                            isAdd = false;
                         }
+                        LogUtil.d("getFileNameList isAdd:" + isAdd);
                     }
                     if (isAdd) {
                         pathList.add(filename);
@@ -832,6 +854,7 @@ public class FileUtil {
                 }
             }
         }
+        LogUtil.d("========================================================");
         return pathList;
     }
 }
