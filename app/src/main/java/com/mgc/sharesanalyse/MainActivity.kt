@@ -877,20 +877,20 @@ class MainActivity : AppCompatActivity() {
             sizeBean = AnalyseSizeBean()
             sizeBean.code = stocksCode.toInt()
         }
-        if (split[11].toDouble() > 0 || split[13].toDouble() > 0 || split[15].toDouble() > 0 || split[17].toDouble() > 0 || split[19].toDouble() > 0) {
+        if (split[11].toDouble() <= 0 || split[13].toDouble() <= 0 || split[15].toDouble() <= 0 || split[17].toDouble() <= 0 || split[19].toDouble() <= 0) {
             val b0Log = getB0Log(split)
             sizeBean.b0 = sizeBean.b0 + b0Log.second
             var str =
-                "(${stocksBean.time},b0 size:${sizeBean.b0},${b0Log.first}${getSimpleAddLog(
+                "(${stocksBean.time},b0 size:${sizeBean.b0}${b0Log.first}${getSimpleAddLog(
                     stocksBean
                 )})"
             sizeBean.b0Str = if (sizeBean.b0Str.isNullOrEmpty()) str else sizeBean.b0Str + splitStr + str
         }
-        if (split[21].toDouble() > 0 || split[23].toDouble() > 0 || split[25].toDouble() > 0 || split[27].toDouble() > 0 || split[29].toDouble() > 0) {
+        if (split[21].toDouble() <= 0 || split[23].toDouble() <= 0 || split[25].toDouble() <= 0 || split[27].toDouble() <= 0 || split[29].toDouble() <= 0) {
             var s0log = getS0Log(split)
             sizeBean.s0 = sizeBean.s0 + s0log.second
             var str =
-                "(${stocksBean.time},s0 size:${sizeBean.s0},${s0log.first}${getSimpleAddLog(
+                "(${stocksBean.time},s0 size:${sizeBean.s0}${s0log.first}${getSimpleAddLog(
                     stocksBean
                 )})"
             sizeBean.s0Str = if (sizeBean.s0Str.isNullOrEmpty()) str else sizeBean.s0Str + splitStr + str
@@ -917,19 +917,19 @@ class MainActivity : AppCompatActivity() {
         var size = 0
         var str = ""
         size++
-        if (split[11].toDouble() > 0) {
+        if (split[11].toDouble() <= 0) {
             str = str + ",01"
         }
-        if (split[13].toDouble() > 0) {
+        if (split[13].toDouble() <= 0) {
             str = str + ",02"
         }
-        if (split[15].toDouble() > 0) {
+        if (split[15].toDouble() <= 0) {
             str = str + ",03"
         }
-        if (split[17].toDouble() > 0) {
+        if (split[17].toDouble() <= 0) {
             str = str + ",04"
         }
-        if (split[19].toDouble() > 0) {
+        if (split[19].toDouble() <= 0) {
             str = str + ",05"
         }
         return Pair(str,size)
@@ -937,21 +937,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun getS0Log(split: List<String>): Pair<String,Int> {
         var size = 0
-        var str = ","
+        var str = ""
         size++
-        if (split[21].toDouble() > 0) {
+        if (split[21].toDouble() <= 0) {
             str = str + ",01"
         }
-        if (split[23].toDouble() > 0) {
+        if (split[23].toDouble() <= 0) {
             str = str + ",02"
         }
-        if (split[25].toDouble() > 0) {
+        if (split[25].toDouble() <= 0) {
             str = str + ",03"
         }
-        if (split[27].toDouble() > 0) {
+        if (split[27].toDouble() <= 0) {
             str = str + ",04"
         }
-        if (split[29].toDouble() > 0) {
+        if (split[29].toDouble() <= 0) {
             str = str + ",05"
         }
         return Pair(str,size)
