@@ -812,17 +812,28 @@ public class FileUtil {
         }
     }
 
-    public static void copyAssets2Sdcard(Context context, String assertsFileName, String sdcardFileName) {
+    public static void copyAssets2File(Context context, String assertsFileName, String sdcardFileName) {
         try {
             InputStream inputStream = context.getAssets().open(assertsFileName);
-            OutputStream outputStream = new FileOutputStream(sdcardFileName);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
+            File file = new File(sdcardFileName);
+            if (!file.getParentFile().exists()) {
+                createDir(file.getParentFile().getAbsolutePath());
+                boolean newFile = file.createNewFile();
             }
+            OutputStream outputStream = null;
+            if (!file.exists()) {
+                outputStream = new FileOutputStream(sdcardFileName);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buf)) > 0) {
+                    outputStream.write(buf, 0, len);
+                }
+            }
+
             inputStream.close();
-            outputStream.close();
+            if (null != outputStream) {
+                outputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -22,6 +22,7 @@ import com.mgc.sharesanalyse.viewmodel.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
+import java.io.File
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     var sizeCount = 0
     var fileNameList: ArrayList<String>? = null
     var isInit = true
-    var intervalTime = 15.toLong()
+    var intervalTime = 25.toLong()
     var logRecordStr = splitStr
     var logAloneStr = ""
 
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE) , 0);
         btnRefreshSpinner.setOnClickListener {
             refreshSpinner()
+            copyTxt()
         }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -210,18 +212,7 @@ class MainActivity : AppCompatActivity() {
         btnCopyDB.setOnClickListener {
             //databases文件夹目录
             App.getSinglePool().execute{
-                var zipList = ArrayList<String>()
-                var listpath = assets.list("")
-                listpath!!.forEach {
-                    if (it.contains(".zip")) {
-                        LogUtil.d("listpath:$it")
-                        zipList.add(it)
-                    }
-                }
-                if (zipList.size > 0) {
-                    unzipForeach(zipList,0)
-                }
-                LogUtil.d("unzipForeach zip copy complete!!")
+                copyDB()
             }
         }
         btnAnalyse.setOnClickListener {
@@ -234,6 +225,35 @@ class MainActivity : AppCompatActivity() {
                 logResult()
             })
         }
+    }
+
+    private fun copyTxt() {
+        var zipList = ArrayList<String>()
+        var listpath = assets.list("")
+        listpath!!.forEach {
+            if (it.contains(".txt")) {
+                LogUtil.d("listpath:$it")
+                zipList.add(it)
+            }
+        }
+        zipList.forEach {
+            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/" + it)
+        }
+    }
+
+    private fun copyDB() {
+        var zipList = ArrayList<String>()
+        var listpath = assets.list("")
+        listpath!!.forEach {
+            if (it.contains(".zip")) {
+                LogUtil.d("listpath:$it")
+                zipList.add(it)
+            }
+        }
+        if (zipList.size > 0) {
+            unzipForeach(zipList, 0)
+        }
+        LogUtil.d("unzipForeach zip copy complete!!")
     }
 
     interface IOForeachListener {
@@ -840,12 +860,9 @@ class MainActivity : AppCompatActivity() {
             if (stocksBean.perStocks.toDouble() > 0) {
                 stocksBean.perPrice = BigDecimalUtils.mul(
                     BigDecimalUtils.div(
-                        BigDecimalUtils.sub(
-                            stocksBean.dealAmount.toDouble(),
-                            lastStockBean.dealAmount.toDouble()
-                        ),
+                        stocksBean.perAmount,
                         stocksBean.perStocks.toDouble()
-                    ), 100.toDouble(), 3
+                    ), 100.toDouble(), 4
                 )
             } else {
                 stocksBean.perPrice = 0.toDouble()

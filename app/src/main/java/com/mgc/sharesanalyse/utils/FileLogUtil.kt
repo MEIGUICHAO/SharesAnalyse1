@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.utils
 
 import android.os.Environment
 import android.util.Log
+import com.mgc.sharesanalyse.base.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.isActive
@@ -19,8 +20,7 @@ import java.util.concurrent.ArrayBlockingQueue
  */
 object FileLogUtil {
     private const val isDebug = true
-    val FilePath =
-        Environment.getExternalStorageDirectory().toString() + "/mgc"
+    val FilePath = "/data/data/" + App.getContext().getPackageName() + "/mgc"
     private val mLogQueue = ArrayBlockingQueue<Triple<Long,String, String>>(100000)
 
     init {
