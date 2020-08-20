@@ -759,7 +759,7 @@ class MainActivity : AppCompatActivity() {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "AAA_10")
                     LogUtil.d("filterStocks!!! AAA_10 name:$name,code:$code")
                     FileLogUtil.d("filterStocks", "AAA_10 name:$name,code:$code")
-                } else if (div >= 0.9) {
+                } else if (div >= 0.09) {
                     CommonDaoUtils.renameTable(db, Datas.tableName + code, "BBB_9")
                     LogUtil.d("filterStocks!!! BBB_9 name:$name,code:$code")
                     FileLogUtil.d("filterStocks", "BBB_9 name:$name,code:$code")
@@ -877,7 +877,6 @@ class MainActivity : AppCompatActivity() {
             sizeBean = AnalyseSizeBean()
             sizeBean.code = stocksCode.toInt()
         }
-        var needSetSizeBean = false
         if (split[11].toDouble() > 0 || split[13].toDouble() > 0 || split[15].toDouble() > 0 || split[17].toDouble() > 0 || split[19].toDouble() > 0) {
             val b0Log = getB0Log(split)
             sizeBean.b0 = sizeBean.b0 + b0Log.second
@@ -886,7 +885,6 @@ class MainActivity : AppCompatActivity() {
                     stocksBean
                 )})"
             sizeBean.b0Str = if (sizeBean.b0Str.isNullOrEmpty()) str else sizeBean.b0Str + splitStr + str
-            needSetSizeBean = true
         }
         if (split[21].toDouble() > 0 || split[23].toDouble() > 0 || split[25].toDouble() > 0 || split[27].toDouble() > 0 || split[29].toDouble() > 0) {
             var s0log = getS0Log(split)
@@ -896,7 +894,6 @@ class MainActivity : AppCompatActivity() {
                     stocksBean
                 )})"
             sizeBean.s0Str = if (sizeBean.s0Str.isNullOrEmpty()) str else sizeBean.s0Str + splitStr + str
-            needSetSizeBean = true
         }
         var sizeRecord = sizeBean.countSize
         if (null != lastStockBean) {
