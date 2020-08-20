@@ -83,7 +83,6 @@ public class CommonDaoUtils<T> {
             daoSession.update(pEntity);
             return true;
         } catch (Exception e) {
-            LogUtil.d("insertTableStringBuilder e:" + e.toString());
             e.printStackTrace();
         }
         return false;
@@ -169,7 +168,6 @@ public class CommonDaoUtils<T> {
         StringBuilder createTableStringBuilder = new StringBuilder();
 
         createTableStringBuilder.append("CREATE TABLE ").append(curTableName).append(" (");
-        LogUtil.d("insertTableStringBuilder classifyTables length:" + daoConfig.properties.length);
         for (int j = 0; j < daoConfig.properties.length; j++) {
             String columnName = daoConfig.properties[j].columnName;
 
@@ -199,7 +197,6 @@ public class CommonDaoUtils<T> {
         if (!tabbleIsExist(curTableName)) {
             db.execSQL(createTableStringBuilder.toString());
         }
-        LogUtil.d("insertTableStringBuilder classifyTables tabbleIsExist:" + tabbleIsExist(curTableName));
 
         StringBuilder insertTableStringBuilder = new StringBuilder();
 
@@ -208,9 +205,7 @@ public class CommonDaoUtils<T> {
         insertTableStringBuilder.append(") SELECT ");
         insertTableStringBuilder.append(TextUtils.join(",", properties));
         insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
-        LogUtil.d("classifyTables insertTableStringBuilder:" + insertTableStringBuilder);
         db.execSQL(insertTableStringBuilder.toString());
-        LogUtil.d("classifyTables insertTableStringBuilder!!!:" + insertTableStringBuilder);
 
     }
 
@@ -223,7 +218,6 @@ public class CommonDaoUtils<T> {
         if (tabbleIsExist(tableName)) {
             String dropTable = "ALTER TABLE " + tableName + " RENAME TO " + newName + tableName;
             db.execSQL(dropTable);
-            LogUtil.d("renameTable:" + dropTable);
         }
     }
 
@@ -231,7 +225,6 @@ public class CommonDaoUtils<T> {
 
     public static StocksBean queryLast(Database db, String tableName) {
         StocksBean stocksBean = null;
-        LogUtil.d("dbName:"+DaoManager.getDbName()+"query tableName:" + tableName + "tabbleIsExist:" + tabbleIsExist(tableName));
         Cursor cursor = null;
         try {
             if (tabbleIsExist(tableName)) {
@@ -259,12 +252,8 @@ public class CommonDaoUtils<T> {
                 stocksBean.setLowest(LOWEST);
                 stocksBean.setPerAmount(PER_AMOUNT);
                 stocksBean.setTime(TIME);
-                LogUtil.d("query deal_stocks:" + deal_stocks);
-                LogUtil.d("query deal_amount:" + deal_amount);
             }
-            LogUtil.d("queryLast @！！！");
         } catch (Exception e) {
-            LogUtil.d("queryLast e:" + e.toString());
 
         } finally {
             if (cursor != null) {
@@ -275,7 +264,6 @@ public class CommonDaoUtils<T> {
     }
 
     public static ArrayList<StocksBean> queryStocks(String tableName) {
-        LogUtil.d("query queryPerAmount:" + tableName);
         if (db == null) {
             db = DaoManager.getsHelper().getWritableDb();
         }
@@ -296,8 +284,6 @@ public class CommonDaoUtils<T> {
                         Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
                         String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
                         Double PER_PRICE = cursor.getDouble(cursor.getColumnIndex("PER_PRICE"));
-                        LogUtil.d("query PER_STOCKS:" + PER_STOCKS);
-                        LogUtil.d("query BUY1:" + BUY1);
                         stocksBean.setBuy1(BUY1);
                         stocksBean.setPerStocks(PER_STOCKS);
                         stocksBean.setCurrent(CURRENT);
@@ -307,7 +293,6 @@ public class CommonDaoUtils<T> {
                         stocksBean.setPerAmount(PER_AMOUNT);
                         stocksBean.setPerPrice(PER_PRICE);
                         stocksBean.setTime(TIME);
-                        LogUtil.d("query PER_AMOUNT:" + PER_AMOUNT+",query TIME:" + TIME);
                         list.add(stocksBean);
                     } while (cursor.moveToNext());
                 }

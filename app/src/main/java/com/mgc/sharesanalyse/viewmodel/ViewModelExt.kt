@@ -3,6 +3,8 @@ package com.mgc.sharesanalyse.viewmodel
 import android.util.SparseArray
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mgc.sharesanalyse.utils.DateUtils
+import com.mgc.sharesanalyse.utils.FormatterEnum
 import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -42,4 +44,8 @@ fun Int.toLog(tag:String):String {
 
 fun String.toLogCompare():Int {
     return this.substringAfter("s:").split(",")[0].toInt()
+}
+
+fun String.toShareDBDateCompare():Long {
+    return DateUtils.parse(this.replace("sharesDB_",""),FormatterEnum.YYYY_MM_DD)
 }

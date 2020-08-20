@@ -22,6 +22,11 @@ public class AnalyseSizeBean {
     private int gt100TimesSize;
     private int PPGtCurSize;
     private int CurGtPPSize;
+    private int B0;
+    private int S0;
+    private String B0Str;
+    private String S0Str;
+    private Double current;
     private String tenTimesSizeStr;
     private String ge100mSizeStr;
     private String ge50mSizeStr;
@@ -32,11 +37,12 @@ public class AnalyseSizeBean {
     private String gt100TimesSizeStr;
     private String PPGtCurSizeStr;
     private String CurGtPPSizeStr;
-    @Generated(hash = 1978869661)
+    @Generated(hash = 1984512402)
     public AnalyseSizeBean(Long id, int Code, Double percent, int countSize,
             int tenTimesSize, int ge100mSize, int ge50mSize, int ge20mSize,
             int ge10mSize, int ge5mSize, int gt1000TimesSize, int gt100TimesSize,
-            int PPGtCurSize, int CurGtPPSize, String tenTimesSizeStr,
+            int PPGtCurSize, int CurGtPPSize, int B0, int S0, String B0Str,
+            String S0Str, Double current, String tenTimesSizeStr,
             String ge100mSizeStr, String ge50mSizeStr, String ge20mSizeStr,
             String ge10mSizeStr, String ge5mSizeStr, String gt1000TimesSizeStr,
             String gt100TimesSizeStr, String PPGtCurSizeStr,
@@ -55,6 +61,11 @@ public class AnalyseSizeBean {
         this.gt100TimesSize = gt100TimesSize;
         this.PPGtCurSize = PPGtCurSize;
         this.CurGtPPSize = CurGtPPSize;
+        this.B0 = B0;
+        this.S0 = S0;
+        this.B0Str = B0Str;
+        this.S0Str = S0Str;
+        this.current = current;
         this.tenTimesSizeStr = tenTimesSizeStr;
         this.ge100mSizeStr = ge100mSizeStr;
         this.ge50mSizeStr = ge50mSizeStr;
@@ -212,5 +223,35 @@ public class AnalyseSizeBean {
     }
     public void setPercent(Double percent) {
         this.percent = percent;
+    }
+    public int getB0() {
+        return this.B0;
+    }
+    public void setB0(int B0) {
+        this.B0 = B0;
+    }
+    public int getS0() {
+        return this.S0;
+    }
+    public void setS0(int S0) {
+        this.S0 = S0;
+    }
+    public String getB0Str() {
+        return this.B0Str;
+    }
+    public void setB0Str(String B0Str) {
+        this.B0Str = B0Str;
+    }
+    public String getS0Str() {
+        return this.S0Str;
+    }
+    public void setS0Str(String S0Str) {
+        this.S0Str = S0Str;
+    }
+    public Double getCurrent() {
+        return this.current;
+    }
+    public void setCurrent(Double current) {
+        this.current = current;
     }
 }

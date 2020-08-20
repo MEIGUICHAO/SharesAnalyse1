@@ -20,6 +20,9 @@ class MainViewModel : ViewModel() {
     val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
     val stocksArray = ResUtil.getSArray(R.array.stocks_code)
+    val urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
+    var isInit = true
+
 
     fun requestData() {
         if (sharesDats.value == null) {
@@ -28,16 +31,18 @@ class MainViewModel : ViewModel() {
             sharesDats.value!!.clear()
         }
 
-        val urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
-        Log.d("mgc", "splitArray size:${stocksArray.size}")
+        if (isInit) {
+            isInit = false
+            Log.d("mgc", "splitArray size:${stocksArray.size}")
+            for (index in 0..stocksArray.size-1) {
+                LogUtil.d("mgc", "splitArray index:${index / 100},code:${stocksArray[index]}")
+                urlArray[index / 100] =
+                    (if (urlArray[index / 100].isNullOrEmpty()) "sh${stocksArray[index]}" else urlArray[index / 100] + ",sh${stocksArray[index]}")
+                LogUtil.d("mgc", "url ${index / 100}:${urlArray[index / 100]}")
 
-        for (index in 0..stocksArray.size-1) {
-            LogUtil.d("mgc", "splitArray index:${index / 100},code:${stocksArray[index]}")
-            urlArray[index / 100] =
-                (if (urlArray[index / 100].isNullOrEmpty()) "sh${stocksArray[index]}" else urlArray[index / 100] + ",sh${stocksArray[index]}")
-            LogUtil.d("mgc", "url ${index / 100}:${urlArray[index / 100]}")
-
+            }
         }
+
 
         var resultArray = arrayOfNulls<Deferred<String>>(stocksArray.size / 100 + 1)
         var index = 0

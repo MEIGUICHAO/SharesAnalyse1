@@ -31,17 +31,18 @@ public class StocksBean {
     private Double PerAmount;
 
     private Double open;
+    private Double close;
     private Double current;
     private Double PerPrice;
 
     private String hightest;
     private String lowest;
-    @Generated(hash = 1342048069)
+    @Generated(hash = 920298224)
     public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
             String sale2, String buy3, String sale3, String buy4, String sale4,
             String buy5, String sale5, String dealStocks, String dealAmount,
-            Double PerStocks, Double PerAmount, Double open, Double current,
-            Double PerPrice, String hightest, String lowest) {
+            Double PerStocks, Double PerAmount, Double open, Double close,
+            Double current, Double PerPrice, String hightest, String lowest) {
         this.id = id;
         this.time = time;
         this.buy1 = buy1;
@@ -59,6 +60,7 @@ public class StocksBean {
         this.PerStocks = PerStocks;
         this.PerAmount = PerAmount;
         this.open = open;
+        this.close = close;
         this.current = current;
         this.PerPrice = PerPrice;
         this.hightest = hightest;
@@ -192,6 +194,12 @@ public class StocksBean {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+    public Double getClose() {
+        return this.close;
+    }
+    public void setClose(Double close) {
+        this.close = close;
     }
 
 }
