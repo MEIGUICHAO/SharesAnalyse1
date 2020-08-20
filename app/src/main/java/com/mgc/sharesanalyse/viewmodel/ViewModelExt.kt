@@ -46,6 +46,16 @@ fun String.toLogCompare():Int {
     return this.substringAfter("s:").split(",")[0].toInt()
 }
 
+fun String.toDateCompare():Long {
+    return DateUtils.parse(this.replace("logAlone.txt",""),FormatterEnum.YYYYMMDD)
+}
+
 fun String.toShareDBDateCompare():Long {
     return DateUtils.parse(this.replace("sharesDB_",""),FormatterEnum.YYYY_MM_DD)
+}
+
+fun SparseArray<String>.putLogSum(key: Int,value:String) {
+   var mValue =  if (this.get(key).isNullOrEmpty()) value else this.get(key) + "\n" + value
+    this.put(key, mValue)
+
 }

@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     var PSGe100MillionSpareArray = SparseArray<String>()
     var PerPricesGtCurSpareArray = SparseArray<String>()
     var CurGtPerPricesSpareArray = SparseArray<String>()
+    var LogSumSpareArray = SparseArray<String>()
     var tenTimesSize = 0
     var ge100mSize = 0
     var ge50mSize = 0
@@ -74,15 +75,20 @@ class MainActivity : AppCompatActivity() {
     var fileNameList: ArrayList<String>? = null
     var isInit = true
     var intervalTime = 25.toLong()
-    var logRecordStr = splitStr
-    var logAloneStr = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         refreshSpinner()
-        ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE) , 0);
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ),
+            0
+        );
         btnRefreshSpinner.setOnClickListener {
             refreshSpinner()
             copyTxt()
@@ -92,6 +98,7 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
+
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -186,32 +193,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        btnLogSum.setOnClickListener{
+        btnLogSum.setOnClickListener {
             //logRecordSum.txt,logAloneSum.txt
-            App.getSinglePool().execute{
-                var logAloneList = FileUtil.getFileNameList(FileLogUtil.FilePath, "logResult.txt","logRecordSum.txt","logAloneSum.txt")
-                var logRecordSumList = FileUtil.getFileNameList(FileLogUtil.FilePath, "Result.txt","logAlone.txt","logAloneSum.txt")
-                var logAloneSumList = FileUtil.getFileNameList(FileLogUtil.FilePath, "Result.txt","logAlone.txt","logRecordSum.txt")
-                LogUtil.d("foreachIOString logAloneList size${logAloneList.size}, logRecordSumList size${logRecordSumList.size}, logAloneSumList size${logAloneSumList.size},")
-                var logRecordStr = splitStr
-                if (logRecordSumList.size > 0) {
-                    logRecordStr
-                } else {
-                    foreachIOString(0, logAloneList)
-                }
+            App.getSinglePool().execute {
+                logSum()
             }
         }
         btnRequest.setOnClickListener {
             requestDatas(viewModel!!)
         }
         btnClassify.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 filterStocks()
             }
         }
         btnCopyDB.setOnClickListener {
             //databases文件夹目录
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 copyDB()
             }
         }
@@ -225,6 +223,23 @@ class MainActivity : AppCompatActivity() {
                 logResult()
             })
         }
+    }
+
+    private fun logSum() {
+        var logAloneList = FileUtil.getFileNameList(
+            FileLogUtil.FilePath,
+            "logResult.txt",
+            "logRecordSum.txt",
+            "logAloneSum.txt"
+        )
+        LogSumSpareArray.clear()
+
+        Collections.sort(logAloneList, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return p1.toDateCompare().compareTo(p0.toDateCompare())
+            }
+        })
+        foreachIOString(0, logAloneList)
     }
 
     private fun copyTxt() {
@@ -256,35 +271,50 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("unzipForeach zip copy complete!!")
     }
 
-    interface IOForeachListener {
-        fun foreachFinish(result: String)
-    }
 
     private fun foreachIOString(index: Int, logList: java.util.ArrayList<String>) {
-        if (logList.size > 0) {
-            FileUtil.getStringByFile(FileLogUtil.FilePath+"/"+logList.get(index), index, object :
-                FileUtil.IOStringListener {
-                override fun finish(index: Int, content: String) {
-                    LogUtil.d("foreachIOString $index size${logList.size}:$content")
-                    if (index < logList.size) {
-                        foreachIOString(index, logList)
+        if (logList.size > 0 && index < logList.size) {
+            FileLogUtil.d("logRecordSum", logList.get(index))
+            FileUtil.getStringByFile(
+                FileLogUtil.FilePath + "/" + logList.get(index),
+                index,
+                object :
+                    FileUtil.IOStringListener {
+                    override fun finish(index: Int, content: String) {
+                        LogUtil.d("foreachIOString $index size${logList.size}:$content")
+                        val split = content.split("---c:")
+                        LogUtil.d("foreachIOString forEach size:${split.size}")
+                        split.forEach {
+                            if (it.contains("---n")) {
+                                var reslut = it.replace(
+                                    "!!!",
+                                    ",${logList[index - 1].replace("logAlone.txt", "")}"
+                                )
+                                LogUtil.d("foreachIOString forEach:$reslut")
+                                val sumStr = reslut.split("---")
+                                LogSumSpareArray.putLogSum(sumStr[0].toInt(),reslut)
+                            }
+                        }
+                        if (index < logList.size) {
+                            foreachIOString(index, logList)
+                        }
                     }
-                }
 
-            })
+                })
         }
 
     }
 
-    private fun unzipForeach(zipList: ArrayList<String>,index:Int) {
-        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index).replace(".zip","")
+    private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
+        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index)
+            .replace(".zip", "")
         LogUtil.d("unzipForeach:$path")
         FileUtil.UnZipAssetsFolder(this, index, zipList.get(index), path, object :
             FileUtil.UnZipListener {
 
             override fun unzipFinish(index: Int) {
                 if (index < zipList.size) {
-                    unzipForeach(zipList,index)
+                    unzipForeach(zipList, index)
                 }
             }
 
@@ -294,7 +324,7 @@ class MainActivity : AppCompatActivity() {
     private fun refreshSpinner() {
         var path = "/data/data/" + getPackageName() + "/databases"
         fileNameList = FileUtil.getFileNameList(path, "journal")
-        var dbName ="sharesDB_" + DateUtils.format(
+        var dbName = "sharesDB_" + DateUtils.format(
             System.currentTimeMillis(),
             FormatterEnum.YYYY_MM_DD
         )
@@ -381,8 +411,8 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-                if (sizeCount >= Datas.limitSize || !needJudeSize) {
-                logSize(code, name, lastBean,logALoneList)
+            if (sizeCount >= Datas.limitSize || !needJudeSize) {
+                logSize(code, name, lastBean, logALoneList)
                 logStrList.forEach {
                     FileLogUtil.d("logResult", it)
                     Log.d(tag, it)
@@ -444,7 +474,8 @@ class MainActivity : AppCompatActivity() {
                     )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.close
-                    )}!!!")
+                    )}!!!"
+        )
     }
 
     private fun logBySplite(it: String?, key: String): Int {
@@ -901,7 +932,8 @@ class MainActivity : AppCompatActivity() {
                 "(${stocksBean.time},b0 size:${sizeBean.b0}${b0Log.first}${getSimpleAddLog(
                     stocksBean
                 )})"
-            sizeBean.b0Str = if (sizeBean.b0Str.isNullOrEmpty()) str else sizeBean.b0Str + splitStr + str
+            sizeBean.b0Str =
+                if (sizeBean.b0Str.isNullOrEmpty()) str else sizeBean.b0Str + splitStr + str
         }
         if (split[21].toDouble() <= 0 || split[23].toDouble() <= 0 || split[25].toDouble() <= 0 || split[27].toDouble() <= 0 || split[29].toDouble() <= 0) {
             var s0log = getS0Log(split)
@@ -910,7 +942,8 @@ class MainActivity : AppCompatActivity() {
                 "(${stocksBean.time},s0 size:${sizeBean.s0}${s0log.first}${getSimpleAddLog(
                     stocksBean
                 )})"
-            sizeBean.s0Str = if (sizeBean.s0Str.isNullOrEmpty()) str else sizeBean.s0Str + splitStr + str
+            sizeBean.s0Str =
+                if (sizeBean.s0Str.isNullOrEmpty()) str else sizeBean.s0Str + splitStr + str
         }
         var sizeRecord = sizeBean.countSize
         if (null != lastStockBean) {
@@ -930,7 +963,7 @@ class MainActivity : AppCompatActivity() {
         return stocksBean
     }
 
-    private fun getB0Log(split: List<String>): Pair<String,Int> {
+    private fun getB0Log(split: List<String>): Pair<String, Int> {
         var size = 0
         var str = ""
         size++
@@ -949,10 +982,10 @@ class MainActivity : AppCompatActivity() {
         if (split[19].toDouble() <= 0) {
             str = str + ",05"
         }
-        return Pair(str,size)
+        return Pair(str, size)
     }
 
-    private fun getS0Log(split: List<String>): Pair<String,Int> {
+    private fun getS0Log(split: List<String>): Pair<String, Int> {
         var size = 0
         var str = ""
         size++
@@ -971,7 +1004,7 @@ class MainActivity : AppCompatActivity() {
         if (split[29].toDouble() <= 0) {
             str = str + ",05"
         }
-        return Pair(str,size)
+        return Pair(str, size)
     }
 
     private fun updatePP(

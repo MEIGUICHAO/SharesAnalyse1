@@ -404,6 +404,7 @@ public class FileUtil {
     public static void getStringByFile(String fileName, int index, IOStringListener listener) {
         try {
             File file = new File(fileName);
+            LogUtil.d("getStringByFile:" + fileName + ",exists:" + file.exists());
             if (file.exists()) {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 String str = null;
@@ -412,12 +413,12 @@ public class FileUtil {
                     result += str;
                 }
                 reader.close();
-                listener.finish(index+1,result);
+
+                listener.finish(index + 1,  result);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        listener.finish(index+1,"");
     }
 
     // 写到文件
