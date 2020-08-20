@@ -240,6 +240,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
         foreachIOString(0, logAloneList)
+        var logname = "logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}.txt"
+        viewModel!!.stocksArray.forEach {
+            FileLogUtil.d(logname,it)
+        }
+
     }
 
     private fun copyTxt() {
