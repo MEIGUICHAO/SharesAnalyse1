@@ -550,7 +550,7 @@ class MainActivity : AppCompatActivity() {
     ): String {
         var addStr1 = addStr
         if (!logAloneStr.contains(lable)) {
-            addStr1 = "\n" + lable
+            addStr1 = "$splitStr\n" + lable
         }
         addStr1 = addStr1 + limitStr.replace("perAmount:", "").replace("lastPerAmount:", "")
         return addStr1
@@ -583,7 +583,7 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("logAloneAdd limiWhenLogPP:$limitStr")
         var addStr1 = addStr
         if (!logAloneStr.contains(lable)) {
-            addStr1 = "\n" + lable
+            addStr1 = "$splitStr\n" + lable
         }
         var time = limitStr.split(":(")[1].split(",")[0]
         LogUtil.d("logAloneAdd limiWhenLogPP:${limitStr.split(":(")[1]}")
