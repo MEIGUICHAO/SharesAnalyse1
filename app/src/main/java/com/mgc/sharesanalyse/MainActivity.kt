@@ -414,6 +414,7 @@ class MainActivity : AppCompatActivity() {
             var name = it.split(splitStr)[1]
             logStrList.clear()
             needJudeSize = true
+            resetSize()
             var tag = "logResult_" + code
             val perAmountList =
                 DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
@@ -495,6 +496,20 @@ class MainActivity : AppCompatActivity() {
                 it
             )
         }
+    }
+
+    private fun resetSize() {
+        tenTimesSize = 0
+        ge100mSize = 0
+        ge50mSize = 0
+        ge20mSize = 0
+        ge10mSize = 0
+        ge5mSize = 0
+        gt1000TimesSize = 0
+        gt100TimesSize = 0
+        PPGtCurSize = 0
+        CurGtPPSize = 0
+        sizeCount = 0
     }
 
     private fun logAloneAdd(
