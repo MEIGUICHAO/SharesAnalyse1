@@ -1,7 +1,5 @@
 package com.mgc.sharesanalyse.utils
 
-import android.os.Environment
-import android.util.Log
 import com.mgc.sharesanalyse.base.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,7 +29,8 @@ object FileLogUtil {
                     try {
                         val path = File(FilePath)
                         if (!path.exists()) path.mkdir()
-                        val file = File("$FilePath/${(DaoManager.getDbName().replace("sharesDB_","")+take.second)}.txt")
+                        val file = File("$FilePath/${take.second}.txt")
+                        FileUtil.createDir(file.parentFile!!.absolutePath)
                         if (!file.exists())file.createNewFile()
                         val out = FileOutputStream(file, true)
                         val newLine = System.getProperty("line.separator")

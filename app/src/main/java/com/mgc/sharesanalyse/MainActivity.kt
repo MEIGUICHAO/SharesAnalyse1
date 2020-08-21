@@ -75,6 +75,12 @@ class MainActivity : AppCompatActivity() {
     var fileNameList: ArrayList<String>? = null
     var isInit = true
     var intervalTime = 25.toLong()
+    var parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
+    var logResultPath =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
+    var logAlonePath =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
+    
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -227,7 +233,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun logSum() {
         var logAloneList = FileUtil.getFileNameList(
-            FileLogUtil.FilePath,
+            FileLogUtil.FilePath+"/$parentPath",
             "logResult.txt",
             "logRecordSum.txt",
             "logAloneSum.txt"
@@ -240,8 +246,22 @@ class MainActivity : AppCompatActivity() {
             }
         })
         foreachIOString(0, logAloneList)
-        var logname = "logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}.txt"
+        var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}.txt"
+        LogUtil.d("logSum logname:$logname")
+        LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
+        val logSumArray = ArrayList<String>()
         viewModel!!.stocksArray.forEach {
+            if (null != LogSumSpareArray[it.toInt()]) {
+                logSumArray.add("\n------------$it------------\n${LogSumSpareArray[it.toInt()]}")
+                LogUtil.d("logSum LogSumSpareArray:${LogSumSpareArray[it.toInt()]}")
+            }
+        }
+        Collections.sort(logSumArray, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return p1.toLogSumSizeCompare("\n").compareTo(p0.toLogSumSizeCompare("\n"))
+            }
+        })
+        logSumArray.forEach {
             FileLogUtil.d(logname,it)
         }
 
@@ -257,7 +277,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         zipList.forEach {
-            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/" + it)
+            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/$parentPath/" + it)
         }
     }
 
@@ -279,9 +299,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun foreachIOString(index: Int, logList: java.util.ArrayList<String>) {
         if (logList.size > 0 && index < logList.size) {
-            FileLogUtil.d("logRecordSum", logList.get(index))
             FileUtil.getStringByFile(
-                FileLogUtil.FilePath + "/" + logList.get(index),
+                FileLogUtil.FilePath + "/$parentPath/" + logList.get(index),
                 index,
                 object :
                     FileUtil.IOStringListener {
@@ -352,7 +371,7 @@ class MainActivity : AppCompatActivity() {
         filterAnalyseStocks = ""
         val shCodeList = ResUtil.getSArray(R.array.stocks_code_name)
         FileLogUtil.d(
-            "logResult",
+            logResultPath,
             "!!!!!!!!!!start_______${DateUtils.format(
                 System.currentTimeMillis(),
                 FormatterEnum.YYYYMMDD__HH_MM_SS
@@ -419,12 +438,12 @@ class MainActivity : AppCompatActivity() {
             if (sizeCount >= Datas.limitSize || !needJudeSize) {
                 logSize(code, name, lastBean, logALoneList)
                 logStrList.forEach {
-                    FileLogUtil.d("logResult", it)
+                    FileLogUtil.d(logResultPath, it)
                     Log.d(tag, it)
                 }
-                FileLogUtil.d("logResult", "----close prices-----:${lastBean.current}!!!")
+                FileLogUtil.d(logResultPath, "----close prices-----:${lastBean.current}!!!")
                 FileLogUtil.d(
-                    "logResult",
+                    logResultPath,
                     "=============================================================================================================="
                 )
                 LogUtil.d(
@@ -442,7 +461,7 @@ class MainActivity : AppCompatActivity() {
         })
         logALoneList.forEach {
             FileLogUtil.d(
-                "logAlone",
+                logAlonePath,
                 it
             )
         }
@@ -455,7 +474,7 @@ class MainActivity : AppCompatActivity() {
         logALoneList: ArrayList<String>
     ) {
         FileLogUtil.d(
-            "logResult",
+            logResultPath,
             "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
                 ",100ms"
             )},${ge50mSize.toLog("50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(

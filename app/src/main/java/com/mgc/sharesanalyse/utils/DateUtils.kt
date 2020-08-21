@@ -9,6 +9,7 @@ import java.util.*
 
 enum class FormatterEnum(val format: String) {
     YYYY_MM_DD("yyyy-MM-dd"),
+    YYYY_MM("yyyy-MM"),
     YYYYMMDD("yyyyMMdd"),
     YYYY_MM_DD__HH_MM("yyyy-MM-dd HH:mm"),
     YYYY_MM_DD__HH_MM_SS("yyyy-MM-dd HH:mm:ss"),

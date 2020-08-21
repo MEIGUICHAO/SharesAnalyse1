@@ -47,15 +47,18 @@ fun String.toLogCompare():Int {
 }
 
 fun String.toDateCompare():Long {
-    return DateUtils.parse(this.replace("logAlone.txt",""),FormatterEnum.YYYYMMDD)
+    return DateUtils.parse(this.replace("logAlone.txt",""),FormatterEnum.YYYY_MM_DD)
 }
 
 fun String.toShareDBDateCompare():Long {
     return DateUtils.parse(this.replace("sharesDB_",""),FormatterEnum.YYYY_MM_DD)
 }
 
+fun String.toLogSumSizeCompare(tag: String): Int {
+    return this.split(tag).size
+}
+
 fun SparseArray<String>.putLogSum(key: Int,value:String) {
    var mValue =  if (this.get(key).isNullOrEmpty()) value else this.get(key) + "\n" + value
     this.put(key, mValue)
-
 }
