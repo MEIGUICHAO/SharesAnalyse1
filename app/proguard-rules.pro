@@ -58,6 +58,21 @@
 
 
 #600036---n:招商银行,s:190,10ts:1,20ms:9,10ms:42,5ms:108,1000ts:2,100ts:20,curGt:1,o:37.85,c:37.33,p:-1.00%,2020-08-13
+#600030: pa_ge50m:(13:41:59,pa:9044.307,cur:31.280,open:31.180,h:31.290,l:30.710,p:.00%,h/l:2.00%,sp:34.289)
+#600030: pa_ge50m:(13:43:42,pa:6059.166,cur:31.370,open:31.180,h:31.390,l:30.710,p:1.00%,h/l:2.00%,sp:34.289)
+
+
+#pa_ge100m pa>100m
+#pa_10Last pa>10last
+#pa_ge50m  pa>50m
+#pa_ge20m  pa>20m
+#pa_ge10m  pa>10m
+#pa_ge5m   pa>5m
+#ps_gt1000times        ps>1000ts
+#ps_gt100times         ps>100ts
+#pp_perPricesGtCur     pp>cur
+#pp_curGtPerPrices     pp<cur
+#pa_ge50m:(13:41:59,9044.307,p:.00%)
 
 
 

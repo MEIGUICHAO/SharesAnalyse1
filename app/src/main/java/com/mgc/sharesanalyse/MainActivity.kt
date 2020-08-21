@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.facebook.stetho.common.Predicate
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.SpinnerAdapter
@@ -22,7 +21,6 @@ import com.mgc.sharesanalyse.viewmodel.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
-import java.io.File
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -76,10 +74,10 @@ class MainActivity : AppCompatActivity() {
     var isInit = true
     var intervalTime = 25.toLong()
     var parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
-    var logResultPath =
-        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
-    var logAlonePath =
-        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
+    var logResultPath = parentPath + "/" +
+            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
+    var logAlonePath = parentPath + "/" +
+            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
     
 
 
@@ -259,14 +257,19 @@ class MainActivity : AppCompatActivity() {
                 var maxValue = 0.toDouble()
                 var maxValueDate = ""
                 for (index in 0 until split.size) {
-                    if (split[index].contains(",c:")) {
-                        var curValue = split[index].split(",c:")[1].split(",p:")[0].toDouble()
+                    var s = split[index]
+                    if (s.contains(splitStr)) {
+                        s = s.split(splitStr)[0]
+                    }
+                    if (s.contains(",c:")) {
+                        LogUtil.d("logSum for value:$s")
+                        var curValue = s.split(",c:")[1].split(",p:")[0].toDouble()
                         if (endValue == 0.toDouble()) {
                             endValue = curValue
                         }
                         if (curValue > maxValue) {
                             maxValue = curValue
-                            maxValueDate = split[index].split("%,")[1]
+                            maxValueDate = s.split("%,")[1]
                         }
                     }
                 }
@@ -458,7 +461,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 logStrList.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 PPGtCurSize = logBySplite(it.perPricesGtCur, "pp_perPricesGtCur")
-                CurGtPPSize = logBySplite(it.curGtPerPrices, "ps_curGtPerPrices")
+                CurGtPPSize = logBySplite(it.curGtPerPrices, "pp_curGtPerPrices")
             }
 
 
@@ -494,6 +497,102 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun logAloneAdd(
+        limitStr: String,
+        logAloneStr: String
+    ):String {
+        var addStr = ""
+        LogUtil.d("logAloneAdd limitStr:${limitStr}")
+        LogUtil.d("logAloneAdd:${limitStr.contains(")") && limitStr.contains(":(")}")
+        if (limitStr.contains(")") && limitStr.contains(":(")) {
+            when (limitStr.split(":(")[0]) {
+                "pa_ge100m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m",limitStr)
+                }
+                "pa_10Last" ->{
+                    addStr = limiWhenLog10ts(logAloneStr, addStr, "pa>10Last",limitStr)
+                }
+                "pa_ge50m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>50m",limitStr)
+                }
+                "pa_ge20m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>20m",limitStr)
+                }
+                "pa_ge10m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>10m",limitStr)
+                }
+                "pa_ge5m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>5m",limitStr)
+                }
+                "ps_gt1000times" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "ps>1000ts",limitStr)
+                }
+                "ps_gt100times" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "ps>100ts",limitStr)
+                }
+                "pp_perPricesGtCur" ->{
+                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp>cur",limitStr)
+                }
+                "pp_curGtPerPrices" ->{
+                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp<cur",limitStr)
+                }
+
+            }
+        }
+        return logAloneStr  + addStr
+    }
+
+    private fun limiWhenLog10ts(
+        logAloneStr: String,
+        addStr: String,
+        lable: String,
+        limitStr: String
+    ): String {
+        var addStr1 = addStr
+        if (!logAloneStr.contains(lable)) {
+            addStr1 = "\n" + lable
+        }
+        addStr1 = addStr1 + limitStr.replace("perAmount:", "").replace("lastPerAmount:", "")
+        return addStr1
+    }
+
+    private fun limiWhenLog(
+        logAloneStr: String,
+        addStr: String,
+        lable: String,
+        limitStr: String
+    ): String {
+        var addStr1 = addStr
+        if (!logAloneStr.contains(lable)) {
+            addStr1 = "$splitStr\n" + lable
+        }
+        var time = limitStr.split(":(")[1].split(",")[0]
+        var attribute = limitStr.split(":(")[1].split(",")[1].split(",cur:")[0]
+        var percent = limitStr.split(",p:")[1].split(",h/l")[0]
+        addStr1 = addStr1 + "($time,$attribute,$percent)"
+        return addStr1
+    }
+
+
+    private fun limiWhenLogPP(
+        logAloneStr: String,
+        addStr: String,
+        lable: String,
+        limitStr: String
+    ): String {
+        LogUtil.d("logAloneAdd limiWhenLogPP:$limitStr")
+        var addStr1 = addStr
+        if (!logAloneStr.contains(lable)) {
+            addStr1 = "\n" + lable
+        }
+        var time = limitStr.split(":(")[1].split(",")[0]
+        LogUtil.d("logAloneAdd limiWhenLogPP:${limitStr.split(":(")[1]}")
+        LogUtil.d("logAloneAdd limiWhenLogPP:${limitStr.split(":(")[1].split("dif:")[1]}")
+        var attribute = limitStr.split(":(")[1].split("dif:")[1]
+        addStr1 = addStr1 + "($time,$attribute)"
+        return addStr1
+    }
+
     private fun logSize(
         code: String,
         name: String,
@@ -514,7 +613,7 @@ class MainActivity : AppCompatActivity() {
                         lastBean.close
                     )}!!!"
         )
-        logALoneList.add(
+        var logAloneStr =
             "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
                 ",100ms"
             )}${ge50mSize.toLog(",50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(
@@ -526,7 +625,12 @@ class MainActivity : AppCompatActivity() {
                         lastBean.current,
                         lastBean.close
                     )}!!!"
-        )
+
+        logStrList.forEach {
+            logAloneStr = logAloneAdd(it,logAloneStr)
+        }
+        logALoneList.add(logAloneStr)
+
     }
 
     private fun logBySplite(it: String?, key: String): Int {
@@ -776,7 +880,7 @@ class MainActivity : AppCompatActivity() {
                     open
                 ) * 100)
             ) + "%"
-        } else return "0"
+        } else return "0%"
     }
 
     private fun getCurPercentDouble(current: Double, open: Double): Double {
