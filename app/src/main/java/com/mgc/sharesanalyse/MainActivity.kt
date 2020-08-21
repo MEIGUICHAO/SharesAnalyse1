@@ -246,14 +246,41 @@ class MainActivity : AppCompatActivity() {
             }
         })
         foreachIOString(0, logAloneList)
-        var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}.txt"
+        var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}"
         LogUtil.d("logSum logname:$logname")
         LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
         val logSumArray = ArrayList<String>()
         viewModel!!.stocksArray.forEach {
-            if (null != LogSumSpareArray[it.toInt()]) {
-                logSumArray.add("\n------------$it------------\n${LogSumSpareArray[it.toInt()]}")
-                LogUtil.d("logSum LogSumSpareArray:${LogSumSpareArray[it.toInt()]}")
+            val codeSumResult = LogSumSpareArray[it.toInt()]
+            if (null != codeSumResult) {
+                val split = codeSumResult.split("$it---n:")
+                LogUtil.d("logSum codeSumResult size:${split.size}")
+                var endValue = 0.toDouble()
+                var maxValue = 0.toDouble()
+                var maxValueDate = ""
+                for (index in 0 until split.size) {
+                    if (split[index].contains(",c:")) {
+                        var curValue = split[index].split(",c:")[1].split(",p:")[0].toDouble()
+                        if (endValue == 0.toDouble()) {
+                            endValue = curValue
+                        }
+                        if (curValue > maxValue) {
+                            maxValue = curValue
+                            maxValueDate = split[index].split("%,")[1]
+                        }
+                    }
+                }
+                var startValue = 0.toDouble()
+                for (index in split.size - 1 downTo 0) {
+                    if (split[index].contains(",c:")) {
+                        startValue= split[index].split(",c:")[1].split(",p:")[0].toDouble()
+                        break
+                    }
+                }
+                LogUtil.d("logSum startValue:$startValue,endValue:$endValue,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate")
+
+                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate\n$codeSumResult")
+                LogUtil.d("logSum LogSumSpareArray:$codeSumResult")
             }
         }
         Collections.sort(logSumArray, object : Comparator<String> {

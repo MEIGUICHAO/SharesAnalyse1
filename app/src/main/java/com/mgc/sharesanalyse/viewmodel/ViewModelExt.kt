@@ -3,6 +3,7 @@ package com.mgc.sharesanalyse.viewmodel
 import android.util.SparseArray
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
 import com.mgc.sharesanalyse.utils.LogUtil
@@ -61,4 +62,11 @@ fun String.toLogSumSizeCompare(tag: String): Int {
 fun SparseArray<String>.putLogSum(key: Int,value:String) {
    var mValue =  if (this.get(key).isNullOrEmpty()) value else this.get(key) + "\n" + value
     this.put(key, mValue)
+}
+
+fun Double.getPercent(start: Double):Double {
+    if (start > 0.toDouble()) {
+        return BigDecimalUtils.mul(BigDecimalUtils.div(BigDecimalUtils.sub(this,start),start),100.toDouble(),2)
+    }
+    return 0.toDouble()
 }
