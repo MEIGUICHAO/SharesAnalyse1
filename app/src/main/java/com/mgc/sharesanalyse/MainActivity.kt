@@ -292,7 +292,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         logSumArray.forEach {
-            FileLogUtil.d(logname,it)
+            FileLogUtil.d(logname,it.replace(splitStr,"\n    "))
         }
 
     }
