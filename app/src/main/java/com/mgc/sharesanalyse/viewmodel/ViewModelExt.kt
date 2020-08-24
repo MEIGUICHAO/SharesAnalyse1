@@ -70,3 +70,11 @@ fun Double.getPercent(start: Double):Double {
     }
     return 0.toDouble()
 }
+
+fun String.logAlongSumtoTimeStamp():Long {
+    return DateUtils.parse(this.replace("logAloneSum_","").replace(".txt",""),FormatterEnum.YYYYMMDD__HH_MM_SS)
+}
+
+fun String.logAlongSumtoTimeStampYMD():Long {
+    return DateUtils.parse(this.replace("logAloneSum_","").replace(".txt",""),FormatterEnum.YYYYMMDD)
+}

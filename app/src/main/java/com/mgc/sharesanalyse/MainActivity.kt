@@ -23,6 +23,7 @@ import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
     var logAlonePath = parentPath + "/" +
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
+    var logAloneSumEndSplitStr = "==============================================="
     
 
 
@@ -230,7 +232,6 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
-
     private fun logSum() {
         var logAloneList = FileUtil.getFileNameList(
             FileLogUtil.FilePath+"/$parentPath",
@@ -239,13 +240,30 @@ class MainActivity : AppCompatActivity() {
             "logAloneSum.txt"
         )
         LogSumSpareArray.clear()
+        val logSumList =
+            FileUtil.getFileNameList(FileLogUtil.FilePath + "/$parentPath/logSum", "")
+        var logSumLimitTimeStamp = 0.toLong()
+        if (logSumList.size > 0) {
+            Collections.sort(logSumList, object : Comparator<String> {
+                override fun compare(p0: String, p1: String): Int {
+                    return p1.logAlongSumtoTimeStamp().compareTo(p0.logAlongSumtoTimeStamp())
+                }
+            })
+            logSumLimitTimeStamp = logSumList[0].logAlongSumtoTimeStampYMD()
+            FileUtil.getStringByFile(
+                FileLogUtil.FilePath + "/$parentPath/logSum" + logSumList.get(0),
+                0,
+                object :
+                    FileUtil.IOStringListener {
+                    override fun finish(index: Int, content: String) {
+                        content.split(logAloneSumEndSplitStr)
+                    }
 
-        Collections.sort(logAloneList, object : Comparator<String> {
-            override fun compare(p0: String, p1: String): Int {
-                return p1.toDateCompare().compareTo(p0.toDateCompare())
-            }
-        })
-        foreachIOString(0, logAloneList)
+                })
+        }
+
+
+        foreachLogAloneIOString(0, logAloneList,logSumLimitTimeStamp)
         var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}"
         LogUtil.d("logSum logname:$logname")
         LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
@@ -284,7 +302,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 LogUtil.d("logSum startValue:$startValue,endValue:$endValue,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate")
 
-                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate\n$codeSumResult")
+                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate$splitStr\n$codeSumResult\n$logAloneSumEndSplitStr")
                 LogUtil.d("logSum LogSumSpareArray:$codeSumResult")
             }
         }
@@ -298,6 +316,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 
     private fun copyTxt() {
         var zipList = ArrayList<String>()
@@ -329,7 +348,11 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun foreachIOString(index: Int, logList: java.util.ArrayList<String>) {
+    private fun foreachLogAloneIOString(
+        index: Int,
+        logList: java.util.ArrayList<String>,
+        limitTimeStamp: Long
+    ) {
         if (logList.size > 0 && index < logList.size) {
             FileUtil.getStringByFile(
                 FileLogUtil.FilePath + "/$parentPath/" + logList.get(index),
@@ -348,11 +371,15 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 LogUtil.d("foreachIOString forEach:$reslut")
                                 val sumStr = reslut.split("---")
-                                LogSumSpareArray.putLogSum(sumStr[0].toInt(),reslut)
+                                if (logList[index - 1].replace("logAlone.txt", "")
+                                        .logAlongSumtoTimeStampYMD() > limitTimeStamp
+                                ) {
+                                    LogSumSpareArray.putLogSum(sumStr[0].toInt(),reslut)
+                                }
                             }
                         }
                         if (index < logList.size) {
-                            foreachIOString(index, logList)
+                            foreachLogAloneIOString(index, logList, limitTimeStamp)
                         }
                     }
 
