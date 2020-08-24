@@ -34,5 +34,11 @@ object DateUtils {
         return simpleDateFormat.format(date)
     }
 
+    fun formatToDay(formatter: FormatterEnum): String {
+        val simpleDateFormat = SimpleDateFormat(formatter.format)
+        val date = Date(System.currentTimeMillis())
+        return simpleDateFormat.format(date)
+    }
+
 
 }
