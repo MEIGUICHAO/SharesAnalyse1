@@ -113,7 +113,10 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 fileNameList?.let {
-                    LogUtil.d("spinner :${fileNameList!![position]}")
+                    logAlonePath =  parentPath + "/" +
+                            fileNameList!![position].replace("sharesDB_","") + "logAlone"
+                    LogUtil.d("spinner onItemSelected:${fileNameList!![position]},logAlonePath:$logAlonePath")
+
                 }
                 if (!isInit) {
                     db = null
@@ -127,6 +130,7 @@ class MainActivity : AppCompatActivity() {
                         AnalysePerStocksBeanDao::class.java,
                         AnalysePerAmountBeanDao::class.java
                     )
+
                 } else {
                     isInit = false
                 }
@@ -918,7 +922,7 @@ class MainActivity : AppCompatActivity() {
         val hightest = hightest?.toDoubleOrNull()
         val lowest = lowest?.toDoubleOrNull()
         if (null != hightest && null != lowest && lowest > 0) {
-            val df = DecimalFormat("#.00")
+            val df = DecimalFormat("#,##0.00")
             return df.format(
                 BigDecimalUtils.div(
                     BigDecimalUtils.sub(hightest, lowest),
@@ -930,13 +934,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurPercent(current: Double, open: Double?): String {
         if (null != open && open > 0) {
-            val df = DecimalFormat("#.00")
-            return df.format(
+            val df = DecimalFormat("#,##0.00")
+            return (df.format(
                 (BigDecimalUtils.div(
                     BigDecimalUtils.sub(current, open),
                     open
                 ) * 100)
-            ) + "%"
+            ) + "%")
         } else return "0%"
     }
 
