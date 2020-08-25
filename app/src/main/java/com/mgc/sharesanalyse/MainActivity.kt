@@ -297,8 +297,8 @@ class MainActivity : AppCompatActivity() {
             if (null != codeSumResult) {
 
                 val split = codeSumResult.split("$it---n:")
-                FileLogUtil.d(parentPath + "/" +
-                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "additcionSparseArray","$it,----------${split.size}\n$codeSumResult\n")
+//                FileLogUtil.d(parentPath + "/" +
+//                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "additcionSparseArray","$it,----------${split.size}\n$codeSumResult\n")
 
                 LogUtil.d("logSum codeSumResult size:${split.size}")
                 var endValue = 0.toDouble()
@@ -335,12 +335,13 @@ class MainActivity : AppCompatActivity() {
         }
         Collections.sort(logSumArray, object : Comparator<String> {
             override fun compare(p0: String, p1: String): Int {
-                return p1.toLogSumSizeCompare("\n").compareTo(p0.toLogSumSizeCompare("\n"))
+                return p1.toLogSumSizeCompare("---n").compareTo(p0.toLogSumSizeCompare("---n"))
             }
         })
         logSumArray.forEach {
             FileLogUtil.d(logname,it.replace(splitStr,"\n    "))
         }
+        LogUtil.d("----------logSum complete-------------")
 
     }
 
