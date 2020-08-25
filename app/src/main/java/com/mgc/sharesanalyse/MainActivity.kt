@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     var stocksCode = ""
     var splitStr = "####"
+    var splitLogSumStr = "!!!!"
 
     var viewModel: MainViewModel? = null
     var PA10TimesSpareArray = SparseArray<String>()
@@ -239,11 +240,19 @@ class MainActivity : AppCompatActivity() {
             "logRecordSum.txt",
             "logAloneSum.txt"
         )
+        var additcionSparseArray = SparseArray<String>()
         LogSumSpareArray.clear()
+
+        Collections.sort(logAloneList, object : java.util.Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return p1.toDateCompare().compareTo(p0.toDateCompare())
+            }
+        })
         val logSumList =
-            FileUtil.getFileNameList(FileLogUtil.FilePath + "/$parentPath/logSum", "")
+            FileUtil.getFileNameList(FileLogUtil.FilePath + "/$parentPath/logSum", "666666")
         var logSumLimitTimeStamp = 0.toLong()
         if (logSumList.size > 0) {
+            LogUtil.d("logSumList size:${logSumList.size},file name:${logSumList.get(0)}")
             Collections.sort(logSumList, object : Comparator<String> {
                 override fun compare(p0: String, p1: String): Int {
                     return p1.logAlongSumtoTimeStamp().compareTo(p0.logAlongSumtoTimeStamp())
@@ -251,12 +260,21 @@ class MainActivity : AppCompatActivity() {
             })
             logSumLimitTimeStamp = logSumList[0].logAlongSumtoTimeStampYMD()
             FileUtil.getStringByFile(
-                FileLogUtil.FilePath + "/$parentPath/logSum" + logSumList.get(0),
+                FileLogUtil.FilePath + "/$parentPath/logSum/" + logSumList.get(0),
                 0,
                 object :
                     FileUtil.IOStringListener {
                     override fun finish(index: Int, content: String) {
-                        content.split(logAloneSumEndSplitStr)
+                        val logSumSplit = content.split(logAloneSumEndSplitStr)
+                        logSumSplit.forEach {
+                            if (it.contains(splitLogSumStr)) {
+                                var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---","")
+                                LogUtil.d("additcionSparseArray!!!${ it.split(splitLogSumStr)[1].contains("    ")}")
+                                var value = it.split(splitLogSumStr)[1].replace("    ", splitStr)
+                                value = value.replace("$it---n:","\r\n$it---n:")
+                                additcionSparseArray.put(code.toInt(),value)
+                            }
+                        }
                     }
 
                 })
@@ -264,14 +282,24 @@ class MainActivity : AppCompatActivity() {
 
 
         foreachLogAloneIOString(0, logAloneList,logSumLimitTimeStamp)
+
         var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}"
         LogUtil.d("logSum logname:$logname")
         LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
         val logSumArray = ArrayList<String>()
         viewModel!!.stocksArray.forEach {
-            val codeSumResult = LogSumSpareArray[it.toInt()]
+            var codeSumResult = LogSumSpareArray[it.toInt()]
+            if (!additcionSparseArray[it.toInt()].isNullOrEmpty()) {
+                LogUtil.d("additcionSparseArray $it:$${additcionSparseArray[it.toInt()]} ")
+                codeSumResult = (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + additcionSparseArray[it.toInt()].replace("$it---n:","\n$it---n:")
+            }
+
             if (null != codeSumResult) {
+
                 val split = codeSumResult.split("$it---n:")
+                FileLogUtil.d(parentPath + "/" +
+                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "additcionSparseArray","$it,----------${split.size}\n$codeSumResult\n")
+
                 LogUtil.d("logSum codeSumResult size:${split.size}")
                 var endValue = 0.toDouble()
                 var maxValue = 0.toDouble()
@@ -300,9 +328,8 @@ class MainActivity : AppCompatActivity() {
                         break
                     }
                 }
-                LogUtil.d("logSum startValue:$startValue,endValue:$endValue,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate")
 
-                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate$splitStr\n$codeSumResult\n$logAloneSumEndSplitStr")
+                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate$splitLogSumStr\n$codeSumResult\n$logAloneSumEndSplitStr")
                 LogUtil.d("logSum LogSumSpareArray:$codeSumResult")
             }
         }
@@ -328,7 +355,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         zipList.forEach {
-            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/$parentPath/" + it)
+            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/$parentPath/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it)
         }
     }
 
@@ -363,18 +390,18 @@ class MainActivity : AppCompatActivity() {
                         LogUtil.d("foreachIOString $index size${logList.size}:$content")
                         val split = content.split("---c:")
                         LogUtil.d("foreachIOString forEach size:${split.size}")
+                        val date = logList[index - 1].replace("logAlone.txt", "")
                         split.forEach {
                             if (it.contains("---n")) {
                                 var reslut = it.replace(
                                     "!!!",
-                                    ",${logList[index - 1].replace("logAlone.txt", "")}"
+                                    ",$date}"
                                 )
                                 LogUtil.d("foreachIOString forEach:$reslut")
+                                LogUtil.d("foreachIOString limitTimeStamp:$limitTimeStamp,date:$date,date TimeStamp:${date.toTimeStampYMD()},boolean:${date.toTimeStampYMD() > limitTimeStamp}")
                                 val sumStr = reslut.split("---")
-                                if (logList[index - 1].replace("logAlone.txt", "")
-                                        .logAlongSumtoTimeStampYMD() > limitTimeStamp
-                                ) {
-                                    LogSumSpareArray.putLogSum(sumStr[0].toInt(),reslut)
+                                if (date.toTimeStampYMD() > limitTimeStamp) {
+                                    LogSumSpareArray.putLogSum(sumStr[0].toInt(), reslut)
                                 }
                             }
                         }
@@ -535,11 +562,11 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("logAloneAdd:${limitStr.contains(")") && limitStr.contains(":(")}")
         if (limitStr.contains(")") && limitStr.contains(":(")) {
             when (limitStr.split(":(")[0]) {
-                "pa_ge100m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m",limitStr)
-                }
                 "pa_10Last" ->{
                     addStr = limiWhenLog10ts(logAloneStr, addStr, "pa>10Last",limitStr)
+                }
+                "pa_ge100m" ->{
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m",limitStr)
                 }
                 "pa_ge50m" ->{
                     addStr = limiWhenLog(logAloneStr, addStr, "pa>50m",limitStr)

@@ -72,9 +72,15 @@ fun Double.getPercent(start: Double):Double {
 }
 
 fun String.logAlongSumtoTimeStamp():Long {
-    return DateUtils.parse(this.replace("logAloneSum_","").replace(".txt",""),FormatterEnum.YYYYMMDD__HH_MM_SS)
+    return DateUtils.parse(this.replace("logAloneSum_","").replace(".txt","").replace("_", ":"),FormatterEnum.YYYYMMDD__HH_MM_SS)
 }
 
 fun String.logAlongSumtoTimeStampYMD():Long {
-    return DateUtils.parse(this.replace("logAloneSum_","").replace(".txt",""),FormatterEnum.YYYYMMDD)
+    var date = this.replace("logAloneSum_", "").replace(".txt", "").replace("_", ":")
+    return DateUtils.parse(date,FormatterEnum.YYYYMMDD__HH_MM_SS)
+}
+
+
+fun String.toTimeStampYMD():Long {
+    return DateUtils.parse(this,FormatterEnum.YYYY_MM_DD)
 }
