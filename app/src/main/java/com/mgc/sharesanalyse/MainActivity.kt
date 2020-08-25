@@ -669,7 +669,7 @@ class MainActivity : AppCompatActivity() {
             )}" +
                     "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
                         ",ppGt"
-                    )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
+                    )}${CurGtPPSize.toLog(",curGt")},ys:${lastBean.close},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.close
                     )}!!!"
@@ -682,7 +682,7 @@ class MainActivity : AppCompatActivity() {
             )}" +
                     "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
                         ",ppGt"
-                    )}${CurGtPPSize.toLog(",curGt")},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
+                    )}${CurGtPPSize.toLog(",curGt")},ys:${lastBean.close},o:${lastBean.open},c:${lastBean.current},p:${getCurPercent(
                         lastBean.current,
                         lastBean.close
                     )}!!!"
