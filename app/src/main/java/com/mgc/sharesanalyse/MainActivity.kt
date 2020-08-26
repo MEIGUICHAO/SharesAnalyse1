@@ -747,12 +747,18 @@ class MainActivity : AppCompatActivity() {
         it?.let {
             if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
-                logStrList.add("$key size:${temTimesLastList.size}")
-                sizeCount = sizeCount + temTimesLastList.size
+                var mList = ArrayList<String>()
                 temTimesLastList.forEach {
+                    if (!it.contains("13:47:01")) {
+                        mList.add(it)
+                    }
+                }
+                logStrList.add("$key size:${mList.size}")
+                sizeCount = sizeCount + mList.size
+                mList.forEach {
                     logStrList.add("$key:$it")
                 }
-                return temTimesLastList.size
+                return mList.size
             }
         }
         return 0
