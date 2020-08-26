@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)+"/"+viewModel!!.path
         refreshSpinner()
         setTypeSpinner()
         ActivityCompat.requestPermissions(
@@ -154,6 +156,7 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 viewModel!!.changeCodeType(position)
+                parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)+"/"+viewModel!!.path
             }
 
         }
@@ -161,7 +164,6 @@ class MainActivity : AppCompatActivity() {
 //
 //        }
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel!!.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {

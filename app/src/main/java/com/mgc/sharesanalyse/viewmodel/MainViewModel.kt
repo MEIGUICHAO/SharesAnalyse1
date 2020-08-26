@@ -25,24 +25,28 @@ class MainViewModel : ViewModel() {
     var viewModelCode = R.array.stocks_code
     var viewModelCodeName = R.array.stocks_code_name
     var tag = "sh"
+    var path = "sh"
 
     fun changeCodeType(type: Int) {
         isInit = true
         when (type) {
             0 ->{
                 tag = "sh"
+                path = "sh"
                 viewModelCode = R.array.stocks_code
                 viewModelCodeName = R.array.stocks_code_name
                 stocksArray = ResUtil.getSArray(R.array.stocks_code)
             }
             1 ->{
                 tag = "sz"
+                path = "szMain"
                 viewModelCode = R.array.sz_main_stocks_code
                 viewModelCodeName = R.array.sz_main_stocks_code_name
                 stocksArray = ResUtil.getSArray(R.array.sz_main_stocks_code)
             }
             2 ->{
                 tag = "sz"
+                path = "szSmall"
                 viewModelCode = R.array.sz_small_stocks_code
                 viewModelCodeName = R.array.sz_small_stocks_code_name
                 stocksArray = ResUtil.getSArray(R.array.sz_small_stocks_code)
