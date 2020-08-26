@@ -293,17 +293,18 @@ class MainActivity : AppCompatActivity() {
         val logSumArray = ArrayList<String>()
         viewModel!!.stocksArray.forEach {
             var codeSumResult = LogSumSpareArray[it.toInt()]
-            if (!additcionSparseArray[it.toInt()].isNullOrEmpty()) {
-                LogUtil.d("additcionSparseArray $it:$${additcionSparseArray[it.toInt()]} ")
-                codeSumResult = (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + additcionSparseArray[it.toInt()].replace("$it---n:","\n$it---n:")
+            var addictionStr = additcionSparseArray[it.toInt()]
+            if (!addictionStr.isNullOrEmpty()) {
+                if (addictionStr.contains("韦尔股份")) {
+                    addictionStr = addictionStr.replace("!!(","$splitStr!!(")
+                    LogUtil.d("additcionSparseArray 韦尔股份$it:$${addictionStr} ")
+                }
+                codeSumResult = (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + addictionStr.replace("$it---n:","\n$it---n:")
             }
 
             if (null != codeSumResult) {
 
                 val split = codeSumResult.split("$it---n:")
-//                FileLogUtil.d(parentPath + "/" +
-//                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "additcionSparseArray","$it,----------${split.size}\n$codeSumResult\n")
-
                 LogUtil.d("logSum codeSumResult size:${split.size}")
                 var endValue = 0.toDouble()
                 var maxValue = 0.toDouble()
