@@ -295,10 +295,7 @@ class MainActivity : AppCompatActivity() {
             var codeSumResult = LogSumSpareArray[it.toInt()]
             var addictionStr = additcionSparseArray[it.toInt()]
             if (!addictionStr.isNullOrEmpty()) {
-                if (addictionStr.contains("韦尔股份")) {
-                    addictionStr = addictionStr.replace("!!(","$splitStr!!(")
-                    LogUtil.d("additcionSparseArray 韦尔股份$it:$${addictionStr} ")
-                }
+                addictionStr = addictionStr.replace("!!(","$splitStr!!(")
                 codeSumResult = (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + addictionStr.replace("$it---n:","\n$it---n:")
             }
 
