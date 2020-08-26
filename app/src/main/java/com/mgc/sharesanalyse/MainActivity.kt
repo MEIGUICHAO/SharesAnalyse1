@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         refreshSpinner()
+        setTypeSpinner()
         ActivityCompat.requestPermissions(
             this,
             arrayOf(
@@ -138,6 +139,21 @@ class MainActivity : AppCompatActivity() {
                     isInit = false
                 }
 
+            }
+
+        }
+        spinnerType.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel!!.changeCodeType(position)
             }
 
         }
@@ -507,9 +523,15 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun setTypeSpinner() {
+        spinnerType.adapter = SpinnerAdapter(this@MainActivity, listOf("Type0","Type1","Type2"))
+        spinnerType.setSelection(0)
+    }
+
+
     private fun logResult() {
         filterAnalyseStocks = ""
-        val shCodeList = ResUtil.getSArray(R.array.stocks_code_name)
+        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCodeName)
         FileLogUtil.d(
             logResultPath,
             "!!!!!!!!!!start_______${DateUtils.format(
@@ -798,7 +820,7 @@ class MainActivity : AppCompatActivity() {
 
         resetSpareArray()
 //        val shCodeList = listOf("600127")
-        val shCodeList = ResUtil.getSArray(R.array.stocks_code)
+        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCode)
         shCodeList.forEach {
             var stocksCode = it
             val queryPerAmount =
@@ -1055,7 +1077,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
             return
         }
-        val shCodeList = ResUtil.getSArray(R.array.stocks_code_name)
+        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCodeName)
         filterStocks = ""
         shCodeList.forEach {
             val code = it.split(splitStr)[0]

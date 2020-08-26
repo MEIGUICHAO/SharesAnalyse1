@@ -19,10 +19,37 @@ import java.util.regex.Pattern
 class MainViewModel : ViewModel() {
     val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
-    val stocksArray = ResUtil.getSArray(R.array.stocks_code)
-    val urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
+    var stocksArray = ResUtil.getSArray(R.array.stocks_code)
+    var urlArray = emptyArray<String?>()
     var isInit = true
+    var viewModelCode = R.array.stocks_code
+    var viewModelCodeName = R.array.stocks_code_name
+    var tag = "sh"
 
+    fun changeCodeType(type: Int) {
+        isInit = true
+        when (type) {
+            0 ->{
+                tag = "sh"
+                viewModelCode = R.array.stocks_code
+                viewModelCodeName = R.array.stocks_code_name
+                stocksArray = ResUtil.getSArray(R.array.stocks_code)
+            }
+            1 ->{
+                tag = "sz"
+                viewModelCode = R.array.sz_main_stocks_code
+                viewModelCodeName = R.array.sz_main_stocks_code_name
+                stocksArray = ResUtil.getSArray(R.array.sz_main_stocks_code)
+            }
+            2 ->{
+                tag = "sz"
+                viewModelCode = R.array.sz_small_stocks_code
+                viewModelCodeName = R.array.sz_small_stocks_code_name
+                stocksArray = ResUtil.getSArray(R.array.sz_small_stocks_code)
+            }
+
+        }
+    }
 
     fun requestData() {
         if (sharesDats.value == null) {
@@ -32,12 +59,13 @@ class MainViewModel : ViewModel() {
         }
 
         if (isInit) {
+            urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
             isInit = false
             Log.d("mgc", "splitArray size:${stocksArray.size}")
             for (index in 0..stocksArray.size-1) {
                 LogUtil.d("mgc", "splitArray index:${index / 100},code:${stocksArray[index]}")
                 urlArray[index / 100] =
-                    (if (urlArray[index / 100].isNullOrEmpty()) "sh${stocksArray[index]}" else urlArray[index / 100] + ",sh${stocksArray[index]}")
+                    (if (urlArray[index / 100].isNullOrEmpty()) "$tag${stocksArray[index]}" else urlArray[index / 100] + ",$tag${stocksArray[index]}")
                 LogUtil.d("mgc", "url ${index / 100}:${urlArray[index / 100]}")
 
             }
