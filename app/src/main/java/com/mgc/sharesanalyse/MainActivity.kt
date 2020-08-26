@@ -521,7 +521,7 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("spinner size:${fileNameList!!.size}")
         spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
         spinner.setSelection(0)
-        DaoManager.setDbName(fileNameList!![0])
+        DaoManager.setDbName(viewModel!!.path+"_"+fileNameList!![0])
     }
 
 
