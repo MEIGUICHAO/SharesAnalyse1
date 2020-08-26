@@ -83,7 +83,8 @@ class MainActivity : AppCompatActivity() {
     var logAlonePath = parentPath + "/" +
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
     var logAloneSumEndSplitStr = "==============================================="
-    
+    var requestTime = 0.toLong()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -191,7 +192,14 @@ class MainActivity : AppCompatActivity() {
                             withContext(Dispatchers.IO) {
 
                                 runBlocking {
-                                    delay(1000 * intervalTime)
+                                    intervalTime = 0.toLong()
+                                    LogUtil.d("requestDatas requestTime:$requestTime ,diff:${(System.currentTimeMillis() - requestTime) / 1000}")
+                                    if (System.currentTimeMillis() - requestTime >= (20 * 1000)) {
+                                        intervalTime = 0.toLong()
+                                    } else {
+                                        intervalTime = System.currentTimeMillis() - requestTime
+                                        delay( intervalTime)
+                                    }
                                     requestDatas(viewModel!!)
                                 }
                             }
@@ -751,10 +759,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestDatas(viewModel: MainViewModel) {
+        LogUtil.d("requestDatas!!!")
         val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryAll()
         if (queryAll.size > 0) {
             DaoUtilsStore.getInstance().month8DataDaoUtils.deleteAll()
         }
+        requestTime = System.currentTimeMillis()
         viewModel.requestData()
     }
 
