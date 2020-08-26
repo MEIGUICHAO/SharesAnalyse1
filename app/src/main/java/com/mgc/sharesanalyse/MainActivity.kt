@@ -18,12 +18,14 @@ import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.*
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
 import java.text.DecimalFormat
 import java.util.*
-import kotlin.Comparator
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -213,6 +215,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btnRequest.setOnClickListener {
+            intervalCheck()
             requestDatas(viewModel!!)
         }
         btnClassify.setOnClickListener {
@@ -237,6 +240,46 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
+
+    private fun intervalCheck() {
+        val subscribe =
+            Observable.interval(1, TimeUnit.MINUTES).subscribeOn(Schedulers.io()).subscribe {
+                if ((System.currentTimeMillis() >= DateUtils.parse(
+                        beginTime,
+                        FormatterEnum.YYYYMMDD__HH_MM_SS
+                    ) &&
+                            System.currentTimeMillis() <= DateUtils.parse(
+                        noonBreakBegin,
+                        FormatterEnum.YYYYMMDD__HH_MM_SS
+                    )) ||
+                    (System.currentTimeMillis() >= DateUtils.parse(
+                        noonBreakEnd,
+                        FormatterEnum.YYYYMMDD__HH_MM_SS
+                    ) &&
+                            System.currentTimeMillis() <= DateUtils.parse(
+                        endTime,
+                        FormatterEnum.YYYYMMDD__HH_MM_SS
+                    ))
+                ) {
+
+                    if (tvTime.text.equals("time")) {
+                        return@subscribe
+                    }
+                    val format =
+                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD)
+                    val timeLast =
+                        DateUtils.parse(
+                            "$format ${tvTime.text}",
+                            FormatterEnum.YYYY_MM_DD__HH_MM_SS
+                        )
+                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (100 * 1000)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast)/1000}")
+                    if (System.currentTimeMillis() - timeLast > (100 * 1000)) {
+                        requestDatas(viewModel!!)
+                    }
+                }
+            }
+    }
+
     private fun logSum() {
         var logAloneList = FileUtil.getFileNameList(
             FileLogUtil.FilePath+"/$parentPath",
