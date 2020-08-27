@@ -10,6 +10,7 @@ public class StocksBean {
     @Id
     private Long id;
     private String time;
+    private String json;
     private String buy1;
     private String sale1;
 
@@ -37,14 +38,16 @@ public class StocksBean {
 
     private String hightest;
     private String lowest;
-    @Generated(hash = 920298224)
-    public StocksBean(Long id, String time, String buy1, String sale1, String buy2,
-            String sale2, String buy3, String sale3, String buy4, String sale4,
-            String buy5, String sale5, String dealStocks, String dealAmount,
-            Double PerStocks, Double PerAmount, Double open, Double close,
-            Double current, Double PerPrice, String hightest, String lowest) {
+    @Generated(hash = 870884224)
+    public StocksBean(Long id, String time, String json, String buy1, String sale1,
+            String buy2, String sale2, String buy3, String sale3, String buy4,
+            String sale4, String buy5, String sale5, String dealStocks,
+            String dealAmount, Double PerStocks, Double PerAmount, Double open,
+            Double close, Double current, Double PerPrice, String hightest,
+            String lowest) {
         this.id = id;
         this.time = time;
+        this.json = json;
         this.buy1 = buy1;
         this.sale1 = sale1;
         this.buy2 = buy2;
@@ -200,6 +203,12 @@ public class StocksBean {
     }
     public void setClose(Double close) {
         this.close = close;
+    }
+    public String getJson() {
+        return this.json;
+    }
+    public void setJson(String json) {
+        this.json = json;
     }
 
 }

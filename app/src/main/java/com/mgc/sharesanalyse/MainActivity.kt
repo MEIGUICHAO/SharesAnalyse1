@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.SpinnerAdapter
@@ -85,6 +86,7 @@ class MainActivity : AppCompatActivity() {
     var logAloneSumEndSplitStr = "==============================================="
     var requestTime = 0.toLong()
     var dbNameEndStr = ""
+    var isDebug = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,6 +163,8 @@ class MainActivity : AppCompatActivity() {
             ) {
                 viewModel!!.changeCodeType(position)
 
+                db = null
+                CommonDaoUtils.db = null
                 App.getmManager().switchDB(
                     "${viewModel!!.path}_$dbNameEndStr",
                     Month8DataDao::class.java,
@@ -211,7 +215,7 @@ class MainActivity : AppCompatActivity() {
                                 System.currentTimeMillis() <= DateUtils.parse(
                             endTime,
                             FormatterEnum.YYYYMMDD__HH_MM_SS
-                        ))
+                        )) || isDebug
                     ) {
                         classifyStocks()
                         tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
@@ -220,7 +224,7 @@ class MainActivity : AppCompatActivity() {
                     if (System.currentTimeMillis() <= DateUtils.parse(
                             endTime,
                             FormatterEnum.YYYYMMDD__HH_MM_SS
-                        )
+                        )|| isDebug
                     ) {
                         GlobalScope.launch {
 
@@ -600,7 +604,7 @@ class MainActivity : AppCompatActivity() {
                     AnalysePerPricesBeanDao.Properties.Code.eq(code)
                 )
             getDB()
-            val lastBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
+            val lastBean = CommonDaoUtils.queryLast(db, code.toLong())
             perAmountList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
                     filterAnalyseStocks =
@@ -849,7 +853,7 @@ class MainActivity : AppCompatActivity() {
             )
             queryAll.forEach {
                 var bean = it
-                val replace = it.json.replace("var hq_str_sh\"", "").replace("\"", "")
+                val replace = it.json.replace("var hq_str_sh\"", "").replace("var hq_str_sz\"", "").replace("\"", "")
                 val split = replace.split(";")
                 var mProgress = 0
                 split.forEach {
@@ -857,7 +861,6 @@ class MainActivity : AppCompatActivity() {
                         val split3 = it.split(",")
                         val stcokBean = setStcokBean(split3, bean)
                         getDB()
-                        CommonDaoUtils.classifyTables(db, Datas.tableName + stocksCode)
                     }
                     mProgress++
                 }
@@ -1135,7 +1138,7 @@ class MainActivity : AppCompatActivity() {
             val code = it.split(splitStr)[0]
             val name = it.split(splitStr)[1]
             getDB()
-            val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + code)
+            val lastStockBean = CommonDaoUtils.queryLast(db, code.toLong())
             if (null == lastStockBean) {
                 return@forEach
             }
@@ -1187,18 +1190,20 @@ class MainActivity : AppCompatActivity() {
         split: List<String>,
         bean: Month8Data
     ): StocksBean {
-        var stocksBean: StocksBean
-        val queryAll = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryAll()
-        if (queryAll.size > 0) {
-            stocksBean = queryAll[0]
-        } else {
-            stocksBean = StocksBean()
-        }
+        val nameSplit = split[0].replace("var hq_str_sz", "").replace("var hq_str_sh", "").replace("\n", "").split("=")
+        stocksCode = nameSplit[0]
+        var isInsert = false
 
+        LogUtil.d("setStcokBean")
+        var stocksBean = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryById(stocksCode.toLong())
+        if (null == stocksBean) {
+            isInsert = true
+            stocksBean = StocksBean()
+            stocksBean.id = stocksCode.toLong()
+        }
+        LogUtil.d("setStcokBean")
 
         stocksBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
-        val nameSplit = split[0].replace("var hq_str_sh", "").replace("\n", "").split("=")
-        stocksCode = nameSplit[0]
         stocksBean.open = split[1].toDouble()
         stocksBean.close = split[2].toDouble()
         stocksBean.current = split[3].toDouble()
@@ -1219,7 +1224,9 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
         getDB()
-        val lastStockBean = CommonDaoUtils.queryLast(db, Datas.tableName + stocksCode)
+        LogUtil.d("setStcokBean")
+        val lastStockBean = CommonDaoUtils.queryLast(db, stocksCode.toLong())
+        LogUtil.d("setStcokBean")
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
@@ -1296,11 +1303,16 @@ class MainActivity : AppCompatActivity() {
         sizeBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
-        if (queryAll.size > 0) {
-            val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
-        } else {
+        LogUtil.d("setStcokBean")
+        stocksBean.json = ""
+        stocksBean.json = GsonHelper.toJson(stocksBean)
+        LogUtil.d("setStcokBean")
+        if (isInsert) {
             val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
+        } else {
+            val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
         }
+        LogUtil.d("setStcokBean")
         return stocksBean
     }
 

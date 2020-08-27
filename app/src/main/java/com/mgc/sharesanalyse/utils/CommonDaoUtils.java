@@ -9,6 +9,7 @@ import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.StocksBean;
 import com.mgc.sharesanalyse.entity.StocksBeanDao;
+import com.mgc.sharesanalyse.entity.StocksJsonBean;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.database.Database;
@@ -223,45 +224,15 @@ public class CommonDaoUtils<T> {
 
 
 
-    public static StocksBean queryLast(Database db, String tableName) {
+    public static StocksBean queryLast(Database db, Long code) {
         StocksBean stocksBean = null;
-        Cursor cursor = null;
-        try {
-            if (tabbleIsExist(tableName)) {
-                stocksBean = new StocksBean();
-                cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-                cursor.moveToLast();
-                String deal_stocks = cursor.getString(cursor.getColumnIndex("DEAL_STOCKS"));
-                String deal_amount = cursor.getString(cursor.getColumnIndex("DEAL_AMOUNT"));
-
-                Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
-                String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
-                Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-                Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
-                Double CLOSE = cursor.getDouble(cursor.getColumnIndex("CLOSE"));
-                String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
-                String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
-                Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
-                String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
-                stocksBean.setDealStocks(deal_stocks);
-                stocksBean.setDealAmount(deal_amount);
-                stocksBean.setBuy1(BUY1);
-                stocksBean.setPerStocks(PER_STOCKS);
-                stocksBean.setCurrent(CURRENT);
-                stocksBean.setOpen(OPEN);
-                stocksBean.setHightest(HIGHTEST);
-                stocksBean.setLowest(LOWEST);
-                stocksBean.setPerAmount(PER_AMOUNT);
-                stocksBean.setTime(TIME);
-                stocksBean.setClose(CLOSE);
-            }
-        } catch (Exception e) {
-
-        } finally {
-            if (cursor != null) {
-                cursor.close();
+        StocksBean stocksBean2 = DaoUtilsStore.getInstance().getStocksBeanDaoUtils().queryById(code);
+        if (null != stocksBean2) {
+            if (!TextUtils.isEmpty(stocksBean2.getJson())) {
+                stocksBean = GsonHelper.getInstance().fromJson(stocksBean2.getJson(), StocksBean.class);
             }
         }
+
         return stocksBean;
     }
 
