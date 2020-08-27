@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                                 runBlocking {
                                     intervalTime = 0.toLong()
                                     LogUtil.d("requestDatas requestTime:$requestTime ,diff:${(System.currentTimeMillis() - requestTime) / 1000}")
-                                    if (System.currentTimeMillis() - requestTime >= (20 * 1000)) {
+                                    if (System.currentTimeMillis() - requestTime >= (30 * 1000)) {
                                         intervalTime = 0.toLong()
                                     } else {
                                         intervalTime = System.currentTimeMillis() - requestTime
@@ -771,6 +771,18 @@ class MainActivity : AppCompatActivity() {
         it?.let {
             if (!it.isEmpty()) {
                 val temTimesLastList = it.split(splitStr)
+//                var tempList = ArrayList<String>()
+//                temTimesLastList.forEach {
+//                    if (!it.contains("13:23:16")) {
+//                        tempList.add(it)
+//                    }
+//                }
+//                logStrList.add("$key size:${tempList.size}")
+//                sizeCount = sizeCount + tempList.size
+//                tempList.forEach {
+//                    logStrList.add("$key:$it")
+//                }
+//                return tempList.size
                 logStrList.add("$key size:${temTimesLastList.size}")
                 sizeCount = sizeCount + temTimesLastList.size
                 temTimesLastList.forEach {
