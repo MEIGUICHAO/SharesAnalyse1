@@ -84,14 +84,17 @@ class MainActivity : AppCompatActivity() {
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
     var logAloneSumEndSplitStr = "==============================================="
     var requestTime = 0.toLong()
-
+    var dbNameEndStr = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)+"/"+viewModel!!.path
+        parentPath = DateUtils.format(
+            System.currentTimeMillis(),
+            FormatterEnum.YYYY_MM
+        ) + "/" + viewModel!!.path
         refreshSpinner()
         setTypeSpinner()
         ActivityCompat.requestPermissions(
@@ -119,16 +122,17 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 fileNameList?.let {
-                    logAlonePath =  parentPath + "/" +
-                            fileNameList!![position].replace("sharesDB_","") + "logAlone"
+                    logAlonePath = parentPath + "/" +
+                            fileNameList!![position].replace("sharesDB_", "") + "logAlone"
                     LogUtil.d("spinner onItemSelected:${fileNameList!![position]},logAlonePath:$logAlonePath")
 
                 }
                 if (!isInit) {
                     db = null
                     CommonDaoUtils.db = null
+                    dbNameEndStr = fileNameList!![position]
                     App.getmManager().switchDB(
-                        fileNameList!![position],
+                        "${viewModel!!.path}_" + fileNameList!![position],
                         Month8DataDao::class.java,
                         StocksBeanDao::class.java,
                         AnalyseSizeBeanDao::class.java,
@@ -144,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        spinnerType.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+        spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
@@ -156,7 +160,20 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 viewModel!!.changeCodeType(position)
-                parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)+"/"+viewModel!!.path
+
+                App.getmManager().switchDB(
+                    "${viewModel!!.path}_$dbNameEndStr",
+                    Month8DataDao::class.java,
+                    StocksBeanDao::class.java,
+                    AnalyseSizeBeanDao::class.java,
+                    AnalysePerPricesBeanDao::class.java,
+                    AnalysePerStocksBeanDao::class.java,
+                    AnalysePerAmountBeanDao::class.java
+                )
+                parentPath = DateUtils.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM
+                ) + "/" + viewModel!!.path
             }
 
         }
@@ -216,7 +233,7 @@ class MainActivity : AppCompatActivity() {
                                         intervalTime = 0.toLong()
                                     } else {
                                         intervalTime = System.currentTimeMillis() - requestTime
-                                        delay( intervalTime)
+                                        delay(intervalTime)
                                     }
                                     requestDatas(viewModel!!)
                                 }
@@ -298,7 +315,7 @@ class MainActivity : AppCompatActivity() {
                             "$format ${tvTime.text}",
                             FormatterEnum.YYYY_MM_DD__HH_MM_SS
                         )
-                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (100 * 1000)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast)/1000}")
+                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (100 * 1000)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
                     if (System.currentTimeMillis() - timeLast > (100 * 1000)) {
                         requestDatas(viewModel!!)
                     }
@@ -308,7 +325,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun logSum() {
         var logAloneList = FileUtil.getFileNameList(
-            FileLogUtil.FilePath+"/$parentPath",
+            FileLogUtil.FilePath + "/$parentPath",
             "logResult.txt",
             "logRecordSum.txt",
             "logAloneSum.txt"
@@ -341,11 +358,16 @@ class MainActivity : AppCompatActivity() {
                         val logSumSplit = content.split(logAloneSumEndSplitStr)
                         logSumSplit.forEach {
                             if (it.contains(splitLogSumStr)) {
-                                var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---","")
-                                LogUtil.d("additcionSparseArray!!!${ it.split(splitLogSumStr)[1].contains("    ")}")
+                                var code =
+                                    it.split(splitLogSumStr)[0].split(",p:")[0].replace("---", "")
+                                LogUtil.d(
+                                    "additcionSparseArray!!!${it.split(splitLogSumStr)[1].contains(
+                                        "    "
+                                    )}"
+                                )
                                 var value = it.split(splitLogSumStr)[1].replace("    ", splitStr)
-                                value = value.replace("$it---n:","\r\n$it---n:")
-                                additcionSparseArray.put(code.toInt(),value)
+                                value = value.replace("$it---n:", "\r\n$it---n:")
+                                additcionSparseArray.put(code.toInt(), value)
                             }
                         }
                     }
@@ -354,9 +376,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        foreachLogAloneIOString(0, logAloneList,logSumLimitTimeStamp)
+        foreachLogAloneIOString(0, logAloneList, logSumLimitTimeStamp)
 
-        var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(System.currentTimeMillis(),FormatterEnum.YYYYMMDD__HH_MM_SS)}"
+        var logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(
+            System.currentTimeMillis(),
+            FormatterEnum.YYYYMMDD__HH_MM_SS
+        )}"
         LogUtil.d("logSum logname:$logname")
         LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
         val logSumArray = ArrayList<String>()
@@ -364,8 +389,12 @@ class MainActivity : AppCompatActivity() {
             var codeSumResult = LogSumSpareArray[it.toInt()]
             var addictionStr = additcionSparseArray[it.toInt()]
             if (!addictionStr.isNullOrEmpty()) {
-                addictionStr = addictionStr.replace("!!(","$splitStr!!(")
-                codeSumResult = (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + addictionStr.replace("$it---n:","\n$it---n:")
+                addictionStr = addictionStr.replace("!!(", "$splitStr!!(")
+                codeSumResult =
+                    (if (codeSumResult.isNullOrEmpty()) "" else (codeSumResult)) + addictionStr.replace(
+                        "$it---n:",
+                        "\n$it---n:"
+                    )
             }
 
             if (null != codeSumResult) {
@@ -395,12 +424,16 @@ class MainActivity : AppCompatActivity() {
                 var startValue = 0.toDouble()
                 for (index in split.size - 1 downTo 0) {
                     if (split[index].contains(",c:")) {
-                        startValue= split[index].split(",c:")[1].split(",p:")[0].toDouble()
+                        startValue = split[index].split(",c:")[1].split(",p:")[0].toDouble()
                         break
                     }
                 }
 
-                logSumArray.add("\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(startValue)}%,maxDate:$maxValueDate$splitLogSumStr\n$codeSumResult\n$logAloneSumEndSplitStr")
+                logSumArray.add(
+                    "\n---$it,p:${endValue.getPercent(startValue)}%,max:$maxValue,maxP:${maxValue.getPercent(
+                        startValue
+                    )}%,maxDate:$maxValueDate$splitLogSumStr\n$codeSumResult\n$logAloneSumEndSplitStr"
+                )
                 LogUtil.d("logSum LogSumSpareArray:$codeSumResult")
             }
         }
@@ -410,7 +443,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         logSumArray.forEach {
-            FileLogUtil.d(logname,it.replace(splitStr,"\n    "))
+            FileLogUtil.d(logname, it.replace(splitStr, "\n    "))
         }
         LogUtil.d("----------logSum complete-------------")
 
@@ -427,7 +460,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         zipList.forEach {
-            FileUtil.copyAssets2File(this, it, FileLogUtil.FilePath!! + "/$parentPath/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it)
+            FileUtil.copyAssets2File(
+                this,
+                it,
+                FileLogUtil.FilePath!! + "/$parentPath/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it
+            )
         }
     }
 
@@ -521,12 +558,13 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("spinner size:${fileNameList!!.size}")
         spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
         spinner.setSelection(0)
-        DaoManager.setDbName(fileNameList!![0])
+        dbNameEndStr = fileNameList!![0]
+        DaoManager.setDbName("${viewModel!!.path}_" + fileNameList!![0])
     }
 
 
     private fun setTypeSpinner() {
-        spinnerType.adapter = SpinnerAdapter(this@MainActivity, listOf("Type0","Type1","Type2"))
+        spinnerType.adapter = SpinnerAdapter(this@MainActivity, listOf("Type0", "Type1", "Type2"))
         spinnerType.setSelection(0)
     }
 
@@ -634,46 +672,46 @@ class MainActivity : AppCompatActivity() {
     private fun logAloneAdd(
         limitStr: String,
         logAloneStr: String
-    ):String {
+    ): String {
         var addStr = ""
         LogUtil.d("logAloneAdd limitStr:${limitStr}")
         LogUtil.d("logAloneAdd:${limitStr.contains(")") && limitStr.contains(":(")}")
         if (limitStr.contains(")") && limitStr.contains(":(")) {
             when (limitStr.split(":(")[0]) {
-                "pa_10Last" ->{
-                    addStr = limiWhenLog10ts(logAloneStr, addStr, "pa>10Last",limitStr)
+                "pa_10Last" -> {
+                    addStr = limiWhenLog10ts(logAloneStr, addStr, "pa>10Last", limitStr)
                 }
-                "pa_ge100m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m",limitStr)
+                "pa_ge100m" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m", limitStr)
                 }
-                "pa_ge50m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>50m",limitStr)
+                "pa_ge50m" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>50m", limitStr)
                 }
-                "pa_ge20m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>20m",limitStr)
+                "pa_ge20m" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>20m", limitStr)
                 }
-                "pa_ge10m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>10m",limitStr)
+                "pa_ge10m" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>10m", limitStr)
                 }
-                "pa_ge5m" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>5m",limitStr)
+                "pa_ge5m" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>5m", limitStr)
                 }
-                "ps_gt1000times" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "ps>1000ts",limitStr)
+                "ps_gt1000times" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "ps>1000ts", limitStr)
                 }
-                "ps_gt100times" ->{
-                    addStr = limiWhenLog(logAloneStr, addStr, "ps>100ts",limitStr)
+                "ps_gt100times" -> {
+                    addStr = limiWhenLog(logAloneStr, addStr, "ps>100ts", limitStr)
                 }
-                "pp_perPricesGtCur" ->{
-                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp>cur",limitStr)
+                "pp_perPricesGtCur" -> {
+                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp>cur", limitStr)
                 }
-                "pp_curGtPerPrices" ->{
-                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp<cur",limitStr)
+                "pp_curGtPerPrices" -> {
+                    addStr = limiWhenLogPP(logAloneStr, addStr, "pp<cur", limitStr)
                 }
 
             }
         }
-        return logAloneStr  + addStr
+        return logAloneStr + addStr
     }
 
     private fun limiWhenLog10ts(
@@ -761,7 +799,7 @@ class MainActivity : AppCompatActivity() {
                     )}!!!"
 
         logStrList.forEach {
-            logAloneStr = logAloneAdd(it,logAloneStr)
+            logAloneStr = logAloneAdd(it, logAloneStr)
         }
         logALoneList.add(logAloneStr)
 

@@ -52,7 +52,7 @@ fun String.toDateCompare():Long {
 }
 
 fun String.toShareDBDateCompare():Long {
-    return DateUtils.parse(this.replace("sharesDB_",""),FormatterEnum.YYYY_MM_DD)
+    return DateUtils.parse(this.replace("sharesDB_","").replace("sh_","").replace("szMain_","").replace("szSmall_",""),FormatterEnum.YYYY_MM_DD)
 }
 
 fun String.toLogSumSizeCompare(tag: String): Int {
