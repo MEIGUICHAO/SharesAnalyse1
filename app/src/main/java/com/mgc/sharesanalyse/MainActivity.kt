@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity() {
                                         intervalTime = 0.toLong()
                                     } else {
                                         intervalTime = System.currentTimeMillis() - requestTime
-                                        delay(intervalTime)
+                                        delay(30 * 1000 - intervalTime)
                                     }
                                     requestDatas(viewModel!!)
                                 }
