@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     var logAloneSumEndSplitStr = "==============================================="
     var requestTime = 0.toLong()
     var dbNameEndStr = ""
-    var isDebug = false
+    var isDebug = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1206,13 +1206,16 @@ class MainActivity : AppCompatActivity() {
         }
         LogUtil.d("setStcokBean")
         var stocksJsonBean = DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCode.toLong())
+        LogUtil.d("setStcokBean")
+
         if (null == stocksJsonBean) {
             stocksJsonBean = StocksJsonBean()
+            stocksJsonBean.id = stocksCode.toLong()
         }
-        stocksJsonBean.id = stocksCode.toLong()
+        LogUtil.d("setStcokBean")
         var sbRecordBean = RecordBean()
 
-
+        LogUtil.d("setStcokBean")
 
         stocksBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
         stocksBean.open = split[1].toDouble()
@@ -1222,25 +1225,46 @@ class MainActivity : AppCompatActivity() {
         stocksBean.lowest = split[5]
         stocksBean.dealAmount = split[9].toDiv10000()
         stocksBean.dealStocks = split[8].toDiv100()
+        LogUtil.d("setStcokBean")
         var b1 = BigDecimalUtils.mul(split[11].toDouble(), split[10].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var b2 = BigDecimalUtils.mul(split[13].toDouble(), split[12].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var b3 = BigDecimalUtils.mul(split[15].toDouble(), split[14].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var b4 = BigDecimalUtils.mul(split[17].toDouble(), split[16].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var b5 = BigDecimalUtils.mul(split[19].toDouble(), split[18].toDouble(),3)
 
+        LogUtil.d("setStcokBean")
         var s1 = BigDecimalUtils.mul(split[21].toDouble(), split[20].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var s2 = BigDecimalUtils.mul(split[23].toDouble(), split[22].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var s3 = BigDecimalUtils.mul(split[25].toDouble(), split[24].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var s4 = BigDecimalUtils.mul(split[27].toDouble(), split[26].toDouble(),3)
+        LogUtil.d("setStcokBean")
         var s5 = BigDecimalUtils.mul(split[29].toDouble(), split[28].toDouble(),3)
+        LogUtil.d("setStcokBean")
         stocksJsonBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        LogUtil.d("setStcokBean")
         sbRecordBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        LogUtil.d("setStcokBean")
         sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5)/10000.0f
+        LogUtil.d("setStcokBean")
         sbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5)/10000.0f
+        LogUtil.d("setStcokBean")
         sbRecordBean.bsDiffAmount = BigDecimalUtils.sub(sbRecordBean.bAmount,sbRecordBean.sAmount)
-        sbRecordBean.bPercent = BigDecimalUtils.div(sbRecordBean.bAmount,sbRecordBean.sAmount+sbRecordBean.bAmount)
+        LogUtil.d("setStcokBean")
+        if ((sbRecordBean.sAmount + sbRecordBean.bAmount) != 0.toDouble()) {
+            sbRecordBean.bPercent = BigDecimalUtils.div(
+                sbRecordBean.bAmount,
+                sbRecordBean.sAmount + sbRecordBean.bAmount
+            )
+        }
 
-
+        LogUtil.d("setStcokBean")
         stocksBean.buy1 = split[11] + "_" + split[10].toDiv100()
         stocksBean.buy2 = split[13] + "_" + split[12].toDiv100()
         stocksBean.buy3 = split[15] + "_" + split[14].toDiv100()
@@ -1289,7 +1313,7 @@ class MainActivity : AppCompatActivity() {
                 stocksBean.perPrice = 0.toDouble()
             }
         }
-
+        LogUtil.d("setStcokBean")
         val sizeBeanList =
             DaoUtilsStore.getInstance().analyseSizeBeanDaoUtils.queryByQueryBuilder(
                 AnalyseSizeBeanDao.Properties.Code.eq(stocksCode.toInt())
@@ -1334,14 +1358,19 @@ class MainActivity : AppCompatActivity() {
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
         LogUtil.d("setStcokBean")
         stocksBean.json = ""
+        LogUtil.d("setStcokBean")
         stocksJsonBean.amount = stocksBean.dealAmount.toDiv10000().toDouble()
+        LogUtil.d("setStcokBean")
         stocksJsonBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
+        LogUtil.d("setStcokBean")
         if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
+            LogUtil.d("setStcokBean")
             var stockListBean = GsonHelper.getInstance()
                 .fromJson(stocksJsonBean.jsonRecord, StockListBean::class.java)
             stockListBean.stocksBeanList.add(stocksBean)
             stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
         } else {
+            LogUtil.d("setStcokBean")
             var stockListBean = StockListBean()
             stockListBean.stocksBeanList = ArrayList()
             stockListBean.stocksBeanList.add(stocksBean)
@@ -1349,16 +1378,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
+            LogUtil.d("setStcokBean sbRecord:${stocksJsonBean.sbRecord}")
             var sBRecordBean = GsonHelper.getInstance()
                 .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
             sBRecordBean.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
         } else {
+            LogUtil.d("setStcokBean")
             var sBRecordBean = SBRecordBean()
             sBRecordBean.recordBeans = ArrayList()
             sBRecordBean.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sbRecordBean)
         }
+        LogUtil.d("setStcokBean")
 
         DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(stocksJsonBean,stocksCode.toLong())
         stocksBean.json = GsonHelper.toJson(stocksBean)
