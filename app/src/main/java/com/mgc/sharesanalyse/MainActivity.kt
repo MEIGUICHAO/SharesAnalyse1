@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
     var requestTime = 0.toLong()
     var dbNameEndStr = ""
     var isDebug = true
+    var needRecordJson = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1358,23 +1359,26 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("setStcokBean")
         stocksBean.json = ""
         LogUtil.d("setStcokBean")
-        stocksJsonBean.amount = stocksBean.dealAmount.toDiv10000().toDouble()
+        stocksJsonBean.amount = stocksBean.dealAmount.toDouble()
         LogUtil.d("setStcokBean")
         stocksJsonBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
         LogUtil.d("setStcokBean")
-        if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
-            LogUtil.d("setStcokBean")
-            var stockListBean = GsonHelper.getInstance()
-                .fromJson(stocksJsonBean.jsonRecord, StockListBean::class.java)
-            stockListBean.stocksBeanList.add(stocksBean)
-            stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
-        } else {
-            LogUtil.d("setStcokBean")
-            var stockListBean = StockListBean()
-            stockListBean.stocksBeanList = ArrayList()
-            stockListBean.stocksBeanList.add(stocksBean)
-            stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
+        if (needRecordJson) {
+            if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
+                LogUtil.d("setStcokBean")
+                var stockListBean = GsonHelper.getInstance()
+                    .fromJson(stocksJsonBean.jsonRecord, StockListBean::class.java)
+                stockListBean.stocksBeanList.add(stocksBean)
+                stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
+            } else {
+                LogUtil.d("setStcokBean")
+                var stockListBean = StockListBean()
+                stockListBean.stocksBeanList = ArrayList()
+                stockListBean.stocksBeanList.add(stocksBean)
+                stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
+            }
         }
+
 
         if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
             LogUtil.d("setStcokBean sbRecord:${stocksJsonBean.sbRecord}")
