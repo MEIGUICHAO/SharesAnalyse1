@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.gson.Gson
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.SpinnerAdapter
@@ -1385,10 +1384,10 @@ class MainActivity : AppCompatActivity() {
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
         } else {
             LogUtil.d("setStcokBean")
-            var sBRecordBean = SBRecordBean()
-            sBRecordBean.recordBeans = ArrayList()
-            sBRecordBean.recordBeans.add(sbRecordBean)
-            stocksJsonBean.sbRecord = GsonHelper.toJson(sbRecordBean)
+            var sBRecordBeanList = SBRecordBean()
+            sBRecordBeanList.recordBeans = ArrayList()
+            sBRecordBeanList.recordBeans.add(sbRecordBean)
+            stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
         }
         LogUtil.d("setStcokBean")
 
