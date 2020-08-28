@@ -12,6 +12,8 @@ import com.mgc.sharesanalyse.entity.Month8Data;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
 import com.mgc.sharesanalyse.entity.StocksBean;
 import com.mgc.sharesanalyse.entity.StocksBeanDao;
+import com.mgc.sharesanalyse.entity.StocksJsonBean;
+import com.mgc.sharesanalyse.entity.StocksJsonBeanDao;
 
 public class DaoUtilsStore {
     private volatile static DaoUtilsStore instance = null;
@@ -20,6 +22,7 @@ public class DaoUtilsStore {
     private CommonDaoUtils<AnalysePerAmountBean> AnalysePerAmountBeanDaoUtils;
     private CommonDaoUtils<AnalysePerStocksBean> AnalysePerStocksBeanDaoUtils;
     private CommonDaoUtils<AnalyseSizeBean> AnalyseSizeBeanDaoUtils;
+    private CommonDaoUtils<StocksJsonBean> stocksJsonBeanCommonDaoUtils;
 
     public CommonDaoUtils<AnalyseSizeBean> getAnalyseSizeBeanDaoUtils() {
         return AnalyseSizeBeanDaoUtils;
@@ -52,12 +55,14 @@ public class DaoUtilsStore {
         AnalysePerStocksBeanDao analysePerStocksBeanDao = mManager.getDaoSession().getAnalysePerStocksBeanDao();
         AnalysePerPricesBeanDao analysePerPricesBeanDao = mManager.getDaoSession().getAnalysePerPricesBeanDao();
         AnalyseSizeBeanDao analyseSizeBeanDao = mManager.getDaoSession().getAnalyseSizeBeanDao();
+        StocksJsonBeanDao stocksJsonBeanDao = mManager.getDaoSession().getStocksJsonBeanDao();
         Month8DataDaoUtils = new CommonDaoUtils(Month8Data.class, month8DataDao);
         StocksBeanDaoUtils = new CommonDaoUtils(StocksBean.class, stocksBeanDao);
         AnalysePerAmountBeanDaoUtils = new CommonDaoUtils(AnalysePerAmountBean.class, analysePerAmountBeanDao);
         AnalysePerStocksBeanDaoUtils = new CommonDaoUtils(AnalysePerStocksBean.class, analysePerStocksBeanDao);
         AnalysePerPricesBeanDaoUtils = new CommonDaoUtils(AnalysePerPricesBean.class, analysePerPricesBeanDao);
         AnalyseSizeBeanDaoUtils = new CommonDaoUtils(AnalyseSizeBean.class, analyseSizeBeanDao);
+        stocksJsonBeanCommonDaoUtils = new CommonDaoUtils(StocksJsonBean.class, stocksJsonBeanDao);
     }
 
     public void resetDaoUtilsStore() {
@@ -78,5 +83,9 @@ public class DaoUtilsStore {
 
     public CommonDaoUtils<AnalysePerStocksBean> getAnalysePerStocksBeanDaoUtils() {
         return AnalysePerStocksBeanDaoUtils;
+    }
+
+    public CommonDaoUtils<StocksJsonBean> getStocksJsonBeanCommonDaoUtils() {
+        return stocksJsonBeanCommonDaoUtils;
     }
 }

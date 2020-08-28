@@ -50,6 +50,15 @@ public class CommonDaoUtils<T> {
         return flag;
     }
 
+    public boolean updateOrInsertById(T pEntity,Long id) {
+        T t = queryById(id);
+        if (null == t) {
+            return insert(pEntity);
+        } else {
+            return update(pEntity);
+        }
+    }
+
     /**
      * 插入多条数据，在子线程操作
      *

@@ -13,6 +13,7 @@ import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
 import com.mgc.sharesanalyse.entity.StocksBeanDao;
+import com.mgc.sharesanalyse.entity.StocksJsonBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -81,7 +82,7 @@ public class DaoManager {
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
             sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class, AnalyseSizeBeanDao.class, AnalysePerPricesBeanDao.class,
-                    AnalysePerStocksBeanDao.class, AnalysePerAmountBeanDao.class);
+                    AnalysePerStocksBeanDao.class, AnalysePerAmountBeanDao.class, StocksJsonBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;

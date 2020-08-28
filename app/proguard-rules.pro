@@ -52,6 +52,7 @@
 #adb forward tcp:8080 tcp:8080
 #adb connect 127.0.0.1:7555
 #adb connect 127.0.0.1:5555
+#adb connect 127.0.0.1:62001
 
 #need ladder
 #chrome://inspect/#devices
