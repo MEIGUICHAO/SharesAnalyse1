@@ -12,6 +12,15 @@ public class App extends Application {
     static ExecutorService singlePool;
     private static App context;
 
+    private static ExecutorService analysePool;
+
+    public static ExecutorService getAnalysePool() {
+        if (null == analysePool) {
+            analysePool = Executors.newFixedThreadPool(50);
+        }
+        return analysePool;
+    }
+
     public static DaoManager getmManager() {
         return mManager;
     }

@@ -265,7 +265,6 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         classifyStocks()
                         tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
-
                     }
                     if (System.currentTimeMillis() <= DateUtils.parse(
                             endTime,
@@ -894,14 +893,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun classifyStocks() {
         for (index in 0..(viewModel!!.sharesDats.value!!.size() - 1)) {
-            LogUtil.d("classifyStocks index:$index")
             val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
+
             queryAll.forEach {
                 var bean = it
-                val replace = it.json.replace("var hq_str_sh\"", "").replace("var hq_str_sz\"", "").replace("\"", "")
-                val split = replace.split(";")
+                val split = it.json.split(";")
                 var mProgress = 0
                 split.forEach {
                     if (it.contains(",")) {
@@ -914,6 +912,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         LogUtil.d("classifyStocks complete!!!")
+
     }
 
 
@@ -1239,22 +1238,23 @@ class MainActivity : AppCompatActivity() {
     ): StocksBean {
         val nameSplit = split[0].replace("var hq_str_sz", "").replace("var hq_str_sh", "").replace("\n", "").split("=")
         stocksCode = nameSplit[0]
+        var stocksCodeLong = nameSplit[0].toLong()
         var isInsert = false
 
         
-        var stocksBean = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryById(stocksCode.toLong())
+        var stocksBean = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryById(stocksCodeLong)
         if (null == stocksBean) {
             isInsert = true
             stocksBean = StocksBean()
-            stocksBean.id = stocksCode.toLong()
+            stocksBean.id = stocksCodeLong
         }
         
-        var stocksJsonBean = DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCode.toLong())
+        var stocksJsonBean = DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCodeLong)
         
 
         if (null == stocksJsonBean) {
             stocksJsonBean = StocksJsonBean()
-            stocksJsonBean.id = stocksCode.toLong()
+            stocksJsonBean.id = stocksCodeLong
         }
         
         var sbRecordBean = RecordBean()
@@ -1320,9 +1320,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale3 = split[25] + "_" + split[24].toDiv100()
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
-        getDB()
-        
-        val lastStockBean = CommonDaoUtils.queryLast(db, stocksCode.toLong())
+        val lastStockBean = CommonDaoUtils.queryLast(db, stocksCodeLong)
         
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
@@ -1390,7 +1388,6 @@ class MainActivity : AppCompatActivity() {
             sizeBean.s0Str =
                 if (sizeBean.s0Str.isNullOrEmpty()) str else sizeBean.s0Str + splitStr + str
         }
-        var sizeRecord = sizeBean.countSize
         if (null != lastStockBean) {
             updatePA(lastStockBean, stocksBean, sizeBean)
             updatePP(stocksBean, sizeBean)
@@ -1425,7 +1422,6 @@ class MainActivity : AppCompatActivity() {
 
 
         if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
-            LogUtil.d("setStcokBean sbRecord:${stocksJsonBean.sbRecord}")
             var sBRecordBean = GsonHelper.getInstance()
                 .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
             sBRecordBean.recordBeans.add(sbRecordBean)
