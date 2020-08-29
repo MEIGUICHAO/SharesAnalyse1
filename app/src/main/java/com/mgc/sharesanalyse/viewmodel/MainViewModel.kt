@@ -19,40 +19,40 @@ import java.util.regex.Pattern
 class MainViewModel : ViewModel() {
     val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
-    var stocksArray = ResUtil.getSArray(R.array.stocks_code)
+    var stocksArray = ResUtil.getSArray(R.array.code_all)
     var urlArray = emptyArray<String?>()
     var isInit = true
-    var viewModelCode = R.array.stocks_code
-    var viewModelCodeName = R.array.stocks_code_name
+    var viewModelCode = R.array.code_all
+    var viewModelCodeName = R.array.code_all_name
     var tag = "sh"
     var path = "sh"
 
     fun changeCodeType(type: Int) {
         isInit = true
-        when (type) {
-            0 ->{
-                tag = "sh"
-                path = "sh"
-                viewModelCode = R.array.stocks_code
-                viewModelCodeName = R.array.stocks_code_name
-                stocksArray = ResUtil.getSArray(R.array.stocks_code)
-            }
-            1 ->{
-                tag = "sz"
-                path = "szMain"
-                viewModelCode = R.array.sz_main_stocks_code
-                viewModelCodeName = R.array.sz_main_stocks_code_name
-                stocksArray = ResUtil.getSArray(R.array.sz_main_stocks_code)
-            }
-            2 ->{
-                tag = "sz"
-                path = "szSmall"
-                viewModelCode = R.array.sz_small_stocks_code
-                viewModelCodeName = R.array.sz_small_stocks_code_name
-                stocksArray = ResUtil.getSArray(R.array.sz_small_stocks_code)
-            }
-
-        }
+//        when (type) {
+//            0 ->{
+//                tag = "sh"
+//                path = "sh"
+//                viewModelCode = R.array.stocks_code
+//                viewModelCodeName = R.array.stocks_code_name
+//                stocksArray = ResUtil.getSArray(R.array.stocks_code)
+//            }
+//            1 ->{
+//                tag = "sz"
+//                path = "szMain"
+//                viewModelCode = R.array.sz_main_stocks_code
+//                viewModelCodeName = R.array.sz_main_stocks_code_name
+//                stocksArray = ResUtil.getSArray(R.array.sz_main_stocks_code)
+//            }
+//            2 ->{
+//                tag = "sz"
+//                path = "szSmall"
+//                viewModelCode = R.array.sz_small_stocks_code
+//                viewModelCodeName = R.array.sz_small_stocks_code_name
+//                stocksArray = ResUtil.getSArray(R.array.sz_small_stocks_code)
+//            }
+//
+//        }
     }
 
     fun requestData() {
@@ -68,6 +68,11 @@ class MainViewModel : ViewModel() {
             Log.d("mgc", "splitArray size:${stocksArray.size}")
             for (index in 0..stocksArray.size-1) {
                 LogUtil.d("mgc", "splitArray index:${index / 100},code:${stocksArray[index]}")
+                if (stocksArray[index].toDouble() < 600000) {
+                    tag = "sz"
+                } else {
+                    tag = "sh"
+                }
                 urlArray[index / 100] =
                     (if (urlArray[index / 100].isNullOrEmpty()) "$tag${stocksArray[index]}" else urlArray[index / 100] + ",$tag${stocksArray[index]}")
                 LogUtil.d("mgc", "url ${index / 100}:${urlArray[index / 100]}")

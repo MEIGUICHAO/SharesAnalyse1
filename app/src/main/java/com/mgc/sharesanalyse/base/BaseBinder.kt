@@ -1,30 +1,12 @@
-package com.mgc.sharesanalyse
+package com.mgc.sharesanalyse.base
 
-import android.Manifest
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
-import android.os.Bundle
-import android.os.IBinder
+import android.os.Binder
 import android.util.Log
 import android.util.SparseArray
-import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.mgc.sharesanalyse.base.App
-import com.mgc.sharesanalyse.base.BaseService
-import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.base.SpinnerAdapter
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
-import com.mgc.sharesanalyse.services.Services1
-import com.mgc.sharesanalyse.services.Services2
-import com.mgc.sharesanalyse.services.Services3
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.*
 import io.reactivex.Observable
@@ -37,31 +19,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
-
-
-    var mBinder1: BaseService.StocksBinder? = null
-    var connection1 = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {}
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mBinder1 = service as BaseService.StocksBinder
-            mBinder1!!.setViewModel(this@MainActivity, viewModel!!)
-        }
-    }
-    var mBinder2: BaseService.StocksBinder? = null
-    var connection2 = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {}
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mBinder2 = service as BaseService.StocksBinder
-        }
-    }
-    var mBinder3: BaseService.StocksBinder? = null
-    var connection3 = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {}
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mBinder3 = service as BaseService.StocksBinder
-        }
-    }
+open class BaseBinder:Binder() {
 
     //    yyyyMMdd HH:mm:ss
     var beginTime =
@@ -84,7 +42,6 @@ class MainActivity : AppCompatActivity() {
     var splitStr = "####"
     var splitLogSumStr = "!!!!"
 
-    var viewModel: MainViewModel? = null
     var PA10TimesSpareArray = SparseArray<String>()
     var PAGe100MillionSpareArray = SparseArray<String>()
     var PAGe50MillionSpareArray = SparseArray<String>()
@@ -112,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     var isInit = true
     var intervalTime = 25.toLong()
     var parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
-//    var logResultPath = parentPath + "/" +
+    //    var logResultPath = parentPath + "/" +
 //            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
     var logAlonePath = parentPath + "/" +
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
@@ -121,121 +78,19 @@ class MainActivity : AppCompatActivity() {
     var dbNameEndStr = ""
     var isDebug = true
     var needRecordJson = false
+    var viewModel: MainViewModel? = null
+    var activity:AppCompatActivity? = null
 
-    private fun bindServices() {
-        val bindIntent1 = Intent(this, Services1::class.java)
-        bindService(bindIntent1, connection1, Context.BIND_AUTO_CREATE)
-        val bindIntent2 = Intent(this, Services2::class.java)
-        bindService(bindIntent2, connection2, Context.BIND_AUTO_CREATE)
-        val bindIntent3 = Intent(this, Services3::class.java)
-        bindService(bindIntent3, connection3, Context.BIND_AUTO_CREATE)
-    }
+    fun setViewModel(context: AppCompatActivity, viewmodel: MainViewModel) {
+        viewModel = viewmodel
+        activity = context
 
+        viewModel!!.loadState.observe(activity!!, androidx.lifecycle.Observer {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        parentPath = DateUtils.format(
-            System.currentTimeMillis(),
-            FormatterEnum.YYYY_MM
-        ) + "/" + viewModel!!.path
-        refreshSpinner()
-        setTypeSpinner()
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            0
-        );
-        btnRefreshSpinner.setOnClickListener {
-            refreshSpinner()
-            copyTxt()
-        }
-
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                fileNameList?.let {
-                    logAlonePath = parentPath + "/" +
-                            fileNameList!![position].replace("sharesDB_", "") + "logAlone"
-                    LogUtil.d("spinner onItemSelected:${fileNameList!![position]},logAlonePath:$logAlonePath")
-
-                }
-                if (!isInit) {
-                    db = null
-                    CommonDaoUtils.db = null
-                    dbNameEndStr = fileNameList!![position]
-                    App.getmManager().switchDB(
-                        "${viewModel!!.path}_" + fileNameList!![position],
-                        Month8DataDao::class.java,
-                        StocksBeanDao::class.java,
-                        AnalyseSizeBeanDao::class.java,
-                        AnalysePerPricesBeanDao::class.java,
-                        AnalysePerStocksBeanDao::class.java,
-                        AnalysePerAmountBeanDao::class.java
-                    )
-
-                } else {
-                    isInit = false
-                }
-
-            }
-
-        }
-        spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                viewModel!!.changeCodeType(position)
-
-                db = null
-                CommonDaoUtils.db = null
-                App.getmManager().switchDB(
-                    "${viewModel!!.path}_$dbNameEndStr",
-                    Month8DataDao::class.java,
-                    StocksBeanDao::class.java,
-                    AnalyseSizeBeanDao::class.java,
-                    AnalysePerPricesBeanDao::class.java,
-                    AnalysePerStocksBeanDao::class.java,
-                    AnalysePerAmountBeanDao::class.java
-                )
-                parentPath = DateUtils.format(
-                    System.currentTimeMillis(),
-                    FormatterEnum.YYYY_MM
-                ) + "/" + viewModel!!.path
-
-                logAlonePath = parentPath + "/" +
-                        dbNameEndStr.replace("sharesDB_", "") + "logAlone"
-            }
-
-        }
-//        spinner.setOnItemClickListener { parent, view, position, id ->
-//
-//        }
-
-        viewModel!!.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {
 
-                    LogUtil.d("viewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
+                    LogUtil.d("mViewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
                     for (index in 0..viewModel!!.sharesDats.value!!.size() - 1) {
                         val data = viewModel!!.sharesDats.value?.get(index)
                         var month8Data = Month8Data()
@@ -264,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                         )) || isDebug
                     ) {
                         classifyStocks()
-                        tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
+//                        tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
 
                     }
                     if (System.currentTimeMillis() <= DateUtils.parse(
@@ -297,81 +152,36 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 is LoadState.Loading -> {
-                    btnRequest.isClickable = false
+
                 }
             }
+
         })
-        btnLogSum.setOnClickListener {
-            //logRecordSum.txt,logAloneSum.txt
-            App.getSinglePool().execute {
-                logSum()
-            }
-        }
-        btnRequest.setOnClickListener {
-            intervalCheck()
-            requestDatas(viewModel!!)
-        }
-        btnClassify.setOnClickListener {
-            App.getSinglePool().execute {
-                filterStocks()
-            }
-        }
-        btnCopyDB.setOnClickListener {
-            //databases文件夹目录
-            App.getSinglePool().execute {
-                copyDB()
-            }
-        }
-        btnAnalyse.setOnClickListener {
-            App.getSinglePool().execute({
-                analyseAll()
-            })
-        }
-        btnLogResult.setOnClickListener {
-            App.getSinglePool().execute({
-                logResult()
-            })
-        }
     }
 
-    private fun intervalCheck() {
-        val subscribe =
-            Observable.interval(1, TimeUnit.MINUTES).subscribeOn(Schedulers.io()).subscribe {
-                if ((System.currentTimeMillis() >= DateUtils.parse(
-                        beginTime,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ) &&
-                            System.currentTimeMillis() <= DateUtils.parse(
-                        noonBreakBegin,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    )) ||
-                    (System.currentTimeMillis() >= DateUtils.parse(
-                        noonBreakEnd,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ) &&
-                            System.currentTimeMillis() <= DateUtils.parse(
-                        endTime,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ))
-                ) {
 
-                    if (tvTime.text.equals("time")) {
-                        return@subscribe
+    private fun classifyStocks() {
+        for (index in 0..(viewModel!!.sharesDats.value!!.size() - 1)) {
+            val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
+                Month8DataDao.Properties.Name.eq(index.toString())
+            )
+            queryAll.forEach {
+                var bean = it
+                val replace = it.json.replace("var hq_str_sh\"", "").replace("var hq_str_sz\"", "").replace("\"", "")
+                val split = replace.split(";")
+                var mProgress = 0
+                split.forEach {
+                    if (it.contains(",")) {
+                        val split3 = it.split(",")
+                        val stcokBean = setStcokBean(split3, bean)
                     }
-                    val format =
-                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD)
-                    val timeLast =
-                        DateUtils.parse(
-                            "$format ${tvTime.text}",
-                            FormatterEnum.YYYY_MM_DD__HH_MM_SS
-                        )
-                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (100 * 1000)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
-                    if (System.currentTimeMillis() - timeLast > (100 * 1000)) {
-                        requestDatas(viewModel!!)
-                    }
+                    mProgress++
                 }
             }
+        }
+        LogUtil.d("classifyStocks complete!!!")
     }
+
 
     private fun logSum() {
         var logAloneList = FileUtil.getFileNameList(
@@ -500,38 +310,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun copyTxt() {
-        var zipList = ArrayList<String>()
-        var listpath = assets.list("")
-        listpath!!.forEach {
-            if (it.contains(".txt")) {
-                LogUtil.d("listpath:$it")
-                zipList.add(it)
-            }
-        }
-        zipList.forEach {
-            FileUtil.copyAssets2File(
-                this,
-                it,
-                FileLogUtil.FilePath!! + "/$parentPath/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it
-            )
-        }
-    }
 
-    private fun copyDB() {
-        var zipList = ArrayList<String>()
-        var listpath = assets.list("")
-        listpath!!.forEach {
-            if (it.contains(".zip")) {
-                LogUtil.d("listpath:$it")
-                zipList.add(it)
-            }
-        }
-        if (zipList.size > 0) {
-            unzipForeach(zipList, 0)
-        }
-        LogUtil.d("unzipForeach zip copy complete!!")
-    }
 
 
     private fun foreachLogAloneIOString(
@@ -574,49 +353,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
-        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index)
-            .replace(".zip", "")
-        LogUtil.d("unzipForeach:$path")
-        FileUtil.UnZipAssetsFolder(this, index, zipList.get(index), path, object :
-            FileUtil.UnZipListener {
-
-            override fun unzipFinish(index: Int) {
-                if (index < zipList.size) {
-                    unzipForeach(zipList, index)
-                }
-            }
-
-        })
-    }
-
-    private fun refreshSpinner() {
-        var path = "/data/data/" + getPackageName() + "/databases"
-        fileNameList = FileUtil.getFileNameList(path, "journal")
-        var dbName = "sharesDB_" + DateUtils.format(
-            System.currentTimeMillis(),
-            FormatterEnum.YYYY_MM_DD
-        )
-        if (!fileNameList!!.contains(dbName)) {
-            fileNameList!!.add(0, dbName)
-        }
-        Collections.sort(fileNameList!!, object : Comparator<String> {
-            override fun compare(p0: String, p1: String): Int {
-                return p1.toShareDBDateCompare().compareTo(p0.toShareDBDateCompare())
-            }
-        })
-        LogUtil.d("spinner size:${fileNameList!!.size}")
-        spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
-        spinner.setSelection(0)
-        dbNameEndStr = fileNameList!![0]
-        DaoManager.setDbName("${viewModel!!.path}_" + fileNameList!![0])
-    }
 
 
-    private fun setTypeSpinner() {
-        spinnerType.adapter = SpinnerAdapter(this@MainActivity, listOf("Type0", "Type1", "Type2"))
-        spinnerType.setSelection(0)
-    }
+
 
 
     private fun logResult() {
@@ -649,7 +388,6 @@ class MainActivity : AppCompatActivity() {
                 DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.queryByQueryBuilder(
                     AnalysePerPricesBeanDao.Properties.Code.eq(code.toInt())
                 )
-            getDB()
             val lastBean = CommonDaoUtils.queryLast(db, code.toLong())
             perAmountList.forEach {
                 if (!filterAnalyseStocks.contains(it.code.toString())) {
@@ -892,187 +630,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.requestData()
     }
 
-    private fun classifyStocks() {
-        for (index in 0..(viewModel!!.sharesDats.value!!.size() - 1)) {
-            LogUtil.d("classifyStocks index:$index")
-            val queryAll = DaoUtilsStore.getInstance().month8DataDaoUtils.queryByQueryBuilder(
-                Month8DataDao.Properties.Name.eq(index.toString())
-            )
-            queryAll.forEach {
-                var bean = it
-                val replace = it.json.replace("var hq_str_sh\"", "").replace("var hq_str_sz\"", "").replace("\"", "")
-                val split = replace.split(";")
-                var mProgress = 0
-                split.forEach {
-                    if (it.contains(",")) {
-                        val split3 = it.split(",")
-                        val stcokBean = setStcokBean(split3, bean)
-                        getDB()
-                    }
-                    mProgress++
-                }
-            }
-        }
-        LogUtil.d("classifyStocks complete!!!")
-    }
 
 
-    private fun analyseAll() {
-        if (analyseNeedReturn()) return
 
-        resetSpareArray()
-//        val shCodeList = listOf("600127")
-        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCode)
-        shCodeList.forEach {
-            var stocksCode = it
-            val queryPerAmount =
-                CommonDaoUtils.queryStocks(Datas.tableName + stocksCode)
-            LogUtil.d("analysePerAmount queryPerAmount size:${queryPerAmount.size}")
-
-            var lastPerAmount = 0.toDouble()
-            queryPerAmount.forEach {
-                if (it.perAmount != null) {
-                    LogUtil.d("analysePerAmount json:${it.toString()} lastPerAmount:$lastPerAmount")
-                    if (lastPerAmount > 100) {
-                        if (BigDecimalUtils.div(it.perAmount.toDouble(), lastPerAmount) > 10) {
-                            var str =
-                                "(${it.time},pa:${it.perAmount},lastPerAmount:$lastPerAmount)"
-                            setSpareArrayData(PA10TimesSpareArray, stocksCode, str)
-                        }
-                    }
-                    lastPerAmount = it.perAmount.toDouble()
-                    LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= ${Datas.limitPerAmount}:${it.perAmount.toDouble() >= Datas.limitPerAmount}")
-
-                    if (it.perAmount.toDouble() >= 10000) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 5000) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 2000) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 1000) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 500) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe5MillionSpareArray, stocksCode, str)
-                    }
-
-
-                    val buy1Stocks = it.buy1.split("_")[1]
-                    val buy1StocksValue = buy1Stocks.toDoubleOrNull()
-                    var bean = it
-                    buy1StocksValue?.let {
-                        if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > Datas.limitPerAmount) {
-                            if (BigDecimalUtils.div(
-                                    bean.perStocks.toDouble(),
-                                    buy1StocksValue.toDouble()
-                                ) >= 1000
-                            ) {
-                                var str =
-                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
-                                        bean
-                                    )})"
-                                setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
-                            } else if (BigDecimalUtils.div(
-                                    bean.perStocks.toDouble(),
-                                    buy1StocksValue.toDouble()
-                                ) >= 100
-                            ) {
-                                var str =
-                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
-                                        bean
-                                    )})"
-                                setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
-                            }
-                        }
-
-                    }
-                    if (it.perPrice > it.current && BigDecimalUtils.sub(
-                            it.perPrice,
-                            it.current
-                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
-                    ) {
-                        var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
-                                it.perPrice,
-                                it.current
-                            )})"
-                        setSpareArrayData(PerPricesGtCurSpareArray, stocksCode, str)
-                    }
-                    if (it.current > it.perPrice && BigDecimalUtils.sub(
-                            it.current,
-                            it.perPrice
-                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
-                    ) {
-                        var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
-                                it.current,
-                                it.perPrice
-                            )})"
-                        setSpareArrayData(CurGtPerPricesSpareArray, stocksCode, str)
-                    }
-                }
-            }
-        }
-        DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.deleteAll()
-        DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.deleteAll()
-        DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.deleteAll()
-        shCodeList.forEach {
-            LogUtil.d("----code:$it-----")
-            LogUtil.d("------------------------------------------------")
-            if (it.isEmpty()) return@forEach
-            if (!PA10TimesSpareArray[it.toInt()].isNullOrEmpty() || !PAGe100MillionSpareArray[it.toInt()].isNullOrEmpty()
-                || !PAGe50MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe20MillionSpareArray[it.toInt()].isNullOrEmpty()
-                || !PAGe10MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe5MillionSpareArray[it.toInt()].isNullOrEmpty()
-            ) {
-                val analysePerAmountBean = AnalysePerAmountBean()
-                analysePerAmountBean.code = it.toInt()
-                analysePerAmountBean.tenTimesLast = PA10TimesSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge100million = PAGe100MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge50million = PAGe50MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge20million = PAGe20MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge10million = PAGe10MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge5million = PAGe5MillionSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.insert(analysePerAmountBean)
-            }
-            if (!PSGe1000MillionSpareArray[it.toInt()].isNullOrEmpty() || !PSGe100MillionSpareArray[it.toInt()].isNullOrEmpty()) {
-                val analysePerStocksBean = AnalysePerStocksBean()
-                analysePerStocksBean.code = it.toInt()
-                analysePerStocksBean.gt1000times = PSGe1000MillionSpareArray.getDBValue(it.toInt())
-                analysePerStocksBean.gt100times = PSGe100MillionSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(analysePerStocksBean)
-            }
-            if (!PerPricesGtCurSpareArray[it.toInt()].isNullOrEmpty() || !CurGtPerPricesSpareArray[it.toInt()].isNullOrEmpty()) {
-                val analysePerPricesBean = AnalysePerPricesBean()
-                analysePerPricesBean.code = it.toInt()
-                analysePerPricesBean.perPricesGtCur =
-                    PerPricesGtCurSpareArray.getDBValue(it.toInt())
-                analysePerPricesBean.curGtPerPrices =
-                    CurGtPerPricesSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.insert(analysePerPricesBean)
-            }
-            LogUtil.d("=======================================================")
-        }
-        LogUtil.d("filterAnalyseStocks:" + filterAnalyseStocks)
-    }
-
-    private fun resetSpareArray() {
-        PA10TimesSpareArray.clear()
-        PAGe100MillionSpareArray.clear()
-        PAGe50MillionSpareArray.clear()
-        PAGe20MillionSpareArray.clear()
-        PAGe10MillionSpareArray.clear()
-        PAGe5MillionSpareArray.clear()
-        PA10TimesSpareArray.clear()
-        PSGe1000MillionSpareArray.clear()
-        PSGe100MillionSpareArray.clear()
-        PerPricesGtCurSpareArray.clear()
-        CurGtPerPricesSpareArray.clear()
-        filterAnalyseStocks = ""
-    }
 
     private fun getAddLog(it: StocksBean) =
         ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(
@@ -1132,7 +692,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun analyseNeedReturn(): Boolean {
-        getDB()
         val toDayStr = DateUtils.format(
             System.currentTimeMillis(),
             FormatterEnum.YYYY_MM_DD
@@ -1144,7 +703,7 @@ class MainActivity : AppCompatActivity() {
                 FormatterEnum.YYYYMMDD__HH_MM_SS
             ) && DaoManager.DB_NAME.contains(toDayStr)
         ) {
-            Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "wait", Toast.LENGTH_SHORT).show()
             return true
         }
         return false
@@ -1165,73 +724,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterStocks() {
-        if (System.currentTimeMillis() < DateUtils.parse(
-                endTime,
-                FormatterEnum.YYYYMMDD__HH_MM_SS
-            ) && DaoManager.DB_NAME.contains(
-                DateUtils.format(
-                    System.currentTimeMillis(),
-                    FormatterEnum.YYYY_MM_DD
-                )
-            )
-        ) {
-            Toast.makeText(this, "wait", Toast.LENGTH_SHORT).show()
-            return
-        }
-        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCodeName)
-        filterStocks = ""
-        shCodeList.forEach {
-            val code = it.split(splitStr)[0]
-            val name = it.split(splitStr)[1]
-            getDB()
-            val lastStockBean = CommonDaoUtils.queryLast(db, code.toLong())
-            if (null == lastStockBean) {
-                return@forEach
-            }
-            if (null != lastStockBean.close && lastStockBean.close > 0) {
-                val div = BigDecimalUtils.div(
-                    BigDecimalUtils.sub(
-                        lastStockBean.current,
-                        lastStockBean.close.toDouble()
-                    ), lastStockBean.close.toDouble()
-                )
-                LogUtil.d("filterStocks div:$div")
-                if (div >= 0.1) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "AAA_10")
-                    LogUtil.d("filterStocks!!! AAA_10 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "AAA_10 name:$name,code:$code")
-                } else if (div >= 0.09) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "BBB_9")
-                    LogUtil.d("filterStocks!!! BBB_9 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "BBB_9 name:$name,code:$code")
-                } else if (div >= 0.08) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "CCC_8")
-                    LogUtil.d("filterStocks!!! CCC_8 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "CCC_8 name:$name,code:$code")
-                } else if (div >= 0.07) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "DDD_7")
-                    LogUtil.d("filterStocks!!! DDD_7 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "DDD_7 name:$name,code:$code")
-                } else if (div >= 0.06) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "EEE_6")
-                    LogUtil.d("filterStocks!!! EEE_6 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "EEE_6 name:$name,code:$code")
-                } else if (div >= 0.05) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "FFF_5")
-                    LogUtil.d("filterStocks!!! FFF_5 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "FFF_5 name:$name,code:$code")
-                } else if (div <= -0.1) {
-                    CommonDaoUtils.renameTable(db, Datas.tableName + code, "HHHH_neg10")
-                    LogUtil.d("filterStocks!!! HHHH_neg10 name:$name,code:$code")
-                    FileLogUtil.d("filterStocks", "HHHH_neg10 name:$name,code:$code")
-                }
-            }
-        }
-        LogUtil.d("filterStocks:$filterStocks")
-
-
-    }
 
     private fun setStcokBean(
         split: List<String>,
@@ -1241,25 +733,25 @@ class MainActivity : AppCompatActivity() {
         stocksCode = nameSplit[0]
         var isInsert = false
 
-        
+
         var stocksBean = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryById(stocksCode.toLong())
         if (null == stocksBean) {
             isInsert = true
             stocksBean = StocksBean()
             stocksBean.id = stocksCode.toLong()
         }
-        
+
         var stocksJsonBean = DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCode.toLong())
-        
+
 
         if (null == stocksJsonBean) {
             stocksJsonBean = StocksJsonBean()
             stocksJsonBean.id = stocksCode.toLong()
         }
-        
+
         var sbRecordBean = RecordBean()
 
-        
+
 
         stocksBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
         stocksBean.open = split[1].toDouble()
@@ -1269,38 +761,38 @@ class MainActivity : AppCompatActivity() {
         stocksBean.lowest = split[5]
         stocksBean.dealAmount = split[9].toDiv10000()
         stocksBean.dealStocks = split[8].toDiv100()
-        
+
         var b1 = BigDecimalUtils.mul(split[11].toDouble(), split[10].toDouble(),3)
-        
+
         var b2 = BigDecimalUtils.mul(split[13].toDouble(), split[12].toDouble(),3)
-        
+
         var b3 = BigDecimalUtils.mul(split[15].toDouble(), split[14].toDouble(),3)
-        
+
         var b4 = BigDecimalUtils.mul(split[17].toDouble(), split[16].toDouble(),3)
-        
+
         var b5 = BigDecimalUtils.mul(split[19].toDouble(), split[18].toDouble(),3)
 
-        
+
         var s1 = BigDecimalUtils.mul(split[21].toDouble(), split[20].toDouble(),3)
-        
+
         var s2 = BigDecimalUtils.mul(split[23].toDouble(), split[22].toDouble(),3)
-        
+
         var s3 = BigDecimalUtils.mul(split[25].toDouble(), split[24].toDouble(),3)
-        
+
         var s4 = BigDecimalUtils.mul(split[27].toDouble(), split[26].toDouble(),3)
-        
+
         var s5 = BigDecimalUtils.mul(split[29].toDouble(), split[28].toDouble(),3)
-        
+
         stocksJsonBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
-        
+
         sbRecordBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
-        
+
         sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5)/10000.0f
-        
+
         sbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5)/10000.0f
-        
+
         sbRecordBean.bsDiffAmount = BigDecimalUtils.sub(sbRecordBean.bAmount,sbRecordBean.sAmount)
-        
+
         if ((sbRecordBean.sAmount + sbRecordBean.bAmount) != 0.toDouble()) {
             sbRecordBean.bPercent = BigDecimalUtils.div(
                 sbRecordBean.bAmount,
@@ -1308,7 +800,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        
+
         stocksBean.buy1 = split[11] + "_" + split[10].toDiv100()
         stocksBean.buy2 = split[13] + "_" + split[12].toDiv100()
         stocksBean.buy3 = split[15] + "_" + split[14].toDiv100()
@@ -1320,10 +812,9 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale3 = split[25] + "_" + split[24].toDiv100()
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
-        getDB()
-        
+
         val lastStockBean = CommonDaoUtils.queryLast(db, stocksCode.toLong())
-        
+
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
@@ -1357,7 +848,7 @@ class MainActivity : AppCompatActivity() {
                 stocksBean.perPrice = 0.toDouble()
             }
         }
-        
+
         val sizeBeanList =
             DaoUtilsStore.getInstance().analyseSizeBeanDaoUtils.queryByQueryBuilder(
                 AnalyseSizeBeanDao.Properties.Code.eq(stocksCode.toInt())
@@ -1400,22 +891,22 @@ class MainActivity : AppCompatActivity() {
         sizeBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
-        
+
         stocksBean.json = ""
-        
+
         stocksJsonBean.amount = stocksBean.dealAmount.toDouble()
-        
+
         stocksJsonBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
-        
+
         if (needRecordJson) {
             if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
-                
+
                 var stockListBean = GsonHelper.getInstance()
                     .fromJson(stocksJsonBean.jsonRecord, StockListBean::class.java)
                 stockListBean.stocksBeanList.add(stocksBean)
                 stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
             } else {
-                
+
                 var stockListBean = StockListBean()
                 stockListBean.stocksBeanList = ArrayList()
                 stockListBean.stocksBeanList.add(stocksBean)
@@ -1431,23 +922,23 @@ class MainActivity : AppCompatActivity() {
             sBRecordBean.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
         } else {
-            
+
             var sBRecordBeanList = SBRecordBean()
             sBRecordBeanList.recordBeans = ArrayList()
             sBRecordBeanList.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
         }
-        
+
 
         DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(stocksJsonBean,stocksCode.toLong())
         stocksBean.json = GsonHelper.toJson(stocksBean)
-        
+
         if (isInsert) {
             val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
         } else {
             val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
         }
-        
+
         return stocksBean
     }
 
@@ -1835,12 +1326,5 @@ class MainActivity : AppCompatActivity() {
             val insert = DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(PSBean)
         }
     }
-
-    private fun getDB() {
-        if (db == null) {
-            db = DaoManager.getsHelper().getWritableDb()
-        }
-    }
-
 
 }

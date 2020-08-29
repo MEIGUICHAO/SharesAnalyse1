@@ -49,7 +49,7 @@ public class Database implements ChromeDevtoolsDomain {
    * Note that when this limit is exceeded, a dummy row will be introduced that indicates
    * truncation occurred.
    */
-  private static final int MAX_EXECUTE_RESULTS = 2500;
+  private static final int MAX_EXECUTE_RESULTS = 5500;
 
   /**
    * Maximum length of a BLOB field before we stop trying to interpret it and just
