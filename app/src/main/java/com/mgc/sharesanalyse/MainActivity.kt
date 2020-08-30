@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
     var fileNameList: ArrayList<String>? = null
     var isInit = true
     var intervalTime = 25.toLong()
+    var parentBasePath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
     var parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
 //    var logResultPath = parentPath + "/" +
 //            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
@@ -118,9 +119,13 @@ class MainActivity : AppCompatActivity() {
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
     var logAloneSumEndSplitStr = "==============================================="
     var requestTime = 0.toLong()
-    var dbNameEndStr = ""
     var isDebug = true
     var needRecordJson = false
+    var pathSH = "sh"
+    var pathSZMain = "szMain"
+    var pathSZStartUp = "szStartUp"
+    var pathSZSmall = "szSmall"
+
 
     private fun bindServices() {
         val bindIntent1 = Intent(this, Services1::class.java)
@@ -175,9 +180,8 @@ class MainActivity : AppCompatActivity() {
                 if (!isInit) {
                     db = null
                     CommonDaoUtils.db = null
-                    dbNameEndStr = fileNameList!![position]
                     App.getmManager().switchDB(
-                        "${viewModel!!.path}_" + fileNameList!![position],
+                        fileNameList!![position],
                         Month8DataDao::class.java,
                         StocksBeanDao::class.java,
                         AnalyseSizeBeanDao::class.java,
@@ -190,40 +194,6 @@ class MainActivity : AppCompatActivity() {
                     isInit = false
                 }
 
-            }
-
-        }
-        spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                viewModel!!.changeCodeType(position)
-
-                db = null
-                CommonDaoUtils.db = null
-                App.getmManager().switchDB(
-                    "${viewModel!!.path}_$dbNameEndStr",
-                    Month8DataDao::class.java,
-                    StocksBeanDao::class.java,
-                    AnalyseSizeBeanDao::class.java,
-                    AnalysePerPricesBeanDao::class.java,
-                    AnalysePerStocksBeanDao::class.java,
-                    AnalysePerAmountBeanDao::class.java
-                )
-                parentPath = DateUtils.format(
-                    System.currentTimeMillis(),
-                    FormatterEnum.YYYY_MM
-                ) + "/" + viewModel!!.path
-
-                logAlonePath = parentPath + "/" +
-                        dbNameEndStr.replace("sharesDB_", "") + "logAlone"
             }
 
         }
@@ -336,6 +306,7 @@ class MainActivity : AppCompatActivity() {
     private fun intervalCheck() {
         val subscribe =
             Observable.interval(1, TimeUnit.MINUTES).subscribeOn(Schedulers.io()).subscribe {
+                LogUtil.d("intervalCheck!!!")
                 if ((System.currentTimeMillis() >= DateUtils.parse(
                         beginTime,
                         FormatterEnum.YYYYMMDD__HH_MM_SS
@@ -512,9 +483,22 @@ class MainActivity : AppCompatActivity() {
             FileUtil.copyAssets2File(
                 this,
                 it,
-                FileLogUtil.FilePath!! + "/$parentPath/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it
+                FileLogUtil.FilePath!! + "/$parentBasePath${getTypePath(it)}/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it
             )
         }
+    }
+
+    private fun getTypePath(name: String): String {
+        if (name.contains(pathSH)) {
+            return "/$pathSH"
+        } else if (name.contains(pathSZMain)) {
+            return "/$pathSZMain"
+        } else if (name.contains(pathSZStartUp)) {
+            return "/$pathSZStartUp"
+        } else if (name.contains(pathSZSmall)) {
+            return "/$pathSZSmall"
+        }
+        return ""
     }
 
     private fun copyDB() {
@@ -607,8 +591,7 @@ class MainActivity : AppCompatActivity() {
         LogUtil.d("spinner size:${fileNameList!!.size}")
         spinner.adapter = SpinnerAdapter(this@MainActivity, fileNameList)
         spinner.setSelection(0)
-        dbNameEndStr = fileNameList!![0]
-        DaoManager.setDbName("${viewModel!!.path}_" + fileNameList!![0])
+        DaoManager.setDbName(fileNameList!![0])
     }
 
 
@@ -704,7 +687,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
+        LogUtil.d("logALoneList size:${logALoneList.size}")
         Collections.sort(logALoneList, object : Comparator<String> {
             override fun compare(p0: String, p1: String): Int {
                 return p1.toLogCompare().compareTo(p0.toLogCompare())
@@ -897,17 +880,13 @@ class MainActivity : AppCompatActivity() {
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
 
-            queryAll.forEach {
-                var bean = it
-                val split = it.json.split(";")
-                var mProgress = 0
+            queryAll.forEach { bean->
+                val split = bean.json.split(";")
                 split.forEach {
                     if (it.contains(",")) {
                         val split3 = it.split(",")
-                        val stcokBean = setStcokBean(split3, bean)
-                        getDB()
+                        setStcokBean(split3, DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS))
                     }
-                    mProgress++
                 }
             }
         }
@@ -1234,8 +1213,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setStcokBean(
         split: List<String>,
-        bean: Month8Data
-    ): StocksBean {
+        time: String
+    ){
         val nameSplit = split[0].replace("var hq_str_sz", "").replace("var hq_str_sh", "").replace("\n", "").split("=")
         stocksCode = nameSplit[0]
         var stocksCodeLong = nameSplit[0].toLong()
@@ -1261,7 +1240,7 @@ class MainActivity : AppCompatActivity() {
 
         
 
-        stocksBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        stocksBean.time = time
         stocksBean.open = split[1].toDouble()
         stocksBean.close = split[2].toDouble()
         stocksBean.current = split[3].toDouble()
@@ -1291,9 +1270,9 @@ class MainActivity : AppCompatActivity() {
         
         var s5 = BigDecimalUtils.mul(split[29].toDouble(), split[28].toDouble(),3)
         
-        stocksJsonBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        stocksJsonBean.time = time
         
-        sbRecordBean.time = DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+        sbRecordBean.time = time
         
         sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5)/10000.0f
         
@@ -1390,11 +1369,15 @@ class MainActivity : AppCompatActivity() {
         }
         if (null != lastStockBean) {
             updatePA(lastStockBean, stocksBean, sizeBean)
-            updatePP(stocksBean, sizeBean)
+            if (stocksBean.perAmount.toDouble() > Datas.limitPerAmount) {
+                updatePP(stocksBean, sizeBean)
+            }
         }
-        updatePS(stocksBean, sizeBean)
-
-        sizeBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
+        if (stocksBean.perAmount.toDouble() > Datas.limitPerAmount) {
+            updatePS(stocksBean, sizeBean)
+        }
+        var curPercentDouble = getCurPercentDouble(stocksBean.current, stocksBean.close)
+        sizeBean.percent = curPercentDouble
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
         
@@ -1402,7 +1385,7 @@ class MainActivity : AppCompatActivity() {
         
         stocksJsonBean.amount = stocksBean.dealAmount.toDouble()
         
-        stocksJsonBean.percent = getCurPercentDouble(stocksBean.current, stocksBean.close)
+        stocksJsonBean.percent = curPercentDouble
         
         if (needRecordJson) {
             if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
@@ -1437,14 +1420,13 @@ class MainActivity : AppCompatActivity() {
 
         DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(stocksJsonBean,stocksCode.toLong())
         stocksBean.json = GsonHelper.toJson(stocksBean)
-        
+
         if (isInsert) {
             val insert = DaoUtilsStore.getInstance().stocksBeanDaoUtils.insert(stocksBean)
         } else {
             val update = DaoUtilsStore.getInstance().stocksBeanDaoUtils.update(stocksBean)
         }
-        
-        return stocksBean
+
     }
 
     private fun getB0Log(split: List<String>): Pair<String, Int> {
@@ -1512,7 +1494,7 @@ class MainActivity : AppCompatActivity() {
         if (bean.perPrice > bean.current && BigDecimalUtils.sub(
                 bean.perPrice,
                 bean.current
-            ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount.toDouble()
+            ) >= 0.2
         ) {
 
             var str =
@@ -1538,7 +1520,7 @@ class MainActivity : AppCompatActivity() {
         if (bean.current > bean.perPrice && BigDecimalUtils.sub(
                 bean.current,
                 bean.perPrice
-            ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
+            ) >= 0.2
         ) {
 
             var str =
@@ -1767,11 +1749,11 @@ class MainActivity : AppCompatActivity() {
         var bean = it
 
         buy1StocksValue?.let {
-            if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > Datas.limitPerAmount && bean.perPrice > bean.current) {
+            if (it > 0 && bean.perAmount != null && bean.perPrice > bean.current) {
                 if (BigDecimalUtils.div(
                         bean.perStocks.toDouble(),
                         buy1StocksValue.toDouble()
-                    ) >= Datas.limitPerAmount
+                    ) >= 1000
                 ) {
                     var str =
                         "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
