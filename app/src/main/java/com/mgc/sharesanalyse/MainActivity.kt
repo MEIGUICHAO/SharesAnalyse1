@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
     var logAloneSumEndSplitStr = "==============================================="
     var requestTime = 0.toLong()
-    var isDebug = true
+    var isDebug = false
     var needRecordJson = false
     var pathSH = "sh"
     var pathSZMain = "szMain"
@@ -623,14 +623,19 @@ class MainActivity : AppCompatActivity() {
                 DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.queryByQueryBuilder(
                     AnalysePerAmountBeanDao.Properties.Code.eq(code.toInt())
                 )
+
+            LogUtil.d("logResult perAmountList size:${perAmountList.size}")
             val perStockList =
                 DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.queryByQueryBuilder(
                     AnalysePerStocksBeanDao.Properties.Code.eq(code.toInt())
                 )
+            LogUtil.d("logResult perStockList size:${perStockList.size}")
             val perPricesList =
                 DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.queryByQueryBuilder(
                     AnalysePerPricesBeanDao.Properties.Code.eq(code.toInt())
                 )
+
+            LogUtil.d("logResult perPricesList size:${perPricesList.size}")
             getDB()
             val lastBean = CommonDaoUtils.queryLast(db, code.toLong())
             perAmountList.forEach {
@@ -1383,7 +1388,7 @@ class MainActivity : AppCompatActivity() {
         
         stocksBean.json = ""
         
-        stocksJsonBean.amount = stocksBean.dealAmount.toDouble()
+        stocksJsonBean.amount = stocksBean.dealAmount.toDiv10000().toDouble()
         
         stocksJsonBean.percent = curPercentDouble
         
