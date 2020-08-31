@@ -702,7 +702,7 @@ class MainActivity : AppCompatActivity() {
         })
         logALoneList.forEach {
             FileLogUtil.d(
-                logAlonePath,
+                it.toClassifyPath(),
                 it
             )
         }
@@ -931,19 +931,19 @@ class MainActivity : AppCompatActivity() {
                     lastPerAmount = it.perAmount.toDouble()
                     LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= ${Datas.limitPerAmount}:${it.perAmount.toDouble() >= Datas.limitPerAmount}")
 
-                    if (it.perAmount.toDouble() >= 10000) {
+                    if (it.perAmount.toDouble() >= Datas.limitPerAmount*20) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 5000) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*10) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 2000) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*4) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 1000) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*2) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= 500) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe5MillionSpareArray, stocksCode, str)
                     }
