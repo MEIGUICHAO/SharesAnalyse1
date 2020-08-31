@@ -3,6 +3,7 @@ package com.mgc.sharesanalyse.viewmodel
 import android.util.SparseArray
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
@@ -125,4 +126,28 @@ fun String.toLogSumPath(): String {
         System.currentTimeMillis(),
         FormatterEnum.YYYYMMDD__HH_MM_SS
     )}"
+}
+
+fun String.paAdapter():String {
+    var beginNum = this.replace(",", "").replace("ms", "").toInt()
+    var base = when (beginNum) {
+        100 -> 20
+        50 -> 10
+        20 -> 4
+        10 -> 2
+        else -> 1
+    }
+    return ",${base * Datas.limitPerAmount / 100}ms"
+}
+
+fun String.paSimpleAdapter():String {
+    var beginNum = this.replace("pa>", "").replace("m", "").toInt()
+    var base = when (beginNum) {
+        100 -> 20
+        50 -> 10
+        20 -> 4
+        10 -> 2
+        else -> 1
+    }
+    return "pa>${base * Datas.limitPerAmount / 100}m"
 }

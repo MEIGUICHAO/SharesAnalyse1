@@ -49,4 +49,14 @@ public class RecordBean {
     }
 
     public double bPercent;
+    public double cPercent;
+    public double perAmount;
+
+    public double getcPercent() {
+        return cPercent;
+    }
+
+    public void setcPercent(double cPercent) {
+        this.cPercent = cPercent;
+    }
 }

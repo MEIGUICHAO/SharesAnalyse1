@@ -161,6 +161,9 @@ class MainActivity : AppCompatActivity() {
             copyTxt()
         }
 
+        btnLogSB.setOnClickListener {
+            logSB()
+        }
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -322,6 +325,41 @@ class MainActivity : AppCompatActivity() {
             App.getSinglePool().execute({
                 logResult()
             })
+        }
+    }
+
+    private fun logSB() {
+        App.getSinglePool().execute {
+            var pathbase =
+                "$parentBasePath/sbjson_${DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS)}"
+            var progess = 0
+            val queryAll = DaoUtilsStore.getInstance().analyseSizeBeanDaoUtils.queryAll()
+            Collections.sort(queryAll, object : Comparator<AnalyseSizeBean> {
+                override fun compare(p0: AnalyseSizeBean, p1: AnalyseSizeBean): Int {
+                    return p1.percent.compareTo(p0.percent)
+                }
+            })
+            queryAll.forEach {
+                var bean =
+                    DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(it.code.toLong())
+                var path = ""
+                if (null != bean) {
+                    if (it.code > 600000) {
+                        path = pathbase + "_sh"
+                    } else if (it.code > 300000) {
+                        path = pathbase + "_SU"
+                    } else {
+                        path = pathbase + "_MS"
+                    }
+                    LogUtil.d("LogSB-----!!!---${it.code}---${it.percent}%--")
+                    FileLogUtil.d(
+                        path,
+                        "!!!---${it.code}---${it.percent}%--\n${bean.sbRecord}\n$logAloneSumEndSplitStr$logAloneSumEndSplitStr\n"
+                    )
+                    progess++
+                }
+            }
+            LogUtil.d("LogSB-----complete--------$progess")
         }
     }
 
@@ -743,19 +781,19 @@ class MainActivity : AppCompatActivity() {
                     addStr = limiWhenLog10ts(logAloneStr, addStr, "pa>10Last", limitStr)
                 }
                 "pa_ge100m" -> {
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m", limitStr)
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>100m".paSimpleAdapter(), limitStr)
                 }
                 "pa_ge50m" -> {
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>50m", limitStr)
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>50m".paSimpleAdapter(), limitStr)
                 }
                 "pa_ge20m" -> {
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>20m", limitStr)
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>20m".paSimpleAdapter(), limitStr)
                 }
                 "pa_ge10m" -> {
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>10m", limitStr)
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>10m".paSimpleAdapter(), limitStr)
                 }
                 "pa_ge5m" -> {
-                    addStr = limiWhenLog(logAloneStr, addStr, "pa>5m", limitStr)
+                    addStr = limiWhenLog(logAloneStr, addStr, "pa>5m".paSimpleAdapter(), limitStr)
                 }
                 "ps_gt1000times" -> {
                     addStr = limiWhenLog(logAloneStr, addStr, "ps>1000ts", limitStr)
@@ -848,9 +886,9 @@ class MainActivity : AppCompatActivity() {
 //        )
         var logAloneStr =
             "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
-                ",100ms"
-            )}${ge50mSize.toLog(",50ms")}${ge20mSize.toLog(",20ms")}${ge10mSize.toLog(",10ms")}${ge5mSize.toLog(
-                ",5ms"
+                ",100ms".paAdapter()
+            )}${ge50mSize.toLog(",50ms".paAdapter())}${ge20mSize.toLog(",20ms".paAdapter())}${ge10mSize.toLog(",10ms".paAdapter())}${ge5mSize.toLog(
+                ",5ms".paAdapter()
             )}" +
                     "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
                         ",ppGt"
@@ -1412,6 +1450,8 @@ class MainActivity : AppCompatActivity() {
             updatePS(stocksBean, sizeBean)
         }
         var curPercentDouble = getCurPercentDouble(stocksBean.current, stocksBean.close)
+        sbRecordBean.cPercent = curPercentDouble
+        sbRecordBean.perAmount = stocksBean.perAmount
         sizeBean.percent = curPercentDouble
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
@@ -1443,10 +1483,14 @@ class MainActivity : AppCompatActivity() {
             var sBRecordBean = GsonHelper.getInstance()
                 .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
             sBRecordBean.recordBeans.add(sbRecordBean)
+            sBRecordBean.dealAmount = stocksBean.dealAmount
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
         } else {
 
             var sBRecordBeanList = SBRecordBean()
+            sBRecordBeanList.code = nameSplit[0]
+            sBRecordBeanList.name = nameSplit[1]
+            sBRecordBeanList.dealAmount = stocksBean.dealAmount
             sBRecordBeanList.recordBeans = ArrayList()
             sBRecordBeanList.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
