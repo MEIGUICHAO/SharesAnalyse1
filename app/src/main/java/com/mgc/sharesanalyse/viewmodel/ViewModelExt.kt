@@ -109,3 +109,20 @@ fun String.toClassifyPath(): String {
     ) + "/" + path + "/" +
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone")
 }
+
+fun String.toLogSumPath(): String {
+    var code = this.toDouble()
+    var path = "sh"
+    if (code > 300000 && code < 600000) {
+        path = "szSU"
+    } else if (code < 600000) {
+        path = "szMS"
+    }
+    return "${DateUtils.format(
+        System.currentTimeMillis(),
+        FormatterEnum.YYYY_MM
+    ) + "/" + path}/logSum/logAloneSum_${DateUtils.format(
+        System.currentTimeMillis(),
+        FormatterEnum.YYYYMMDD__HH_MM_SS
+    )}"
+}

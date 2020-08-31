@@ -271,9 +271,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+//        var path = "sh"
+//        if (code > 300000 && code < 600000) {
+//            path = "szSU"
+//        } else if (code < 600000) {
+//            path = "szMS"
+//        }
         btnLogSum.setOnClickListener {
             //logRecordSum.txt,logAloneSum.txt
             App.getSinglePool().execute {
+                parentPath = DateUtils.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM
+                ) + "/sh"
+                logSum()
+                parentPath = DateUtils.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM
+                ) + "/szSU"
+                logSum()
+                parentPath = DateUtils.format(
+                    System.currentTimeMillis(),
+                    FormatterEnum.YYYY_MM
+                ) + "/szMS"
                 logSum()
             }
         }
@@ -465,6 +486,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         logSumArray.forEach {
+            var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---","")
             FileLogUtil.d(logname, it.replace(splitStr, "\n    "))
         }
         LogUtil.d("----------logSum complete-------------")
