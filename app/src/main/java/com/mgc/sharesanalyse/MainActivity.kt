@@ -113,7 +113,8 @@ class MainActivity : AppCompatActivity() {
     var intervalTime = 25.toLong()
     var parentBasePath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
     var parentPath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)
-//    var logResultPath = parentPath + "/" +
+
+    //    var logResultPath = parentPath + "/" +
 //            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logResult"
     var logAlonePath = parentPath + "/" +
             DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone"
@@ -239,7 +240,7 @@ class MainActivity : AppCompatActivity() {
                     if (System.currentTimeMillis() <= DateUtils.parse(
                             endTime,
                             FormatterEnum.YYYYMMDD__HH_MM_SS
-                        )|| isDebug
+                        ) || isDebug
                     ) {
                         GlobalScope.launch {
 
@@ -248,11 +249,11 @@ class MainActivity : AppCompatActivity() {
                                 runBlocking {
                                     intervalTime = 0.toLong()
                                     LogUtil.d("requestDatas requestTime:$requestTime ,diff:${(System.currentTimeMillis() - requestTime) / 1000}")
-                                    if (System.currentTimeMillis() - requestTime >= (30 * 1000)) {
+                                    if (System.currentTimeMillis() - requestTime >= Datas.intervalTime) {
                                         intervalTime = 0.toLong()
                                     } else {
                                         intervalTime = System.currentTimeMillis() - requestTime
-                                        delay(30 * 1000 - intervalTime)
+                                        delay(Datas.intervalTime - intervalTime)
                                     }
                                     requestDatas(viewModel!!)
                                 }
@@ -335,8 +336,9 @@ class MainActivity : AppCompatActivity() {
                             "$format ${tvTime.text}",
                             FormatterEnum.YYYY_MM_DD__HH_MM_SS
                         )
-                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (100 * 1000)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
-                    if (System.currentTimeMillis() - timeLast > (100 * 1000)) {
+                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
+
+                    if (System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)) {
                         requestDatas(viewModel!!)
                     }
                 }
@@ -885,12 +887,15 @@ class MainActivity : AppCompatActivity() {
                 Month8DataDao.Properties.Name.eq(index.toString())
             )
 
-            queryAll.forEach { bean->
+            queryAll.forEach { bean ->
                 val split = bean.json.split(";")
                 split.forEach {
                     if (it.contains(",")) {
                         val split3 = it.split(",")
-                        setStcokBean(split3, DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS))
+                        setStcokBean(
+                            split3,
+                            DateUtils.format(bean.timeStamp, FormatterEnum.HH_MM_SS)
+                        )
                     }
                 }
             }
@@ -1219,31 +1224,34 @@ class MainActivity : AppCompatActivity() {
     private fun setStcokBean(
         split: List<String>,
         time: String
-    ){
-        val nameSplit = split[0].replace("var hq_str_sz", "").replace("var hq_str_sh", "").replace("\n", "").split("=")
+    ) {
+        val nameSplit =
+            split[0].replace("var hq_str_sz", "").replace("var hq_str_sh", "").replace("\n", "")
+                .split("=")
         stocksCode = nameSplit[0]
         var stocksCodeLong = nameSplit[0].toLong()
         var isInsert = false
 
-        
+
         var stocksBean = DaoUtilsStore.getInstance().stocksBeanDaoUtils.queryById(stocksCodeLong)
         if (null == stocksBean) {
             isInsert = true
             stocksBean = StocksBean()
             stocksBean.id = stocksCodeLong
         }
-        
-        var stocksJsonBean = DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCodeLong)
-        
+
+        var stocksJsonBean =
+            DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.queryById(stocksCodeLong)
+
 
         if (null == stocksJsonBean) {
             stocksJsonBean = StocksJsonBean()
             stocksJsonBean.id = stocksCodeLong
         }
-        
+
         var sbRecordBean = RecordBean()
 
-        
+
 
         stocksBean.time = time
         stocksBean.open = split[1].toDouble()
@@ -1253,38 +1261,38 @@ class MainActivity : AppCompatActivity() {
         stocksBean.lowest = split[5]
         stocksBean.dealAmount = split[9].toDiv10000()
         stocksBean.dealStocks = split[8].toDiv100()
-        
-        var b1 = BigDecimalUtils.mul(split[11].toDouble(), split[10].toDouble(),3)
-        
-        var b2 = BigDecimalUtils.mul(split[13].toDouble(), split[12].toDouble(),3)
-        
-        var b3 = BigDecimalUtils.mul(split[15].toDouble(), split[14].toDouble(),3)
-        
-        var b4 = BigDecimalUtils.mul(split[17].toDouble(), split[16].toDouble(),3)
-        
-        var b5 = BigDecimalUtils.mul(split[19].toDouble(), split[18].toDouble(),3)
 
-        
-        var s1 = BigDecimalUtils.mul(split[21].toDouble(), split[20].toDouble(),3)
-        
-        var s2 = BigDecimalUtils.mul(split[23].toDouble(), split[22].toDouble(),3)
-        
-        var s3 = BigDecimalUtils.mul(split[25].toDouble(), split[24].toDouble(),3)
-        
-        var s4 = BigDecimalUtils.mul(split[27].toDouble(), split[26].toDouble(),3)
-        
-        var s5 = BigDecimalUtils.mul(split[29].toDouble(), split[28].toDouble(),3)
-        
+        var b1 = BigDecimalUtils.mul(split[11].toDouble(), split[10].toDouble(), 3)
+
+        var b2 = BigDecimalUtils.mul(split[13].toDouble(), split[12].toDouble(), 3)
+
+        var b3 = BigDecimalUtils.mul(split[15].toDouble(), split[14].toDouble(), 3)
+
+        var b4 = BigDecimalUtils.mul(split[17].toDouble(), split[16].toDouble(), 3)
+
+        var b5 = BigDecimalUtils.mul(split[19].toDouble(), split[18].toDouble(), 3)
+
+
+        var s1 = BigDecimalUtils.mul(split[21].toDouble(), split[20].toDouble(), 3)
+
+        var s2 = BigDecimalUtils.mul(split[23].toDouble(), split[22].toDouble(), 3)
+
+        var s3 = BigDecimalUtils.mul(split[25].toDouble(), split[24].toDouble(), 3)
+
+        var s4 = BigDecimalUtils.mul(split[27].toDouble(), split[26].toDouble(), 3)
+
+        var s5 = BigDecimalUtils.mul(split[29].toDouble(), split[28].toDouble(), 3)
+
         stocksJsonBean.time = time
-        
+
         sbRecordBean.time = time
-        
-        sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5)/10000.0f
-        
-        sbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5)/10000.0f
-        
-        sbRecordBean.bsDiffAmount = BigDecimalUtils.sub(sbRecordBean.bAmount,sbRecordBean.sAmount)
-        
+
+        sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5) / 10000.0f
+
+        sbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5) / 10000.0f
+
+        sbRecordBean.bsDiffAmount = BigDecimalUtils.sub(sbRecordBean.bAmount, sbRecordBean.sAmount)
+
         if ((sbRecordBean.sAmount + sbRecordBean.bAmount) != 0.toDouble()) {
             sbRecordBean.bPercent = BigDecimalUtils.div(
                 sbRecordBean.bAmount,
@@ -1292,7 +1300,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        
+
         stocksBean.buy1 = split[11] + "_" + split[10].toDiv100()
         stocksBean.buy2 = split[13] + "_" + split[12].toDiv100()
         stocksBean.buy3 = split[15] + "_" + split[14].toDiv100()
@@ -1305,7 +1313,7 @@ class MainActivity : AppCompatActivity() {
         stocksBean.sale4 = split[27] + "_" + split[26].toDiv100()
         stocksBean.sale5 = split[29] + "_" + split[28].toDiv100()
         val lastStockBean = CommonDaoUtils.queryLast(db, stocksCodeLong)
-        
+
         if (null != lastStockBean) {
             stocksBean.perStocks = BigDecimalUtils.sub(
                 stocksBean.dealStocks.toDouble(),
@@ -1339,7 +1347,7 @@ class MainActivity : AppCompatActivity() {
                 stocksBean.perPrice = 0.toDouble()
             }
         }
-        
+
         val sizeBeanList =
             DaoUtilsStore.getInstance().analyseSizeBeanDaoUtils.queryByQueryBuilder(
                 AnalyseSizeBeanDao.Properties.Code.eq(stocksCode.toInt())
@@ -1374,33 +1382,33 @@ class MainActivity : AppCompatActivity() {
         }
         if (null != lastStockBean) {
             updatePA(lastStockBean, stocksBean, sizeBean)
-            if (stocksBean.perAmount.toDouble() > Datas.limitPerAmount) {
+            if (stocksBean.perAmount > Datas.limitPerAmount) {
                 updatePP(stocksBean, sizeBean)
             }
         }
-        if (stocksBean.perAmount.toDouble() > Datas.limitPerAmount) {
+        if (stocksBean.perAmount > Datas.limitPerAmount) {
             updatePS(stocksBean, sizeBean)
         }
         var curPercentDouble = getCurPercentDouble(stocksBean.current, stocksBean.close)
         sizeBean.percent = curPercentDouble
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
-        
+
         stocksBean.json = ""
-        
+
         stocksJsonBean.amount = stocksBean.dealAmount.toDiv10000().toDouble()
-        
+
         stocksJsonBean.percent = curPercentDouble
-        
+
         if (needRecordJson) {
             if (!stocksJsonBean.jsonRecord.isNullOrEmpty()) {
-                
+
                 var stockListBean = GsonHelper.getInstance()
                     .fromJson(stocksJsonBean.jsonRecord, StockListBean::class.java)
                 stockListBean.stocksBeanList.add(stocksBean)
                 stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
             } else {
-                
+
                 var stockListBean = StockListBean()
                 stockListBean.stocksBeanList = ArrayList()
                 stockListBean.stocksBeanList.add(stocksBean)
@@ -1415,15 +1423,18 @@ class MainActivity : AppCompatActivity() {
             sBRecordBean.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
         } else {
-            
+
             var sBRecordBeanList = SBRecordBean()
             sBRecordBeanList.recordBeans = ArrayList()
             sBRecordBeanList.recordBeans.add(sbRecordBean)
             stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
         }
-        
 
-        DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(stocksJsonBean,stocksCode.toLong())
+
+        DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(
+            stocksJsonBean,
+            stocksCode.toLong()
+        )
         stocksBean.json = GsonHelper.toJson(stocksBean)
 
         if (isInsert) {
@@ -1593,7 +1604,7 @@ class MainActivity : AppCompatActivity() {
                 PABean.code = stocksCode.toInt()
             }
             var lastPerAmount = lastStockBean.perAmount.toDouble()
-            if (lastPerAmount > 100) {
+            if (lastPerAmount > Datas.limitPerAmount) {
                 if (BigDecimalUtils.div(stocksBean.perAmount.toDouble(), lastPerAmount) > 10) {
                     var str =
                         "(${stocksBean.time},perAmount:${stocksBean.perAmount},lastPerAmount:$lastPerAmount)"
@@ -1612,7 +1623,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            if (stocksBean.perAmount.toDouble() >= 10000) {
+            if (stocksBean.perAmount.toDouble() >= (Datas.limitPerAmount * 20)) {
                 var str =
                     "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge100million =
@@ -1628,7 +1639,7 @@ class MainActivity : AppCompatActivity() {
                 sizeBean.countSize = analyseSize.first
                 sizeBean.ge100mSize = analyseSize.second
                 sizeBean.ge100mSizeStr = analyseSize.third
-            } else if (stocksBean.perAmount.toDouble() >= 5000) {
+            } else if (stocksBean.perAmount.toDouble() >= (Datas.limitPerAmount * 10)) {
                 var str =
                     "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge50million =
@@ -1644,7 +1655,7 @@ class MainActivity : AppCompatActivity() {
                 sizeBean.countSize = analyseSize.first
                 sizeBean.ge50mSize = analyseSize.second
                 sizeBean.ge50mSizeStr = analyseSize.third
-            } else if (stocksBean.perAmount.toDouble() >= 2000) {
+            } else if (stocksBean.perAmount.toDouble() >= (Datas.limitPerAmount * 4)) {
                 var str =
                     "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge20million =
@@ -1660,7 +1671,7 @@ class MainActivity : AppCompatActivity() {
                 sizeBean.countSize = analyseSize.first
                 sizeBean.ge20mSize = analyseSize.second
                 sizeBean.ge20mSizeStr = analyseSize.third
-            } else if (stocksBean.perAmount.toDouble() >= 1000) {
+            } else if (stocksBean.perAmount.toDouble() >= (Datas.limitPerAmount * 2)) {
                 var str =
                     "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge10million =
@@ -1676,7 +1687,7 @@ class MainActivity : AppCompatActivity() {
                 sizeBean.countSize = analyseSize.first
                 sizeBean.ge10mSize = analyseSize.second
                 sizeBean.ge10mSizeStr = analyseSize.third
-            } else if (stocksBean.perAmount.toDouble() >= 500) {
+            } else if (stocksBean.perAmount.toDouble() >= Datas.limitPerAmount) {
                 var str =
                     "(${stocksBean.time},pa:${stocksBean.perAmount}${getAddLog(stocksBean)})"
                 PABean.ge5million =
