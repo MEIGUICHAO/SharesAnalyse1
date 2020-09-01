@@ -4,7 +4,7 @@ object Datas {
     var url = "http://hq.sinajs.cn"
 
     var tableName = "stock_"
-    var limitSize = 150
+    var limitSize = 50
     var basebase = 30
     var baseNum = 60/basebase
     var limitPerAmount = 500 * baseNum

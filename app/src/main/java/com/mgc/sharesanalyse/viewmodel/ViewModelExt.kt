@@ -81,14 +81,16 @@ fun Double.getPercent(start: Double): Double {
 
 fun String.logAlongSumtoTimeStamp(): Long {
     return DateUtils.parse(
-        this.replace("logAloneSum_", "").replace(".txt", "").replace("_", ":"),
+        this.replace("sh_", "").replace("szMS_", "").replace("szSU_", "").replace("logAloneSum_", "").replace(".txt", "").replace("_", ":"),
         FormatterEnum.YYYYMMDD__HH_MM_SS
     )
 }
 
 fun String.logAlongSumtoTimeStampYMD(): Long {
-    var date = this.replace("logAloneSum_", "").replace(".txt", "").replace("_", ":")
-    return DateUtils.parse(date, FormatterEnum.YYYYMMDD__HH_MM_SS)
+    var first = this.replace("sh_", "").replace("szMS_", "").replace("szSU_", "")
+    var date = first.replace("logAloneSum_", "").replace(".txt", "").replace("_", ":")
+    var end = date.replace("sh:", "").replace("szSU:", "").replace("szMS:", "")
+    return DateUtils.parse(end, FormatterEnum.YYYYMMDD__HH_MM_SS)
 }
 
 

@@ -124,9 +124,8 @@ class MainActivity : AppCompatActivity() {
     var isDebug = false
     var needRecordJson = false
     var pathSH = "sh"
-    var pathSZMain = "szMain"
-    var pathSZStartUp = "szStartUp"
-    var pathSZSmall = "szSmall"
+    var pathSZMS = "szMS"
+    var pathszSU = "szSU"
 
 
     private fun bindServices() {
@@ -555,12 +554,10 @@ class MainActivity : AppCompatActivity() {
     private fun getTypePath(name: String): String {
         if (name.contains(pathSH)) {
             return "/$pathSH"
-        } else if (name.contains(pathSZMain)) {
-            return "/$pathSZMain"
-        } else if (name.contains(pathSZStartUp)) {
-            return "/$pathSZStartUp"
-        } else if (name.contains(pathSZSmall)) {
-            return "/$pathSZSmall"
+        } else if (name.contains(pathSZMS)) {
+            return "/$pathSZMS"
+        } else if (name.contains(pathszSU)) {
+            return "/$pathszSU"
         }
         return ""
     }
