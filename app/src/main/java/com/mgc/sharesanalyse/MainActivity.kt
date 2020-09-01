@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     var PSGe100MillionSpareArray = SparseArray<String>()
     var PerPricesGtCurSpareArray = SparseArray<String>()
     var CurGtPerPricesSpareArray = SparseArray<String>()
+    var sbRecordSparseArray = SparseArray<SBRecordBean>()
     var LogSumSpareArray = SparseArray<String>()
     var tenTimesSize = 0
     var ge100mSize = 0
@@ -354,7 +355,7 @@ class MainActivity : AppCompatActivity() {
                     LogUtil.d("LogSB-----!!!---${it.code}---${it.percent}%--")
                     FileLogUtil.d(
                         path,
-                        "!!!---${it.code}---${it.percent}%--\n${bean.sbRecord}\n$logAloneSumEndSplitStr$logAloneSumEndSplitStr\n"
+                        "!!!---${it.code}---${it.percent}%--\n${bean.sbRecord.replace("\n","")}\n$logAloneSumEndSplitStr$logAloneSumEndSplitStr\n"
                     )
                     progess++
                 }
@@ -365,43 +366,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun intervalCheck() {
         val subscribe =
-            Observable.interval(1, TimeUnit.MINUTES).subscribeOn(Schedulers.io()).subscribe {
-                LogUtil.d("intervalCheck!!!")
-                if ((System.currentTimeMillis() >= DateUtils.parse(
-                        beginTime,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ) &&
-                            System.currentTimeMillis() <= DateUtils.parse(
-                        noonBreakBegin,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    )) ||
-                    (System.currentTimeMillis() >= DateUtils.parse(
-                        noonBreakEnd,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ) &&
-                            System.currentTimeMillis() <= DateUtils.parse(
-                        endTime,
-                        FormatterEnum.YYYYMMDD__HH_MM_SS
-                    ))
-                ) {
+            Observable.interval(2 * Datas.intervalTime.toLong(), TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io()).subscribe {
+                    LogUtil.d("intervalCheck!!!")
+                    if ((System.currentTimeMillis() >= DateUtils.parse(
+                            beginTime,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ) &&
+                                System.currentTimeMillis() <= DateUtils.parse(
+                            noonBreakBegin,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        )) ||
+                        (System.currentTimeMillis() >= DateUtils.parse(
+                            noonBreakEnd,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ) &&
+                                System.currentTimeMillis() <= DateUtils.parse(
+                            endTime,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ))
+                    ) {
 
-                    if (tvTime.text.equals("time")) {
-                        return@subscribe
-                    }
-                    val format =
-                        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD)
-                    val timeLast =
-                        DateUtils.parse(
-                            "$format ${tvTime.text}",
-                            FormatterEnum.YYYY_MM_DD__HH_MM_SS
-                        )
-                    LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
+                        if (tvTime.text.equals("time")) {
+                            return@subscribe
+                        }
+                        val format =
+                            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD)
+                        val timeLast =
+                            DateUtils.parse(
+                                "$format ${tvTime.text}",
+                                FormatterEnum.YYYY_MM_DD__HH_MM_SS
+                            )
+                        LogUtil.d("intervalCheck:${System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)},System.currentTimeMillis() - timeLast:${(System.currentTimeMillis() - timeLast) / 1000}")
 
-                    if (System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)) {
-                        requestDatas(viewModel!!)
+                        if (System.currentTimeMillis() - timeLast > (2 * Datas.intervalTime)) {
+                            requestDatas(viewModel!!)
+                        }
                     }
                 }
-            }
     }
 
     private fun logSum() {
@@ -524,7 +526,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         logSumArray.forEach {
-            var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---","")
+            var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---", "")
             FileLogUtil.d(logname, it.replace(splitStr, "\n    "))
         }
         LogUtil.d("----------logSum complete-------------")
@@ -887,7 +889,9 @@ class MainActivity : AppCompatActivity() {
         var logAloneStr =
             "---c:${code}---n:$name,s:${logStrList.size}${tenTimesSize.toLog(",10ts")}${ge100mSize.toLog(
                 ",100ms".paAdapter()
-            )}${ge50mSize.toLog(",50ms".paAdapter())}${ge20mSize.toLog(",20ms".paAdapter())}${ge10mSize.toLog(",10ms".paAdapter())}${ge5mSize.toLog(
+            )}${ge50mSize.toLog(",50ms".paAdapter())}${ge20mSize.toLog(",20ms".paAdapter())}${ge10mSize.toLog(
+                ",10ms".paAdapter()
+            )}${ge5mSize.toLog(
                 ",5ms".paAdapter()
             )}" +
                     "${gt1000TimesSize.toLog(",1000ts")}${gt100TimesSize.toLog(",100ts")}${PPGtCurSize.toLog(
@@ -991,16 +995,16 @@ class MainActivity : AppCompatActivity() {
                     lastPerAmount = it.perAmount.toDouble()
                     LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= ${Datas.limitPerAmount}:${it.perAmount.toDouble() >= Datas.limitPerAmount}")
 
-                    if (it.perAmount.toDouble() >= Datas.limitPerAmount*20) {
+                    if (it.perAmount.toDouble() >= Datas.limitPerAmount * 20) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*10) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 10) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*4) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 4) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount*2) {
+                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 2) {
                         var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
                         setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
                     } else if (it.perAmount.toDouble() >= Datas.limitPerAmount) {
@@ -1309,7 +1313,7 @@ class MainActivity : AppCompatActivity() {
             stocksJsonBean.id = stocksCodeLong
         }
 
-        var sbRecordBean = RecordBean()
+        var ssbRecordBean = RecordBean()
 
 
 
@@ -1345,18 +1349,19 @@ class MainActivity : AppCompatActivity() {
 
         stocksJsonBean.time = time
 
-        sbRecordBean.time = time
+        ssbRecordBean.time = time
 
-        sbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5) / 10000.0f
+        ssbRecordBean.bAmount = (b1 + b2 + b3 + b4 + b5) / 10000.0f
 
-        sbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5) / 10000.0f
+        ssbRecordBean.sAmount = (s1 + s2 + s3 + s4 + s5) / 10000.0f
 
-        sbRecordBean.bsDiffAmount = BigDecimalUtils.sub(sbRecordBean.bAmount, sbRecordBean.sAmount)
+        ssbRecordBean.bsDiffAmount =
+            BigDecimalUtils.sub(ssbRecordBean.bAmount, ssbRecordBean.sAmount)
 
-        if ((sbRecordBean.sAmount + sbRecordBean.bAmount) != 0.toDouble()) {
-            sbRecordBean.bPercent = BigDecimalUtils.div(
-                sbRecordBean.bAmount,
-                sbRecordBean.sAmount + sbRecordBean.bAmount
+        if ((ssbRecordBean.sAmount + ssbRecordBean.bAmount) != 0.toDouble()) {
+            ssbRecordBean.bPercent = BigDecimalUtils.div(
+                ssbRecordBean.bAmount,
+                ssbRecordBean.sAmount + ssbRecordBean.bAmount
             )
         }
 
@@ -1450,8 +1455,8 @@ class MainActivity : AppCompatActivity() {
             updatePS(stocksBean, sizeBean)
         }
         var curPercentDouble = getCurPercentDouble(stocksBean.current, stocksBean.close)
-        sbRecordBean.cPercent = curPercentDouble
-        sbRecordBean.perAmount = stocksBean.perAmount
+        ssbRecordBean.cPercent = curPercentDouble
+        ssbRecordBean.perAmount = stocksBean.perAmount
         sizeBean.percent = curPercentDouble
         sizeBean.current = stocksBean.current
         updateOrInsertSizeBean(sizeBeanList, sizeBean)
@@ -1478,23 +1483,47 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
-            var sBRecordBean = GsonHelper.getInstance()
-                .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
-            sBRecordBean.recordBeans.add(sbRecordBean)
-            sBRecordBean.dealAmount = stocksBean.dealAmount
-            stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
+        if (null == sbRecordSparseArray[stocksCode.toInt()]) {
+            if (stocksJsonBean.sbRecord.isNullOrEmpty()) {
+                var sBRecordBeanList = SBRecordBean()
+                sBRecordBeanList.code = nameSplit[0]
+                sBRecordBeanList.name = nameSplit[1]
+                sBRecordBeanList.dealAmount = stocksBean.dealAmount
+                sBRecordBeanList.recordBeans = ArrayList()
+                sBRecordBeanList.recordBeans.add(ssbRecordBean)
+                stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
+                sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBeanList)
+            } else {
+                var sBRecordBean = GsonHelper.getInstance()
+                    .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
+                sBRecordBean.recordBeans.add(ssbRecordBean)
+                sBRecordBean.dealAmount = stocksBean.dealAmount
+                stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
+                sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBean)
+            }
         } else {
-
-            var sBRecordBeanList = SBRecordBean()
-            sBRecordBeanList.code = nameSplit[0]
-            sBRecordBeanList.name = nameSplit[1]
-            sBRecordBeanList.dealAmount = stocksBean.dealAmount
-            sBRecordBeanList.recordBeans = ArrayList()
-            sBRecordBeanList.recordBeans.add(sbRecordBean)
-            stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
+            var recordBeans = sbRecordSparseArray[stocksCode.toInt()]
+            recordBeans.recordBeans.add(ssbRecordBean)
+            recordBeans.dealAmount = stocksBean.dealAmount
+            stocksJsonBean.sbRecord = GsonHelper.toJson(recordBeans)
         }
+
+//        if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
+//            var sBRecordBean = GsonHelper.getInstance()
+//                .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
+//            sBRecordBean.recordBeans.add(ssbRecordBean)
+//            sBRecordBean.dealAmount = stocksBean.dealAmount
+//            stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
+//        } else {
+//
+//            var sBRecordBeanList = SBRecordBean()
+//            sBRecordBeanList.code = nameSplit[0]
+//            sBRecordBeanList.name = nameSplit[1]
+//            sBRecordBeanList.dealAmount = stocksBean.dealAmount
+//            sBRecordBeanList.recordBeans = ArrayList()
+//            sBRecordBeanList.recordBeans.add(ssbRecordBean)
+//            stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
+//        }
 
 
         DaoUtilsStore.getInstance().stocksJsonBeanCommonDaoUtils.updateOrInsertById(
