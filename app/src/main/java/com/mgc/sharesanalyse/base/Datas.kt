@@ -6,19 +6,9 @@ object Datas {
     var tableName = "stock_"
     var limitSize = 50
     var basebase = 30
-    var baseNum = 60/basebase
+    var baseNum = 30/basebase
     var limitPerAmount = 500 * baseNum
     var intervalTime = basebase * 1000 * baseNum
-
-
-
-
-
-
-
-
-
-
 
 
 }

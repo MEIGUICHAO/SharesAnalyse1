@@ -1478,32 +1478,33 @@ class MainActivity : AppCompatActivity() {
                 stockListBean.stocksBeanList.add(stocksBean)
                 stocksJsonBean.jsonRecord = GsonHelper.toJson(stockListBean)
             }
+
+            if (null == sbRecordSparseArray[stocksCode.toInt()]) {
+                if (stocksJsonBean.sbRecord.isNullOrEmpty()) {
+                    var sBRecordBeanList = SBRecordBean()
+                    sBRecordBeanList.code = nameSplit[0]
+                    sBRecordBeanList.name = nameSplit[1]
+                    sBRecordBeanList.dealAmount = stocksBean.dealAmount
+                    sBRecordBeanList.recordBeans = ArrayList()
+                    sBRecordBeanList.recordBeans.add(ssbRecordBean)
+                    stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
+                    sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBeanList)
+                } else {
+                    var sBRecordBean = GsonHelper.getInstance()
+                        .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
+                    sBRecordBean.recordBeans.add(ssbRecordBean)
+                    sBRecordBean.dealAmount = stocksBean.dealAmount
+                    stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
+                    sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBean)
+                }
+            } else {
+                var recordBeans = sbRecordSparseArray[stocksCode.toInt()]
+                recordBeans.recordBeans.add(ssbRecordBean)
+                recordBeans.dealAmount = stocksBean.dealAmount
+                stocksJsonBean.sbRecord = GsonHelper.toJson(recordBeans)
+            }
         }
 
-        if (null == sbRecordSparseArray[stocksCode.toInt()]) {
-            if (stocksJsonBean.sbRecord.isNullOrEmpty()) {
-                var sBRecordBeanList = SBRecordBean()
-                sBRecordBeanList.code = nameSplit[0]
-                sBRecordBeanList.name = nameSplit[1]
-                sBRecordBeanList.dealAmount = stocksBean.dealAmount
-                sBRecordBeanList.recordBeans = ArrayList()
-                sBRecordBeanList.recordBeans.add(ssbRecordBean)
-                stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBeanList)
-                sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBeanList)
-            } else {
-                var sBRecordBean = GsonHelper.getInstance()
-                    .fromJson(stocksJsonBean.sbRecord, SBRecordBean::class.java)
-                sBRecordBean.recordBeans.add(ssbRecordBean)
-                sBRecordBean.dealAmount = stocksBean.dealAmount
-                stocksJsonBean.sbRecord = GsonHelper.toJson(sBRecordBean)
-                sbRecordSparseArray.put(stocksCode.toInt(), sBRecordBean)
-            }
-        } else {
-            var recordBeans = sbRecordSparseArray[stocksCode.toInt()]
-            recordBeans.recordBeans.add(ssbRecordBean)
-            recordBeans.dealAmount = stocksBean.dealAmount
-            stocksJsonBean.sbRecord = GsonHelper.toJson(recordBeans)
-        }
 
 //        if (!stocksJsonBean.sbRecord.isNullOrEmpty()) {
 //            var sBRecordBean = GsonHelper.getInstance()
