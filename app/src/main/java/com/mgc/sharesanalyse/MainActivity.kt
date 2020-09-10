@@ -464,6 +464,11 @@ class MainActivity : AppCompatActivity() {
             System.currentTimeMillis(),
             FormatterEnum.YYYYMMDD__HH_MM_SS
         )}"
+        if (DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) != DaoManager.getDbName().replace("sharesDB_", "")) {
+            var long = DateUtils.parse("${DaoManager.getDbName().replace("sharesDB_", "")} 15:00:00",FormatterEnum.YYYY_MM_DD__HH_MM_SS)
+            logname = "$parentPath/logSum/logAloneSum_${DateUtils.format(long,FormatterEnum.YYYYMMDD__HH_MM_SS)}"
+        }
+
         LogUtil.d("logSum logname:$logname")
         LogUtil.d("logSum LogSumSpareArray.size:${LogSumSpareArray.size()}")
         val logSumArray = ArrayList<String>()
@@ -526,7 +531,9 @@ class MainActivity : AppCompatActivity() {
         })
         logSumArray.forEach {
             var code = it.split(splitLogSumStr)[0].split(",p:")[0].replace("---", "")
-            FileLogUtil.d(logname, it.replace(splitStr, "\n    "))
+            FileLogUtil.d(logname, it.replace(splitStr, "\n    ").replace(
+                    "    \n" +
+                    "    \n" ,""))
         }
         LogUtil.d("----------logSum complete-------------")
 
@@ -543,11 +550,37 @@ class MainActivity : AppCompatActivity() {
             }
         }
         zipList.forEach {
-            FileUtil.copyAssets2File(
-                this,
-                it,
-                FileLogUtil.FilePath!! + "/$parentBasePath${getTypePath(it)}/${(if (it.contains("logAloneSum")) "logSum/" else "")}" + it
-            )
+
+            if (it.contains("logAloneSum")) {
+
+                var nameTemp = it.replace(
+                    pathSH + "_",
+                    ""
+                ).replace(pathSZMS + "_", "").replace(pathszSU + "_", "").replace("logAloneSum_","").replace(".txt","").replace("_",":")
+                if (parentBasePath !=DateUtils.format(DateUtils.parse(nameTemp,FormatterEnum.YYYYMMDD__HH_MM_SS), FormatterEnum.YYYY_MM)) {
+                    parentBasePath = DateUtils.format(
+                        DateUtils.parse(
+                            nameTemp,
+                            FormatterEnum.YYYYMMDD__HH_MM_SS
+                        ), FormatterEnum.YYYY_MM
+                    )
+                }
+
+                var txtPath =
+                    FileLogUtil.FilePath!! + "/$parentBasePath${getTypePath(it)}/${(if (it.contains(
+                            "logAloneSum"
+                        )
+                    ) "logSum/" else "")}" + it.replace(
+                    pathSH + "_",
+                    ""
+                ).replace(pathSZMS + "_", "").replace(pathszSU + "_", "")
+                LogUtil.d("txtPath:$txtPath it:$it")
+                FileUtil.copyAssets2File(
+                    this,
+                    it,txtPath
+
+                )
+            }
         }
     }
 
@@ -761,7 +794,7 @@ class MainActivity : AppCompatActivity() {
         })
         logALoneList.forEach {
             FileLogUtil.d(
-                it.toClassifyPath(),
+                it.toClassifyPath(DaoManager.getDbName()),
                 it
             )
         }

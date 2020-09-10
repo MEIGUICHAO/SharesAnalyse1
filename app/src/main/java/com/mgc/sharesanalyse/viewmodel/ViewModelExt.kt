@@ -7,7 +7,6 @@ import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
-import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -98,7 +97,7 @@ fun String.toTimeStampYMD(): Long {
     return DateUtils.parse(this, FormatterEnum.YYYY_MM_DD)
 }
 
-fun String.toClassifyPath(): String {
+fun String.toClassifyPath(dbName: String): String {
     var code = this.split("---n:")[0].replace("---c:","").toDouble()
     var path = "sh"
     if (code > 300000 && code < 600000) {
@@ -109,8 +108,7 @@ fun String.toClassifyPath(): String {
     return (DateUtils.format(
         System.currentTimeMillis(),
         FormatterEnum.YYYY_MM
-    ) + "/" + path + "/" +
-            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM_DD) + "logAlone")
+    ) + "/" + path + "/" +dbName.replace("sharesDB_","")+ "logAlone")
 }
 
 fun String.toLogSumPath(): String {
