@@ -11,3 +11,12 @@ https://q.stock.sohu.com/cn/601216/fjb.shtml
 记录分价表成交金额
 https://vip.stock.finance.sina.com.cn/quotes_service/view/cn_price_history.php?symbol=sh601216
 新浪可以查看历史分价表，可以配合日期分析 分价价格在不同时间
+
+//历史分价表
+http://market.finance.sina.com.cn/pricehis.php?symbol=sh601216&startdate=2020-09-10&enddate=2020-09-11
+
+
+http://market.finance.sina.com.cn/downxls.php?date=2020-09-11&symbol=sh601216
+
+
+https://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradedetail.php?symbol=sh601216&date=2020-09-11&page=75
