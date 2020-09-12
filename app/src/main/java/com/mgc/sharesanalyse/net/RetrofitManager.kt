@@ -6,6 +6,7 @@ package com.galanz.rxretrofit.network
 import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.net.BaseUrlInterceptor
 import com.mgc.sharesanalyse.net.LenientGsonConverterFactory
 import com.mgc.sharesanalyse.net.RequestService
 import com.mgc.sharesanalyse.utils.LogUtil
@@ -25,6 +26,7 @@ object RetrofitManager {
         //Okhttp对象
         var okHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(BaseUrlInterceptor())
             .build()
 //        var gson = Gson()
         val retrofit =

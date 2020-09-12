@@ -2,6 +2,8 @@ package com.mgc.sharesanalyse.base
 
 object Datas {
     var url = "http://hq.sinajs.cn"
+    const val dealDetailUrl = "https://vip.stock.finance.sina.com.cn"
+    const val pricehisUrl = "http://market.finance.sina.com.cn"
 
     var tableName = "stock_"
     var limitSize = 160

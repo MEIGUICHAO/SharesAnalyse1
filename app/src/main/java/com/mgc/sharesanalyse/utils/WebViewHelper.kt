@@ -6,7 +6,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.mgc.webviewjshelper.base.Constant
 
 
 object WebViewHelper {
@@ -40,7 +39,7 @@ object WebViewHelper {
 
         // 设置webview加载的页面的模式,缩放至屏幕的大小
         mWebView.getSettings().setLoadWithOverviewMode(true)
-        mWebView.getSettings().setUserAgentString(Constant.UserAgentString)
+//        mWebView.getSettings().setUserAgentString(Constant.UserAgentString)
 
 
 

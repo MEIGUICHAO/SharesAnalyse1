@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.BaseService
 import com.mgc.sharesanalyse.base.Datas
@@ -316,10 +317,11 @@ class MainActivity : AppCompatActivity() {
                 copyDB()
             }
         }
-        btnAnalyse.setOnClickListener {
-            App.getSinglePool().execute({
-                analyseAll()
-            })
+        btnRequestDealDetail.setOnClickListener {
+            RetrofitManager.reqApi.getDealDetai("sh601216","2020-09-11")
+        }
+        btnRequestPricehis.setOnClickListener {
+            RetrofitManager.reqApi.getPricehis("sh601216","2020-09-11","2020-09-11")
         }
         btnLogResult.setOnClickListener {
             App.getSinglePool().execute({
@@ -999,162 +1001,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun analyseAll() {
-        if (analyseNeedReturn()) return
 
-        resetSpareArray()
-//        val shCodeList = listOf("600127")
-        val shCodeList = ResUtil.getSArray(viewModel!!.viewModelCode)
-        shCodeList.forEach {
-            var stocksCode = it
-            val queryPerAmount =
-                CommonDaoUtils.queryStocks(Datas.tableName + stocksCode)
-            LogUtil.d("analysePerAmount queryPerAmount size:${queryPerAmount.size}")
-
-            var lastPerAmount = 0.toDouble()
-            queryPerAmount.forEach {
-                if (it.perAmount != null) {
-                    LogUtil.d("analysePerAmount json:${it.toString()} lastPerAmount:$lastPerAmount")
-                    if (lastPerAmount > 100) {
-                        if (BigDecimalUtils.div(it.perAmount.toDouble(), lastPerAmount) > 10) {
-                            var str =
-                                "(${it.time},pa:${it.perAmount},lastPerAmount:$lastPerAmount)"
-                            setSpareArrayData(PA10TimesSpareArray, stocksCode, str)
-                        }
-                    }
-                    lastPerAmount = it.perAmount.toDouble()
-                    LogUtil.d("analysePerAmount it.perAmount:${it.perAmount},it.perAmount.toDouble() >= ${Datas.limitPerAmount}:${it.perAmount.toDouble() >= Datas.limitPerAmount}")
-
-                    if (it.perAmount.toDouble() >= Datas.limitPerAmount * 20) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe100MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 10) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe50MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 4) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe20MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount * 2) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe10MillionSpareArray, stocksCode, str)
-                    } else if (it.perAmount.toDouble() >= Datas.limitPerAmount) {
-                        var str = "(${it.time},pa:${it.perAmount}${getAddLog(it)})"
-                        setSpareArrayData(PAGe5MillionSpareArray, stocksCode, str)
-                    }
-
-
-                    val buy1Stocks = it.buy1.split("_")[1]
-                    val buy1StocksValue = buy1Stocks.toDoubleOrNull()
-                    var bean = it
-                    buy1StocksValue?.let {
-                        if (it > 0 && bean.perAmount != null && bean.perAmount.toDouble() > Datas.limitPerAmount) {
-                            if (BigDecimalUtils.div(
-                                    bean.perStocks.toDouble(),
-                                    buy1StocksValue.toDouble()
-                                ) >= 1000
-                            ) {
-                                var str =
-                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
-                                        bean
-                                    )})"
-                                setSpareArrayData(PSGe1000MillionSpareArray, stocksCode, str)
-                            } else if (BigDecimalUtils.div(
-                                    bean.perStocks.toDouble(),
-                                    buy1StocksValue.toDouble()
-                                ) >= 100
-                            ) {
-                                var str =
-                                    "(${bean.time},ps:${bean.perStocks},buy1:$buy1StocksValue${getAddLog(
-                                        bean
-                                    )})"
-                                setSpareArrayData(PSGe100MillionSpareArray, stocksCode, str)
-                            }
-                        }
-
-                    }
-                    if (it.perPrice > it.current && BigDecimalUtils.sub(
-                            it.perPrice,
-                            it.current
-                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
-                    ) {
-                        var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
-                                it.perPrice,
-                                it.current
-                            )})"
-                        setSpareArrayData(PerPricesGtCurSpareArray, stocksCode, str)
-                    }
-                    if (it.current > it.perPrice && BigDecimalUtils.sub(
-                            it.current,
-                            it.perPrice
-                        ) >= 0.2 && bean.perAmount.toDouble() > Datas.limitPerAmount
-                    ) {
-                        var str =
-                            "(${it.time},pp:${it.perPrice},pa:${it.perAmount},cur:${it.current},dif:${BigDecimalUtils.sub(
-                                it.current,
-                                it.perPrice
-                            )})"
-                        setSpareArrayData(CurGtPerPricesSpareArray, stocksCode, str)
-                    }
-                }
-            }
-        }
-        DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.deleteAll()
-        DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.deleteAll()
-        DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.deleteAll()
-        shCodeList.forEach {
-            LogUtil.d("----code:$it-----")
-            LogUtil.d("------------------------------------------------")
-            if (it.isEmpty()) return@forEach
-            if (!PA10TimesSpareArray[it.toInt()].isNullOrEmpty() || !PAGe100MillionSpareArray[it.toInt()].isNullOrEmpty()
-                || !PAGe50MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe20MillionSpareArray[it.toInt()].isNullOrEmpty()
-                || !PAGe10MillionSpareArray[it.toInt()].isNullOrEmpty() || !PAGe5MillionSpareArray[it.toInt()].isNullOrEmpty()
-            ) {
-                val analysePerAmountBean = AnalysePerAmountBean()
-                analysePerAmountBean.code = it.toInt()
-                analysePerAmountBean.tenTimesLast = PA10TimesSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge100million = PAGe100MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge50million = PAGe50MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge20million = PAGe20MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge10million = PAGe10MillionSpareArray.getDBValue(it.toInt())
-                analysePerAmountBean.ge5million = PAGe5MillionSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerAmountBeanDaoUtils.insert(analysePerAmountBean)
-            }
-            if (!PSGe1000MillionSpareArray[it.toInt()].isNullOrEmpty() || !PSGe100MillionSpareArray[it.toInt()].isNullOrEmpty()) {
-                val analysePerStocksBean = AnalysePerStocksBean()
-                analysePerStocksBean.code = it.toInt()
-                analysePerStocksBean.gt1000times = PSGe1000MillionSpareArray.getDBValue(it.toInt())
-                analysePerStocksBean.gt100times = PSGe100MillionSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerStocksBeanDaoUtils.insert(analysePerStocksBean)
-            }
-            if (!PerPricesGtCurSpareArray[it.toInt()].isNullOrEmpty() || !CurGtPerPricesSpareArray[it.toInt()].isNullOrEmpty()) {
-                val analysePerPricesBean = AnalysePerPricesBean()
-                analysePerPricesBean.code = it.toInt()
-                analysePerPricesBean.perPricesGtCur =
-                    PerPricesGtCurSpareArray.getDBValue(it.toInt())
-                analysePerPricesBean.curGtPerPrices =
-                    CurGtPerPricesSpareArray.getDBValue(it.toInt())
-                DaoUtilsStore.getInstance().analysePerPricesBeanDaoUtils.insert(analysePerPricesBean)
-            }
-            LogUtil.d("=======================================================")
-        }
-        LogUtil.d("filterAnalyseStocks:" + filterAnalyseStocks)
-    }
-
-    private fun resetSpareArray() {
-        PA10TimesSpareArray.clear()
-        PAGe100MillionSpareArray.clear()
-        PAGe50MillionSpareArray.clear()
-        PAGe20MillionSpareArray.clear()
-        PAGe10MillionSpareArray.clear()
-        PAGe5MillionSpareArray.clear()
-        PA10TimesSpareArray.clear()
-        PSGe1000MillionSpareArray.clear()
-        PSGe100MillionSpareArray.clear()
-        PerPricesGtCurSpareArray.clear()
-        CurGtPerPricesSpareArray.clear()
-        filterAnalyseStocks = ""
-    }
 
     private fun getAddLog(it: StocksBean) =
         ",cur:${it.current},open:${it.open},h:${it.hightest},l:${it.lowest},p:${getCurPercent(

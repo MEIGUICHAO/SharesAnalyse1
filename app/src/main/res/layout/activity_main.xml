@@ -47,13 +47,6 @@
             android:layout_marginTop="15dp"
             android:text="CopyDB" />
 
-        <Button
-            android:id="@+id/btnAnalyse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="15dp"
-            android:text="Analyse" />
 
         <Button
             android:id="@+id/btnLogResult"
@@ -92,6 +85,21 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:spinnerMode="dialog" />
+
+        <Button
+            android:id="@+id/btnRequestPricehis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Pricehis" />
+
+        <Button
+            android:id="@+id/btnRequestDealDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="DealDetail" />
+
 
     </LinearLayout>
 
