@@ -15,8 +15,14 @@ https://vip.stock.finance.sina.com.cn/quotes_service/view/cn_price_history.php?s
 //历史分价表
 http://market.finance.sina.com.cn/pricehis.php?symbol=sh601216&startdate=2020-09-10&enddate=2020-09-11
 
-
-http://market.finance.sina.com.cn/downxls.php?date=2020-09-11&symbol=sh601216
-
-
+//sina 主页
 https://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradedetail.php?symbol=sh601216&date=2020-09-11&page=75
+
+//大单明细
+https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.GetBillList?symbol=sh601216&num=1600&page=1&sort=ticktime&asc=0&volume=0&amount=2000000&type=0&day=2020-09-07
+//10倍
+https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.GetBillList?symbol=sh601216&num=60&page=1&sort=ticktime&asc=0&volume=0&amount=0&type=2&day=2020-09-11
+//20倍
+https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.GetBillList?symbol=sh601216&num=60&page=1&sort=ticktime&asc=0&volume=0&amount=0&type=3&day=2020-09-11
+//500000手
+https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.GetBillList?symbol=sh601216&num=60&page=1&sort=ticktime&asc=0&volume=500000&amount=0&type=0&day=2020-09-11
