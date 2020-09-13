@@ -26,34 +26,10 @@ class MainViewModel : ViewModel() {
     var viewModelCodeName = R.array.code_all_name
     var tag = "sh"
     var path = "sh"
+    val REQUEST_TYPE_1 = 1
+    val REQUEST_TYPE_2 = 2
+    val REQUEST_TYPE_3 = 3
 
-    fun changeCodeType(type: Int) {
-        isInit = true
-//        when (type) {
-//            0 ->{
-//                tag = "sh"
-//                path = "sh"
-//                viewModelCode = R.array.stocks_code
-//                viewModelCodeName = R.array.stocks_code_name
-//                stocksArray = ResUtil.getSArray(R.array.stocks_code)
-//            }
-//            1 ->{
-//                tag = "sz"
-//                path = "szMain"
-//                viewModelCode = R.array.sz_main_stocks_code
-//                viewModelCodeName = R.array.sz_main_stocks_code_name
-//                stocksArray = ResUtil.getSArray(R.array.sz_main_stocks_code)
-//            }
-//            2 ->{
-//                tag = "sz"
-//                path = "szSmall"
-//                viewModelCode = R.array.sz_small_stocks_code
-//                viewModelCodeName = R.array.sz_small_stocks_code_name
-//                stocksArray = ResUtil.getSArray(R.array.sz_small_stocks_code)
-//            }
-//
-//        }
-    }
 
     fun requestData() {
         if (sharesDats.value == null) {
@@ -110,16 +86,33 @@ class MainViewModel : ViewModel() {
                     index++
                 }
             }
-            loadState.value = LoadState.Success()
+            loadState.value = LoadState.Success(REQUEST_TYPE_1)
 
         }, {
-            loadState.value = LoadState.Fail(it.message ?: "加载失败")
+            loadState.value = LoadState.Fail()
 
         })
 
     }
 
 
+    fun getDealDetail(code: String, date: String) {
+        var result = RetrofitManager.reqApi.getDealDetai(code,date)
+        launch({
+            var json = result.await()
+            loadState.value = LoadState.Success(REQUEST_TYPE_2,json)
+        })
+
+    }
+
+    fun getPricehis(code: String, startdate: String, endDate: String) {
+        var result = RetrofitManager.reqApi.getPricehis(code,startdate,endDate)
+        launch({
+            var json = result.await()
+            loadState.value = LoadState.Success(REQUEST_TYPE_3,json)
+        })
+
+    }
 
 
 

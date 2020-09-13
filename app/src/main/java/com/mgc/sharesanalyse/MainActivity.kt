@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.greenrobot.greendao.database.Database
+import org.jsoup.Jsoup
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -202,79 +203,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-//        spinner.setOnItemClickListener { parent, view, position, id ->
-//
-//        }
-
-        viewModel!!.loadState.observe(this, Observer {
-            when (it) {
-                is LoadState.Success -> {
-
-                    LogUtil.d("viewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
-                    for (index in 0..viewModel!!.sharesDats.value!!.size() - 1) {
-                        val data = viewModel!!.sharesDats.value?.get(index)
-                        var month8Data = Month8Data()
-                        month8Data.json = data
-                        month8Data.name = index.toString()
-                        month8Data.timeStamp = System.currentTimeMillis()
-                        month8Data.ymd =
-                            DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD)
-                        DaoUtilsStore.getInstance().month8DataDaoUtils.insert(month8Data)
-                    }
-                    if ((System.currentTimeMillis() >= DateUtils.parse(
-                            beginTime,
-                            FormatterEnum.YYYYMMDD__HH_MM_SS
-                        ) &&
-                                System.currentTimeMillis() <= DateUtils.parse(
-                            noonBreakBegin,
-                            FormatterEnum.YYYYMMDD__HH_MM_SS
-                        )) ||
-                        (System.currentTimeMillis() >= DateUtils.parse(
-                            noonBreakEnd,
-                            FormatterEnum.YYYYMMDD__HH_MM_SS
-                        ) &&
-                                System.currentTimeMillis() <= DateUtils.parse(
-                            endTime,
-                            FormatterEnum.YYYYMMDD__HH_MM_SS
-                        )) || isDebug
-                    ) {
-                        classifyStocks()
-                        tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
-                    }
-                    if (System.currentTimeMillis() <= DateUtils.parse(
-                            endTime,
-                            FormatterEnum.YYYYMMDD__HH_MM_SS
-                        ) || isDebug
-                    ) {
-                        GlobalScope.launch {
-
-                            withContext(Dispatchers.IO) {
-
-                                runBlocking {
-                                    intervalTime = 0.toLong()
-                                    LogUtil.d("requestDatas requestTime:$requestTime ,diff:${(System.currentTimeMillis() - requestTime) / 1000}")
-                                    if (System.currentTimeMillis() - requestTime >= Datas.intervalTime) {
-                                        intervalTime = 0.toLong()
-                                    } else {
-                                        intervalTime = System.currentTimeMillis() - requestTime
-                                        delay(Datas.intervalTime - intervalTime)
-                                    }
-                                    requestDatas(viewModel!!)
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-                is LoadState.Fail -> {
-
-                }
-                is LoadState.Loading -> {
-                    btnRequest.isClickable = false
-                }
-            }
-        })
+        viewModelObserve()
 
 //        var path = "sh"
 //        if (code > 300000 && code < 600000) {
@@ -318,15 +247,101 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btnRequestDealDetail.setOnClickListener {
-            RetrofitManager.reqApi.getDealDetai("sh601216","2020-09-11")
+            viewModel!!.getDealDetail("sh601216","2020-09-11")
         }
         btnRequestPricehis.setOnClickListener {
-            RetrofitManager.reqApi.getPricehis("sh601216","2020-09-11","2020-09-11")
+            viewModel!!.getPricehis("sh601216","2020-09-11","2020-09-11")
         }
         btnLogResult.setOnClickListener {
             App.getSinglePool().execute({
                 logResult()
             })
+        }
+    }
+
+    private fun viewModelObserve() {
+        viewModel!!.loadState.observe(this, Observer {
+            when (it) {
+                is LoadState.Success -> {
+                    when (it.type) {
+                        viewModel!!.REQUEST_TYPE_1 -> {
+                            frequencySinaRequest()
+                        }
+                        viewModel!!.REQUEST_TYPE_2 -> {
+                            var dealList = GsonHelper.parseArray(it.json,SinaDealDatailBean::class.java)
+                            LogUtil.d("dealList size:${dealList.size} name:${dealList.get(0).name}")
+                        }
+                        viewModel!!.REQUEST_TYPE_3 -> {
+                            var document = Jsoup.parse(it.json)
+                            var chars = document.body().getElementsByClass("main")[0].getElementsByTag("tbody")[0].getElementsByTag("tr")
+                            LogUtil.d("chars size:${chars.size} name:${chars.get(0).getElementsByTag("td")[0].text()}")
+                        }
+                    }
+                }
+                is LoadState.Fail -> {
+
+                }
+                is LoadState.Loading -> {
+                    btnRequest.isClickable = false
+                }
+            }
+        })
+    }
+
+    private fun frequencySinaRequest() {
+        LogUtil.d("viewModel!! size():${viewModel!!.sharesDats.value!!.size()}")
+        for (index in 0..viewModel!!.sharesDats.value!!.size() - 1) {
+            val data = viewModel!!.sharesDats.value?.get(index)
+            var month8Data = Month8Data()
+            month8Data.json = data
+            month8Data.name = index.toString()
+            month8Data.timeStamp = System.currentTimeMillis()
+            month8Data.ymd =
+                DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYYMMDD)
+            DaoUtilsStore.getInstance().month8DataDaoUtils.insert(month8Data)
+        }
+        if ((System.currentTimeMillis() >= DateUtils.parse(
+                beginTime,
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            ) &&
+                    System.currentTimeMillis() <= DateUtils.parse(
+                noonBreakBegin,
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            )) ||
+            (System.currentTimeMillis() >= DateUtils.parse(
+                noonBreakEnd,
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            ) &&
+                    System.currentTimeMillis() <= DateUtils.parse(
+                endTime,
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            )) || isDebug
+        ) {
+            classifyStocks()
+            tvTime.setText(DateUtils.formatToDay(FormatterEnum.HH_MM_SS))
+        }
+        if (System.currentTimeMillis() <= DateUtils.parse(
+                endTime,
+                FormatterEnum.YYYYMMDD__HH_MM_SS
+            ) || isDebug
+        ) {
+            GlobalScope.launch {
+
+                withContext(Dispatchers.IO) {
+
+                    runBlocking {
+                        intervalTime = 0.toLong()
+                        LogUtil.d("requestDatas requestTime:$requestTime ,diff:${(System.currentTimeMillis() - requestTime) / 1000}")
+                        if (System.currentTimeMillis() - requestTime >= Datas.intervalTime) {
+                            intervalTime = 0.toLong()
+                        } else {
+                            intervalTime = System.currentTimeMillis() - requestTime
+                            delay(Datas.intervalTime - intervalTime)
+                        }
+                        requestDatas(viewModel!!)
+                    }
+                }
+            }
         }
     }
 

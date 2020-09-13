@@ -31,17 +31,19 @@ public class BaseUrlInterceptor implements Interceptor {
             //匹配获得新的BaseUrl
             String headerValue = headerValues.get(0);
             HttpUrl newBaseUrl = null;
+            String httpTag = "https";
             if (Datas.INSTANCE.dealDetailUrl.equals(headerValue)) {
                 newBaseUrl = HttpUrl.parse(Datas.INSTANCE.dealDetailUrl);
             } else if (Datas.INSTANCE.pricehisUrl.equals(headerValue)) {
                 newBaseUrl = HttpUrl.parse(Datas.INSTANCE.pricehisUrl);
+                httpTag = "http";
             } else {
                 newBaseUrl = oldHttpUrl;
             }
             //重建新的HttpUrl，修改需要修改的url部分
             HttpUrl newFullUrl = oldHttpUrl
                     .newBuilder()
-                    .scheme("https")//更换网络协议
+                    .scheme(httpTag)//更换网络协议
                     .host(newBaseUrl.host())//更换主机名
 //                    .port(newBaseUrl.port())//更换端口
                     .build();
