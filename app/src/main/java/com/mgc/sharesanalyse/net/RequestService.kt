@@ -20,6 +20,13 @@ interface RequestService {
     @GET("/pricehis.php")
     fun getPricehis(@Query("symbol") symbol: String, @Query("startdate") startdate: String, @Query("enddate") enddate: String): Deferred<String>
 
+    /**
+     * start=20200421&end=20200911
+     */
+    @Headers("urlname:${Datas.hisHqUrl}")
+    @GET("/hisHq")
+    fun getHisHq(@Query("code") code: String,@Query("start") start: String,@Query("end") end: String): Deferred<String>
+
 
 
 

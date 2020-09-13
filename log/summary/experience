@@ -29,5 +29,5 @@ https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.Get
 https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_Bill.GetBillList?symbol=sh601216&num=60&page=1&sort=ticktime&asc=0&volume=500000&amount=0&type=0&day=2020-09-11
 
 //历史行情 100交易日
-https://q.stock.sohu.com/hisHq?code=cn_601216&stat=1&order=D&period=d&callback=historySearchHandler
+https://q.stock.sohu.com/hisHq?code=cn_601216&start=20200421&end=20200911
 日期	开盘	收盘	涨跌额	涨跌幅	最低	最高	成交量(手)	成交金额(万)	换手率

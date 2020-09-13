@@ -252,6 +252,9 @@ class MainActivity : AppCompatActivity() {
         btnRequestPricehis.setOnClickListener {
             viewModel!!.getPricehis("sh601216","2020-09-11","2020-09-11")
         }
+        btnRequestHisHq.setOnClickListener {
+            viewModel!!.getHisHq("601216","20200910","20200911")
+        }
         btnLogResult.setOnClickListener {
             App.getSinglePool().execute({
                 logResult()
@@ -275,6 +278,16 @@ class MainActivity : AppCompatActivity() {
                             var document = Jsoup.parse(it.json)
                             var chars = document.body().getElementsByClass("main")[0].getElementsByTag("tbody")[0].getElementsByTag("tr")
                             LogUtil.d("chars size:${chars.size} name:${chars.get(0).getElementsByTag("td")[0].text()}")
+                        }
+                        viewModel!!.REQUEST_TYPE_4 -> {
+                            LogUtil.d(
+                                "hisHqBean json:${it.json}"
+                            )
+                            var hisHqBean = GsonHelper.parseArray(it.json,HisHqBean::class.java)
+                            LogUtil.d(
+                                "hisHqBean hq size:${hisHqBean[0].hq.size}"
+                            )
+
                         }
                     }
                 }

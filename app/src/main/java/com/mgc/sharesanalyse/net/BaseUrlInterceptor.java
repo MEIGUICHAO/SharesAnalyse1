@@ -25,21 +25,14 @@ public class BaseUrlInterceptor implements Interceptor {
         Request.Builder builder = request.newBuilder();
         //从request中获取headers，通过给定的键url_name
         List<String> headerValues = request.headers("urlname");
-        if (headerValues != null && headerValues.size() > 0) {
+        if (headerValues.size() > 0) {
             //如果有这个header，先将配置的header删除，因此header仅用作app和okhttp之间使用
             builder.removeHeader("urlname");
             //匹配获得新的BaseUrl
             String headerValue = headerValues.get(0);
             HttpUrl newBaseUrl = null;
             String httpTag = "https";
-            if (Datas.INSTANCE.dealDetailUrl.equals(headerValue)) {
-                newBaseUrl = HttpUrl.parse(Datas.INSTANCE.dealDetailUrl);
-            } else if (Datas.INSTANCE.pricehisUrl.equals(headerValue)) {
-                newBaseUrl = HttpUrl.parse(Datas.INSTANCE.pricehisUrl);
-                httpTag = "http";
-            } else {
-                newBaseUrl = oldHttpUrl;
-            }
+            newBaseUrl = HttpUrl.parse(headerValue);
             //重建新的HttpUrl，修改需要修改的url部分
             HttpUrl newFullUrl = oldHttpUrl
                     .newBuilder()

@@ -29,6 +29,7 @@ class MainViewModel : ViewModel() {
     val REQUEST_TYPE_1 = 1
     val REQUEST_TYPE_2 = 2
     val REQUEST_TYPE_3 = 3
+    val REQUEST_TYPE_4 = 4
 
 
     fun requestData() {
@@ -110,6 +111,15 @@ class MainViewModel : ViewModel() {
         launch({
             var json = result.await()
             loadState.value = LoadState.Success(REQUEST_TYPE_3,json)
+        })
+
+    }
+
+    fun getHisHq(code: String,start:String,end:String) {
+        var result = RetrofitManager.reqApi.getHisHq("cn_$code",start,end)
+        launch({
+            var json = result.await()
+            loadState.value = LoadState.Success(REQUEST_TYPE_4,json)
         })
 
     }

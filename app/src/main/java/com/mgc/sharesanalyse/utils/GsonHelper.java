@@ -43,6 +43,7 @@ public class GsonHelper {
         }
         return getInstance().fromJson(json, type);
         } catch (Exception e) {
+            LogUtil.e(getInstance().getClass().getSimpleName(), "Exception" + e.toString());
             return null;
         }
     }
