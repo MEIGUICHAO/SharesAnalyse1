@@ -81,7 +81,7 @@ public class DaoManager {
      */
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, DB_NAME, null, Month8DataDao.class, StocksBeanDao.class, AnalyseSizeBeanDao.class, AnalysePerPricesBeanDao.class,
+            sHelper = new CommonOpenHelper(context, getDbName(), null, Month8DataDao.class, StocksBeanDao.class, AnalyseSizeBeanDao.class, AnalysePerPricesBeanDao.class,
                     AnalysePerStocksBeanDao.class, AnalysePerAmountBeanDao.class, StocksJsonBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }

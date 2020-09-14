@@ -41,7 +41,7 @@ class NewApiViewModel : BaseViewModel() {
             if (today != bean.date) {
                 requestHisPriceHq(false,start, end, code)
             } else {
-                LogUtil.d("cache_${Datas.hisHqUrl}")
+                LogUtil.d("cache_${Datas.hisHqUrl}--------$code")
                 loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
             }
         } else {
@@ -69,13 +69,10 @@ class NewApiViewModel : BaseViewModel() {
             bean.date =  DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             bean.json = json
             var dbName = DaoManager.getDbName()
-            LogUtil.d("dbName:$dbName")
             if (isInsert) {
                 DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
-                LogUtil.d("getHisHq updateOrInsertById insert result:${result} id:${code.toLong()}")
             } else {
                 DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
-                LogUtil.d("getHisHq updateOrInsertById update result:${result} id:${code.toLong()}")
             }
 
             loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
@@ -88,21 +85,16 @@ class NewApiViewModel : BaseViewModel() {
         code: String
     ) {
 //        val baseDays = hqList.size/2
-        val baseDays = 5
+        val baseDays = 10
         var baseDealAmount = 0.toDouble()
         var baseDealPercent = 0.toDouble()
         for (index in (hqList.size - 1) downTo baseDays) {
             baseDealAmount = baseDealAmount + getHisHqDayDealAmount(hqList[index])
             baseDealPercent = baseDealPercent + getHisHqDayDealPercent(hqList[index])
-            LogUtil.d("getHisHqAnalyseResult downTo baseDays $index:------- baseDealAmount:$baseDealAmount  baseDealPercent:$baseDealPercent ")
         }
-        val baseAvgDealAmount = BigDecimalUtils.div(baseDealAmount, baseDays.toDouble())
-        val baseAvgDealPercent = BigDecimalUtils.div(baseDealPercent, baseDays.toDouble())
+        val baseAvgDealAmount = BigDecimalUtils.div(baseDealAmount, (hqList.size-baseDays).toDouble())
+        val baseAvgDealPercent = BigDecimalUtils.div(baseDealPercent, (hqList.size-baseDays).toDouble())
         val basePrices = getHisHqDayClosePrice(hqList[baseDays])
-        LogUtil.d("baseDays:$baseDays")
-        LogUtil.d("basePrices:$basePrices")
-        LogUtil.d("baseAvgDealAmount:$baseAvgDealAmount")
-        LogUtil.d("baseAvgDealPercent:$baseAvgDealPercent")
         var needLog = false
         var logStr = "========$code============"
         for (index in 0 until baseDays) {
@@ -117,17 +109,19 @@ class NewApiViewModel : BaseViewModel() {
             if (!needLog) {
                 needLog = dealTimes >= 5 && percentTimes >= 5
             }
+            LogUtil.d("getHisHqAnalyseResult-------code:$code \n dealTimes:$dealTimes \n  percentTimes:$percentTimes  \n baseAvgDealAmount:$baseAvgDealAmount" +
+                    "\n currentAmount:${getHisHqDayDealAmount(hqList[index])} \ncurrentDealPercent:${getHisHqDayDealPercent(hqList[index])} \nbaseAvgDealPercent:$baseAvgDealPercent")
             val addStr =
                 "day:${getHisHqDay(hqList[index])}---dealTimes:$dealTimes---percentTimes:$percentTimes---colsePrices:${getHisHqDayClosePrice(
                     hqList[index]
-                )}---difPrices${diffPrices}---percent:${BigDecimalUtils.div(
+                )}---difPrices:${diffPrices}---percent:${BigDecimalUtils.div(
                     diffPrices,
                     basePrices
                 ) * 100}%"
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
         }
         if (needLog) {
-            LogUtil.d(logStr)
+            LogUtil.d("------needLog---\n$logStr")
             FileLogUtil.d("${parentBasePath}hishq$pathDate",logStr)
         }
         loadState.value = LoadState.GoNext(REQUEST_HIS_HQ)
@@ -137,7 +131,7 @@ class NewApiViewModel : BaseViewModel() {
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
     fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toDouble()
     fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble()
-    fun getHisHqDayDealPercent(dayDatas: List<String>) = dayDatas[9].replace("%", "").toDouble()
+    fun getHisHqDayDealPercent(dayDatas: List<String>) = if (dayDatas[9]=="-") 0.toDouble() else dayDatas[9].replace("%", "").toDouble()
     fun setFilelogPath(formatToDay: String) {
         pathDate = formatToDay
     }

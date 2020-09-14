@@ -4,14 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
 import com.mgc.sharesanalyse.entity.SinaDealDatailBean
 import com.mgc.sharesanalyse.net.LoadState
-import com.mgc.sharesanalyse.utils.DateUtils
-import com.mgc.sharesanalyse.utils.FormatterEnum
-import com.mgc.sharesanalyse.utils.GsonHelper
-import com.mgc.sharesanalyse.utils.LogUtil
+import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
 import kotlinx.android.synthetic.main.activity_new_api.*
 import org.jsoup.Jsoup
@@ -26,6 +24,7 @@ class NewApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_api)
+        DaoManager.setDbName("newapiDatabases")
         viewModel = ViewModelProvider(this).get(NewApiViewModel::class.java)
         viewModelObserve()
 
@@ -82,6 +81,7 @@ class NewApiActivity : AppCompatActivity() {
                         viewModel.REQUEST_HIS_HQ -> {
                             val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
                             viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, hisHqBean[0].code)
+
                         }
                     }
                 }
@@ -95,8 +95,8 @@ class NewApiActivity : AppCompatActivity() {
                     when (it.type) {
                         viewModel.REQUEST_HIS_HQ ->{
                             progressIndex++
-                            if (progressIndex < 5) {
-//                            if (progressIndex < viewModel.stocksArray.size) {
+//                            if (progressIndex < 5) {
+                            if (progressIndex < viewModel.stocksArray.size) {
                                 getHisHq()
                             }
                         }

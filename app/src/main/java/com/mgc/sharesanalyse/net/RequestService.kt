@@ -25,13 +25,12 @@ interface RequestService {
      */
     @Headers("urlname:${Datas.hisHqUrl}")
     @GET("/hisHq")
-    fun getHisHq(@Query("code") code: String,@Query("start") start: String,@Query("end") end: String): Deferred<String>
-
+    fun getHisHq(@Query("code") code: String,@Query("start") start: String,@Query("end") end: String, @Query("stat") stat: String = "1"): Deferred<String>
 
 
     @Headers("urlname:${Datas.hisHqUrl}")
     @GET("/hisHq")
-    fun getHisHq(@Query("code") code: String): Deferred<String>
+    fun getHisHq(@Query("code") code: String, @Query("stat") stat: String = "1"): Deferred<String>
 
 
 
