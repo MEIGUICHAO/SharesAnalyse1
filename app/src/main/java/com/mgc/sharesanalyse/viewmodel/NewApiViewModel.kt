@@ -1,6 +1,8 @@
 package com.mgc.sharesanalyse.viewmodel
 
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.entity.PricesHisGDBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import kotlinx.coroutines.Deferred
@@ -31,17 +33,46 @@ class NewApiViewModel : BaseViewModel() {
 
 
     fun getHisHq(code: String, start: String = "", end: String = "") {
+        var bean = DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
+
+        if (null != bean) {
+            val today = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+            LogUtil.d("today:$today bean.date:${bean.date} ${today != bean.date}")
+            if (today != bean.date) {
+                requestHisPriceHq(false,start, end, code)
+            } else {
+                LogUtil.d("cache_${Datas.hisHqUrl}")
+                loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
+            }
+        } else {
+            requestHisPriceHq(true,start, end, code)
+        }
+
+
+    }
+
+    private fun requestHisPriceHq(isInsert:Boolean,start: String, end: String, code: String) {
         var result: Deferred<String>
         if (start.isEmpty() && end.isEmpty()) {
             result = RetrofitManager.reqApi.getHisHq("cn_$code")
         } else {
             result = RetrofitManager.reqApi.getHisHq("cn_$code", start, end)
         }
+
         launch({
             var json = result.await()
+            var bean = PricesHisGDBean()
+            bean.code = code
+            if (isInsert) {
+                bean.id = code.toLong()
+            }
+            bean.date =  DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+            bean.json = json
+            var result = DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
+
+            LogUtil.d("getHisHq updateOrInsertById result:${result} id:${code.toLong()}")
             loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
         })
-
     }
 
     //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
@@ -89,8 +120,10 @@ class NewApiViewModel : BaseViewModel() {
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
         }
         if (needLog) {
+            LogUtil.d(logStr)
             FileLogUtil.d("${parentBasePath}hishq$pathDate",logStr)
         }
+        loadState.value = LoadState.GoNext(REQUEST_HIS_HQ)
 
     }
 

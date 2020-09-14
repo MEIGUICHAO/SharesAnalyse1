@@ -19,6 +19,7 @@ import org.jsoup.Jsoup
 class NewApiActivity : AppCompatActivity() {
 
     lateinit var viewModel: NewApiViewModel
+    var progressIndex = 0
 
 
 
@@ -35,11 +36,16 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("sh601216","2020-09-11","2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
+            progressIndex = 0
             viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-            viewModel.getHisHq("601216")
+            getHisHq()
         }
     }
 
+    private fun getHisHq() {
+        var code = viewModel.stocksArray[progressIndex]!!.replace("sz", "").replace("sh", "")
+        viewModel.getHisHq(code)
+    }
 
 
     private fun viewModelObserve() {
@@ -48,18 +54,24 @@ class NewApiActivity : AppCompatActivity() {
                 is LoadState.Success -> {
                     when (it.type) {
                         viewModel.REQUEST_DealDETAIL -> {
-                            val dealList = GsonHelper.parseArray(it.json, SinaDealDatailBean::class.java)
+                            val dealList =
+                                GsonHelper.parseArray(it.json, SinaDealDatailBean::class.java)
 
                             LogUtil.d("dealList size:${dealList.size} name:${dealList.get(0).name}")
                         }
                         viewModel.REQUEST_PRICESHIS -> {
                             val document = Jsoup.parse(it.json)
-                            val chars = document.body().getElementsByClass("main")[0].getElementsByTag("tbody")[0].getElementsByTag("tr")
+                            val chars = document.body()
+                                .getElementsByClass("main")[0].getElementsByTag("tbody")[0].getElementsByTag(
+                                "tr"
+                            )
                             val priceHisDealList = ArrayList<PriceHisBean>()
                             chars.forEach {
                                 val priceHisBean = PriceHisBean()
-                                priceHisBean.dealPrice = it.getElementsByTag("td")[0].text().toDouble()
-                                priceHisBean.dealStocks = it.getElementsByTag("td")[1].text().toDouble()
+                                priceHisBean.dealPrice =
+                                    it.getElementsByTag("td")[0].text().toDouble()
+                                priceHisBean.dealStocks =
+                                    it.getElementsByTag("td")[1].text().toDouble()
                                 priceHisBean.dealPercent = it.getElementsByTag("td")[2].text()
                                 priceHisDealList.add(priceHisBean)
                             }
@@ -69,7 +81,7 @@ class NewApiActivity : AppCompatActivity() {
                         }
                         viewModel.REQUEST_HIS_HQ -> {
                             val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
-                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq,hisHqBean[0].code)
+                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, hisHqBean[0].code)
                         }
                     }
                 }
@@ -78,6 +90,17 @@ class NewApiActivity : AppCompatActivity() {
                 }
                 is LoadState.Loading -> {
 
+                }
+                is LoadState.GoNext ->{
+                    when (it.type) {
+                        viewModel.REQUEST_HIS_HQ ->{
+                            progressIndex++
+                            if (progressIndex < 5) {
+//                            if (progressIndex < viewModel.stocksArray.size) {
+                                getHisHq()
+                            }
+                        }
+                    }
                 }
             }
         })
