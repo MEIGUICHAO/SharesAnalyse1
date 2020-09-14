@@ -67,6 +67,10 @@ fun SparseArray<String>.putLogSum(key: Int, value: String) {
     this.put(key, mValue)
 }
 
+fun String.putTogetherAndChangeLineLogic(addString: String):String {
+    return if (this.isEmpty()) addString else "$this\n$addString"
+}
+
 fun Double.getPercent(start: Double): Double {
     if (start > 0.toDouble()) {
         return BigDecimalUtils.mul(

@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.BaseService
 import com.mgc.sharesanalyse.base.Datas
@@ -246,14 +245,9 @@ class MainActivity : AppCompatActivity() {
                 copyDB()
             }
         }
-        btnRequestDealDetail.setOnClickListener {
-            viewModel!!.getDealDetail("sh601216","2020-09-11")
-        }
-        btnRequestPricehis.setOnClickListener {
-            viewModel!!.getPricehis("sh601216","2020-09-11","2020-09-11")
-        }
-        btnRequestHisHq.setOnClickListener {
-            viewModel!!.getHisHq("601216","20200910","20200911")
+        btnGoNewApi.setOnClickListener {
+            var intent = Intent(this@MainActivity, NewApiActivity::class.java)
+            startActivity(intent)
         }
         btnLogResult.setOnClickListener {
             App.getSinglePool().execute({
@@ -270,16 +264,16 @@ class MainActivity : AppCompatActivity() {
                         viewModel!!.REQUEST_TYPE_1 -> {
                             frequencySinaRequest()
                         }
-                        viewModel!!.REQUEST_TYPE_2 -> {
+                        viewModel!!.REQUEST_DealDETAIL -> {
                             var dealList = GsonHelper.parseArray(it.json,SinaDealDatailBean::class.java)
                             LogUtil.d("dealList size:${dealList.size} name:${dealList.get(0).name}")
                         }
-                        viewModel!!.REQUEST_TYPE_3 -> {
+                        viewModel!!.REQUEST_PRICESHIS -> {
                             var document = Jsoup.parse(it.json)
                             var chars = document.body().getElementsByClass("main")[0].getElementsByTag("tbody")[0].getElementsByTag("tr")
                             LogUtil.d("chars size:${chars.size} name:${chars.get(0).getElementsByTag("td")[0].text()}")
                         }
-                        viewModel!!.REQUEST_TYPE_4 -> {
+                        viewModel!!.REQUEST_HIS_HQ -> {
                             LogUtil.d(
                                 "hisHqBean json:${it.json}"
                             )

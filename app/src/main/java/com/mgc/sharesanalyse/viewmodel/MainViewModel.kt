@@ -2,34 +2,17 @@ package com.mgc.sharesanalyse.viewmodel
 
 import android.util.Log
 import android.util.SparseArray
-import androidx.core.util.isEmpty
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.R
-import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.LogUtil
 import com.mgc.sharesanalyse.utils.ResUtil
 import kotlinx.coroutines.*
-import java.util.regex.Pattern
 
 
-class MainViewModel : ViewModel() {
-    val sharesDats = MutableLiveData<SparseArray<String>>()
-    val loadState = MutableLiveData<LoadState>()
-    var stocksArray = ResUtil.getSArray(R.array.code_all)
-    var urlArray = emptyArray<String?>()
-    var isInit = true
-    var viewModelCode = R.array.code_all
-    var viewModelCodeName = R.array.code_all_name
-    var tag = "sh"
-    var path = "sh"
-    val REQUEST_TYPE_1 = 1
-    val REQUEST_TYPE_2 = 2
-    val REQUEST_TYPE_3 = 3
-    val REQUEST_TYPE_4 = 4
+class MainViewModel : BaseViewModel() {
 
 
     fun requestData() {
@@ -38,25 +21,6 @@ class MainViewModel : ViewModel() {
         } else {
             sharesDats.value!!.clear()
         }
-
-        if (isInit) {
-            urlArray = arrayOfNulls<String>(stocksArray.size / 100 + 1)
-            isInit = false
-            Log.d("mgc", "splitArray size:${stocksArray.size}")
-            for (index in 0..stocksArray.size-1) {
-                LogUtil.d("mgc", "splitArray index:${index / 100},code:${stocksArray[index]}")
-                if (stocksArray[index].toDouble() < 600000) {
-                    tag = "sz"
-                } else {
-                    tag = "sh"
-                }
-                urlArray[index / 100] =
-                    (if (urlArray[index / 100].isNullOrEmpty()) "$tag${stocksArray[index]}" else urlArray[index / 100] + ",$tag${stocksArray[index]}")
-                LogUtil.d("mgc", "url ${index / 100}:${urlArray[index / 100]}")
-
-            }
-        }
-
 
         var resultArray = arrayOfNulls<Deferred<String>>(stocksArray.size / 100 + 1)
         var index = 0
@@ -97,32 +61,6 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun getDealDetail(code: String, date: String) {
-        var result = RetrofitManager.reqApi.getDealDetai(code,date)
-        launch({
-            var json = result.await()
-            loadState.value = LoadState.Success(REQUEST_TYPE_2,json)
-        })
-
-    }
-
-    fun getPricehis(code: String, startdate: String, endDate: String) {
-        var result = RetrofitManager.reqApi.getPricehis(code,startdate,endDate)
-        launch({
-            var json = result.await()
-            loadState.value = LoadState.Success(REQUEST_TYPE_3,json)
-        })
-
-    }
-
-    fun getHisHq(code: String,start:String,end:String) {
-        var result = RetrofitManager.reqApi.getHisHq("cn_$code",start,end)
-        launch({
-            var json = result.await()
-            loadState.value = LoadState.Success(REQUEST_TYPE_4,json)
-        })
-
-    }
 
 
 

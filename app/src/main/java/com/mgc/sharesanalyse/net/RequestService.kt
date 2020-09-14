@@ -29,6 +29,12 @@ interface RequestService {
 
 
 
+    @Headers("urlname:${Datas.hisHqUrl}")
+    @GET("/hisHq")
+    fun getHisHq(@Query("code") code: String): Deferred<String>
+
+
+
 
 //    fun getSharesDatas(@Path("path") string: String): Deferred<String>
 
