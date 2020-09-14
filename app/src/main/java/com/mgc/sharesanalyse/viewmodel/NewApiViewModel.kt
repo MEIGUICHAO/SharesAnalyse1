@@ -68,9 +68,16 @@ class NewApiViewModel : BaseViewModel() {
             }
             bean.date =  DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             bean.json = json
-            var result = DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
+            var dbName = DaoManager.getDbName()
+            LogUtil.d("dbName:$dbName")
+            if (isInsert) {
+                DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
+                LogUtil.d("getHisHq updateOrInsertById insert result:${result} id:${code.toLong()}")
+            } else {
+                DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
+                LogUtil.d("getHisHq updateOrInsertById update result:${result} id:${code.toLong()}")
+            }
 
-            LogUtil.d("getHisHq updateOrInsertById result:${result} id:${code.toLong()}")
             loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
         })
     }
