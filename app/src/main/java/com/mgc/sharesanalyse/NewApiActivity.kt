@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
@@ -11,16 +12,20 @@ import com.mgc.sharesanalyse.entity.SinaDealDatailBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_new_api.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 class NewApiActivity : AppCompatActivity() {
 
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +45,9 @@ class NewApiActivity : AppCompatActivity() {
             DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
             viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
             getHisHq()
+        }
+        btnBwcList.setOnClickListener {
+            viewModel.bwc()
         }
     }
 

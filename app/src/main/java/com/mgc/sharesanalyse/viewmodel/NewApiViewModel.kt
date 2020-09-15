@@ -2,12 +2,20 @@ package com.mgc.sharesanalyse.viewmodel
 
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.entity.BWCQPResultBean
 import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean
 import com.mgc.sharesanalyse.entity.PricesHisGDBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class NewApiViewModel : BaseViewModel() {
 
@@ -179,6 +187,67 @@ class NewApiViewModel : BaseViewModel() {
             }
             FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate",it.result+"\n")
         }
+
+    }
+
+
+
+    var bwcTag = "###########"
+    var requestBody =
+        "{\"userId\":\"20200429090359-43c4c27f70_user\",\"openid\":\"oOLE444a8L_g7Fu5pMl074lNDMVo\",\"businessId\":\"20200428151950-5fc381e926_business\",\"overbearfoodId\":\"$bwcTag\",\"serviceNoStr\":\"api_overbear_sign_up\",\"phoneNumber\":\"13316940915\",\"buyChannel\":\"autonomy\",\"shareUserId\":\"\"}"
+    var adb = Triple<Boolean, Boolean, Boolean>(false,false,false)
+
+    fun bwc() {
+
+        var beanDeferred = RetrofitManager.reqApi.getBwcDpList()
+        launch({
+            var bean = beanDeferred.await()
+            var slbID = "20200826094759-aede32d710_business"//三里半
+            var gscfwID = "20200907094507-15576a4e7c_business"//"广式茶点·炒粉"
+            var dpjID = "20200908165211-ead7c9e1af_business"//"舌尖上的大盘鸡"
+            val foodList = ArrayList<String>()
+            bean.data.forEach {
+                LogUtil.d("shopName:${it.shopName}")
+                if (it.businessId == slbID || it.businessId == gscfwID || it.businessId == dpjID) {
+                    foodList.add(it.overbearFoodEntityId)
+                }
+            }
+
+            var qiangFP = ArrayList<Deferred<BWCQPResultBean>>()
+            Observable.interval(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io()).subscribe {
+                    val judeTime = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)+" 00:30:00"
+                    var timeStamp =  DateUtils.parse(judeTime,FormatterEnum.YYYYMMDD__HH_MM_SS)
+
+                    if (System.currentTimeMillis() < timeStamp) {
+//                        var result1：Def
+                        if (!adb.first) {
+                            var body1 = requestBody.replace(bwcTag,foodList[0])
+                            var result1 = RetrofitManager.reqApi.qiangBwc(body1)
+                        }
+                        if (!adb.second) {
+                            var body2 = requestBody.replace(bwcTag,foodList[1])
+                            var result2 =RetrofitManager.reqApi.qiangBwc(body2)
+                        }
+                        if (!adb.third) {
+                            var body3 = requestBody.replace(bwcTag,foodList[2])
+                            var result3 = RetrofitManager.reqApi.qiangBwc(body3)
+                        }
+                        launch {
+                            var resultBean1 = result1.await()
+                            if (resultBean1.code == 1 || resultBean1.code == -1) {
+                                adb.first = true
+                            }
+                        }
+
+                    } else {
+                        LogUtil.d("not begin")
+                    }
+                    qiangFP.forEach {
+
+                    }
+                }
+        })
 
     }
 }
