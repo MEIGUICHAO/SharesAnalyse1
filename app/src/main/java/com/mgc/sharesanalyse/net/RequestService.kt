@@ -37,12 +37,12 @@ interface RequestService {
 
     @Headers("urlname:${Datas.bwcUrl}","User-Agent:${Datas.UserAgent}","Content-Type:application/json")
     @POST("/api/v2/overbearfood/api_overbear_ordinary_data_list")
-    fun getBwcDpList(@Body json: String="{\"userLatitude\":22.543965,\"userLongitude\":113.954606,\"userAddress\":\"华润城润府2期附近\",\"userId\":\"20200429090359-43c4c27f70_user\",\"page\":1,\"limit\":100,\"serviceNoStr\":\"api_overbear_ordinary_data_list\"}"): Deferred<BWCDPJsonBean>
+    fun getBwcDpList(@Body json: String="{\"userLatitude\":22.543965,\"userLongitude\":113.954606,\"userAddress\":\"华润城润府2期附近\",\"userId\":\"20200429090359-43c4c27f70_user\",\"page\":1,\"limit\":100,\"serviceNoStr\":\"api_overbear_ordinary_data_list\"}"): Deferred<String>
 
 
     @Headers("urlname:${Datas.bwcUrl}","User-Agent:${Datas.UserAgent}","Content-Type:application/json")
     @POST("/api/v2/overbearfood/api_overbear_sign_up")
-    fun qiangBwc(@Body json: String): Deferred<BWCQPResultBean>
+    fun qiangBwc(@Body json: String): Deferred<String>
 
 
 
