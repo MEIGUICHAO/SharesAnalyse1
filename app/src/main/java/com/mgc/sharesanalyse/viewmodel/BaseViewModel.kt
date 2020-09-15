@@ -14,6 +14,7 @@ open class BaseViewModel:ViewModel() {
     val sharesDats = MutableLiveData<SparseArray<String>>()
     val loadState = MutableLiveData<LoadState>()
     var stocksArray = ResUtil.getSArray(R.array.code_all)
+    var stocksNameArray = ResUtil.getSArray(R.array.code_all_name)
     var urlArray = emptyArray<String?>()
     var viewModelCode = R.array.code_all
     var viewModelCodeName = R.array.code_all_name

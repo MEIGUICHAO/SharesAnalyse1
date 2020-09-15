@@ -2,10 +2,12 @@ package com.mgc.sharesanalyse.viewmodel
 
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean
 import com.mgc.sharesanalyse.entity.PricesHisGDBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import kotlinx.coroutines.Deferred
+import java.util.*
 
 class NewApiViewModel : BaseViewModel() {
 
@@ -82,10 +84,10 @@ class NewApiViewModel : BaseViewModel() {
     //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
     fun getHisHqAnalyseResult(
         hqList: List<List<String>>,
-        code: String
+        codeSum: String,code: String
     ) {
 //        val baseDays = hqList.size/2
-        val baseDays = 10
+        val baseDays = 15
         var baseDealAmount = 0.toDouble()
         var baseDealPercent = 0.toDouble()
         for (index in (hqList.size - 1) downTo baseDays) {
@@ -96,7 +98,8 @@ class NewApiViewModel : BaseViewModel() {
         val baseAvgDealPercent = BigDecimalUtils.div(baseDealPercent, (hqList.size-baseDays).toDouble())
         val basePrices = getHisHqDayClosePrice(hqList[baseDays])
         var needLog = false
-        var logStr = "========$code============"
+        var logStr = codeSum
+        var conformSize = 0
         for (index in 0 until baseDays) {
             val dealTimes =
                 BigDecimalUtils.div(getHisHqDayDealAmount(hqList[index]), baseAvgDealAmount)
@@ -106,33 +109,72 @@ class NewApiViewModel : BaseViewModel() {
                 getHisHqDayClosePrice(hqList[index]),
                 basePrices
             )
-            if (!needLog) {
-                needLog = dealTimes >= 5 && percentTimes >= 5
+            if (dealTimes >= 5 && percentTimes >= 5) {
+                conformSize++
             }
-            LogUtil.d("getHisHqAnalyseResult-------code:$code \n dealTimes:$dealTimes \n  percentTimes:$percentTimes  \n baseAvgDealAmount:$baseAvgDealAmount" +
-                    "\n currentAmount:${getHisHqDayDealAmount(hqList[index])} \ncurrentDealPercent:${getHisHqDayDealPercent(hqList[index])} \nbaseAvgDealPercent:$baseAvgDealPercent")
+            if (conformSize >= 2) {
+                needLog = true
+            }
             val addStr =
                 "day:${getHisHqDay(hqList[index])}---dealTimes:$dealTimes---percentTimes:$percentTimes---colsePrices:${getHisHqDayClosePrice(
                     hqList[index]
                 )}---difPrices:${diffPrices}---percent:${BigDecimalUtils.div(
                     diffPrices,
                     basePrices
-                ) * 100}%"
+                ) * 100}%---curPercent:${getcurPercent(hqList[index])}"
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
         }
+        LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
         if (needLog) {
-            LogUtil.d("------needLog---\n$logStr")
-            FileLogUtil.d("${parentBasePath}hishq$pathDate",logStr)
+            val bean = PriceHisRecordGDBean()
+            bean.code = code
+            bean.id = code.toLong()
+            bean.result = "==========conformSize:$conformSize============\n$$logStr"
+            bean.conformSize = conformSize
+            bean.baseComparePercent = BigDecimalUtils.div(
+                BigDecimalUtils.sub(
+                    getHisHqDayClosePrice(hqList[0]),
+                    basePrices
+                ),
+                basePrices
+            ) * 100
+            val result = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.insert(bean)
+            LogUtil.d("getPriceHisFileLog result:${result} code:$code")
+//            LogUtil.d("------needLog---\n$logStr")
+
         }
         loadState.value = LoadState.GoNext(REQUEST_HIS_HQ)
 
     }
 
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
+    fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
     fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toDouble()
     fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble()
     fun getHisHqDayDealPercent(dayDatas: List<String>) = if (dayDatas[9]=="-") 0.toDouble() else dayDatas[9].replace("%", "").toDouble()
     fun setFilelogPath(formatToDay: String) {
         pathDate = formatToDay
+    }
+
+    fun getPriceHisFileLog() {
+        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+        LogUtil.d("getPriceHisFileLog list size:${list.size}")
+        Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
+            override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
+                return p1.conformSize.compareTo(p0.conformSize)
+            }
+        })
+        var txtname:String
+        list.forEach {
+            if (it.id > 600000) {
+                txtname = "sh_"
+            } else if (it.id > 300000) {
+                txtname = "cy_"
+            } else {
+                txtname = "sz_"
+            }
+            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate",it.result+"\n")
+        }
+
     }
 }

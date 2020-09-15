@@ -13,6 +13,7 @@ import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
 import kotlinx.android.synthetic.main.activity_new_api.*
 import org.jsoup.Jsoup
+import java.nio.charset.Charset
 
 class NewApiActivity : AppCompatActivity() {
 
@@ -36,13 +37,14 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnRequestHisHq.setOnClickListener {
             progressIndex = 0
+            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
             viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
             getHisHq()
         }
     }
 
     private fun getHisHq() {
-        var code = viewModel.stocksArray[progressIndex]!!.replace("sz", "").replace("sh", "")
+        var code = viewModel.stocksNameArray[progressIndex].split("####")[0].replace("sz", "").replace("sh", "")
         viewModel.getHisHq(code)
     }
 
@@ -80,7 +82,13 @@ class NewApiActivity : AppCompatActivity() {
                         }
                         viewModel.REQUEST_HIS_HQ -> {
                             val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
-                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, hisHqBean[0].code)
+                            var sumStr = "${hisHqBean[0].code.replace("cn_","")}---${viewModel.stocksNameArray[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[2]},lowest:${hisHqBean[0].stat[3]},highest:${hisHqBean[0].stat[4]}"
+                            sumStr = String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace("��","至")
+                            LogUtil.d("!!stat sumStr:$sumStr")
+                            hisHqBean[0].stat.forEach {
+                                LogUtil.d("!!stat:$it")
+                            }
+                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, sumStr,hisHqBean[0].code.replace("cn_",""))
 
                         }
                     }
@@ -98,6 +106,8 @@ class NewApiActivity : AppCompatActivity() {
 //                            if (progressIndex < 5) {
                             if (progressIndex < viewModel.stocksArray.size) {
                                 getHisHq()
+                            } else {
+                                viewModel.getPriceHisFileLog()
                             }
                         }
                     }
