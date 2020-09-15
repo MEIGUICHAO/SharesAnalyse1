@@ -84,7 +84,7 @@ class NewApiViewModel : BaseViewModel() {
     //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
     fun getHisHqAnalyseResult(
         hqList: List<List<String>>,
-        codeSum: String,code: String
+        codeSum: String, code: String, stat: List<String>
     ) {
 //        val baseDays = hqList.size/2
         val baseDays = 15
@@ -126,11 +126,15 @@ class NewApiViewModel : BaseViewModel() {
         }
         LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
         if (needLog) {
+            //                            2涨跌额	3涨跌幅	4最低	5最高	6成交量(手)	7成交金额(万)	8换手率
             val bean = PriceHisRecordGDBean()
             bean.code = code
             bean.id = code.toLong()
-            bean.result = "==========conformSize:$conformSize============\n$$logStr"
             bean.conformSize = conformSize
+            bean.dealAmount = stat[7].toDouble()
+            bean.dealAvgAmount = stat[7].toDouble()/hqList.size
+            bean.turnOverRate = stat[8].replace("%","").toDouble()
+            bean.result = "===conformSize:$conformSize===dealAvgAmount:${bean.dealAvgAmount}===turnOverRate:${bean.turnOverRate}===\n$$logStr"
             bean.baseComparePercent = BigDecimalUtils.div(
                 BigDecimalUtils.sub(
                     getHisHqDayClosePrice(hqList[0]),

@@ -12,6 +12,7 @@ object Datas {
     var baseNum = 30/basebase
     var limitPerAmount = 500 * baseNum
     var intervalTime = basebase * 1000 * baseNum
+    const val dataNamesDefault = "newapiDatabases"
 
 
 }

@@ -26,9 +26,10 @@ public class DaoManager {
 
     public static String getDbName() {
         if (TextUtils.isEmpty(DB_NAME)) {
-            DB_NAME = "sharesDB_" + DateUtils.INSTANCE.format(
-                    System.currentTimeMillis(),
-                    FormatterEnum.YYYY_MM_DD);
+//            DB_NAME = "sharesDB_" + DateUtils.INSTANCE.format(
+//                    System.currentTimeMillis(),
+//                    FormatterEnum.YYYY_MM_DD);
+            DB_NAME = Datas.dataNamesDefault;
         }
         return DB_NAME;
     }

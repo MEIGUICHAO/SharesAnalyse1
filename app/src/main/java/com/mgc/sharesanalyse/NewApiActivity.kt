@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mgc.sharesanalyse.base.App
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
 import com.mgc.sharesanalyse.entity.SinaDealDatailBean
@@ -25,7 +25,7 @@ class NewApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_api)
-        DaoManager.setDbName("newapiDatabases")
+        DaoManager.setDbName(Datas.dataNamesDefault)
         viewModel = ViewModelProvider(this).get(NewApiViewModel::class.java)
         viewModelObserve()
 
@@ -82,13 +82,10 @@ class NewApiActivity : AppCompatActivity() {
                         }
                         viewModel.REQUEST_HIS_HQ -> {
                             val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
-                            var sumStr = "${hisHqBean[0].code.replace("cn_","")}---${viewModel.stocksNameArray[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[2]},lowest:${hisHqBean[0].stat[3]},highest:${hisHqBean[0].stat[4]}"
+                            var sumStr = "${viewModel.stocksNameArray[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[3]},lowest:${hisHqBean[0].stat[4]},highest:${hisHqBean[0].stat[5]}"
                             sumStr = String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace("��","至")
-                            LogUtil.d("!!stat sumStr:$sumStr")
-                            hisHqBean[0].stat.forEach {
-                                LogUtil.d("!!stat:$it")
-                            }
-                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, sumStr,hisHqBean[0].code.replace("cn_",""))
+
+                            viewModel.getHisHqAnalyseResult(hisHqBean[0].hq, sumStr,hisHqBean[0].code.replace("cn_",""),hisHqBean[0].stat)
 
                         }
                     }
