@@ -117,7 +117,8 @@ class NewApiViewModel : BaseViewModel() {
                 getHisHqDayClosePrice(hqList[index]),
                 basePrices
             )
-            if (dealTimes >= 5 && percentTimes >= 5) {
+            //连续三天3，b时机 待验证
+            if (dealTimes >= 3 && percentTimes >= 3) {
                 conformSize++
             }
             if (conformSize >= 2) {
