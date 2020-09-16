@@ -8,7 +8,6 @@ import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.R
 import com.mgc.sharesanalyse.entity.BWCDPJsonBean
 import com.mgc.sharesanalyse.entity.BWCQPResultBean
-import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import io.reactivex.Observable
@@ -54,8 +53,9 @@ open class BaseViewModel:ViewModel() {
 
 
     var bwcTag = "###########"
+    var bwcDPTag = "^^^^^^^^^^"
     var requestBody =
-        "{\"userId\":\"20200429090359-43c4c27f70_user\",\"openid\":\"oOLE444a8L_g7Fu5pMl074lNDMVo\",\"businessId\":\"20200428151950-5fc381e926_business\",\"overbearfoodId\":\"$bwcTag\",\"serviceNoStr\":\"api_overbear_sign_up\",\"phoneNumber\":\"13316940915\",\"buyChannel\":\"autonomy\",\"shareUserId\":\"\"}"
+        "{\"userId\":\"20200429090359-43c4c27f70_user\",\"openid\":\"oOLE444a8L_g7Fu5pMl074lNDMVo\",\"businessId\":\"$bwcDPTag\",\"overbearfoodId\":\"$bwcTag\",\"serviceNoStr\":\"api_overbear_sign_up\",\"phoneNumber\":\"13316940915\",\"buyChannel\":\"autonomy\",\"shareUserId\":\"\"}"
     var bcw1Complete = false
     var bcw2Complete = false
     var bcw3Complete = false
@@ -69,20 +69,20 @@ open class BaseViewModel:ViewModel() {
         launch({
             var mjson = json.await()
             var bean = GsonHelper.parse(mjson,BWCDPJsonBean::class.java)
-            var slbID = "20200826094759-aede32d710_business"//三里半
-            var gscfwID = "20200912151229-81bf084bc5_business"//"蛋包个饭"
-            var dpjID = "20200908165211-ead7c9e1af_business"//"舌尖上的大盘鸡"
+            var s1ID = "20200826094759-aede32d710_business"//三里半
+            var s2ID = "20200912151229-81bf084bc5_business"//"蛋包个饭"
+            var s3ID = "20200908165211-ead7c9e1af_business"//"舌尖上的大盘鸡"
             val foodList = ArrayList<String>()
             bean.data.forEach {
                 LogUtil.d("shopName:${it.shopName}")
-                if (it.businessId == slbID || it.businessId == gscfwID || it.businessId == dpjID) {
+                if (it.businessId == s1ID || it.businessId == s2ID || it.businessId == s3ID) {
                     foodList.add(it.overbearFoodEntityId)
                 }
             }
 
             Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io()).subscribe {
-                    val judeTime = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)+" 00:30:00"
+                    val judeTime = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)+" 12:30:00"
                     var timeStamp =  DateUtils.parse(judeTime, FormatterEnum.YYYYMMDD__HH_MM_SS)
 
                     if (System.currentTimeMillis() < timeStamp) {
@@ -93,16 +93,19 @@ open class BaseViewModel:ViewModel() {
                         if (!bcw1Complete&&!bcw1Begin) {
                             bcw1Begin = true
                             var body1 = requestBody.replace(bwcTag,foodList[0])
+                            body1 = body1.replace(bwcDPTag,s1ID)
                             result1 = RetrofitManager.reqApi.qiangBwc(body1)
                         }
                         if (!bcw2Complete&&!bcw2Begin) {
                             bcw2Begin = true
                             var body2 = requestBody.replace(bwcTag,foodList[1])
+                            body2 = body2.replace(bwcDPTag,s2ID)
                             result2 = RetrofitManager.reqApi.qiangBwc(body2)
                         }
                         if (!bcw3Complete&&!bcw3Begin) {
                             bcw3Begin = true
                             var body3 = requestBody.replace(bwcTag,foodList[2])
+                            body3 = body3.replace(bwcDPTag,s3ID)
                             result3 = RetrofitManager.reqApi.qiangBwc(body3)
                         }
                         launch {
