@@ -12,13 +12,18 @@ public class PricesHisGDBean {
     private String code;
     private String json;
     private String date;
+    private String mineInfo;
+    private String XQInfo;
 
-    @Generated(hash = 209692857)
-    public PricesHisGDBean(Long id, String code, String json, String date) {
+    @Generated(hash = 1659858968)
+    public PricesHisGDBean(Long id, String code, String json, String date,
+            String mineInfo, String XQInfo) {
         this.id = id;
         this.code = code;
         this.json = json;
         this.date = date;
+        this.mineInfo = mineInfo;
+        this.XQInfo = XQInfo;
     }
     @Generated(hash = 1088630204)
     public PricesHisGDBean() {
@@ -47,5 +52,17 @@ public class PricesHisGDBean {
     }
     public void setDate(String date) {
         this.date = date;
+    }
+    public String getMineInfo() {
+        return this.mineInfo;
+    }
+    public void setMineInfo(String mineInfo) {
+        this.mineInfo = mineInfo;
+    }
+    public String getXQInfo() {
+        return this.XQInfo;
+    }
+    public void setXQInfo(String XQInfo) {
+        this.XQInfo = XQInfo;
     }
 }

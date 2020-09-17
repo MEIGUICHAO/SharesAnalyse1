@@ -3,10 +3,12 @@ package com.mgc.sharesanalyse.net
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.BWCDPJsonBean
 import com.mgc.sharesanalyse.entity.BWCQPResultBean
+import com.mgc.sharesanalyse.entity.XQInfoBean
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
 interface RequestService {
+
 
     @GET("list={path}")
     fun getSharesDatas(@Path("path") string: String): Deferred<String>
@@ -45,6 +47,15 @@ interface RequestService {
     fun qiangBwc(@Body json: String): Deferred<String>
 
 
+
+    @Headers("urlname:${Datas.xqUrl}","User-Agent:${Datas.WinChromeAgent}","Cookie:${Datas.XQCookies}")
+    @POST("/query/v1/search/status")
+    fun getXQInfo(@Query("q") code: String, @Query("page") page: String = "1", @Query("sort") sort: String = "relevance", @Query("source") source: String = "all"): Deferred<XQInfoBean>
+
+
+    @Headers("urlname:${Datas.dealDetailUrl}")
+    @POST("/corp/view/vCB_AllMemordDetail.php?")
+    fun getSinaMineInfo(@Query("stockid") stockid: String): Deferred<String>
 
 
 //    fun getSharesDatas(@Path("path") string: String): Deferred<String>

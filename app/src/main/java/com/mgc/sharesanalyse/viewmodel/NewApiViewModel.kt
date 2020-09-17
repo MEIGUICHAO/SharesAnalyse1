@@ -1,25 +1,26 @@
 package com.mgc.sharesanalyse.viewmodel
 
+import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.entity.BWCQPResultBean
-import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean
-import com.mgc.sharesanalyse.entity.PricesHisGDBean
+import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import org.jsoup.Jsoup
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.math.min
 
 class NewApiViewModel : BaseViewModel() {
 
-    var parentBasePath = DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM)+"/newapi/"
+    val debug = true
+
+    var parentBasePath =
+        DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM) + "/newapi/"
 
     var pathDate = ""
 
@@ -43,26 +44,50 @@ class NewApiViewModel : BaseViewModel() {
 
 
     fun getHisHq(code: String, start: String = "", end: String = "") {
-        var bean = DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
+        var bean =
+            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
+
 
         if (null != bean) {
             val today = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             LogUtil.d("today:$today bean.date:${bean.date} ${today != bean.date}")
-            if (today != bean.date) {
-                requestHisPriceHq(false,start, end, code)
+            if (today != bean.date || debug) {
+                requestHisPriceHq(false, start, end, code)
             } else {
                 LogUtil.d("cache_${Datas.hisHqUrl}--------$code")
                 loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
             }
         } else {
-            requestHisPriceHq(true,start, end, code)
+            requestHisPriceHq(true, start, end, code)
         }
 
 
     }
 
-    private fun requestHisPriceHq(isInsert:Boolean,start: String, end: String, code: String) {
-        var result: Deferred<String>
+    private fun jsoupParseMineInfoHtml(json: String): ArrayList<InfoDateBean> {
+        LogUtil.d("jsoupParseMineInfoHtml")
+        val document = Jsoup.parse(json)
+        val tagmains = document.body().getElementById("main")
+            .getElementById("main").getElementById("center").getElementsByClass("tagmain")
+        val title_cls = tagmains.get(0).getElementsByClass("title_cls")
+        val date_cls = tagmains.get(0).getElementsByClass("date_cls")
+        val mineInfoList = ArrayList<InfoDateBean>()
+        for (index in 0 until title_cls.size) {
+            val bean = InfoDateBean()
+            bean.date = date_cls[index].text()
+            bean.info = title_cls[index].text()
+            mineInfoList.add(bean)
+        }
+        return mineInfoList
+    }
+
+    private fun requestHisPriceHq(isInsert: Boolean, start: String, end: String, code: String) {
+
+        val xq1 = RetrofitManager.reqApi.getXQInfo(code, "1")
+        val xq2 = RetrofitManager.reqApi.getXQInfo(code, "2")
+        val xq3 = RetrofitManager.reqApi.getXQInfo(code, "3")
+        val mine = RetrofitManager.reqApi.getSinaMineInfo(code)
+        val result: Deferred<String>
         if (start.isEmpty() && end.isEmpty()) {
             result = RetrofitManager.reqApi.getHisHq("cn_$code")
         } else {
@@ -70,15 +95,29 @@ class NewApiViewModel : BaseViewModel() {
         }
 
         launch({
-            var json = result.await()
-            var bean = PricesHisGDBean()
+            val json = result.await()
+            val mineInfoList = jsoupParseMineInfoHtml(mine.await())
+            val  XQInfoList = ArrayList<InfoDateBean>()
+            val XQInfoList1 = getXQInfo( xq1.await())
+            val XQInfoList2 = getXQInfo( xq2.await())
+            val XQInfoList3 = getXQInfo( xq3.await())
+            XQInfoList.addAll(XQInfoList1)
+            XQInfoList.addAll(XQInfoList2)
+            XQInfoList.addAll(XQInfoList3)
+            LogUtil.d("getXQInfo!!! XQInfoList size ${XQInfoList.size}" )
+            val mineInfoJson = GsonHelper.toJson(mineInfoList)
+            val xqInfoJson = GsonHelper.toJson(XQInfoList)
+
+            val bean = PricesHisGDBean()
             bean.code = code
             if (isInsert) {
                 bean.id = code.toLong()
             }
-            bean.date =  DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+            bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             bean.json = json
-            var dbName = DaoManager.getDbName()
+            bean.mineInfo = mineInfoJson
+            bean.xqInfo = xqInfoJson
+            LogUtil.d("xqInfo:\n$xqInfoJson")
             if (isInsert) {
                 DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
             } else {
@@ -87,6 +126,26 @@ class NewApiViewModel : BaseViewModel() {
 
             loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
         })
+    }
+
+    private fun getXQInfo(xq1Bean: XQInfoBean):ArrayList<InfoDateBean> {
+        val list = ArrayList<InfoDateBean>()
+        LogUtil.d("getXQInfo!!! size ${list.size}" )
+        xq1Bean.list.forEach {
+            if (!TextUtils.isEmpty(it.title)) {
+                val infoDateBean = InfoDateBean()
+                infoDateBean.info = it.title
+                infoDateBean.date = DateUtils.format(
+                    it.created_at,
+                    FormatterEnum.YYYYMMDD__HH_MM_SS
+                )
+                list.add(infoDateBean)
+            }
+        }
+        LogUtil.d("getXQInfo!!! size ${list.size}" )
+        return list
+
+
     }
 
     //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
@@ -102,8 +161,10 @@ class NewApiViewModel : BaseViewModel() {
             baseDealAmount = baseDealAmount + getHisHqDayDealAmount(hqList[index])
             baseDealPercent = baseDealPercent + getHisHqDayDealPercent(hqList[index])
         }
-        val baseAvgDealAmount = BigDecimalUtils.div(baseDealAmount, (hqList.size-baseDays).toDouble())
-        val baseAvgDealPercent = BigDecimalUtils.div(baseDealPercent, (hqList.size-baseDays).toDouble())
+        val baseAvgDealAmount =
+            BigDecimalUtils.div(baseDealAmount, (hqList.size - baseDays).toDouble())
+        val baseAvgDealPercent =
+            BigDecimalUtils.div(baseDealPercent, (hqList.size - baseDays).toDouble())
         val basePrices = getHisHqDayClosePrice(hqList[baseDays])
         var needLog = false
         var logStr = codeSum
@@ -141,9 +202,10 @@ class NewApiViewModel : BaseViewModel() {
             bean.id = code.toLong()
             bean.conformSize = conformSize
             bean.dealAmount = stat[7].toDouble()
-            bean.dealAvgAmount = stat[7].toDouble()/hqList.size
-            bean.turnOverRate = stat[8].replace("%","").toDouble()
-            bean.result = "===conformSize:$conformSize===dealAvgAmount:${bean.dealAvgAmount}===turnOverRate:${bean.turnOverRate}===\n$$logStr"
+            bean.dealAvgAmount = stat[7].toDouble() / hqList.size
+            bean.turnOverRate = stat[8].replace("%", "").toDouble()
+            bean.result =
+                "===conformSize:$conformSize===dealAvgAmount:${bean.dealAvgAmount}===turnOverRate:${bean.turnOverRate}===\n$$logStr"
             bean.baseComparePercent = BigDecimalUtils.div(
                 BigDecimalUtils.sub(
                     getHisHqDayClosePrice(hqList[0]),
@@ -164,7 +226,9 @@ class NewApiViewModel : BaseViewModel() {
     fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
     fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toDouble()
     fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble()
-    fun getHisHqDayDealPercent(dayDatas: List<String>) = if (dayDatas[9]=="-") 0.toDouble() else dayDatas[9].replace("%", "").toDouble()
+    fun getHisHqDayDealPercent(dayDatas: List<String>) =
+        if (dayDatas[9] == "-") 0.toDouble() else dayDatas[9].replace("%", "").toDouble()
+
     fun setFilelogPath(formatToDay: String) {
         pathDate = formatToDay
     }
@@ -177,7 +241,7 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
-        var txtname:String
+        var txtname: String
         list.forEach {
             if (it.id > 600000) {
                 txtname = "sh_"
@@ -186,7 +250,7 @@ class NewApiViewModel : BaseViewModel() {
             } else {
                 txtname = "sz_"
             }
-            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate",it.result+"\n")
+            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
         }
 
     }
