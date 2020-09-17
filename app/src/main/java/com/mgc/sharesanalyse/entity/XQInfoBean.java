@@ -14,6 +14,7 @@ public class XQInfoBean {
      * size : 10
      */
 
+    private int code;
     private int count;
     private int maxPage;
     private int page;

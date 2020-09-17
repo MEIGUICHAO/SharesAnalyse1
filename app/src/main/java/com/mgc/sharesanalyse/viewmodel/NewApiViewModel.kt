@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 
 class NewApiViewModel : BaseViewModel() {
 
-    val debug = true
+    val debug = false
 
     var parentBasePath =
         DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM) + "/newapi/"
@@ -79,52 +79,49 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun requestHisPriceHq(isInsert: Boolean, start: String, end: String, code: String) {
 
-        val xq1 = RetrofitManager.reqApi.getXQInfo(code, "1")
-        val xq2 = RetrofitManager.reqApi.getXQInfo(code, "2")
-        val xq3 = RetrofitManager.reqApi.getXQInfo(code, "3")
-        val mine = RetrofitManager.reqApi.getSinaMineInfo(code)
-        val result: Deferred<String>
-        if (start.isEmpty() && end.isEmpty()) {
-            result = RetrofitManager.reqApi.getHisHq("cn_$code")
-        } else {
-            result = RetrofitManager.reqApi.getHisHq("cn_$code", start, end)
-        }
-
         launch({
+//            val xq1 = RetrofitManager.reqApi.getXQInfo(code, "1")
+//            val xq2 = requestXQInfo(code,"2",xq1.await())
+//            val xq3 = requestXQInfo(code,"3",xq2.await())
+//            var xq1Bean:XQInfoBean? = GsonHelper.parse(xq1.await(),XQInfoBean::class.java)
+//            var xq2Bean:XQInfoBean? = GsonHelper.parse(xq2.await(),XQInfoBean::class.java)
+//            var xq3Bean:XQInfoBean? = GsonHelper.parse(xq3.await(),XQInfoBean::class.java)
+
+//            val mine = RetrofitManager.reqApi.getSinaMineInfo(code)
+            val result: Deferred<String>
+            if (start.isEmpty() && end.isEmpty()) {
+                result = RetrofitManager.reqApi.getHisHq("cn_$code")
+            } else {
+                result = RetrofitManager.reqApi.getHisHq("cn_$code", start, end)
+            }
             updateHisPriceInfo(
                 result.await(),
-                xq1.await(),
-                xq2.await(),
-                xq3.await(),
-                mine.await(),
                 code,
                 isInsert
             )
         })
+
+
     }
+
+    private fun requestXQInfo(code: String, page: String, json: String):Deferred<String> {
+        return RetrofitManager.reqApi.getXQInfo(code, page)
+    }
+
 
     private fun updateHisPriceInfo(
         json: String,
-        await1: XQInfoBean,
-        await2: XQInfoBean,
-        await3: XQInfoBean,
-        mine: String,
         code: String,
         isInsert: Boolean
     ) {
 
-        LogUtil.d("updateHisPriceInfo code:$code")
-        val mineInfoList = jsoupParseMineInfoHtml(mine)
-        val XQInfoList = ArrayList<InfoDateBean>()
-        val XQInfoList1 = getXQInfo(await1)
-        val XQInfoList2 = getXQInfo(await2)
-        val XQInfoList3 = getXQInfo(await3)
-        XQInfoList.addAll(XQInfoList1)
-        XQInfoList.addAll(XQInfoList2)
-        XQInfoList.addAll(XQInfoList3)
-        LogUtil.d("getXQInfo!!! XQInfoList size ${XQInfoList.size}")
-        val mineInfoJson = GsonHelper.toJson(mineInfoList)
-        val xqInfoJson = GsonHelper.toJson(XQInfoList)
+//        LogUtil.d("updateHisPriceInfo code:$code")
+//        XQInfoList.addAll(XQInfoList1)
+//        XQInfoList.addAll(XQInfoList2)
+//        XQInfoList.addAll(XQInfoList3)
+//        LogUtil.d("getXQInfo!!! XQInfoList size ${XQInfoList.size}")
+//        val mineInfoJson = GsonHelper.toJson(mineInfoList)
+//        val xqInfoJson = GsonHelper.toJson(XQInfoList)
 
         val bean = PricesHisGDBean()
         bean.code = code
@@ -133,22 +130,22 @@ class NewApiViewModel : BaseViewModel() {
         }
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         bean.json = json
-        bean.mineInfo = mineInfoJson
-        bean.xqInfo = xqInfoJson
-        LogUtil.d("xqInfo:\n$xqInfoJson")
+//        bean.mineInfo = mineInfoJson
+//        bean.xqInfo = xqInfoJson
+//        LogUtil.d("xqInfo:\n$xqInfoJson")
         if (isInsert) {
             DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
         } else {
             DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
         }
-
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
+
     }
 
-    private fun getXQInfo(xq1Bean: XQInfoBean): ArrayList<InfoDateBean> {
+    private fun getXQInfo(xq1Bean: XQInfoBean?): ArrayList<InfoDateBean> {
         val list = ArrayList<InfoDateBean>()
         LogUtil.d("getXQInfo!!! size ${list.size}")
-        xq1Bean.list.forEach {
+        xq1Bean?.list?.forEach {
             if (!TextUtils.isEmpty(it.title)) {
                 val infoDateBean = InfoDateBean()
                 infoDateBean.info = it.title
@@ -196,14 +193,16 @@ class NewApiViewModel : BaseViewModel() {
                 basePrices
             )
             //连续三天3，b时机 待验证
+            var needLogTag = ""
             if (dealTimes >= 3 && percentTimes >= 3) {
                 conformSize++
+                needLogTag = "!!!!!"
             }
             if (conformSize >= 2) {
                 needLog = true
             }
             val addStr =
-                "day:${getHisHqDay(hqList[index])}---dealTimes:$dealTimes---percentTimes:$percentTimes---colsePrices:${getHisHqDayClosePrice(
+                "${needLogTag} day:${getHisHqDay(hqList[index])}---dealTimes:$dealTimes---percentTimes:$percentTimes---colsePrices:${getHisHqDayClosePrice(
                     hqList[index]
                 )}---difPrices:${diffPrices}---percent:${BigDecimalUtils.div(
                     diffPrices,

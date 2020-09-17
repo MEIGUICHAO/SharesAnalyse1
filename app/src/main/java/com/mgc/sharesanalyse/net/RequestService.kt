@@ -50,7 +50,7 @@ interface RequestService {
 
     @Headers("urlname:${Datas.xqUrl}","User-Agent:${Datas.WinChromeAgent}","Cookie:${Datas.XQCookies}")
     @POST("/query/v1/search/status")
-    fun getXQInfo(@Query("q") code: String, @Query("page") page: String = "1", @Query("sort") sort: String = "relevance", @Query("source") source: String = "all"): Deferred<XQInfoBean>
+    fun getXQInfo(@Query("q") code: String, @Query("page") page: String = "1", @Query("sort") sort: String = "relevance", @Query("source") source: String = "all"): Deferred<String>
 
 
     @Headers("urlname:${Datas.dealDetailUrl}")
