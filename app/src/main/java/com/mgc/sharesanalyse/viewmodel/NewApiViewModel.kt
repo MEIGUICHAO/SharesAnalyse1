@@ -6,14 +6,10 @@ import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 class NewApiViewModel : BaseViewModel() {
 
@@ -95,42 +91,63 @@ class NewApiViewModel : BaseViewModel() {
         }
 
         launch({
-            val json = result.await()
-            val mineInfoList = jsoupParseMineInfoHtml(mine.await())
-            val  XQInfoList = ArrayList<InfoDateBean>()
-            val XQInfoList1 = getXQInfo( xq1.await())
-            val XQInfoList2 = getXQInfo( xq2.await())
-            val XQInfoList3 = getXQInfo( xq3.await())
-            XQInfoList.addAll(XQInfoList1)
-            XQInfoList.addAll(XQInfoList2)
-            XQInfoList.addAll(XQInfoList3)
-            LogUtil.d("getXQInfo!!! XQInfoList size ${XQInfoList.size}" )
-            val mineInfoJson = GsonHelper.toJson(mineInfoList)
-            val xqInfoJson = GsonHelper.toJson(XQInfoList)
-
-            val bean = PricesHisGDBean()
-            bean.code = code
-            if (isInsert) {
-                bean.id = code.toLong()
-            }
-            bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
-            bean.json = json
-            bean.mineInfo = mineInfoJson
-            bean.xqInfo = xqInfoJson
-            LogUtil.d("xqInfo:\n$xqInfoJson")
-            if (isInsert) {
-                DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
-            } else {
-                DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
-            }
-
-            loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
+            updateHisPriceInfo(
+                result.await(),
+                xq1.await(),
+                xq2.await(),
+                xq3.await(),
+                mine.await(),
+                code,
+                isInsert
+            )
         })
     }
 
-    private fun getXQInfo(xq1Bean: XQInfoBean):ArrayList<InfoDateBean> {
+    private fun updateHisPriceInfo(
+        json: String,
+        await1: XQInfoBean,
+        await2: XQInfoBean,
+        await3: XQInfoBean,
+        mine: String,
+        code: String,
+        isInsert: Boolean
+    ) {
+
+        LogUtil.d("updateHisPriceInfo code:$code")
+        val mineInfoList = jsoupParseMineInfoHtml(mine)
+        val XQInfoList = ArrayList<InfoDateBean>()
+        val XQInfoList1 = getXQInfo(await1)
+        val XQInfoList2 = getXQInfo(await2)
+        val XQInfoList3 = getXQInfo(await3)
+        XQInfoList.addAll(XQInfoList1)
+        XQInfoList.addAll(XQInfoList2)
+        XQInfoList.addAll(XQInfoList3)
+        LogUtil.d("getXQInfo!!! XQInfoList size ${XQInfoList.size}")
+        val mineInfoJson = GsonHelper.toJson(mineInfoList)
+        val xqInfoJson = GsonHelper.toJson(XQInfoList)
+
+        val bean = PricesHisGDBean()
+        bean.code = code
+        if (isInsert) {
+            bean.id = code.toLong()
+        }
+        bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        bean.json = json
+        bean.mineInfo = mineInfoJson
+        bean.xqInfo = xqInfoJson
+        LogUtil.d("xqInfo:\n$xqInfoJson")
+        if (isInsert) {
+            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
+        } else {
+            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
+        }
+
+        loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
+    }
+
+    private fun getXQInfo(xq1Bean: XQInfoBean): ArrayList<InfoDateBean> {
         val list = ArrayList<InfoDateBean>()
-        LogUtil.d("getXQInfo!!! size ${list.size}" )
+        LogUtil.d("getXQInfo!!! size ${list.size}")
         xq1Bean.list.forEach {
             if (!TextUtils.isEmpty(it.title)) {
                 val infoDateBean = InfoDateBean()
@@ -142,7 +159,7 @@ class NewApiViewModel : BaseViewModel() {
                 list.add(infoDateBean)
             }
         }
-        LogUtil.d("getXQInfo!!! size ${list.size}" )
+        LogUtil.d("getXQInfo!!! size ${list.size}")
         return list
 
 
