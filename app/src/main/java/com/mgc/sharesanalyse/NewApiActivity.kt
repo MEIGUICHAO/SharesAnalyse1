@@ -36,7 +36,9 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnRequestDealDetail.setOnClickListener {
-            viewModel.getDealDetail("601216", DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD))
+            progressIndex = 0
+            var code = viewModel.stocksNameArray[progressIndex].split("####")[0]
+            viewModel.getDealDetail(code, DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD))
         }
         btnRequestPricehis.setOnClickListener {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
@@ -124,6 +126,20 @@ class NewApiActivity : AppCompatActivity() {
                                 getHisHq()
                             } else {
                                 viewModel.getPriceHisFileLog()
+                            }
+                        }
+                        viewModel.REQUEST_DealDETAIL -> {
+                            progressIndex++
+                            LogUtil.d("progressIndex:$progressIndex")
+//                            if (progressIndex < 2) {
+                            if (progressIndex < viewModel.stocksArray.size) {
+                                var code = viewModel.stocksNameArray[progressIndex].split("####")[0]
+                                viewModel.getDealDetail(
+                                    code,
+                                    DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
+                                )
+                            } else {
+
                             }
                         }
                     }
