@@ -36,10 +36,10 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnRequestDealDetail.setOnClickListener {
-            viewModel.getDealDetail("sh601216", "2020-09-11")
+            viewModel.getDealDetail("601216", "2020-09-11")
         }
         btnRequestPricehis.setOnClickListener {
-            viewModel.getPricehis("sh601216", "2020-09-11", "2020-09-11")
+            viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
             progressIndex = 0

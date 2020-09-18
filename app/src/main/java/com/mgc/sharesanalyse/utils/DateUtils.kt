@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.mgc.sharesanalyse.utils
 
 import android.annotation.SuppressLint
@@ -19,6 +21,7 @@ enum class FormatterEnum(val format: String) {
 }
 
 object DateUtils {
+    val calendar = Calendar.getInstance()
 
     @SuppressLint("SimpleDateFormat")
     fun parse(dateStr: String, formatter: FormatterEnum): Long {
@@ -28,16 +31,31 @@ object DateUtils {
         return  ts
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun format(timestamp: Long, formatter: FormatterEnum): String {
         val simpleDateFormat = SimpleDateFormat(formatter.format)
         val date = Date(timestamp)
         return simpleDateFormat.format(date)
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun formatToDay(formatter: FormatterEnum): String {
         val simpleDateFormat = SimpleDateFormat(formatter.format)
         val date = Date(System.currentTimeMillis())
         return simpleDateFormat.format(date)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun isWeekDay(timestamp: Long):Pair<Boolean,String> {
+        val simpleDateFormat = SimpleDateFormat(FormatterEnum.YYYY_MM_DD.format)
+        val date = format(timestamp,FormatterEnum.YYYY_MM_DD)
+        calendar.time = simpleDateFormat.parse(date)
+        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+            return Pair(true, date)
+        } else {
+            return Pair(false, date)
+        }
+
     }
 
 

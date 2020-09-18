@@ -8,6 +8,8 @@ import com.mgc.sharesanalyse.entity.AnalysePerStocksBean;
 import com.mgc.sharesanalyse.entity.AnalysePerStocksBeanDao;
 import com.mgc.sharesanalyse.entity.AnalyseSizeBean;
 import com.mgc.sharesanalyse.entity.AnalyseSizeBeanDao;
+import com.mgc.sharesanalyse.entity.DealDetailBean;
+import com.mgc.sharesanalyse.entity.DealDetailBeanDao;
 import com.mgc.sharesanalyse.entity.Month8Data;
 import com.mgc.sharesanalyse.entity.Month8DataDao;
 import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean;
@@ -28,6 +30,16 @@ public class DaoUtilsStore {
     private CommonDaoUtils<AnalyseSizeBean> AnalyseSizeBeanDaoUtils;
     private CommonDaoUtils<StocksJsonBean> stocksJsonBeanCommonDaoUtils;
     private CommonDaoUtils<PriceHisRecordGDBean> priceHisRecordGDBeanCommonDaoUtils;
+
+    public CommonDaoUtils<DealDetailBean> getDealDetailBeanCommonDaoUtils() {
+        return dealDetailBeanCommonDaoUtils;
+    }
+
+    public void setDealDetailBeanCommonDaoUtils(CommonDaoUtils<DealDetailBean> dealDetailBeanCommonDaoUtils) {
+        this.dealDetailBeanCommonDaoUtils = dealDetailBeanCommonDaoUtils;
+    }
+
+    private CommonDaoUtils<DealDetailBean> dealDetailBeanCommonDaoUtils;
 
     public CommonDaoUtils<PricesHisGDBean> getPricesHisGDBeanCommonDaoUtils() {
         return pricesHisGDBeanCommonDaoUtils;
@@ -73,6 +85,7 @@ public class DaoUtilsStore {
         StocksJsonBeanDao stocksJsonBeanDao = mManager.getDaoSession().getStocksJsonBeanDao();
         PricesHisGDBeanDao pricesHisGDBeanDao = mManager.getDaoSession().getPricesHisGDBeanDao();
         PriceHisRecordGDBeanDao priceHisRecordGDBeanDao = mManager.getDaoSession().getPriceHisRecordGDBeanDao();
+        DealDetailBeanDao dealDetailBeanDao = mManager.getDaoSession().getDealDetailBeanDao();
         Month8DataDaoUtils = new CommonDaoUtils(Month8Data.class, month8DataDao);
         StocksBeanDaoUtils = new CommonDaoUtils(StocksBean.class, stocksBeanDao);
         AnalysePerAmountBeanDaoUtils = new CommonDaoUtils(AnalysePerAmountBean.class, analysePerAmountBeanDao);
@@ -83,6 +96,7 @@ public class DaoUtilsStore {
 
         pricesHisGDBeanCommonDaoUtils = new CommonDaoUtils(PricesHisGDBean.class, pricesHisGDBeanDao);
         priceHisRecordGDBeanCommonDaoUtils = new CommonDaoUtils(PriceHisRecordGDBean.class, priceHisRecordGDBeanDao);
+        dealDetailBeanCommonDaoUtils = new CommonDaoUtils(DealDetailBean.class, dealDetailBeanDao);
     }
 
     public void resetDaoUtilsStore() {
