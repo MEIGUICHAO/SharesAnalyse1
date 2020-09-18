@@ -3,13 +3,8 @@ package com.mgc.sharesanalyse.utils;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.DaoSession;
-import com.mgc.sharesanalyse.entity.StocksBean;
-import com.mgc.sharesanalyse.entity.StocksBeanDao;
-import com.mgc.sharesanalyse.entity.StocksJsonBean;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.database.Database;
@@ -17,12 +12,8 @@ import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import javax.xml.validation.Schema;
 
 public class CommonDaoUtils<T> {
     private static final String TAG = CommonDaoUtils.class.getSimpleName();
@@ -168,56 +159,6 @@ public class CommonDaoUtils<T> {
     }
 
 
-    public static void classifyTables(Database db, String curTableName) {
-        DaoConfig daoConfig = new DaoConfig(db, StocksBeanDao.class);
-
-        String divider = "";
-        String tableName = daoConfig.tablename;
-        ArrayList<String> properties = new ArrayList<>();
-
-        StringBuilder createTableStringBuilder = new StringBuilder();
-
-        createTableStringBuilder.append("CREATE TABLE ").append(curTableName).append(" (");
-        for (int j = 0; j < daoConfig.properties.length; j++) {
-            String columnName = daoConfig.properties[j].columnName;
-
-            if (!columnName.equals("_id")) {
-                if (MigrationHelper.getColumns(db, tableName).contains(columnName)) {
-                    properties.add(columnName);
-
-                    String type = null;
-
-                    try {
-                        type = MigrationHelper.getTypeByClass(daoConfig.properties[j].type);
-                    } catch (Exception exception) {
-
-                    }
-
-                    createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
-
-                    if (daoConfig.properties[j].primaryKey) {
-                        createTableStringBuilder.append(" PRIMARY KEY");
-                    }
-
-                    divider = ",";
-                }
-            }
-        }
-        createTableStringBuilder.append(");");
-        if (!tabbleIsExist(curTableName)) {
-            db.execSQL(createTableStringBuilder.toString());
-        }
-
-        StringBuilder insertTableStringBuilder = new StringBuilder();
-
-        insertTableStringBuilder.append("INSERT INTO ").append(curTableName).append(" (");
-        insertTableStringBuilder.append(TextUtils.join(",", properties));
-        insertTableStringBuilder.append(") SELECT ");
-        insertTableStringBuilder.append(TextUtils.join(",", properties));
-        insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
-        db.execSQL(insertTableStringBuilder.toString());
-
-    }
 
     public static void dropTable(Database db, String tableName) {
         String dropTable = "DROP TABLE IF EXISTS " + tableName;
@@ -233,62 +174,6 @@ public class CommonDaoUtils<T> {
 
 
 
-    public static StocksBean queryLast(Database db, Long code) {
-        StocksBean stocksBean = null;
-        StocksBean stocksBean2 = DaoUtilsStore.getInstance().getStocksBeanDaoUtils().queryById(code);
-        if (null != stocksBean2) {
-            if (!TextUtils.isEmpty(stocksBean2.getJson())) {
-                stocksBean = GsonHelper.getInstance().fromJson(stocksBean2.getJson(), StocksBean.class);
-            }
-        }
-
-        return stocksBean;
-    }
-
-    public static ArrayList<StocksBean> queryStocks(String tableName) {
-        if (db == null) {
-            db = DaoManager.getsHelper().getWritableDb();
-        }
-        ArrayList<StocksBean> list = new ArrayList<>();
-        Cursor cursor = null;
-        try {
-            if (tabbleIsExist(tableName)) {
-                cursor = db.rawQuery("SELECT * FROM " + tableName, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    do {
-                        StocksBean stocksBean = new StocksBean();
-                        Double PER_AMOUNT = cursor.getDouble(cursor.getColumnIndex("PER_AMOUNT"));
-                        String TIME = cursor.getString(cursor.getColumnIndex("TIME"));
-                        Double CURRENT = cursor.getDouble(cursor.getColumnIndex("CURRENT"));
-                        Double OPEN = cursor.getDouble(cursor.getColumnIndex("OPEN"));
-                        String HIGHTEST = cursor.getString(cursor.getColumnIndex("HIGHTEST"));
-                        String LOWEST = cursor.getString(cursor.getColumnIndex("LOWEST"));
-                        Double PER_STOCKS = cursor.getDouble(cursor.getColumnIndex("PER_STOCKS"));
-                        String BUY1 = cursor.getString(cursor.getColumnIndex("BUY1"));
-                        Double PER_PRICE = cursor.getDouble(cursor.getColumnIndex("PER_PRICE"));
-                        stocksBean.setBuy1(BUY1);
-                        stocksBean.setPerStocks(PER_STOCKS);
-                        stocksBean.setCurrent(CURRENT);
-                        stocksBean.setOpen(OPEN);
-                        stocksBean.setHightest(HIGHTEST);
-                        stocksBean.setLowest(LOWEST);
-                        stocksBean.setPerAmount(PER_AMOUNT);
-                        stocksBean.setPerPrice(PER_PRICE);
-                        stocksBean.setTime(TIME);
-                        list.add(stocksBean);
-                    } while (cursor.moveToNext());
-                }
-
-            }
-        } catch (Exception e) {
-
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return list;
-    }
 
 
     /**

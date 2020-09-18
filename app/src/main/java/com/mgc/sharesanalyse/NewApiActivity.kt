@@ -36,7 +36,7 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnRequestDealDetail.setOnClickListener {
-            viewModel.getDealDetail("601216", "2020-09-11")
+            viewModel.getDealDetail("601216", DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD))
         }
         btnRequestPricehis.setOnClickListener {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")

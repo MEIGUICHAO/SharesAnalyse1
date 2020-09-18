@@ -5,15 +5,11 @@ import android.text.TextUtils;
 
 import com.mgc.sharesanalyse.BuildConfig;
 import com.mgc.sharesanalyse.base.Datas;
-import com.mgc.sharesanalyse.entity.AnalysePerAmountBeanDao;
-import com.mgc.sharesanalyse.entity.AnalysePerPricesBeanDao;
-import com.mgc.sharesanalyse.entity.AnalysePerStocksBeanDao;
-import com.mgc.sharesanalyse.entity.AnalyseSizeBeanDao;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
-import com.mgc.sharesanalyse.entity.Month8DataDao;
-import com.mgc.sharesanalyse.entity.StocksBeanDao;
-import com.mgc.sharesanalyse.entity.StocksJsonBeanDao;
+import com.mgc.sharesanalyse.entity.DealDetailBeanDao;
+import com.mgc.sharesanalyse.entity.PriceHisRecordGDBeanDao;
+import com.mgc.sharesanalyse.entity.PricesHisGDBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -82,8 +78,7 @@ public class DaoManager {
      */
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, getDbName(), null, Month8DataDao.class, StocksBeanDao.class, AnalyseSizeBeanDao.class, AnalysePerPricesBeanDao.class,
-                    AnalysePerStocksBeanDao.class, AnalysePerAmountBeanDao.class, StocksJsonBeanDao.class);
+            sHelper = new CommonOpenHelper(context, getDbName(), null, DealDetailBeanDao.class, PricesHisGDBeanDao.class, PriceHisRecordGDBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;

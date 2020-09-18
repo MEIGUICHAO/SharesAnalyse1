@@ -45,6 +45,14 @@ object DateUtils {
         return simpleDateFormat.format(date)
     }
 
+
+    @SuppressLint("SimpleDateFormat")
+    fun formatYesterDay(formatter: FormatterEnum): String {
+        val simpleDateFormat = SimpleDateFormat(formatter.format)
+        val date = Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000)
+        return simpleDateFormat.format(date)
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun isWeekDay(timestamp: Long):Pair<Boolean,String> {
         val simpleDateFormat = SimpleDateFormat(FormatterEnum.YYYY_MM_DD.format)

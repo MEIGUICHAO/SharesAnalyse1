@@ -23,26 +23,35 @@ class NewApiViewModel : BaseViewModel() {
     var pathDate = ""
 
     fun getDealDetail(code: String, date: String) {
-        var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
-        launch({
-            var json = result.await()
-            var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
-            var dealDetailBean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
-            if (null == dealDetailBean) {
-                dealDetailBean = DealDetailBean()
-            }
-            dealDetailBean.id = code.toLong()
-            dealDetailBean.code = code
-            dealDetailBean.size = sinaDealList.size
-            dealDetailBean.date = date
-            val wholeJson15List = ArrayList<String>()
-            wholeJson15List.add(json)
-            dealDetailBean.wholeJson15 = GsonHelper.toJson(wholeJson15List)
-            dealDetailBean = classifyDealDetail(dealDetailBean,sinaDealList)
-            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(dealDetailBean,code.toLong())
+        var dealDetailBean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+        if (null == dealDetailBean || dealDetailBean.date != DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)) {
+            var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
+            launch({
+                var json = result.await()
+                var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
+                if (null == dealDetailBean) {
+                    dealDetailBean = DealDetailBean()
+                }
+                dealDetailBean.id = code.toLong()
+                dealDetailBean.code = code
+                dealDetailBean.size = sinaDealList.size
+                dealDetailBean.date = date
+                dealDetailBean = classifyDealDetail(dealDetailBean, sinaDealList)
 
-            loadState.value = LoadState.Success(REQUEST_DealDETAIL, json)
-        })
+                val wholeJson15List = ArrayList<String>()
+                wholeJson15List.add(dealDetailBean.amoutSizeJson)
+                dealDetailBean.amoutSizeJson = ""
+                dealDetailBean.wholeJson15 = GsonHelper.toJson(wholeJson15List)
+
+                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
+                    dealDetailBean,
+                    code.toLong()
+                )
+
+                loadState.value = LoadState.Success(REQUEST_DealDETAIL, json)
+            })
+        }
+
 
     }
 

@@ -3,13 +3,8 @@ package com.mgc.sharesanalyse.utils;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import androidx.room.Dao;
-
 import com.mgc.sharesanalyse.entity.DaoMaster;
-import com.mgc.sharesanalyse.entity.Month8Data;
-import com.mgc.sharesanalyse.entity.Month8DataDao;
 
-import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.database.Database;
 
 public class CommonOpenHelper extends DaoMaster.DevOpenHelper {
