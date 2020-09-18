@@ -16,6 +16,11 @@ import kotlin.collections.ArrayList
 class NewApiViewModel : BaseViewModel() {
 
     val debug = false
+    var needGoOn = false
+    var dealDetailIndex = 1
+    val dayMillis = 24 * 60 * 60 * 1000
+
+    val DealDetailDays = 4//需要减1
 
     var parentBasePath =
         DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM) + "/newapi/"
@@ -23,39 +28,108 @@ class NewApiViewModel : BaseViewModel() {
     var pathDate = ""
 
     fun getDealDetail(code: String, date: String) {
-        var dealDetailBean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+        dealDetailIndex = 1
+        val dealDetailBean: DealDetailBean? =
+            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
         if (null == dealDetailBean || dealDetailBean.date != DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)) {
-            var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
-            launch({
-                var json = result.await()
-                var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
-                if (null == dealDetailBean) {
-                    dealDetailBean = DealDetailBean()
-                }
-                dealDetailBean.id = code.toLong()
-                dealDetailBean.code = code
-                dealDetailBean.size = sinaDealList.size
-                dealDetailBean.date = date
-                dealDetailBean = classifyDealDetail(dealDetailBean, sinaDealList)
+            needGoOn = null == dealDetailBean
+            requestDealDetail(code, date, dealDetailBean)
 
-                val wholeJson15List = ArrayList<String>()
-                wholeJson15List.add(dealDetailBean.amoutSizeJson)
-                dealDetailBean.amoutSizeJson = ""
-                dealDetailBean.wholeJson15 = GsonHelper.toJson(wholeJson15List)
-
-                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
-                    dealDetailBean,
-                    code.toLong()
-                )
-
-                loadState.value = LoadState.Success(REQUEST_DealDETAIL, json)
-            })
         }
 
 
     }
 
-    private fun classifyDealDetail(dealDetailBean:DealDetailBean,sinaDealList: java.util.ArrayList<SinaDealDatailBean>):DealDetailBean {
+    private fun requestDealDetail(
+        code: String,
+        date: String,
+        dealDetailBean: DealDetailBean?
+    ) {
+        LogUtil.d("requestDealDetail")
+        var dealDetailBean1 = dealDetailBean
+        var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
+        launch({
+            var json = result.await()
+            var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
+            if (null == dealDetailBean1) {
+                dealDetailBean1 = DealDetailBean()
+                dealDetailBean1!!.id = code.toLong()
+                dealDetailBean1!!.code = code
+            }
+            LogUtil.d("requestDealDetail")
+            if (dealDetailIndex == 1) {
+                dealDetailBean1!!.size = sinaDealList.size
+                dealDetailBean1!!.date = date
+            }
+            LogUtil.d("requestDealDetail")
+
+            dealDetailBean1 = classifyDealDetail(date,dealDetailBean1!!, sinaDealList)
+            val wholeJson15List:ArrayList<String>
+            LogUtil.d("requestDealDetail")
+            if (null != dealDetailBean && !dealDetailBean.wholeJson15.isEmpty()) {
+                LogUtil.d("requestDealDetail amoutSizeJson:\n ${dealDetailBean.wholeJson15}")
+                wholeJson15List =
+                    GsonHelper.parseArray(dealDetailBean.wholeJson15, String::class.java)
+            } else {
+                LogUtil.d("requestDealDetail")
+                wholeJson15List = ArrayList()
+            }
+            LogUtil.d("requestDealDetail")
+            if (!needGoOn) {
+                wholeJson15List.removeAt(wholeJson15List.size-1)
+            }
+            LogUtil.d("requestDealDetail")
+            if (!needGoOn) {
+                wholeJson15List.add(0, dealDetailBean1!!.amoutSizeJson)
+            } else {
+                wholeJson15List.add( dealDetailBean1!!.amoutSizeJson)
+            }
+            LogUtil.d("requestDealDetail")
+            dealDetailBean1!!.amoutSizeJson = ""
+            dealDetailBean1!!.wholeJson15 = GsonHelper.toJson(wholeJson15List)
+
+            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
+                dealDetailBean1,
+                code.toLong()
+            )
+
+            LogUtil.d("requestDealDetailNext")
+            requestDealDetailNext(code)
+            if (!needGoOn) {
+                LogUtil.d("requestDealDetail")
+                loadState.value = LoadState.Success(REQUEST_DealDETAIL, json)
+            }
+
+        })
+    }
+
+    private fun requestDealDetailNext(code: String) {
+
+        val pair = judeWeekDay()
+        if (needGoOn) {
+            if (pair.first) {
+                var dealDetailBean: DealDetailBean =
+                    DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+                requestDealDetail(code, pair.second, dealDetailBean)
+            } else {
+                requestDealDetailNext(code)
+                LogUtil.d("requestDealDetailNext")
+            }
+        }
+    }
+
+    private fun judeWeekDay(): Pair<Boolean, String> {
+        dealDetailIndex++
+        if (dealDetailIndex > DealDetailDays) {
+            needGoOn = false
+        }
+        val dateMillis = System.currentTimeMillis() - dealDetailIndex * dayMillis
+        val pair = DateUtils.isWeekDay(dateMillis)
+        return pair
+    }
+
+    private fun classifyDealDetail(date: String,dealDetailBean:DealDetailBean,sinaDealList: java.util.ArrayList<SinaDealDatailBean>):DealDetailBean {
+        LogUtil.d("classifyDealDetail")
         dealDetailBean.percent = sinaDealList[0].price.toDouble().getPercent(sinaDealList[sinaDealList.size-1].price.toDouble())
         val  dealDetailAmountSizeBean = DealDetailAmountSizeBean()
         dealDetailAmountSizeBean.m100List = ArrayList()
@@ -66,33 +140,34 @@ class NewApiViewModel : BaseViewModel() {
         dealDetailAmountSizeBean.m1List = ArrayList()
         dealDetailAmountSizeBean.m05List = ArrayList()
         dealDetailAmountSizeBean.m01List = ArrayList()
+        LogUtil.d("classifyDealDetail")
         sinaDealList.forEach {
             if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3) >= 100 * 1000000) {
                 val m100 = M100()
                 dealDetailAmountSizeBean.m100Size = dealDetailAmountSizeBean.m100Size + 1
                 m100.amount = it.price.toDouble() * it.volume.toDouble()
-                m100.time = it.ticktime
+                m100.time = date + it.ticktime
                 m100.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m100List.add(m100)
             } else if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3)>= 50 * 1000000) {
                 val m50 = DealDetailAmountSizeBean.M50()
                 dealDetailAmountSizeBean.m50Size = dealDetailAmountSizeBean.m50Size + 1
                 m50.amount = it.price.toDouble() * it.volume.toDouble()
-                m50.time = it.ticktime
+                m50.time = date + it.ticktime
                 m50.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m50List.add(m50)
             } else if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3)>= 30 * 1000000) {
                 val m30 = DealDetailAmountSizeBean.M30()
                 dealDetailAmountSizeBean.m30Size = dealDetailAmountSizeBean.m30Size + 1
                 m30.amount = it.price.toDouble() * it.volume.toDouble()
-                m30.time = it.ticktime
+                m30.time = date + it.ticktime
                 m30.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m30List.add(m30)
             } else if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3)>= 10 * 1000000) {
                 val m10 = DealDetailAmountSizeBean.M10()
                 dealDetailAmountSizeBean.m10Size = dealDetailAmountSizeBean.m10Size + 1
                 m10.amount = it.price.toDouble() * it.volume.toDouble()
-                m10.time = it.ticktime
+                m10.time = date + it.ticktime
                 m10.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m10List.add(m10)
 
@@ -100,21 +175,21 @@ class NewApiViewModel : BaseViewModel() {
                 val m5 = DealDetailAmountSizeBean.M5()
                 dealDetailAmountSizeBean.m5Size = dealDetailAmountSizeBean.m5Size + 1
                 m5.amount = it.price.toDouble() * it.volume.toDouble()
-                m5.time = it.ticktime
+                m5.time = date + it.ticktime
                 m5.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m5List.add(m5)
             } else if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3)>= 1 * 1000000) {
                 val m1 = DealDetailAmountSizeBean.M1()
                 dealDetailAmountSizeBean.m1Size = dealDetailAmountSizeBean.m1Size + 1
                 m1.amount = it.price.toDouble() * it.volume.toDouble()
-                m1.time = it.ticktime
+                m1.time = date + it.ticktime
                 m1.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m1List.add(m1)
             } else if (BigDecimalUtils.mul(it.price.toDouble(),it.volume.toDouble(),3)>= 0.5 * 1000000) {
                 val m05 = DealDetailAmountSizeBean.M05()
                 dealDetailAmountSizeBean.m05Size = dealDetailAmountSizeBean.m05Size + 1
                 m05.amount = it.price.toDouble() * it.volume.toDouble()
-                m05.time = it.ticktime
+                m05.time = date + it.ticktime
                 m05.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m05List.add(m05)
 
@@ -122,15 +197,16 @@ class NewApiViewModel : BaseViewModel() {
                 val m01 = DealDetailAmountSizeBean.M01()
                 dealDetailAmountSizeBean.m01Size = dealDetailAmountSizeBean.m01Size + 1
                 m01.amount = it.price.toDouble() * it.volume.toDouble()
-                m01.time = it.ticktime
+                m01.time = date + it.ticktime
                 m01.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m01List.add(m01)
             }
 
 
         }
+        LogUtil.d("classifyDealDetail")
         dealDetailBean.amoutSizeJson = GsonHelper.toJson(dealDetailAmountSizeBean)
-
+        LogUtil.d("classifyDealDetail")
         return dealDetailBean
     }
 
