@@ -1,5 +1,8 @@
 package com.mgc.sharesanalyse.viewmodel
 
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
@@ -29,6 +32,16 @@ class NewApiViewModel : BaseViewModel() {
 
     var pathDate = ""
 
+    private val mHandler: Handler =
+        object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                when (msg.what) {
+
+                }
+            }
+        }
+
     fun getDealDetail(code: String, date: String) {
         LogUtil.d("getDealDetail")
         dealDetailIndex = 1
@@ -38,7 +51,7 @@ class NewApiViewModel : BaseViewModel() {
             dealDetailBean =
                 DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
         } catch (e: Exception) {
-            LogUtil.d("getDealDetail Exception:${e.toString()}")
+            LogUtil.d("getDealDetail Exception:${e}---code:$code")
 
         }
         LogUtil.d("getDealDetail")
@@ -109,12 +122,15 @@ class NewApiViewModel : BaseViewModel() {
             dealDetailBean1!!.wholeJson15 = GsonHelper.toJson(wholeJson15List)
 
 
-            var success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
-                dealDetailBean1,
-                code.toLong()
-            )
-
-            LogUtil.d("requestDealDetailNext success:$success")
+            try {
+                var success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
+                    dealDetailBean1,
+                    code.toLong()
+                )
+                LogUtil.d("requestDealDetailNext success:$success")
+            } catch (e: Exception) {
+                LogUtil.d("requestDealDetail Exception:${e}---code:$code")
+            }
             requestDealDetailNext(code)
             if (!needGoOn) {
                 LogUtil.d("requestDealDetail")
@@ -456,7 +472,9 @@ class NewApiViewModel : BaseViewModel() {
         pathDate = formatToDay
     }
 
+    val detailCodeList = ArrayList<String>()
     fun getPriceHisFileLog() {
+        detailCodeList.clear()
         var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
         LogUtil.d("getPriceHisFileLog list size:${list.size}")
         Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
@@ -466,14 +484,15 @@ class NewApiViewModel : BaseViewModel() {
         })
         var txtname: String
         list.forEach {
-            if (it.id > 600000) {
-                txtname = "sh_"
-            } else if (it.id > 300000) {
-                txtname = "cy_"
-            } else {
-                txtname = "sz_"
-            }
-            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
+            detailCodeList.add(it.code)
+//            if (it.id > 600000) {
+//                txtname = "sh_"
+//            } else if (it.id > 300000) {
+//                txtname = "cy_"
+//            } else {
+//                txtname = "sz_"
+//            }
+//            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
         }
 
     }
