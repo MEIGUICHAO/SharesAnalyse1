@@ -1,11 +1,9 @@
 package com.mgc.sharesanalyse
 
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
@@ -13,20 +11,15 @@ import com.mgc.sharesanalyse.entity.SinaDealDatailBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_new_api.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import java.nio.charset.Charset
-import java.util.concurrent.TimeUnit
 
 class NewApiActivity : AppCompatActivity() {
 
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
+    var dealDetailBeginDate = "2020-09-18"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +29,7 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnRequestDealDetail.setOnClickListener {
-            progressIndex = 0
-            var code = viewModel.stocksNameArray[progressIndex].split("####")[0]
-            viewModel.getDealDetail(code, DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD))
+            requestDealDetailBtn()
         }
         btnRequestPricehis.setOnClickListener {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
@@ -54,6 +45,12 @@ class NewApiActivity : AppCompatActivity() {
         }
     }
 
+    fun requestDealDetailBtn() {
+        progressIndex = 0
+        var code = viewModel.detailCodeList[progressIndex]
+        viewModel.getDealDetail(code, dealDetailBeginDate)
+    }
+
     private fun getHisHq() {
         var code = viewModel.stocksNameArray[progressIndex].split("####")[0].replace("sz", "")
             .replace("sh", "")
@@ -62,6 +59,7 @@ class NewApiActivity : AppCompatActivity() {
 
 
     private fun viewModelObserve() {
+        viewModel.setActivity(this)
         viewModel.loadState.observe(this, Observer {
             when (it) {
                 is LoadState.Success -> {
@@ -133,12 +131,12 @@ class NewApiActivity : AppCompatActivity() {
                             LogUtil.d("progressIndex:$progressIndex")
 //                            if (progressIndex < 2) {
                             if (progressIndex < viewModel.stocksArray.size) {
-                                var code = viewModel.stocksNameArray[progressIndex].split("####")[0]
+                                var code = viewModel.detailCodeList[progressIndex]
                                 viewModel.getDealDetail(
                                     code,
-                                    DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
-                                )
+                                    dealDetailBeginDate)
                             } else {
+                                viewModel!!.logDealDetailHqSum()
 
                             }
                         }

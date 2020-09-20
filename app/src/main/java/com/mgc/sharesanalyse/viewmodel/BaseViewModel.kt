@@ -2,9 +2,11 @@ package com.mgc.sharesanalyse.viewmodel
 
 import android.util.Log
 import android.util.SparseArray
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.R
 import com.mgc.sharesanalyse.entity.BWCDPJsonBean
 import com.mgc.sharesanalyse.entity.BWCQPResultBean
@@ -29,6 +31,7 @@ open class BaseViewModel:ViewModel() {
     val REQUEST_DealDETAIL = 2
     val REQUEST_PRICESHIS = 3
     val REQUEST_HIS_HQ = 4
+    var mActivity:AppCompatActivity? = null
 
     var tag = "sh"
     var path = "sh"
@@ -142,5 +145,9 @@ open class BaseViewModel:ViewModel() {
                 }
         })
 
+    }
+
+    fun setActivity(activity: AppCompatActivity) {
+        mActivity = activity
     }
 }

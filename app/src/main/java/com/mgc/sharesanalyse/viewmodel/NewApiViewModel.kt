@@ -5,12 +5,14 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.toSinaCode
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
+import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.lang.Exception
@@ -21,30 +23,45 @@ class NewApiViewModel : BaseViewModel() {
 
     val debug = false
     var needGoOn = false
-    var dealDetailIndex = 1
+    var dealDetailIndex = 0
     val dayMillis = 24 * 60 * 60 * 1000
 
     val DealDetailDays = 14
     var DealDetailDaysWeekDayIndex = 0
+    var dealDetailBeginDate = ""
 
     var parentBasePath =
         DateUtils.format(System.currentTimeMillis(), FormatterEnum.YYYY_MM) + "/newapi/"
 
     var pathDate = ""
+    var rd:Random? = null
+    val DEAL_DETAIL_NEXT_DATE = 1
+    val DEAL_DETAIL_NEXT_CODE = 2
 
     private val mHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when (msg.what) {
+                    DEAL_DETAIL_NEXT_DATE->{
+                        requestDealDetailNext(msg.obj.toString())
+                        if (!needGoOn) {
+                            LogUtil.d("requestDealDetail")
+                            loadState.value = LoadState.GoNext(REQUEST_DealDETAIL)
+                        }
+                    }
+                    DEAL_DETAIL_NEXT_CODE->{
+                        loadState.value = LoadState.GoNext(REQUEST_DealDETAIL)
+                    }
 
                 }
             }
         }
 
     fun getDealDetail(code: String, date: String) {
+        dealDetailBeginDate = date
         LogUtil.d("getDealDetail")
-        dealDetailIndex = 1
+        dealDetailIndex = 0
         DealDetailDaysWeekDayIndex = 1
         var dealDetailBean: DealDetailBean? = null
         try {
@@ -61,7 +78,10 @@ class NewApiViewModel : BaseViewModel() {
             requestDealDetail(code, date, dealDetailBean)
             LogUtil.d("getDealDetail")
         } else {
-            loadState.value = LoadState.GoNext(REQUEST_DealDETAIL)
+            val message = mHandler.obtainMessage()
+            message.obj = code
+            message.what = DEAL_DETAIL_NEXT_CODE
+            mHandler.sendMessageDelayed(message,getRandomTime(5000).toLong())
         }
 
 
@@ -77,6 +97,10 @@ class NewApiViewModel : BaseViewModel() {
         var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
         launch({
             var json = result.await()
+            if (json == "[]") {
+                handlerDealDetailNextDate(code)
+                return@launch
+            }
             var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
             val isInsert = null == dealDetailBean1
             if (null == dealDetailBean1) {
@@ -85,7 +109,7 @@ class NewApiViewModel : BaseViewModel() {
                 dealDetailBean1!!.code = code
             }
             LogUtil.d("requestDealDetail")
-            if (dealDetailIndex == 1) {
+            if (dealDetailIndex == 0) {
                 dealDetailBean1!!.size = sinaDealList.size
                 dealDetailBean1!!.date = date
             }
@@ -131,13 +155,24 @@ class NewApiViewModel : BaseViewModel() {
             } catch (e: Exception) {
                 LogUtil.d("requestDealDetail Exception:${e}---code:$code")
             }
-            requestDealDetailNext(code)
-            if (!needGoOn) {
-                LogUtil.d("requestDealDetail")
-                loadState.value = LoadState.GoNext(REQUEST_DealDETAIL)
-            }
+            handlerDealDetailNextDate(code)
+
 
         })
+    }
+
+    private fun handlerDealDetailNextDate(code: String) {
+        val message = mHandler.obtainMessage()
+        message.obj = code
+        message.what = DEAL_DETAIL_NEXT_DATE
+        mHandler.sendMessageDelayed(message, getRandomTime(3000).toLong())
+    }
+
+    fun getRandomTime(range:Int):Int {
+        if (null == rd) {
+            rd = Random()
+        }
+        return rd!!.nextInt(range) + 500
     }
 
     private fun requestDealDetailNext(code: String) {
@@ -145,8 +180,15 @@ class NewApiViewModel : BaseViewModel() {
         val pair = judeWeekDay()
         if (needGoOn) {
             if (pair.first) {
-                var dealDetailBean: DealDetailBean =
-                    DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+//                var dealDetailBean: DealDetailBean =DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(DealDetailBeanDao.Properties.Id.eq(code.toLong()))[0]
+                var dealDetailBean: DealDetailBean? = null
+                try {
+                    dealDetailBean =
+                        DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+                } catch (e: Exception) {
+                    dealDetailBean = null
+                    LogUtil.d("requestDealDetailNext:$e")
+                }
                 requestDealDetail(code, pair.second, dealDetailBean)
             } else {
                 requestDealDetailNext(code)
@@ -157,7 +199,7 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun judeWeekDay(): Pair<Boolean, String> {
         dealDetailIndex++
-        val dateMillis = System.currentTimeMillis() - dealDetailIndex * dayMillis
+        val dateMillis = DateUtils.parse(dealDetailBeginDate,FormatterEnum.YYYY_MM_DD) - dealDetailIndex * dayMillis
         val pair = DateUtils.isWeekDay(dateMillis)
         if (pair.first) {
             DealDetailDaysWeekDayIndex = DealDetailDaysWeekDayIndex + 1
@@ -482,7 +524,6 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
-        var txtname: String
         list.forEach {
             detailCodeList.add(it.code)
 //            if (it.id > 600000) {
@@ -494,7 +535,46 @@ class NewApiViewModel : BaseViewModel() {
 //            }
 //            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
         }
+        if (mActivity is NewApiActivity) {
+//            private fun requestDealDetailNext(code: String) {
+//
+//
+//                if (needGoOn) {
+//                    if (pair.first) {
+//                        var dealDetailBean: DealDetailBean =
+//                            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+//                        requestDealDetail(code, pair.second, dealDetailBean)
+//                    } else {
+//                        requestDealDetailNext(code)
+//                        LogUtil.d("requestDealDetailNext")
+//                    }
+//                }
+//            }
+            (mActivity as NewApiActivity).requestDealDetailBtn()
+        }
 
+    }
+
+    fun logDealDetailHqSum() {
+//        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+//        var txtname: String
+//        list.forEach {
+//            if (it.id > 600000) {
+//                txtname = "sh_"
+//            } else if (it.id > 300000) {
+//                txtname = "cy_"
+//            } else {
+//                txtname = "sz_"
+//            }
+//            val dealDetailBean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(it.id)
+//            var list = GsonHelper.parseArray(dealDetailBean.wholeJson15,DealDetailAmountSizeBean::class.java)
+//            var dealDetailStr = ""
+//            list.forEach {
+//                dealDetailStr = it.m05List
+//            }
+//
+//            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
+//        }
     }
 
 
