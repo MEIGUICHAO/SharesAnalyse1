@@ -66,22 +66,32 @@ class NewApiViewModel : BaseViewModel() {
         var dealDetailBean: DealDetailBean? = null
         try {
             dealDetailBean =
-                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
         } catch (e: Exception) {
-            LogUtil.d("getDealDetail Exception:${e}---code:$code")
+            LogUtil.e("getDealDetail","getDealDetail Exception:${e}---code:$code")
 
         }
         LogUtil.d("getDealDetail")
-        if (null == dealDetailBean || dealDetailBean.date != DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)) {
+        needGoOn = null==dealDetailBean
+        if (null == dealDetailBean || dealDetailBean.date != dealDetailBeginDate) {
             LogUtil.d("getDealDetail")
-            needGoOn = null == dealDetailBean
             requestDealDetail(code, date, dealDetailBean)
-            LogUtil.d("getDealDetail")
+            LogUtil.d("getDealDetail needGoOn:$needGoOn")
         } else {
-            val message = mHandler.obtainMessage()
-            message.obj = code
-            message.what = DEAL_DETAIL_NEXT_CODE
-            mHandler.sendMessageDelayed(message,getRandomTime(5000).toLong())
+            var list = GsonHelper.parseArray(dealDetailBean.wholeJson15,DealDetailWholeJsonBean::class.java)
+            LogUtil.d("query dealDetailBean $code size:${list.size}")
+            if (list.size == 14) {
+                val message = mHandler.obtainMessage()
+                message.obj = code
+                message.what = DEAL_DETAIL_NEXT_CODE
+                mHandler.sendMessageDelayed(
+                    message,
+                    if (needGoOn) 0.toLong() else getRandomTime(1500).toLong()
+                )
+            } else {
+                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.delete(dealDetailBean)
+                getDealDetail(code,date)
+            }
         }
 
 
@@ -97,15 +107,11 @@ class NewApiViewModel : BaseViewModel() {
         var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
         launch({
             var json = result.await()
-            if (json == "[]") {
-                handlerDealDetailNextDate(code)
-                return@launch
-            }
+
             var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
             val isInsert = null == dealDetailBean1
             if (null == dealDetailBean1) {
                 dealDetailBean1 = DealDetailBean()
-                dealDetailBean1!!.id = code.toLong()
                 dealDetailBean1!!.code = code
             }
             LogUtil.d("requestDealDetail")
@@ -115,7 +121,9 @@ class NewApiViewModel : BaseViewModel() {
             }
             LogUtil.d("requestDealDetail")
 
-            dealDetailBean1 = classifyDealDetail(dealDetailBean1!!, sinaDealList)
+            if (json != "[]") {
+                dealDetailBean1 = classifyDealDetail(dealDetailBean1!!, sinaDealList)
+            }
             val wholeJson15List:ArrayList<DealDetailWholeJsonBean>
             LogUtil.d("requestDealDetail")
             if (null != dealDetailBean && !dealDetailBean.wholeJson15.isEmpty()) {
@@ -147,13 +155,21 @@ class NewApiViewModel : BaseViewModel() {
 
 
             try {
-                var success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateOrInsertById(
-                    dealDetailBean1,
-                    code.toLong()
-                )
-                LogUtil.d("requestDealDetailNext success:$success")
+                if (isInsert) {
+                    val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insert(
+                        dealDetailBean1
+                    )
+                    LogUtil.d("requestDealDetailNext insert success:$success")
+                } else {
+
+                    val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.update(
+                        dealDetailBean1
+                    )
+                    LogUtil.d("requestDealDetailNext insert success:$success")
+                }
             } catch (e: Exception) {
-                LogUtil.d("requestDealDetail Exception:${e}---code:$code")
+                val bean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
+                LogUtil.e("Exception","requestDealDetail Exception:${e}---id:${dealDetailBean1?.id}---code:$code---isInsert:$isInsert---query:${bean==null}")
             }
             handlerDealDetailNextDate(code)
 
@@ -165,7 +181,7 @@ class NewApiViewModel : BaseViewModel() {
         val message = mHandler.obtainMessage()
         message.obj = code
         message.what = DEAL_DETAIL_NEXT_DATE
-        mHandler.sendMessageDelayed(message, getRandomTime(3000).toLong())
+        mHandler.sendMessageDelayed(message, getRandomTime(1000).toLong())
     }
 
     fun getRandomTime(range:Int):Int {
@@ -184,10 +200,10 @@ class NewApiViewModel : BaseViewModel() {
                 var dealDetailBean: DealDetailBean? = null
                 try {
                     dealDetailBean =
-                        DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+                        DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
                 } catch (e: Exception) {
                     dealDetailBean = null
-                    LogUtil.d("requestDealDetailNext:$e")
+                    LogUtil.e("Exception","requestDealDetailNext:$e")
                 }
                 requestDealDetail(code, pair.second, dealDetailBean)
             } else {
@@ -542,7 +558,7 @@ class NewApiViewModel : BaseViewModel() {
 //                if (needGoOn) {
 //                    if (pair.first) {
 //                        var dealDetailBean: DealDetailBean =
-//                            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(code.toLong())
+//                            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
 //                        requestDealDetail(code, pair.second, dealDetailBean)
 //                    } else {
 //                        requestDealDetailNext(code)

@@ -158,6 +158,21 @@ public class CommonDaoUtils<T> {
         return queryBuilder.where(cond, condMore).list();
     }
 
+    /**
+     * 使用queryBuilder进行查询
+     *
+     * @return
+     */
+    public T queryByCode(WhereCondition cond, WhereCondition... condMore) {
+        QueryBuilder<T> queryBuilder = daoSession.queryBuilder(entityClass);
+        List<T> list = queryBuilder.where(cond, condMore).list();
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
 
 
     public static void dropTable(Database db, String tableName) {

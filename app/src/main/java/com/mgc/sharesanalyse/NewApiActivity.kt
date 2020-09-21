@@ -35,10 +35,12 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-            progressIndex = 0
-            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
-            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-            getHisHq()
+//            progressIndex = 0
+//            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
+//            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
+//            getHisHq()
+            
+            viewModel.getPriceHisFileLog()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()
@@ -130,13 +132,13 @@ class NewApiActivity : AppCompatActivity() {
                             progressIndex++
                             LogUtil.d("progressIndex:$progressIndex")
 //                            if (progressIndex < 2) {
-                            if (progressIndex < viewModel.stocksArray.size) {
+                            if (progressIndex < viewModel.detailCodeList.size) {
                                 var code = viewModel.detailCodeList[progressIndex]
                                 viewModel.getDealDetail(
                                     code,
                                     dealDetailBeginDate)
                             } else {
-                                viewModel!!.logDealDetailHqSum()
+                                viewModel.logDealDetailHqSum()
 
                             }
                         }

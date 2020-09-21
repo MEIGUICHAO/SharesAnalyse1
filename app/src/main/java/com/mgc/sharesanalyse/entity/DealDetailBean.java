@@ -7,8 +7,23 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class DealDetailBean {
     
-    @Id
-    private long id;
+    @Id(autoincrement = true)
+    private Long id;
+
+    @Override
+    public String toString() {
+        return "DealDetailBean{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", size=" + size +
+                ", percent=" + percent +
+                ", date='" + date + '\'' +
+                ", wholeJson15='" + wholeJson15 + '\'' +
+                ", amoutSizeJson='" + amoutSizeJson + '\'' +
+                ", halfHourSize='" + halfHourSize + '\'' +
+                '}';
+    }
+
     private String code;
     private int size;
     private double percent;
@@ -16,8 +31,9 @@ public class DealDetailBean {
     private String wholeJson15;//date、json,size15
     private String amoutSizeJson;//m100,m50,m30,m10,m5,m1,m05,m01-->(time、amount),size
     private String halfHourSize;//half1--half8
-    @Generated(hash = 1204947815)
-    public DealDetailBean(long id, String code, int size, double percent, String date,
+
+    @Generated(hash = 939049040)
+    public DealDetailBean(Long id, String code, int size, double percent, String date,
             String wholeJson15, String amoutSizeJson, String halfHourSize) {
         this.id = id;
         this.code = code;
@@ -31,11 +47,8 @@ public class DealDetailBean {
     @Generated(hash = 337904532)
     public DealDetailBean() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
-    }
-    public void setId(long id) {
-        this.id = id;
     }
     public String getCode() {
         return this.code;
@@ -78,5 +91,8 @@ public class DealDetailBean {
     }
     public void setHalfHourSize(String halfHourSize) {
         this.halfHourSize = halfHourSize;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 }
