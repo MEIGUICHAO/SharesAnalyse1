@@ -12,7 +12,6 @@ import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
-import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.lang.Exception
@@ -72,29 +71,8 @@ class NewApiViewModel : BaseViewModel() {
 
         }
         LogUtil.d("getDealDetail")
-        needGoOn = null==dealDetailBean
-        if (null == dealDetailBean || dealDetailBean.date != dealDetailBeginDate) {
-            LogUtil.d("getDealDetail")
-            requestDealDetail(code, date, dealDetailBean)
-            LogUtil.d("getDealDetail needGoOn:$needGoOn")
-        } else {
-            var list = GsonHelper.parseArray(dealDetailBean.wholeJson15,DealDetailWholeJsonBean::class.java)
-            LogUtil.d("query dealDetailBean $code size:${list.size}")
-            if (list.size == 14) {
-                val message = mHandler.obtainMessage()
-                message.obj = code
-                message.what = DEAL_DETAIL_NEXT_CODE
-                mHandler.sendMessageDelayed(
-                    message,
-                    if (needGoOn) 0.toLong() else getRandomTime(1500).toLong()
-                )
-            } else {
-                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.delete(dealDetailBean)
-                getDealDetail(code,date)
-            }
-        }
-
-
+        needGoOn = true
+        requestDealDetail(code, date, dealDetailBean)
     }
 
     private fun requestDealDetail(
@@ -103,85 +81,133 @@ class NewApiViewModel : BaseViewModel() {
         dealDetailBean: DealDetailBean?
     ) {
         LogUtil.d("requestDealDetail")
-        var dealDetailBean1 = dealDetailBean
+        var list = GsonHelper.parseArray(dealDetailBean?.wholeJson15,DealDetailWholeJsonBean::class.java)
+        var needNetRequest = null == dealDetailBean
+        if (!needNetRequest) {
+            needNetRequest = true
+            list.forEach {
+                if (it.date == date) {
+                    needNetRequest = false
+                }
+            }
+
+        }
+        if (needNetRequest) {
+            launchNetDealDetail(dealDetailBean, code, date)
+        } else {
+            LogUtil.d("skip needNetRequest!!!:$needNetRequest code:$code---date:$date")
+            val message = mHandler.obtainMessage()
+            message.obj = code
+            message.what = DEAL_DETAIL_NEXT_DATE
+            mHandler.sendMessageDelayed(message,0)
+        }
+    }
+
+    private fun launchNetDealDetail(
+        dealDetailBean: DealDetailBean?,
+        code: String,
+        date: String
+    ) {
         var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
         launch({
             var json = result.await()
-
-            var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
-            val isInsert = null == dealDetailBean1
-            if (null == dealDetailBean1) {
-                dealDetailBean1 = DealDetailBean()
-                dealDetailBean1!!.code = code
-            }
-            LogUtil.d("requestDealDetail")
-            if (dealDetailIndex == 0) {
-                dealDetailBean1!!.size = sinaDealList.size
-                dealDetailBean1!!.date = date
-            }
-            LogUtil.d("requestDealDetail")
-
-            if (json != "[]") {
-                dealDetailBean1 = classifyDealDetail(dealDetailBean1!!, sinaDealList)
-            }
-            val wholeJson15List:ArrayList<DealDetailWholeJsonBean>
-            LogUtil.d("requestDealDetail")
-            if (null != dealDetailBean && !dealDetailBean.wholeJson15.isEmpty()) {
-                LogUtil.d("requestDealDetail amoutSizeJson:\n ${dealDetailBean.wholeJson15}")
-                wholeJson15List =
-                    GsonHelper.parseArray(dealDetailBean.wholeJson15, DealDetailWholeJsonBean::class.java)
-            } else {
-                LogUtil.d("requestDealDetail")
-                wholeJson15List = ArrayList()
-            }
-            LogUtil.d("requestDealDetail")
-            if (!needGoOn) {
-                wholeJson15List.removeAt(wholeJson15List.size-1)
-            }
-            LogUtil.d("requestDealDetail")
-            val bean = DealDetailWholeJsonBean()
-            bean.percent = sinaDealList[0].price.toDouble().getPercent(sinaDealList[sinaDealList.size-1].price.toDouble())
-            bean.allSize = sinaDealList.size
-            bean.date = date
-            bean.json = dealDetailBean1!!.amoutSizeJson
-            if (!needGoOn) {
-                wholeJson15List.add(0, bean)
-            } else {
-                wholeJson15List.add(bean)
-            }
-            LogUtil.d("requestDealDetail")
-            dealDetailBean1!!.amoutSizeJson = ""
-            dealDetailBean1!!.wholeJson15 = GsonHelper.toJson(wholeJson15List)
-
-
-            try {
-                if (isInsert) {
-                    val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insert(
-                        dealDetailBean1
-                    )
-                    LogUtil.d("requestDealDetailNext insert success:$success")
-                } else {
-
-                    val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.update(
-                        dealDetailBean1
-                    )
-                    LogUtil.d("requestDealDetailNext insert success:$success")
-                }
-            } catch (e: Exception) {
-                val bean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
-                LogUtil.e("Exception","requestDealDetail Exception:${e}---id:${dealDetailBean1?.id}---code:$code---isInsert:$isInsert---query:${bean==null}")
-            }
-            handlerDealDetailNextDate(code)
-
+            analyseDealDetailJson(json, code, date, dealDetailBean)
 
         })
+    }
+
+    private fun analyseDealDetailJson(
+        json: String,
+        code: String,
+        date: String,
+        dealDetailBean: DealDetailBean?
+    ) {
+        var dealDetailBean11 = dealDetailBean
+        var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
+        val isInsert = null == dealDetailBean11
+        if (null == dealDetailBean11) {
+            dealDetailBean11 = DealDetailBean()
+            dealDetailBean11.code = code
+        }
+        LogUtil.d("requestDealDetail")
+        if (dealDetailIndex == 0) {
+            dealDetailBean11.size = sinaDealList.size
+            dealDetailBean11.date = date
+        }
+        LogUtil.d("requestDealDetail")
+
+        if (json != "[]") {
+            dealDetailBean11 = classifyDealDetail(dealDetailBean11!!, sinaDealList)
+        }
+        val wholeJson15List: ArrayList<DealDetailWholeJsonBean>
+        LogUtil.d("requestDealDetail")
+        if (null != dealDetailBean && !dealDetailBean.wholeJson15.isEmpty()) {
+            LogUtil.d("requestDealDetail amoutSizeJson:\n ${dealDetailBean.wholeJson15}")
+            wholeJson15List =
+                GsonHelper.parseArray(
+                    dealDetailBean.wholeJson15,
+                    DealDetailWholeJsonBean::class.java
+                )
+        } else {
+            LogUtil.d("requestDealDetail")
+            wholeJson15List = ArrayList()
+        }
+        LogUtil.d("requestDealDetail")
+
+        LogUtil.d("requestDealDetail")
+        val bean = DealDetailWholeJsonBean()
+        if (sinaDealList.size > 0) {
+            bean.percent = sinaDealList[0].price.toDouble()
+                .getPercent(sinaDealList[sinaDealList.size - 1].price.toDouble())
+            bean.allSize = sinaDealList.size
+        }
+        bean.date = date
+        bean.json = dealDetailBean11.amoutSizeJson
+        wholeJson15List.add(bean)
+
+        Collections.sort(wholeJson15List, object : Comparator<DealDetailWholeJsonBean> {
+            override fun compare(p0: DealDetailWholeJsonBean, p1: DealDetailWholeJsonBean): Int {
+                return p1.date.toTimeStampYMD().compareTo(p0.date.toTimeStampYMD())
+            }
+        })
+        if (wholeJson15List.size > 30) {
+            wholeJson15List.removeAt(wholeJson15List.size - 1)
+        }
+        LogUtil.d("requestDealDetail")
+        dealDetailBean11.amoutSizeJson = ""
+        dealDetailBean11.wholeJson15 = GsonHelper.toJson(wholeJson15List)
+
+
+        try {
+            if (isInsert) {
+                val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insert(
+                    dealDetailBean11
+                )
+                LogUtil.d("requestDealDetailNext insert success:$success")
+            } else {
+
+                val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.update(
+                    dealDetailBean11
+                )
+                LogUtil.d("requestDealDetailNext insert success:$success")
+            }
+        } catch (e: Exception) {
+            val bean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(
+                DealDetailBeanDao.Properties.Code.eq(code)
+            )
+            LogUtil.e(
+                "Exception",
+                "requestDealDetail Exception:${e}---id:${dealDetailBean11?.id}---code:$code---isInsert:$isInsert---query:${bean == null}"
+            )
+        }
+        handlerDealDetailNextDate(code)
     }
 
     private fun handlerDealDetailNextDate(code: String) {
         val message = mHandler.obtainMessage()
         message.obj = code
         message.what = DEAL_DETAIL_NEXT_DATE
-        mHandler.sendMessageDelayed(message, getRandomTime(1000).toLong())
+        mHandler.sendMessageDelayed(message, getRandomTime(700).toLong())
     }
 
     fun getRandomTime(range:Int):Int {

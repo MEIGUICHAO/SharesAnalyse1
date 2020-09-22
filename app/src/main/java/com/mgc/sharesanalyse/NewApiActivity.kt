@@ -19,7 +19,7 @@ class NewApiActivity : AppCompatActivity() {
 
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
-    var dealDetailBeginDate = "2020-09-18"
+    var dealDetailBeginDate = "2020-09-21"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
