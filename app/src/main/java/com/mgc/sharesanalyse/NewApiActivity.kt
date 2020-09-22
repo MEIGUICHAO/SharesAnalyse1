@@ -19,7 +19,11 @@ class NewApiActivity : AppCompatActivity() {
 
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
-    var dealDetailBeginDate = "2020-09-21"
+    var judeWeekDayIndex = 0
+    var yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
+    var dealDetailBeginDate = DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,22 +39,31 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
+            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
+            judeWeekDayIndex = 0
 //            progressIndex = 0
 //            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
 //            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
 //            getHisHq()
-            
             viewModel.getPriceHisFileLog()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()
         }
+
     }
 
     fun requestDealDetailBtn() {
-        progressIndex = 0
-        var code = viewModel.detailCodeList[progressIndex]
-        viewModel.getDealDetail(code, dealDetailBeginDate)
+        var pair = DateUtils.isWeekDay(yesterDayDateTimeStamp)
+        if (pair.first) {
+            progressIndex = 0
+            var code = viewModel.detailCodeList[progressIndex]
+            viewModel.getDealDetail(code, dealDetailBeginDate)
+        } else {
+            judeWeekDayIndex++
+            yesterDayDateTimeStamp = yesterDayDateTimeStamp - judeWeekDayIndex * 24 * 60 * 60 * 1000
+            requestDealDetailBtn()
+        }
     }
 
     private fun getHisHq() {

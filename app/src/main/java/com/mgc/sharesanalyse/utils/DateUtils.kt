@@ -22,6 +22,8 @@ enum class FormatterEnum(val format: String) {
 
 object DateUtils {
     val calendar = Calendar.getInstance()
+    val holiday = arrayListOf("2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06"
+        ,"2020-10-07","2020-10-08")
 
     @SuppressLint("SimpleDateFormat")
     fun parse(dateStr: String, formatter: FormatterEnum): Long {
@@ -53,13 +55,27 @@ object DateUtils {
         return simpleDateFormat.format(date)
     }
 
+
+    @SuppressLint("SimpleDateFormat")
+    fun formatYesterDayTimeStamp(formatter: FormatterEnum): Long {
+        val simpleDateFormat = SimpleDateFormat(formatter.format)
+        val date = Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000)
+        return date.time
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun isWeekDay(timestamp: Long):Pair<Boolean,String> {
         val simpleDateFormat = SimpleDateFormat(FormatterEnum.YYYY_MM_DD.format)
         val date = format(timestamp,FormatterEnum.YYYY_MM_DD)
         calendar.time = simpleDateFormat.parse(date)
         if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-            return Pair(true, date)
+            var isWorkDay = true
+            holiday.forEach {
+                if (date == it) {
+                    isWorkDay = false
+                }
+            }
+            return Pair(isWorkDay, date)
         } else {
             return Pair(false, date)
         }

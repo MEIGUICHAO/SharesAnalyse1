@@ -12,9 +12,9 @@ import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
 import org.jsoup.Jsoup
-import java.lang.Exception
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,8 +34,14 @@ class NewApiViewModel : BaseViewModel() {
 
     var pathDate = ""
     var rd:Random? = null
+
+    var curCode = 1
+    var curDate = 1
+    var curDateStr = "1"
+
     val DEAL_DETAIL_NEXT_DATE = 1
     val DEAL_DETAIL_NEXT_CODE = 2
+    val CHECK_DEAL_DETAIL = 3
 
     private val mHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
@@ -52,6 +58,20 @@ class NewApiViewModel : BaseViewModel() {
                     DEAL_DETAIL_NEXT_CODE->{
                         loadState.value = LoadState.GoNext(REQUEST_DealDETAIL)
                     }
+                    CHECK_DEAL_DETAIL->{
+                        if (msg.arg1 == curCode && msg.arg2 == curDate) {
+                            val code = if (curCode < 300000) {
+                                 DecimalFormat("000000").format(curCode)
+                            } else curCode.toString()
+
+                            launchNetDealDetail(
+                                msg.obj as DealDetailBean?,
+                                code,
+                                curDateStr
+                            )
+                        }
+
+                    }
 
                 }
             }
@@ -59,13 +79,13 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getDealDetail(code: String, date: String) {
         dealDetailBeginDate = date
-        LogUtil.d("getDealDetail")
         dealDetailIndex = 0
         DealDetailDaysWeekDayIndex = 1
         var dealDetailBean: DealDetailBean? = null
         try {
             dealDetailBean =
                 DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
+            LogUtil.d("getDealDetail needGoOn:${null==dealDetailBean} size:${dealDetailBean.size}")
         } catch (e: Exception) {
             LogUtil.e("getDealDetail","getDealDetail Exception:${e}---code:$code")
 
@@ -93,13 +113,23 @@ class NewApiViewModel : BaseViewModel() {
 
         }
         if (needNetRequest) {
+            val message = mHandler.obtainMessage()
+
+            message.obj = dealDetailBean
+            message.arg1 = code.toInt()
+            curDateStr = date
+            message.arg2 = DateUtils.parse(date,FormatterEnum.YYYY_MM_DD).toInt()/1000
+            curCode = code.toInt()
+            curDate = DateUtils.parse(date, FormatterEnum.YYYY_MM_DD).toInt() / 1000
+            message.what = CHECK_DEAL_DETAIL
+            mHandler.sendMessageDelayed(message, 20*1000)
             launchNetDealDetail(dealDetailBean, code, date)
         } else {
             LogUtil.d("skip needNetRequest!!!:$needNetRequest code:$code---date:$date")
             val message = mHandler.obtainMessage()
             message.obj = code
             message.what = DEAL_DETAIL_NEXT_DATE
-            mHandler.sendMessageDelayed(message,0)
+            mHandler.sendMessage(message)
         }
     }
 
@@ -566,8 +596,7 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
-        list.forEach {
-            detailCodeList.add(it.code)
+//        list.forEach {
 //            if (it.id > 600000) {
 //                txtname = "sh_"
 //            } else if (it.id > 300000) {
@@ -576,7 +605,10 @@ class NewApiViewModel : BaseViewModel() {
 //                txtname = "sz_"
 //            }
 //            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
-        }
+//        }
+
+        detailCodeList.add("300185")
+        detailCodeList.add("300116")
         if (mActivity is NewApiActivity) {
 //            private fun requestDealDetailNext(code: String) {
 //
@@ -598,6 +630,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun logDealDetailHqSum() {
+        LogUtil.d("complete==========================")
 //        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
 //        var txtname: String
 //        list.forEach {

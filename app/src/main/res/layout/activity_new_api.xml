@@ -23,6 +23,7 @@
             android:id="@+id/btnRequestPricehis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:text="Pricehis" />
 
@@ -31,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="DealDetail" />
         <Button
             android:id="@+id/btnRequestHisHq"
