@@ -25,7 +25,8 @@ class NewApiViewModel : BaseViewModel() {
     var dealDetailIndex = 0
     val dayMillis = 24 * 60 * 60 * 1000
 
-    val DealDetailDays = 14
+//    val DealDetailDays = 14
+    val DealDetailDays = 1
     var DealDetailDaysWeekDayIndex = 0
     var dealDetailBeginDate = ""
 
@@ -64,10 +65,10 @@ class NewApiViewModel : BaseViewModel() {
                                  DecimalFormat("000000").format(curCode)
                             } else curCode.toString()
 
-                            launchNetDealDetail(
-                                msg.obj as DealDetailBean?,
+                            requestDealDetail(
                                 code,
-                                curDateStr
+                                curDateStr,
+                                msg.obj as DealDetailBean?
                             )
                         }
 
@@ -158,7 +159,7 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         var dealDetailBean11 = dealDetailBean
         var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
-        val isInsert =
+        val isinsertInTx =
             DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
                 DealDetailBeanDao.Properties.Code.eq(code)
             ).size < 1
@@ -216,21 +217,19 @@ class NewApiViewModel : BaseViewModel() {
 
 
         try {
-            if (isInsert) {
-                val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insert(
+            if (isinsertInTx) {
+               DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insertInTx(
                     dealDetailBean11
                 )
                 var list = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
                     DealDetailBeanDao.Properties.Code.eq(code)
                 )
-
-                LogUtil.d("requestDealDetailNext insert success:$success size:${list.size}")
+                LogUtil.d("requestDealDetailNext insertInTx size:${list.size}")
             } else {
-
-                val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.update(
+                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.updateInTx(
                     dealDetailBean11
                 )
-                LogUtil.d("requestDealDetailNext update success:$success")
+                LogUtil.d("requestDealDetailNext updateInTx success ")
             }
         } catch (e: Exception) {
             val bean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(
@@ -238,7 +237,7 @@ class NewApiViewModel : BaseViewModel() {
             )
             LogUtil.e(
                 "Exception",
-                "requestDealDetail Exception:${e}---id:${dealDetailBean11?.id}---code:$code---isInsert:$isInsert---query:${bean == null}"
+                "requestDealDetail Exception:${e}---id:${dealDetailBean11?.id}---code:$code---isinsertInTx:$isinsertInTx---query:${bean == null}"
             )
         }
         handlerDealDetailNextDate(code)
@@ -425,7 +424,7 @@ class NewApiViewModel : BaseViewModel() {
         return mineInfoList
     }
 
-    private fun requestHisPriceHq(isInsert: Boolean, start: String, end: String, code: String) {
+    private fun requestHisPriceHq(isinsertInTx: Boolean, start: String, end: String, code: String) {
 
         launch({
 //            val xq1 = RetrofitManager.reqApi.getXQInfo(code, "1")
@@ -442,10 +441,10 @@ class NewApiViewModel : BaseViewModel() {
             } else {
                 result = RetrofitManager.reqApi.getHisHq("cn_$code", start, end)
             }
-            updateHisPriceInfo(
+            updateInTxHisPriceInfo(
                 result.await(),
                 code,
-                isInsert
+                isinsertInTx
             )
         })
 
@@ -457,13 +456,13 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-    private fun updateHisPriceInfo(
+    private fun updateInTxHisPriceInfo(
         json: String,
         code: String,
-        isInsert: Boolean
+        isinsertInTx: Boolean
     ) {
 
-//        LogUtil.d("updateHisPriceInfo code:$code")
+//        LogUtil.d("updateInTxHisPriceInfo code:$code")
 //        XQInfoList.addAll(XQInfoList1)
 //        XQInfoList.addAll(XQInfoList2)
 //        XQInfoList.addAll(XQInfoList3)
@@ -473,7 +472,7 @@ class NewApiViewModel : BaseViewModel() {
 
         val bean = PricesHisGDBean()
         bean.code = code
-        if (isInsert) {
+        if (isinsertInTx) {
             bean.id = code.toLong()
         }
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
@@ -481,10 +480,10 @@ class NewApiViewModel : BaseViewModel() {
 //        bean.mineInfo = mineInfoJson
 //        bean.xqInfo = xqInfoJson
 //        LogUtil.d("xqInfo:\n$xqInfoJson")
-        if (isInsert) {
-            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insert(bean)
+        if (isinsertInTx) {
+            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insertInTx(bean)
         } else {
-            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.update(bean)
+            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateInTx(bean)
         }
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
@@ -577,7 +576,7 @@ class NewApiViewModel : BaseViewModel() {
                 ),
                 basePrices
             ) * 100
-            val result = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.insert(bean)
+            val result = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.insertInTx(bean)
             LogUtil.d("getPriceHisFileLog result:${result} code:$code")
 //            LogUtil.d("------needLog---\n$logStr")
 
@@ -607,6 +606,10 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
+        detailCodeList.addAll(stocksArray)
+//        list.forEach{
+//            detailCodeList.add(it.code)
+//        }
 //        list.forEach {
 //            if (it.id > 600000) {
 //                txtname = "sh_"
@@ -618,8 +621,6 @@ class NewApiViewModel : BaseViewModel() {
 //            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
 //        }
 
-        detailCodeList.add("300185")
-        detailCodeList.add("300116")
         if (mActivity is NewApiActivity) {
 //            private fun requestDealDetailNext(code: String) {
 //

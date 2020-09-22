@@ -24,6 +24,36 @@ class NewApiActivity : AppCompatActivity() {
     var dealDetailBeginDate = DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
 
 
+    private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
+        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index)
+            .replace(".zip", "")
+        LogUtil.d("unzipForeach:$path")
+        FileUtil.UnZipAssetsFolder(this, index, zipList.get(index), path, object :
+            FileUtil.UnZipListener {
+
+            override fun unzipFinish(index: Int) {
+                if (index < zipList.size) {
+                    unzipForeach(zipList, index)
+                }
+            }
+
+        })
+    }
+
+    private fun copyDB() {
+        var zipList = ArrayList<String>()
+        var listpath = assets.list("")
+        listpath!!.forEach {
+            if (it.contains(".zip")) {
+                LogUtil.d("listpath:$it")
+                zipList.add(it)
+            }
+        }
+        if (zipList.size > 0) {
+            unzipForeach(zipList, 0)
+        }
+        LogUtil.d("unzipForeach zip copy complete!!")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +62,10 @@ class NewApiActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(NewApiViewModel::class.java)
         viewModelObserve()
 
+        btnCopy.setOnClickListener {
+//            copyDB()
+            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
+        }
         btnRequestDealDetail.setOnClickListener {
             requestDealDetailBtn()
         }

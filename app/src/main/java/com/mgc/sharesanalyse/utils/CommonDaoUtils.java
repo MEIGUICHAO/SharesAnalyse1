@@ -41,6 +41,26 @@ public class CommonDaoUtils<T> {
         return flag;
     }
 
+    /**
+     * 插入记录，如果表未创建，先创建表
+     *
+     * @param pEntity
+     * @return
+     */
+    public void insertInTx(T pEntity) {
+        entityDao.insertInTx(pEntity);
+    }
+
+    /**
+     * 插入记录，如果表未创建，先创建表
+     *
+     * @param pEntity
+     * @return
+     */
+    public void updateInTx(T pEntity) {
+        entityDao.updateInTx(pEntity);
+    }
+
     public boolean updateOrInsertById(T pEntity,Long id) {
         T t = queryById(id);
         if (null == t) {
