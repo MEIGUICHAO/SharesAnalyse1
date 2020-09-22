@@ -83,9 +83,13 @@ class NewApiViewModel : BaseViewModel() {
         DealDetailDaysWeekDayIndex = 1
         var dealDetailBean: DealDetailBean? = null
         try {
-            dealDetailBean =
-                DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
-            LogUtil.d("getDealDetail needGoOn:${null==dealDetailBean} size:${dealDetailBean.size}")
+            var list = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
+                DealDetailBeanDao.Properties.Code.eq(code)
+            )
+            if (list.size > 0) {
+                dealDetailBean = list[0]
+            }
+            LogUtil.d("getDealDetail needGoOn:${null==dealDetailBean} size:${list.size}")
         } catch (e: Exception) {
             LogUtil.e("getDealDetail","getDealDetail Exception:${e}---code:$code")
 
@@ -154,11 +158,14 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         var dealDetailBean11 = dealDetailBean
         var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
-        val isInsert = null == dealDetailBean11
+        val isInsert =
+            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
+                DealDetailBeanDao.Properties.Code.eq(code)
+            ).size < 1
         if (null == dealDetailBean11) {
             dealDetailBean11 = DealDetailBean()
-            dealDetailBean11.code = code
         }
+        dealDetailBean11.code = code
         LogUtil.d("requestDealDetail")
         if (dealDetailIndex == 0) {
             dealDetailBean11.size = sinaDealList.size
@@ -213,13 +220,17 @@ class NewApiViewModel : BaseViewModel() {
                 val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.insert(
                     dealDetailBean11
                 )
-                LogUtil.d("requestDealDetailNext insert success:$success")
+                var list = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
+                    DealDetailBeanDao.Properties.Code.eq(code)
+                )
+
+                LogUtil.d("requestDealDetailNext insert success:$success size:${list.size}")
             } else {
 
                 val success = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.update(
                     dealDetailBean11
                 )
-                LogUtil.d("requestDealDetailNext insert success:$success")
+                LogUtil.d("requestDealDetailNext update success:$success")
             }
         } catch (e: Exception) {
             val bean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(
