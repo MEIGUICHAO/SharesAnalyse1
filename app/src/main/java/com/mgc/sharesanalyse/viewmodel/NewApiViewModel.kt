@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import com.facebook.stetho.inspector.protocol.module.DOMStorage
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.Datas
@@ -25,8 +26,8 @@ class NewApiViewModel : BaseViewModel() {
     var dealDetailIndex = 0
     val dayMillis = 24 * 60 * 60 * 1000
 
-//    val DealDetailDays = 14
-    val DealDetailDays = 1
+    val DealDetailDays = 14
+//    val DealDetailDays = 1
     var DealDetailDaysWeekDayIndex = 0
     var dealDetailBeginDate = ""
 
@@ -43,6 +44,7 @@ class NewApiViewModel : BaseViewModel() {
     val DEAL_DETAIL_NEXT_DATE = 1
     val DEAL_DETAIL_NEXT_CODE = 2
     val CHECK_DEAL_DETAIL = 3
+    var GetCodeIndex = 0
 
     private val mHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
@@ -77,6 +79,41 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
+
+    fun getAllCode() {
+        GetCodeIndex = 1
+        getAllCodeApi()
+
+
+    }
+
+    private fun getAllCodeApi() {
+        var json = RetrofitManager.reqApi.getAllCode(GetCodeIndex.toString())
+        launch({
+            addCodeToAll(json.await())
+        })
+    }
+
+    private fun addCodeToAll(json: String) {
+        var bean = GsonHelper.parseArray(json, SinaCodeListBean::class.java)
+        LogUtil.d("addCodeToAll size:${bean.size}")
+        GetCodeIndex++
+        bean.forEach {
+            LogUtil.d("getAllCode success")
+            val allCodeGDBean = AllCodeGDBean()
+            allCodeGDBean.code = it.code.replace("sh","").replace("sz","")
+            LogUtil.d("getAllCode success")
+            allCodeGDBean.id = allCodeGDBean.code.toLong()
+            allCodeGDBean.name = it.name
+            LogUtil.d("getAllCode success")
+            var success  =DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.updateOrInsertById(allCodeGDBean,allCodeGDBean.code.toLong())
+            LogUtil.d("getAllCode success:$success")
+        }
+        if (GetCodeIndex < 52) {
+            getAllCodeApi()
+        }
+
+    }
 
     fun getDealDetail(code: String, date: String) {
         dealDetailBeginDate = date
@@ -397,7 +434,7 @@ class NewApiViewModel : BaseViewModel() {
             if (today != bean.date || debug) {
                 requestHisPriceHq(false, start, end, code)
             } else {
-                LogUtil.d("cache_${Datas.hisHqUrl}--------$code")
+                LogUtil.d("cache_${Datas.sohuStockUrl}--------$code")
                 loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
             }
         } else {
@@ -576,7 +613,7 @@ class NewApiViewModel : BaseViewModel() {
                 ),
                 basePrices
             ) * 100
-            val result = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.insertInTx(bean)
+            val result = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
             LogUtil.d("getPriceHisFileLog result:${result} code:$code")
 //            LogUtil.d("------needLog---\n$logStr")
 
@@ -598,6 +635,7 @@ class NewApiViewModel : BaseViewModel() {
 
     val detailCodeList = ArrayList<String>()
     fun getPriceHisFileLog() {
+        //300185！！！
         detailCodeList.clear()
         var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
         LogUtil.d("getPriceHisFileLog list size:${list.size}")
@@ -606,36 +644,10 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
-        detailCodeList.addAll(stocksArray)
-//        list.forEach{
-//            detailCodeList.add(it.code)
-//        }
-//        list.forEach {
-//            if (it.id > 600000) {
-//                txtname = "sh_"
-//            } else if (it.id > 300000) {
-//                txtname = "cy_"
-//            } else {
-//                txtname = "sz_"
-//            }
-//            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
-//        }
-
+        list.forEach {
+            detailCodeList.add(it.code)
+        }
         if (mActivity is NewApiActivity) {
-//            private fun requestDealDetailNext(code: String) {
-//
-//
-//                if (needGoOn) {
-//                    if (pair.first) {
-//                        var dealDetailBean: DealDetailBean =
-//                            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByCode(DealDetailBeanDao.Properties.Code.eq(code))
-//                        requestDealDetail(code, pair.second, dealDetailBean)
-//                    } else {
-//                        requestDealDetailNext(code)
-//                        LogUtil.d("requestDealDetailNext")
-//                    }
-//                }
-//            }
             (mActivity as NewApiActivity).requestDealDetailBtn()
         }
 

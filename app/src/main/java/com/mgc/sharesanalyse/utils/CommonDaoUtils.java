@@ -47,7 +47,7 @@ public class CommonDaoUtils<T> {
      * @param pEntity
      * @return
      */
-    public void insertInTx(T pEntity) {
+    public void insertInTx(T... pEntity) {
         entityDao.insertInTx(pEntity);
     }
 

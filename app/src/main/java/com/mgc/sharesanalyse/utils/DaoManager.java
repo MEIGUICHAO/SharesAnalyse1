@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.mgc.sharesanalyse.BuildConfig;
 import com.mgc.sharesanalyse.base.Datas;
+import com.mgc.sharesanalyse.entity.AllCodeGDBeanDao;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.DealDetailBeanDao;
@@ -78,7 +79,7 @@ public class DaoManager {
      */
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, getDbName(), null, DealDetailBeanDao.class, PricesHisGDBeanDao.class, PriceHisRecordGDBeanDao.class);
+            sHelper = new CommonOpenHelper(context, getDbName(), null, DealDetailBeanDao.class, PricesHisGDBeanDao.class, PriceHisRecordGDBeanDao.class, AllCodeGDBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;

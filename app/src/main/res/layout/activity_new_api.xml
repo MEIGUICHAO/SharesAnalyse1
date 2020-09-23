@@ -25,6 +25,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Copy" />
+        <Button
+            android:id="@+id/btnGetALlCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetALlCode" />
 
         <Button
             android:id="@+id/btnRequestPricehis"

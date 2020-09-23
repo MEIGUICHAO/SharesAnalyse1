@@ -62,9 +62,15 @@ class NewApiActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(NewApiViewModel::class.java)
         viewModelObserve()
 
-        btnCopy.setOnClickListener {
+        btnGetALlCode.setOnClickListener {
+            viewModel.getAllCode()
 //            copyDB()
-            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
+//            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
+        }
+
+        btnCopy.setOnClickListener {
+            copyDB()
+//            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
         btnRequestDealDetail.setOnClickListener {
             requestDealDetailBtn()
@@ -75,11 +81,11 @@ class NewApiActivity : AppCompatActivity() {
         btnRequestHisHq.setOnClickListener {
             yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
             judeWeekDayIndex = 0
-//            progressIndex = 0
+            progressIndex = 0
 //            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
-//            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-//            getHisHq()
-            viewModel.getPriceHisFileLog()
+            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
+            getHisHq()
+//            viewModel.getPriceHisFileLog()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()

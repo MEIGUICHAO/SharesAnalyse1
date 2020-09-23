@@ -1,5 +1,7 @@
 package com.mgc.sharesanalyse.utils;
 
+import com.mgc.sharesanalyse.entity.AllCodeGDBean;
+import com.mgc.sharesanalyse.entity.AllCodeGDBeanDao;
 import com.mgc.sharesanalyse.entity.DealDetailBean;
 import com.mgc.sharesanalyse.entity.DealDetailBeanDao;
 import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean;
@@ -20,6 +22,11 @@ public class DaoUtilsStore {
     }
 
     private CommonDaoUtils<DealDetailBean> dealDetailBeanCommonDaoUtils;
+    private CommonDaoUtils<AllCodeGDBean> allCodeGDBeanDaoUtils;
+
+    public CommonDaoUtils<AllCodeGDBean> getAllCodeGDBeanDaoUtils() {
+        return allCodeGDBeanDaoUtils;
+    }
 
     public CommonDaoUtils<PricesHisGDBean> getPricesHisGDBeanCommonDaoUtils() {
         return pricesHisGDBeanCommonDaoUtils;
@@ -50,10 +57,12 @@ public class DaoUtilsStore {
         PricesHisGDBeanDao pricesHisGDBeanDao = mManager.getDaoSession().getPricesHisGDBeanDao();
         PriceHisRecordGDBeanDao priceHisRecordGDBeanDao = mManager.getDaoSession().getPriceHisRecordGDBeanDao();
         DealDetailBeanDao dealDetailBeanDao = mManager.getDaoSession().getDealDetailBeanDao();
+        AllCodeGDBeanDao allCodeGDBeanDao = mManager.getDaoSession().getAllCodeGDBeanDao();
 
         pricesHisGDBeanCommonDaoUtils = new CommonDaoUtils(PricesHisGDBean.class, pricesHisGDBeanDao);
         priceHisRecordGDBeanCommonDaoUtils = new CommonDaoUtils(PriceHisRecordGDBean.class, priceHisRecordGDBeanDao);
         dealDetailBeanCommonDaoUtils = new CommonDaoUtils(DealDetailBean.class, dealDetailBeanDao);
+        allCodeGDBeanDaoUtils = new CommonDaoUtils(AllCodeGDBean.class, allCodeGDBeanDao);
     }
 
     public void resetDaoUtilsStore() {
