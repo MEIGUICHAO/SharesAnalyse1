@@ -79,13 +79,15 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
-            judeWeekDayIndex = 0
-            progressIndex = 0
-//            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
-            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-            getHisHq()
-//            viewModel.getPriceHisFileLog()
+//            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
+//            judeWeekDayIndex = 0
+//            progressIndex = 0
+////            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
+//            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
+//            getHisHq()
+
+
+            viewModel.getPriceHisFileLog()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()

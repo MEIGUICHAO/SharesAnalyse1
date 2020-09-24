@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse.utils;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.mgc.sharesanalyse.BuildConfig;
@@ -46,6 +47,10 @@ public class DaoManager {
             getDaoMaster();
         }
         return sHelper;
+    }
+
+    public static SQLiteDatabase getDB() {
+        return getsHelper().getWritableDatabase();
     }
 
     public static void setsHelper(CommonOpenHelper sHelper) {

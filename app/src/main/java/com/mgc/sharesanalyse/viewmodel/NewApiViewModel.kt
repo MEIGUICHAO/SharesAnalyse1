@@ -4,9 +4,9 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
-import com.facebook.stetho.inspector.protocol.module.DOMStorage
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
+import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.toSinaCode
 import com.mgc.sharesanalyse.entity.*
@@ -120,21 +120,25 @@ class NewApiViewModel : BaseViewModel() {
         dealDetailIndex = 0
         DealDetailDaysWeekDayIndex = 1
         var dealDetailBean: DealDetailBean? = null
-        try {
-            var list = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
-                DealDetailBeanDao.Properties.Code.eq(code)
-            )
-            if (list.size > 0) {
-                dealDetailBean = list[0]
-            }
-            LogUtil.d("getDealDetail needGoOn:${null==dealDetailBean} size:${list.size}")
-        } catch (e: Exception) {
-            LogUtil.e("getDealDetail","getDealDetail Exception:${e}---code:$code")
+        App.getAnalysePool().execute {
+            try {
+                var list = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(
+                    DealDetailBeanDao.Properties.Code.eq(code)
+                )
+                if (list.size > 0) {
+                    dealDetailBean = list[0]
+                }
+                var dealList = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryAll()
+                LogUtil.d("getDealDetail needGoOn:${null==dealDetailBean} size:${list.size} dealList size:${dealList.size}")
+            } catch (e: Exception) {
+                LogUtil.e("getDealDetail","getDealDetail Exception:${e}---code:$code")
 
+            }
+//        LogUtil.d("getDealDetail")
+//        needGoOn = true
+//        requestDealDetail(code, date, dealDetailBean)
         }
-        LogUtil.d("getDealDetail")
-        needGoOn = true
-        requestDealDetail(code, date, dealDetailBean)
+
     }
 
     private fun requestDealDetail(
@@ -644,9 +648,10 @@ class NewApiViewModel : BaseViewModel() {
                 return p1.conformSize.compareTo(p0.conformSize)
             }
         })
-        list.forEach {
-            detailCodeList.add(it.code)
-        }
+        detailCodeList.add("300185")
+//        list.forEach {
+//            detailCodeList.add(it.code)
+//        }
         if (mActivity is NewApiActivity) {
             (mActivity as NewApiActivity).requestDealDetailBtn()
         }
