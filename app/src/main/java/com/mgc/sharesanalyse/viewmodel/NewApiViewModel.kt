@@ -183,6 +183,7 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("requestDealDetail")
         if (json != "[]") {
             var pair = classifyDealDetail(sinaDealList)
+            tableBean.name = sinaDealList[0].name
             tableBean.sizeBean = pair.first
             tableBean.percent = pair.second
         }
@@ -256,7 +257,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m100 = M100()
                 dealDetailAmountSizeBean.m100Size = dealDetailAmountSizeBean.m100Size + 1
-                m100.amount = it.price.toDouble() * it.volume.toDouble()
+                m100.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m100.time = it.ticktime
                 m100.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m100List.add(m100)
@@ -268,7 +269,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m50 = DealDetailAmountSizeBean.M50()
                 dealDetailAmountSizeBean.m50Size = dealDetailAmountSizeBean.m50Size + 1
-                m50.amount = it.price.toDouble() * it.volume.toDouble()
+                m50.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m50.time = it.ticktime
                 m50.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m50List.add(m50)
@@ -280,7 +281,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m30 = DealDetailAmountSizeBean.M30()
                 dealDetailAmountSizeBean.m30Size = dealDetailAmountSizeBean.m30Size + 1
-                m30.amount = it.price.toDouble() * it.volume.toDouble()
+                m30.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m30.time = it.ticktime
                 m30.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m30List.add(m30)
@@ -292,7 +293,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m10 = DealDetailAmountSizeBean.M10()
                 dealDetailAmountSizeBean.m10Size = dealDetailAmountSizeBean.m10Size + 1
-                m10.amount = it.price.toDouble() * it.volume.toDouble()
+                m10.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m10.time = it.ticktime
                 m10.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m10List.add(m10)
@@ -305,7 +306,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m5 = DealDetailAmountSizeBean.M5()
                 dealDetailAmountSizeBean.m5Size = dealDetailAmountSizeBean.m5Size + 1
-                m5.amount = it.price.toDouble() * it.volume.toDouble()
+                m5.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m5.time = it.ticktime
                 m5.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m5List.add(m5)
@@ -317,7 +318,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m1 = DealDetailAmountSizeBean.M1()
                 dealDetailAmountSizeBean.m1Size = dealDetailAmountSizeBean.m1Size + 1
-                m1.amount = it.price.toDouble() * it.volume.toDouble()
+                m1.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m1.time = it.ticktime
                 m1.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m1List.add(m1)
@@ -329,7 +330,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m05 = DealDetailAmountSizeBean.M05()
                 dealDetailAmountSizeBean.m05Size = dealDetailAmountSizeBean.m05Size + 1
-                m05.amount = it.price.toDouble() * it.volume.toDouble()
+                m05.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m05.time = it.ticktime
                 m05.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m05List.add(m05)
@@ -342,7 +343,7 @@ class NewApiViewModel : BaseViewModel() {
             ) {
                 val m01 = DealDetailAmountSizeBean.M01()
                 dealDetailAmountSizeBean.m01Size = dealDetailAmountSizeBean.m01Size + 1
-                m01.amount = it.price.toDouble() * it.volume.toDouble()
+                m01.amount = it.price.toDouble() * it.volume.toDouble()/10000
                 m01.time = it.ticktime
                 m01.price = it.price.toDouble()
                 dealDetailAmountSizeBean.m01List.add(m01)

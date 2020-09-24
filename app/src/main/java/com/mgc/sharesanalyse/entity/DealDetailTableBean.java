@@ -2,6 +2,16 @@ package com.mgc.sharesanalyse.entity;
 
 public class DealDetailTableBean {
     private String code;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
     private double percent;
     private int allsize;
 
@@ -42,7 +52,8 @@ public class DealDetailTableBean {
 
 
     public String toSqlValues() {
-        return "(" + code  +
+        return "(" + code +
+                "," + "'" + name + "'" +
                 "," + allsize +
                 "," + percent + sizeBean.toValues();
     }

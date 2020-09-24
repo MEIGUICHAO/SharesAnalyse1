@@ -19,7 +19,7 @@ object DBUtils {
         createDealDetailTable(dbName)
         if (!queryDealDetailIsExsitByCode(dbName,dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)" +
+                    "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)" +
                     " VALUES${dealDetailTableBean.toSqlValues()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -52,6 +52,7 @@ object DBUtils {
             dealDetailTableBean = DealDetailTableBean()
             var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
             val code = cursor.getString(cursor.getColumnIndex("CODE"))
+            val name = cursor.getString(cursor.getColumnIndex("NAME"))
             val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
             val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
             val m100s = cursor.getInt(cursor.getColumnIndex("M100S"))
@@ -89,6 +90,7 @@ object DBUtils {
             dealDetailAmountSizeBean.m01List = m01j.json2Array(DealDetailAmountSizeBean.M01::class.java)
 
             dealDetailTableBean.code = code
+            dealDetailTableBean.name = name
             dealDetailTableBean.allsize = allsize
             dealDetailTableBean.percent  = percent
             dealDetailTableBean.sizeBean = dealDetailAmountSizeBean
@@ -101,7 +103,7 @@ object DBUtils {
     fun createDealDetailTable(dbName:String) {
 //        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
-            val sqlStr = "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, ALLSIZE INTEGER, PERCENT INTEGER" +
+            val sqlStr = "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, PERCENT INTEGER" +
                     ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER" +
                     ", M100J TEXT, M50J TEXT, M30J TEXT, M10J TEXT, M5J TEXT, M1J TEXT, M05J TEXT, M01J TEXT);"
             db.execSQL(sqlStr)
