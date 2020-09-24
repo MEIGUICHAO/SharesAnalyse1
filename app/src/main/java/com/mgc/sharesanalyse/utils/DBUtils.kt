@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.mgc.sharesanalyse.base.json2Array
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
+import java.text.DecimalFormat
 
 
 object DBUtils {
@@ -24,8 +25,17 @@ object DBUtils {
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         }
+    }
 
-
+    fun insertEmptyDealDetail2DateTable(dbName:String,dealDetailTableBean: DealDetailTableBean) {
+        createDealDetailTable(dbName)
+        if (!queryDealDetailIsExsitByCode(dbName,dealDetailTableBean.code)) {
+            var insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,NAME)" +
+                    " VALUES(${dealDetailTableBean.code},${dealDetailTableBean.name})"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        }
     }
 
     fun dropTable(dbName: String) {
@@ -37,9 +47,11 @@ object DBUtils {
     fun queryDealDetailIsExsitByCode(dbName: String, code: String):Boolean {
         createDealDetailTable(dbName)
         LogUtil.d("code:$code")
-        var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE=?", arrayOf(code))
+        var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
+        cursor.moveToFirst()
+        var coede = cursor.getString(cursor.getColumnIndex("CODE"))
         var isexsit = cursor.count>0
-        LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+        LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}  coede:$coede")
         cursor.close()
         return isexsit
     }
@@ -47,7 +59,10 @@ object DBUtils {
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
         createDealDetailTable(dbName)
         var dealDetailTableBean: DealDetailTableBean? = null
-        var cursor = db.rawQuery("SELECT * FROM $dbName WHERE CODE = ?", arrayOf(code))
+        val mCode = if (code.toInt() < 300000) {
+            DecimalFormat("000000").format(code)
+        } else code
+        var cursor = db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
         if (null != cursor && cursor.moveToFirst()) {
             dealDetailTableBean = DealDetailTableBean()
             var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
@@ -89,7 +104,7 @@ object DBUtils {
             dealDetailAmountSizeBean.m05List = m05j.json2Array(DealDetailAmountSizeBean.M05::class.java)
             dealDetailAmountSizeBean.m01List = m01j.json2Array(DealDetailAmountSizeBean.M01::class.java)
 
-            dealDetailTableBean.code = code
+            dealDetailTableBean.code = mCode
             dealDetailTableBean.name = name
             dealDetailTableBean.allsize = allsize
             dealDetailTableBean.percent  = percent

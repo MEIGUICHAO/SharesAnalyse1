@@ -148,7 +148,7 @@ class NewApiViewModel : BaseViewModel() {
             curCode = code.toInt()
             curDate = DateUtils.parse(date, FormatterEnum.YYYY_MM_DD).toInt() / 1000
             message.what = CHECK_DEAL_DETAIL
-            mHandler.sendMessageDelayed(message, 20 * 1000)
+            mHandler.sendMessageDelayed(message, 50 * 1000)
             launchNetDealDetail(code, date)
         } else {
             LogUtil.d("skip needNetRequest!!!:$needNetRequest code:$code---date:$date")
@@ -186,8 +186,16 @@ class NewApiViewModel : BaseViewModel() {
             tableBean.name = sinaDealList[0].name
             tableBean.sizeBean = pair.first
             tableBean.percent = pair.second
+            DBUtils.insertDealDetail2DateTable(
+                "${Datas.dealDetailTableName}$date".replace("-", ""),
+                tableBean
+            )
+        } else {
+            DBUtils.insertEmptyDealDetail2DateTable(
+                "${Datas.dealDetailTableName}$date".replace("-", ""),
+                tableBean
+            )
         }
-        DBUtils.insertDealDetail2DateTable("${Datas.dealDetailTableName}$date".replace("-",""), tableBean)
         handlerDealDetailNextDate(code)
     }
 
