@@ -48,10 +48,8 @@ object DBUtils {
         createDealDetailTable(dbName)
         LogUtil.d("code:$code")
         var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
-        cursor.moveToFirst()
-        var coede = cursor.getString(cursor.getColumnIndex("CODE"))
         var isexsit = cursor.count>0
-        LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}  coede:$coede")
+        LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
         cursor.close()
         return isexsit
     }
