@@ -1,5 +1,8 @@
 package com.mgc.sharesanalyse.entity;
 
+import com.mgc.sharesanalyse.utils.GsonHelper;
+import com.mgc.sharesanalyse.utils.LogUtil;
+
 import java.util.ArrayList;
 
 public class DealDetailAmountSizeBean {
@@ -24,6 +27,35 @@ public class DealDetailAmountSizeBean {
                 ", m01Size=" + m01Size +
                 '}';
     }
+
+
+    public String toValues() {
+        return
+                "," + m100Size +
+                "," + m50Size +
+                "," + m30Size +
+                "," + m10Size +
+                "," + m5Size +
+                "," + m1Size +
+                "," + m05Size +
+                "," + m01Size +
+                "," + array2Json(m100List) +
+                "," + array2Json(m50List) +
+                "," + array2Json(m30List) +
+                "," + array2Json(m10List) +
+                "," + array2Json(m5List) +
+                "," + array2Json(m1List) +
+                "," + array2Json(m05List) +
+                "," + array2Json(m01List) +
+                ");";
+    }
+
+    private <T> String array2Json(ArrayList<T> array) {
+        LogUtil.d("GsonHelper.toJson(array):"+GsonHelper.toJson(array));
+        return "'"+GsonHelper.toJson(array)+"'";
+    }
+
+
 
     private ArrayList<M100> m100List;
     private int m100Size;

@@ -38,4 +38,12 @@ public class DealDetailTableBean {
     }
 
     private DealDetailAmountSizeBean sizeBean;
+
+
+
+    public String toSqlValues() {
+        return "(" + code  +
+                "," + allsize +
+                "," + percent + sizeBean.toValues();
+    }
 }

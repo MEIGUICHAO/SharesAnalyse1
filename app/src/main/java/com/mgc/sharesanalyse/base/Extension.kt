@@ -1,8 +1,5 @@
 package com.mgc.sharesanalyse.base
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
-import com.mgc.sharesanalyse.entity.DealDetailBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.GsonHelper
 import java.util.ArrayList
@@ -15,6 +12,10 @@ fun Double.getPercent(begin: Double) {
     BigDecimalUtils.div(BigDecimalUtils.sub(this,begin),begin)*100
 }
 
-fun String.json2Array(clazz: Class<Any>): ArrayList<out Class<Any>>? {
-    return GsonHelper.parseArray(this,clazz::class.java)
+fun <T> String.json2Array(cls: Class<T>?): ArrayList<T>? {
+    return GsonHelper.parseArray(this, cls)
+}
+
+fun <T> ArrayList<T>.array2Json(): String {
+    return GsonHelper.toJson(this)
 }

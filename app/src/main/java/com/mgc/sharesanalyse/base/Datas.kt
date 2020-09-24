@@ -12,6 +12,7 @@ object Datas {
     const val xqUrl = "https://xueqiu.com"
 
     var tableName = "stock_"
+    var dealDetailTableName = "DD_"
     var limitSize = 160
     var basebase = 30
     var baseNum = 30/basebase
