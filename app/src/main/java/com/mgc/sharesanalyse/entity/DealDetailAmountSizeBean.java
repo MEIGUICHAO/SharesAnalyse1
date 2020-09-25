@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public class DealDetailAmountSizeBean {
     @Override
     public String toString() {
-        return "DealDetailAmountSizeBean{" +
-                ", m100Size=" + m100Size +
+        return "{" +
+                " m100Size=" + m100Size +
                 ", m50Size=" + m50Size +
                 ", m30Size=" + m30Size +
                 ", m10Size=" + m10Size +

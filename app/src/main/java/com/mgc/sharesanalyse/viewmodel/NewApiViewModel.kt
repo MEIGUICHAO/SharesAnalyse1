@@ -6,10 +6,7 @@ import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
-import com.mgc.sharesanalyse.base.App
-import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.base.sortDDBeanDescByAllsize
-import com.mgc.sharesanalyse.base.toSinaCode
+import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
@@ -606,15 +603,11 @@ class NewApiViewModel : BaseViewModel() {
     fun getPriceHisFileLog() {
         //300185！！！
         detailCodeList.clear()
-//        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-//        LogUtil.d("getPriceHisFileLog list size:${list.size}")
-//        Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
-//            override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
-//                return p1.conformSize.compareTo(p0.conformSize)
-//            }
-//        })
+        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+        LogUtil.d("getPriceHisFileLog list size:${list.size}")
+        sortpriceHisRecordGDBean(list)
 
-        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+//        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
             detailCodeList.add(it.code)
         }
@@ -624,63 +617,78 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
+    private fun sortpriceHisRecordGDBean(list: List<PriceHisRecordGDBean>?) {
+        Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
+            override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
+                return p1.conformSize.compareTo(p0.conformSize)
+            }
+        })
+    }
+
     fun logDealDetailHqSum() {
         needGoOn = false
         LogUtil.d("complete==========================")
-//        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-//        var txtname: String
-//        list.forEach {
-//            if (it.id > 600000) {
-//                txtname = "sh_"
-//            } else if (it.id > 300000) {
-//                txtname = "cy_"
-//            } else {
-//                txtname = "sz_"
-//            }
-//            val dealDetailBean = DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryById(it.id)
-//            var list = GsonHelper.parseArray(dealDetailBean.wholeJson15,DealDetailAmountSizeBean::class.java)
-//            var dealDetailStr = ""
-//            list.forEach {
-//                dealDetailStr = it.m05List
-//            }
-//
-//            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", it.result + "\n")
-//        }
+        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+        var txtname: String
+        var dbDateList = ArrayList<String>()
+        dbDateList.getWeekDayS(DateUtils.formatYesterDayTimeStamp(), 15)
+        dbDateList.forEach {
+            LogUtil.d("dbDateList:$it")
+        }
+        sortpriceHisRecordGDBean(list)
+        list.forEach {
+            if (it.id > 600000) {
+                txtname = "sh_"
+            } else if (it.id > 300000) {
+                txtname = "cy_"
+            } else {
+                txtname = "sz_"
+            }
+            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
+            dbDateList.forEach {date->
+                var bean = DBUtils.queryDealDetailByCode("DD_${date.replace("-","")}", it.code)
+                bean?.let {
+                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "DealDetail_code:${bean.code}_name:${bean.name}---------------------------------------------------------")
+                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", date+bean.toString())
+                }
+            }
+        }
+        LogUtil.d("logDealDetailHqSum---completed----------------------------")
     }
 
     fun foreachDDInfo() {
 
-        var shList = ArrayList<DealDetailTableBean>()
-        var szList = ArrayList<DealDetailTableBean>()
-        var szCyList = ArrayList<DealDetailTableBean>()
-        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
-        list.forEach {
-            var ddBean = DBUtils.queryDealDetailByCode("DD_20200924", it.code)
-            ddBean?.let {
-                if (it.code.toDouble() > 600000) {
-                    shList.add(it)
-                } else if (it.code.toDouble() > 300000) {
-                    szCyList.add(it)
-                } else {
-                    szList.add(it)
-                }
-            }
-        }
-        LogUtil.d("shList size:${shList.size}")
-        shList.sortDDBeanDescByAllsize()
-        szCyList.sortDDBeanDescByAllsize()
-        szList.sortDDBeanDescByAllsize()
-        LogUtil.d("szCyList size:${szCyList.size}")
-        LogUtil.d("szList size:${szList.size}")
-        shList.forEach {
-            FileLogUtil.d("${parentBasePath}sh_hishq$pathDate", it.toString())
-        }
-        szCyList.forEach {
-            FileLogUtil.d("${parentBasePath}cy_hishq$pathDate", it.toString())
-        }
-        szList.forEach {
-            FileLogUtil.d("${parentBasePath}sz_hishq$pathDate", it.toString())
-        }
+//        var shList = ArrayList<DealDetailTableBean>()
+//        var szList = ArrayList<DealDetailTableBean>()
+//        var szCyList = ArrayList<DealDetailTableBean>()
+//        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+//        list.forEach {
+//            var ddBean = DBUtils.queryDealDetailByCode("DD_20200924", it.code)
+//            ddBean?.let {
+//                if (it.code.toDouble() > 600000) {
+//                    shList.add(it)
+//                } else if (it.code.toDouble() > 300000) {
+//                    szCyList.add(it)
+//                } else {
+//                    szList.add(it)
+//                }
+//            }
+//        }
+//        LogUtil.d("shList size:${shList.size}")
+//        shList.sortDDBeanDescByAllsize()
+//        szCyList.sortDDBeanDescByAllsize()
+//        szList.sortDDBeanDescByAllsize()
+//        LogUtil.d("szCyList size:${szCyList.size}")
+//        LogUtil.d("szList size:${szList.size}")
+//        shList.forEach {
+//            FileLogUtil.d("${parentBasePath}sh_hishq$pathDate", it.toString())
+//        }
+//        szCyList.forEach {
+//            FileLogUtil.d("${parentBasePath}cy_hishq$pathDate", it.toString())
+//        }
+//        szList.forEach {
+//            FileLogUtil.d("${parentBasePath}sz_hishq$pathDate", it.toString())
+//        }
 
     }
 

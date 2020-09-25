@@ -2,9 +2,11 @@ package com.mgc.sharesanalyse.base
 
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
+import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.GsonHelper
 import java.util.*
 import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
@@ -28,4 +30,17 @@ fun  List<DealDetailTableBean>.sortDDBeanDescByAllsize() {
             return p1.allsize.compareTo(p0.allsize)
         }
     })
+}
+
+
+fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
+    var pair = DateUtils.isWeekDay(time)
+    if (pair.first) {
+        this.add(pair.second)
+        if (this.size < requestSize) {
+            this.getWeekDayS(time - 24 * 60 * 60 * 1000, requestSize)
+        }
+    } else if (this.size < requestSize) {
+        this.getWeekDayS(time - 24 * 60 * 60 * 1000, requestSize)
+    }
 }

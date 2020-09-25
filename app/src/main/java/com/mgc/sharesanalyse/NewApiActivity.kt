@@ -20,7 +20,7 @@ class NewApiActivity : AppCompatActivity() {
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
     var judeWeekDayIndex = 0
-    var yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
+    var yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp()
     var dealDetailBeginDate = DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
 
 
@@ -69,8 +69,8 @@ class NewApiActivity : AppCompatActivity() {
         }
 
         btnCopy.setOnClickListener {
-            viewModel.foreachDDInfo()
-//            copyDB()
+//            viewModel.foreachDDInfo()
+            copyDB()
 //            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
         btnRequestDealDetail.setOnClickListener {
@@ -80,15 +80,15 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-//            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp(FormatterEnum.YYYY_MM_DD)
-//            judeWeekDayIndex = 0
-//            progressIndex = 0
-////            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
-//            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-//            getHisHq()
+            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp()
+            judeWeekDayIndex = 0
+            progressIndex = 0
+//            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
+            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
+            getHisHq()
 
 
-            viewModel.getPriceHisFileLog()
+//            viewModel.getPriceHisFileLog()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()

@@ -57,8 +57,7 @@ object DateUtils {
 
 
     @SuppressLint("SimpleDateFormat")
-    fun formatYesterDayTimeStamp(formatter: FormatterEnum): Long {
-        val simpleDateFormat = SimpleDateFormat(formatter.format)
+    fun formatYesterDayTimeStamp(): Long {
         val date = Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000)
         return date.time
     }
