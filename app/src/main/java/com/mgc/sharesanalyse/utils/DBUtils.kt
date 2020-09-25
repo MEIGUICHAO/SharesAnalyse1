@@ -5,20 +5,20 @@ import android.database.sqlite.SQLiteDatabase
 import com.mgc.sharesanalyse.base.json2Array
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
-import java.text.DecimalFormat
 
 
 object DBUtils {
 
-     var db: SQLiteDatabase
+    var db: SQLiteDatabase
+//    UPDATE Person SET FirstName='Fred' WHERE LastName='Wilson'
 
     init {
         db = DaoManager.getDB()
     }
 
-    fun insertDealDetail2DateTable(dbName:String,dealDetailTableBean: DealDetailTableBean) {
+    fun insertDealDetail2DateTable(dbName: String, dealDetailTableBean: DealDetailTableBean) {
         createDealDetailTable(dbName)
-        if (!queryDealDetailIsExsitByCode(dbName,dealDetailTableBean.code)) {
+        if (!queryDealDetailIsExsitByCode(dbName, dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J)" +
                     " VALUES${dealDetailTableBean.toSqlValues()}"
@@ -27,9 +27,9 @@ object DBUtils {
         }
     }
 
-    fun insertEmptyDealDetail2DateTable(dbName:String,dealDetailTableBean: DealDetailTableBean) {
+    fun insertEmptyDealDetail2DateTable(dbName: String, dealDetailTableBean: DealDetailTableBean) {
         createDealDetailTable(dbName)
-        if (!queryDealDetailIsExsitByCode(dbName,dealDetailTableBean.code)) {
+        if (!queryDealDetailIsExsitByCode(dbName, dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME)" +
                     " VALUES(${dealDetailTableBean.code},${dealDetailTableBean.name})"
@@ -44,11 +44,12 @@ object DBUtils {
 
     }
 
-    fun queryDealDetailIsExsitByCode(dbName: String, code: String):Boolean {
+    fun queryDealDetailIsExsitByCode(dbName: String, code: String): Boolean {
         createDealDetailTable(dbName)
         LogUtil.d("code:$code")
-        var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
-        var isexsit = cursor.count>0
+        var cursor =
+            db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+        var isexsit = cursor.count > 0
         LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
         cursor.close()
         return isexsit
@@ -57,7 +58,8 @@ object DBUtils {
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
         createDealDetailTable(dbName)
         var dealDetailTableBean: DealDetailTableBean? = null
-        var cursor = db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+        var cursor =
+            db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
         if (null != cursor && cursor.moveToFirst()) {
             dealDetailTableBean = DealDetailTableBean()
             var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
@@ -73,12 +75,12 @@ object DBUtils {
             val m1s = cursor.getInt(cursor.getColumnIndex("M1S"))
             val m05s = cursor.getInt(cursor.getColumnIndex("M05S"))
             val m01s = cursor.getInt(cursor.getColumnIndex("M01S"))
-            val m100j:String? = cursor.getString(cursor.getColumnIndex("M100J"))
-            val m50j:String?  = cursor.getString(cursor.getColumnIndex("M50J"))
-            val m30j:String?  = cursor.getString(cursor.getColumnIndex("M30J"))
-            val m10j:String?  = cursor.getString(cursor.getColumnIndex("M10J"))
-            val m5j:String?  = cursor.getString(cursor.getColumnIndex("M5J"))
-            val m1j:String?  = cursor.getString(cursor.getColumnIndex("M1J"))
+            val m100j: String? = cursor.getString(cursor.getColumnIndex("M100J"))
+            val m50j: String? = cursor.getString(cursor.getColumnIndex("M50J"))
+            val m30j: String? = cursor.getString(cursor.getColumnIndex("M30J"))
+            val m10j: String? = cursor.getString(cursor.getColumnIndex("M10J"))
+            val m5j: String? = cursor.getString(cursor.getColumnIndex("M5J"))
+            val m1j: String? = cursor.getString(cursor.getColumnIndex("M1J"))
             dealDetailAmountSizeBean.m100Size = m100s
             dealDetailAmountSizeBean.m50Size = m50s
             dealDetailAmountSizeBean.m30Size = m30s
@@ -88,17 +90,23 @@ object DBUtils {
             dealDetailAmountSizeBean.m05Size = m05s
             dealDetailAmountSizeBean.m01Size = m01s
 
-            dealDetailAmountSizeBean.m100List = m100j?.json2Array(DealDetailAmountSizeBean.M100::class.java)
-            dealDetailAmountSizeBean.m50List = m50j?.json2Array(DealDetailAmountSizeBean.M50::class.java)
-            dealDetailAmountSizeBean.m30List = m30j?.json2Array(DealDetailAmountSizeBean.M30::class.java)
-            dealDetailAmountSizeBean.m10List = m10j?.json2Array(DealDetailAmountSizeBean.M10::class.java)
-            dealDetailAmountSizeBean.m5List = m5j?.json2Array(DealDetailAmountSizeBean.M5::class.java)
-            dealDetailAmountSizeBean.m1List = m1j?.json2Array(DealDetailAmountSizeBean.M1::class.java)
+            dealDetailAmountSizeBean.m100List =
+                m100j?.json2Array(DealDetailAmountSizeBean.M100::class.java)
+            dealDetailAmountSizeBean.m50List =
+                m50j?.json2Array(DealDetailAmountSizeBean.M50::class.java)
+            dealDetailAmountSizeBean.m30List =
+                m30j?.json2Array(DealDetailAmountSizeBean.M30::class.java)
+            dealDetailAmountSizeBean.m10List =
+                m10j?.json2Array(DealDetailAmountSizeBean.M10::class.java)
+            dealDetailAmountSizeBean.m5List =
+                m5j?.json2Array(DealDetailAmountSizeBean.M5::class.java)
+            dealDetailAmountSizeBean.m1List =
+                m1j?.json2Array(DealDetailAmountSizeBean.M1::class.java)
 
             dealDetailTableBean.code = code
             dealDetailTableBean.name = name
             dealDetailTableBean.allsize = allsize
-            dealDetailTableBean.percent  = percent
+            dealDetailTableBean.percent = percent
             dealDetailTableBean.sizeBean = dealDetailAmountSizeBean
 
         }
@@ -106,12 +114,13 @@ object DBUtils {
         return dealDetailTableBean
     }
 
-    fun createDealDetailTable(dbName:String) {
+    fun createDealDetailTable(dbName: String) {
 //        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
-            val sqlStr = "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, PERCENT INTEGER" +
-                    ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER" +
-                    ", M100J TEXT, M50J TEXT, M30J TEXT, M10J TEXT, M5J TEXT, M1J TEXT, M05J TEXT, M01J TEXT);"
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, PERCENT INTEGER" +
+                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER" +
+                        ", M100J TEXT, M50J TEXT, M30J TEXT, M10J TEXT, M5J TEXT, M1J TEXT, M05J TEXT, M01J TEXT);"
             db.execSQL(sqlStr)
         }
     }
@@ -144,6 +153,17 @@ object DBUtils {
             cursor?.close()
         }
         return result
+    }
+
+    fun updateDDPercentByCode(
+        dbname: String,
+        code: String,
+        percent: String
+    ) {
+        if (tabbleIsExist(dbname)) {
+            var sql = "UPDATE $dbname SET PERCENT=${percent} WHERE CODE=${code.toInt()}"
+            db.execSQL(sql)
+        }
     }
 
 }

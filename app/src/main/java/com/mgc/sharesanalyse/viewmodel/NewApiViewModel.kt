@@ -24,8 +24,8 @@ class NewApiViewModel : BaseViewModel() {
     var dealDetailIndex = 0
     val dayMillis = 24 * 60 * 60 * 1000
 
-    //    val DealDetailDays = 14//15天
-    val DealDetailDays = 1//15天
+//        val DealDetailDays = 14//15天
+    val DealDetailDays = 13//15天
 
     //    val DealDetailDays = 1
     var DealDetailDaysWeekDayIndex = 0
@@ -545,14 +545,17 @@ class NewApiViewModel : BaseViewModel() {
                 ) * 100}%---curPercent:${getcurPercent(hqList[index])}---dealAmount:${getHisHqDayDealAmount(hqList[index])}"
 
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
-            var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
-            bean?.let {
-                logStr = logStr.putTogetherAndChangeLineLogic(
-                    "DealDetail-->" + getHisHqDay(hqList[index]).replace(
-                        "-",
-                        ""
-                    ) + bean.toString()
-                )
+            DBUtils.updateDDPercentByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}",code,getcurPercent(hqList[index]).replace("%",""))
+            if (needLog) {
+                var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
+                bean?.let {
+                    logStr = logStr.putTogetherAndChangeLineLogic(
+                        "DealDetail-->" + getHisHqDay(hqList[index]).replace(
+                            "-",
+                            ""
+                        ) + bean.toString()
+                    )
+                }
             }
         }
         LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
