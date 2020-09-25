@@ -47,11 +47,10 @@ public class DealDetailTableBean {
         this.sizeBean = sizeBean;
     }
 
-    @Override
-    public String toString() {
+    public String getToString(double dealAmount) {
         return "" +
                 ", allsize=" + allsize +
-                ", sizeBean=" + sizeBean.toString();
+                ", sizeBean=" + sizeBean.getToString(dealAmount);
     }
 
     private DealDetailAmountSizeBean sizeBean;

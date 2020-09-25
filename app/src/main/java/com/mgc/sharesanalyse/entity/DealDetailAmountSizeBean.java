@@ -1,13 +1,14 @@
 package com.mgc.sharesanalyse.entity;
 
+import com.mgc.sharesanalyse.utils.BigDecimalUtils;
 import com.mgc.sharesanalyse.utils.GsonHelper;
 import com.mgc.sharesanalyse.utils.LogUtil;
 
 import java.util.ArrayList;
 
 public class DealDetailAmountSizeBean {
-    @Override
-    public String toString() {
+
+    public String getToString(double dealAmount) {
         return "{" +
                 (m100Size > 0 ? ",m100Size=" + m100Size : "") +
                 (m50Size > 0 ? ",m50Size=" + m50Size : "") +
@@ -17,47 +18,59 @@ public class DealDetailAmountSizeBean {
                 (m1Size > 0 ? ",m1Size=" + m1Size : "") +
                 (m05Size > 0 ? ",m05Size=" + m05Size : "") +
                 (m01Size > 0 ? ",m01Size=" + m01Size : "") +
-                (getGt5000() > 0 ? ",>5000=" + getGt5000() : "") +
-                (getGt1000() > 0 ? ",>1000=" + getGt1000() : "") +
-                (getGt500() > 0 ? ",>500=" + getGt500() : "") +
-                (getGt100() > 0 ? ",>100=" + getGt100() : "") +
+                (getGt5000() > 0 ? ",>5000=" + getGt5000()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt5000(),dealAmount)+";" : "") +
+                (getGt1000() > 0 ? ",>1000=" + getGt1000()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt1000(),dealAmount)+";" : "") +
+                (getGt500() > 0 ? ",>500=" + getGt500()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt500(),dealAmount)+";" : "") +
+                (getGt100() > 0 ? ",>100=" + getGt100()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt100(),dealAmount)+";" : "") +
                 '}';
     }
 
     private double getGt5000() {
         double beiging = 0;
-        for (int i = 0; i < m100List.size(); i++) {
-            beiging = beiging + m100List.get(i).amount;
+        if (null !=m100List) {
+            for (int i = 0; i < m100List.size(); i++) {
+                beiging = beiging + m100List.get(i).amount;
+            }
         }
-        for (int i = 0; i < m50List.size(); i++) {
-            beiging = beiging + m50List.get(i).amount;
+        if (null != m50List) {
+            for (int i = 0; i < m50List.size(); i++) {
+                beiging = beiging + m50List.get(i).amount;
+            }
         }
         return beiging;
     }
 
     private double getGt1000() {
         double beiging = getGt5000();
-        for (int i = 0; i < m30List.size(); i++) {
-            beiging = beiging + m30List.get(i).amount;
+        if (null != m30List) {
+            for (int i = 0; i < m30List.size(); i++) {
+                beiging = beiging + m30List.get(i).amount;
+            }
         }
-        for (int i = 0; i < m10List.size(); i++) {
-            beiging = beiging + m10List.get(i).amount;
+        if (null != m10List) {
+            for (int i = 0; i < m10List.size(); i++) {
+                beiging = beiging + m10List.get(i).amount;
+            }
         }
         return beiging;
     }
 
     private double getGt500() {
         double beiging = getGt1000();
-        for (int i = 0; i < m5List.size(); i++) {
-            beiging = beiging + m5List.get(i).amount;
+        if (null != m5List) {
+            for (int i = 0; i < m5List.size(); i++) {
+                beiging = beiging + m5List.get(i).amount;
+            }
         }
         return beiging;
     }
 
     private double getGt100() {
         double beiging = getGt500();
-        for (int i = 0; i < m1List.size(); i++) {
-            beiging = beiging + m1List.get(i).amount;
+        if (null != m1List) {
+            for (int i = 0; i < m1List.size(); i++) {
+                beiging = beiging + m1List.get(i).amount;
+            }
         }
         return beiging;
     }

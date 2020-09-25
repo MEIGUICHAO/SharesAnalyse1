@@ -553,8 +553,9 @@ class NewApiViewModel : BaseViewModel() {
                         "DealDetail-->" + getHisHqDay(hqList[index]).replace(
                             "-",
                             ""
-                        ) + bean.toString()
+                        ) + bean.getToString(getHisHqDayDealAmount(hqList[index]))
                     )
+                    logStr = logStr.putTogetherAndChangeLineLogic("-----------------------------------------------------------")
                 }
             }
         }
