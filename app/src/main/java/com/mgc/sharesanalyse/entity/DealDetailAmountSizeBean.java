@@ -9,49 +9,91 @@ public class DealDetailAmountSizeBean {
     @Override
     public String toString() {
         return "{" +
-                " m100Size=" + m100Size +
-                ", m50Size=" + m50Size +
-                ", m30Size=" + m30Size +
-                ", m10Size=" + m10Size +
-                ", m5Size=" + m5Size +
-                ", m1Size=" + m1Size +
-                ", m05Size=" + m05Size +
-                ", m01Size=" + m01Size +
+                (m100Size > 0 ? ",m100Size=" + m100Size : "") +
+                (m50Size > 0 ? ",m50Size=" + m50Size : "") +
+                (m30Size > 0 ? ",m30Size=" + m30Size : "") +
+                (m10Size > 0 ? ",m10Size=" + m10Size : "") +
+                (m5Size > 0 ? ",m5Size=" + m5Size : "") +
+                (m1Size > 0 ? ",m1Size=" + m1Size : "") +
+                (m05Size > 0 ? ",m05Size=" + m05Size : "") +
+                (m01Size > 0 ? ",m01Size=" + m01Size : "") +
+                (getGt5000() > 0 ? ",>5000=" + getGt5000() : "") +
+                (getGt1000() > 0 ? ",>1000=" + getGt1000() : "") +
+                (getGt500() > 0 ? ",>500=" + getGt500() : "") +
+                (getGt100() > 0 ? ",>100=" + getGt100() : "") +
                 '}';
+    }
+
+    private double getGt5000() {
+        double beiging = 0;
+        for (int i = 0; i < m100List.size(); i++) {
+            beiging = beiging + m100List.get(i).amount;
+        }
+        for (int i = 0; i < m50List.size(); i++) {
+            beiging = beiging + m50List.get(i).amount;
+        }
+        return beiging;
+    }
+
+    private double getGt1000() {
+        double beiging = getGt5000();
+        for (int i = 0; i < m30List.size(); i++) {
+            beiging = beiging + m30List.get(i).amount;
+        }
+        for (int i = 0; i < m10List.size(); i++) {
+            beiging = beiging + m10List.get(i).amount;
+        }
+        return beiging;
+    }
+
+    private double getGt500() {
+        double beiging = getGt1000();
+        for (int i = 0; i < m5List.size(); i++) {
+            beiging = beiging + m5List.get(i).amount;
+        }
+        return beiging;
+    }
+
+    private double getGt100() {
+        double beiging = getGt500();
+        for (int i = 0; i < m1List.size(); i++) {
+            beiging = beiging + m1List.get(i).amount;
+        }
+        return beiging;
     }
 
 
     public String toValues() {
         return
                 "," + m100Size +
-                "," + m50Size +
-                "," + m30Size +
-                "," + m10Size +
-                "," + m5Size +
-                "," + m1Size +
-                "," + m05Size +
-                "," + m01Size +
-                "," + array2Json(m100List) +
-                "," + array2Json(m50List) +
-                "," + array2Json(m30List) +
-                "," + array2Json(m10List) +
-                "," + array2Json(m5List) +
-                "," + array2Json(m1List) +
-                "," + array2Json(m05List) +
-                "," + array2Json(m01List) +
-                ");";
+                        "," + m50Size +
+                        "," + m30Size +
+                        "," + m10Size +
+                        "," + m5Size +
+                        "," + m1Size +
+                        "," + m05Size +
+                        "," + m01Size +
+                        "," + array2Json(m100List) +
+                        "," + array2Json(m50List) +
+                        "," + array2Json(m30List) +
+                        "," + array2Json(m10List) +
+                        "," + array2Json(m5List) +
+                        "," + array2Json(m1List) +
+                        "," + array2Json(m05List) +
+                        "," + array2Json(m01List) +
+                        ");";
     }
 
     private <T> String array2Json(ArrayList<T> array) {
-        LogUtil.d("GsonHelper.toJson(array):"+GsonHelper.toJson(array));
-        return "'"+GsonHelper.toJson(array)+"'";
+        LogUtil.d("GsonHelper.toJson(array):" + GsonHelper.toJson(array));
+        return "'" + GsonHelper.toJson(array) + "'";
     }
-
 
 
     private ArrayList<M100> m100List;
     private int m100Size;
-    public static class M100{
+
+    public static class M100 {
         private String time;
         private double amount;
 
@@ -64,6 +106,7 @@ public class DealDetailAmountSizeBean {
         }
 
         private double price;
+
         public String getTime() {
             return time;
         }
@@ -80,9 +123,11 @@ public class DealDetailAmountSizeBean {
             this.amount = amount;
         }
     }
+
     private ArrayList<M50> m50List;
     private int m50Size;
-    public static class M50{
+
+    public static class M50 {
         public double getPrice() {
             return price;
         }
@@ -114,7 +159,8 @@ public class DealDetailAmountSizeBean {
 
     private ArrayList<M30> m30List;
     private int m30Size;
-    public static class M30{
+
+    public static class M30 {
         public double getPrice() {
             return price;
         }
@@ -146,7 +192,8 @@ public class DealDetailAmountSizeBean {
 
     private ArrayList<M10> m10List;
     private int m10Size;
-    public static class M10{
+
+    public static class M10 {
         public double getPrice() {
             return price;
         }
@@ -158,6 +205,7 @@ public class DealDetailAmountSizeBean {
         private double price;
         private String time;
         private double amount;
+
         public String getTime() {
             return time;
         }
@@ -178,7 +226,8 @@ public class DealDetailAmountSizeBean {
 
     private ArrayList<M5> m5List;
     private int m5Size;
-    public static class M5{
+
+    public static class M5 {
         public double getPrice() {
             return price;
         }
@@ -190,6 +239,7 @@ public class DealDetailAmountSizeBean {
         private double price;
         private String time;
         private double amount;
+
         public String getTime() {
             return time;
         }
@@ -209,7 +259,8 @@ public class DealDetailAmountSizeBean {
 
     private ArrayList<M1> m1List;
     private int m1Size;
-    public static class M1{
+
+    public static class M1 {
         public double getPrice() {
             return price;
         }
@@ -221,6 +272,7 @@ public class DealDetailAmountSizeBean {
         private double price;
         private String time;
         private double amount;
+
         public String getTime() {
             return time;
         }
@@ -240,7 +292,8 @@ public class DealDetailAmountSizeBean {
 
     private ArrayList<M05> m05List;
     private int m05Size;
-    public static class M05{
+
+    public static class M05 {
         public double getPrice() {
             return price;
         }
@@ -252,6 +305,7 @@ public class DealDetailAmountSizeBean {
         private double price;
         private String time;
         private double amount;
+
         public String getTime() {
             return time;
         }
@@ -405,7 +459,8 @@ public class DealDetailAmountSizeBean {
     }
 
     private int m01Size;
-    public static class M01{
+
+    public static class M01 {
         public double getPrice() {
             return price;
         }
@@ -417,6 +472,7 @@ public class DealDetailAmountSizeBean {
         private double price;
         private String time;
         private double amount;
+
         public String getTime() {
             return time;
         }

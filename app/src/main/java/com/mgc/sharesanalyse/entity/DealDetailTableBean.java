@@ -50,7 +50,6 @@ public class DealDetailTableBean {
     @Override
     public String toString() {
         return "" +
-                ", percent=" + percent +
                 ", allsize=" + allsize +
                 ", sizeBean=" + sizeBean.toString();
     }

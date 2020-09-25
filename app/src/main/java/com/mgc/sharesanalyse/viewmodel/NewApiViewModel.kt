@@ -553,8 +553,18 @@ class NewApiViewModel : BaseViewModel() {
                 )}---difPrices:${diffPrices}---percent:${BigDecimalUtils.div(
                     diffPrices,
                     basePrices
-                ) * 100}%---curPercent:${getcurPercent(hqList[index])}"
+                ) * 100}%---curPercent:${getcurPercent(hqList[index])}---dealAmount:${getHisHqDayDealAmount(hqList[index])}"
+
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
+            var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
+            bean?.let {
+                logStr = logStr.putTogetherAndChangeLineLogic(
+                    "DealDetail-->" + getHisHqDay(hqList[index]).replace(
+                        "-",
+                        ""
+                    ) + bean.toString()
+                )
+            }
         }
         LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
         if (needLog) {
@@ -630,11 +640,11 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("complete==========================")
         var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
         var txtname: String
-        var dbDateList = ArrayList<String>()
-        dbDateList.getWeekDayS(DateUtils.formatYesterDayTimeStamp(), 15)
-        dbDateList.forEach {
-            LogUtil.d("dbDateList:$it")
-        }
+//        var dbDateList = ArrayList<String>()
+//        dbDateList.getWeekDayS(DateUtils.formatYesterDayTimeStamp(), 15)
+//        dbDateList.forEach {
+//            LogUtil.d("dbDateList:$it")
+//        }
         sortpriceHisRecordGDBean(list)
         list.forEach {
             if (it.id > 600000) {
@@ -645,13 +655,13 @@ class NewApiViewModel : BaseViewModel() {
                 txtname = "sz_"
             }
             FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
-            dbDateList.forEach {date->
-                var bean = DBUtils.queryDealDetailByCode("DD_${date.replace("-","")}", it.code)
-                bean?.let {
-                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "DealDetail_code:${bean.code}_name:${bean.name}---------------------------------------------------------")
-                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", date+bean.toString())
-                }
-            }
+//            dbDateList.forEach {date->
+//                var bean = DBUtils.queryDealDetailByCode("DD_${date.replace("-","")}", it.code)
+//                bean?.let {
+//                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "DealDetail_code:${bean.code}_name:${bean.name}---------------------------------------------------------")
+//                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", date+bean.toString())
+//                }
+//            }
         }
         LogUtil.d("logDealDetailHqSum---completed----------------------------")
     }
