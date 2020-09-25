@@ -9,21 +9,13 @@ public class DealDetailAmountSizeBean {
     @Override
     public String toString() {
         return "DealDetailAmountSizeBean{" +
-                "m100List=" + m100List +
                 ", m100Size=" + m100Size +
-                ", m50List=" + m50List +
                 ", m50Size=" + m50Size +
-                ", m30List=" + m30List +
                 ", m30Size=" + m30Size +
-                ", m10List=" + m10List +
                 ", m10Size=" + m10Size +
-                ", m5List=" + m5List +
                 ", m5Size=" + m5Size +
-                ", m1List=" + m1List +
                 ", m1Size=" + m1Size +
-                ", m05List=" + m05List +
                 ", m05Size=" + m05Size +
-                ", m01List=" + m01List +
                 ", m01Size=" + m01Size +
                 '}';
     }

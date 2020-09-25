@@ -47,6 +47,17 @@ public class DealDetailTableBean {
         this.sizeBean = sizeBean;
     }
 
+    @Override
+    public String toString() {
+        return "DealDetailTableBean{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", percent=" + percent +
+                ", allsize=" + allsize +
+                ", sizeBean=" + sizeBean.toString() +
+                '}';
+    }
+
     private DealDetailAmountSizeBean sizeBean;
 
 

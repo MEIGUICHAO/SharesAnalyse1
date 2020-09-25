@@ -69,7 +69,8 @@ class NewApiActivity : AppCompatActivity() {
         }
 
         btnCopy.setOnClickListener {
-            copyDB()
+            viewModel.foreachDDInfo()
+//            copyDB()
 //            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
         btnRequestDealDetail.setOnClickListener {

@@ -47,7 +47,7 @@ object DBUtils {
     fun queryDealDetailIsExsitByCode(dbName: String, code: String):Boolean {
         createDealDetailTable(dbName)
         LogUtil.d("code:$code")
-        var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
+        var cursor= db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
         var isexsit = cursor.count>0
         LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
         cursor.close()
@@ -57,10 +57,7 @@ object DBUtils {
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
         createDealDetailTable(dbName)
         var dealDetailTableBean: DealDetailTableBean? = null
-        val mCode = if (code.toInt() < 300000) {
-            DecimalFormat("000000").format(code)
-        } else code
-        var cursor = db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
+        var cursor = db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
         if (null != cursor && cursor.moveToFirst()) {
             dealDetailTableBean = DealDetailTableBean()
             var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
@@ -76,14 +73,14 @@ object DBUtils {
             val m1s = cursor.getInt(cursor.getColumnIndex("M1S"))
             val m05s = cursor.getInt(cursor.getColumnIndex("M05S"))
             val m01s = cursor.getInt(cursor.getColumnIndex("M01S"))
-            val m100j = cursor.getString(cursor.getColumnIndex("M100J"))
-            val m50j = cursor.getString(cursor.getColumnIndex("M50J"))
-            val m30j = cursor.getString(cursor.getColumnIndex("M30J"))
-            val m10j = cursor.getString(cursor.getColumnIndex("M10J"))
-            val m5j = cursor.getString(cursor.getColumnIndex("M5J"))
-            val m1j = cursor.getString(cursor.getColumnIndex("M1J"))
-            val m05j = cursor.getString(cursor.getColumnIndex("M05J"))
-            val m01j = cursor.getString(cursor.getColumnIndex("M01J"))
+            val m100j:String? = cursor.getString(cursor.getColumnIndex("M100J"))
+            val m50j:String?  = cursor.getString(cursor.getColumnIndex("M50J"))
+            val m30j:String?  = cursor.getString(cursor.getColumnIndex("M30J"))
+            val m10j:String?  = cursor.getString(cursor.getColumnIndex("M10J"))
+            val m5j:String?  = cursor.getString(cursor.getColumnIndex("M5J"))
+            val m1j:String?  = cursor.getString(cursor.getColumnIndex("M1J"))
+            val m05j:String?  = cursor.getString(cursor.getColumnIndex("M05J"))
+            val m01j:String?  = cursor.getString(cursor.getColumnIndex("M01J"))
             dealDetailAmountSizeBean.m100Size = m100s
             dealDetailAmountSizeBean.m50Size = m50s
             dealDetailAmountSizeBean.m30Size = m30s
@@ -93,16 +90,16 @@ object DBUtils {
             dealDetailAmountSizeBean.m05Size = m05s
             dealDetailAmountSizeBean.m01Size = m01s
 
-            dealDetailAmountSizeBean.m100List = m100j.json2Array(DealDetailAmountSizeBean.M100::class.java)
-            dealDetailAmountSizeBean.m50List = m50j.json2Array(DealDetailAmountSizeBean.M50::class.java)
-            dealDetailAmountSizeBean.m30List = m30j.json2Array(DealDetailAmountSizeBean.M30::class.java)
-            dealDetailAmountSizeBean.m10List = m10j.json2Array(DealDetailAmountSizeBean.M10::class.java)
-            dealDetailAmountSizeBean.m5List = m5j.json2Array(DealDetailAmountSizeBean.M5::class.java)
-            dealDetailAmountSizeBean.m1List = m1j.json2Array(DealDetailAmountSizeBean.M1::class.java)
-            dealDetailAmountSizeBean.m05List = m05j.json2Array(DealDetailAmountSizeBean.M05::class.java)
-            dealDetailAmountSizeBean.m01List = m01j.json2Array(DealDetailAmountSizeBean.M01::class.java)
+            dealDetailAmountSizeBean.m100List = m100j?.json2Array(DealDetailAmountSizeBean.M100::class.java)
+            dealDetailAmountSizeBean.m50List = m50j?.json2Array(DealDetailAmountSizeBean.M50::class.java)
+            dealDetailAmountSizeBean.m30List = m30j?.json2Array(DealDetailAmountSizeBean.M30::class.java)
+            dealDetailAmountSizeBean.m10List = m10j?.json2Array(DealDetailAmountSizeBean.M10::class.java)
+            dealDetailAmountSizeBean.m5List = m5j?.json2Array(DealDetailAmountSizeBean.M5::class.java)
+            dealDetailAmountSizeBean.m1List = m1j?.json2Array(DealDetailAmountSizeBean.M1::class.java)
+            dealDetailAmountSizeBean.m05List = m05j?.json2Array(DealDetailAmountSizeBean.M05::class.java)
+            dealDetailAmountSizeBean.m01List = m01j?.json2Array(DealDetailAmountSizeBean.M01::class.java)
 
-            dealDetailTableBean.code = mCode
+            dealDetailTableBean.code = code
             dealDetailTableBean.name = name
             dealDetailTableBean.allsize = allsize
             dealDetailTableBean.percent  = percent
