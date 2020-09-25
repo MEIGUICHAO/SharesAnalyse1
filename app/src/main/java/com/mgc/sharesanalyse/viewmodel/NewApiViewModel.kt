@@ -256,6 +256,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun classifyDealDetail(sinaDealList: java.util.ArrayList<SinaDealDatailBean>): Pair<DealDetailAmountSizeBean, Double> {
+
         var percent = sinaDealList[0].price.toDouble()
             .getPercent(sinaDealList[sinaDealList.size - 1].price.toDouble())
         val dealDetailAmountSizeBean = DealDetailAmountSizeBean()
@@ -265,8 +266,6 @@ class NewApiViewModel : BaseViewModel() {
         dealDetailAmountSizeBean.m10List = ArrayList()
         dealDetailAmountSizeBean.m5List = ArrayList()
         dealDetailAmountSizeBean.m1List = ArrayList()
-        dealDetailAmountSizeBean.m05List = ArrayList()
-        dealDetailAmountSizeBean.m01List = ArrayList()
         LogUtil.d("classifyDealDetail")
         sinaDealList.forEach {
             if (BigDecimalUtils.mul(
@@ -348,12 +347,7 @@ class NewApiViewModel : BaseViewModel() {
                     3
                 ) >= 0.5 * 1000000
             ) {
-                val m05 = DealDetailAmountSizeBean.M05()
                 dealDetailAmountSizeBean.m05Size = dealDetailAmountSizeBean.m05Size + 1
-                m05.amount = it.price.toDouble() * it.volume.toDouble() / 10000
-                m05.time = it.ticktime
-                m05.price = it.price.toDouble()
-                dealDetailAmountSizeBean.m05List.add(m05)
 
             } else if (BigDecimalUtils.mul(
                     it.price.toDouble(),
@@ -361,12 +355,7 @@ class NewApiViewModel : BaseViewModel() {
                     3
                 ) >= 0.1 * 1000000
             ) {
-                val m01 = DealDetailAmountSizeBean.M01()
                 dealDetailAmountSizeBean.m01Size = dealDetailAmountSizeBean.m01Size + 1
-                m01.amount = it.price.toDouble() * it.volume.toDouble() / 10000
-                m01.time = it.ticktime
-                m01.price = it.price.toDouble()
-                dealDetailAmountSizeBean.m01List.add(m01)
             }
 
 
@@ -613,11 +602,11 @@ class NewApiViewModel : BaseViewModel() {
     fun getPriceHisFileLog() {
         //300185！！！
         detailCodeList.clear()
-        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-        LogUtil.d("getPriceHisFileLog list size:${list.size}")
-        sortpriceHisRecordGDBean(list)
+//        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+//        LogUtil.d("getPriceHisFileLog list size:${list.size}")
+//        sortpriceHisRecordGDBean(list)
 
-//        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
             detailCodeList.add(it.code)
         }

@@ -79,8 +79,6 @@ public class DealDetailAmountSizeBean {
                         "," + array2Json(m10List) +
                         "," + array2Json(m5List) +
                         "," + array2Json(m1List) +
-                        "," + array2Json(m05List) +
-                        "," + array2Json(m01List) +
                         ");";
     }
 
@@ -290,40 +288,9 @@ public class DealDetailAmountSizeBean {
         }
     }
 
-    private ArrayList<M05> m05List;
     private int m05Size;
 
-    public static class M05 {
-        public double getPrice() {
-            return price;
-        }
 
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        private double price;
-        private String time;
-        private double amount;
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public double getAmount() {
-            return amount;
-        }
-
-        public void setAmount(double amount) {
-            this.amount = amount;
-        }
-    }
-
-    private ArrayList<M01> m01List;
 
     public ArrayList<M100> getM100List() {
         return m100List;
@@ -373,21 +340,6 @@ public class DealDetailAmountSizeBean {
         this.m1List = m1List;
     }
 
-    public ArrayList<M05> getM05List() {
-        return m05List;
-    }
-
-    public void setM05List(ArrayList<M05> m05List) {
-        this.m05List = m05List;
-    }
-
-    public ArrayList<M01> getM01List() {
-        return m01List;
-    }
-
-    public void setM01List(ArrayList<M01> m01List) {
-        this.m01List = m01List;
-    }
 
     public int getM100Size() {
         return m100Size;
@@ -460,33 +412,4 @@ public class DealDetailAmountSizeBean {
 
     private int m01Size;
 
-    public static class M01 {
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        private double price;
-        private String time;
-        private double amount;
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public double getAmount() {
-            return amount;
-        }
-
-        public void setAmount(double amount) {
-            this.amount = amount;
-        }
-    }
 }

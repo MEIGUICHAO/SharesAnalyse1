@@ -20,7 +20,7 @@ object DBUtils {
         createDealDetailTable(dbName)
         if (!queryDealDetailIsExsitByCode(dbName,dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)" +
+                    "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J)" +
                     " VALUES${dealDetailTableBean.toSqlValues()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -79,8 +79,6 @@ object DBUtils {
             val m10j:String?  = cursor.getString(cursor.getColumnIndex("M10J"))
             val m5j:String?  = cursor.getString(cursor.getColumnIndex("M5J"))
             val m1j:String?  = cursor.getString(cursor.getColumnIndex("M1J"))
-            val m05j:String?  = cursor.getString(cursor.getColumnIndex("M05J"))
-            val m01j:String?  = cursor.getString(cursor.getColumnIndex("M01J"))
             dealDetailAmountSizeBean.m100Size = m100s
             dealDetailAmountSizeBean.m50Size = m50s
             dealDetailAmountSizeBean.m30Size = m30s
@@ -96,8 +94,6 @@ object DBUtils {
             dealDetailAmountSizeBean.m10List = m10j?.json2Array(DealDetailAmountSizeBean.M10::class.java)
             dealDetailAmountSizeBean.m5List = m5j?.json2Array(DealDetailAmountSizeBean.M5::class.java)
             dealDetailAmountSizeBean.m1List = m1j?.json2Array(DealDetailAmountSizeBean.M1::class.java)
-            dealDetailAmountSizeBean.m05List = m05j?.json2Array(DealDetailAmountSizeBean.M05::class.java)
-            dealDetailAmountSizeBean.m01List = m01j?.json2Array(DealDetailAmountSizeBean.M01::class.java)
 
             dealDetailTableBean.code = code
             dealDetailTableBean.name = name
