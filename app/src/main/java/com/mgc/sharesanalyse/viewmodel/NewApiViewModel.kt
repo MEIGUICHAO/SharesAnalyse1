@@ -606,11 +606,11 @@ class NewApiViewModel : BaseViewModel() {
     fun getPriceHisFileLog() {
         //300185！！！
         detailCodeList.clear()
-//        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-//        LogUtil.d("getPriceHisFileLog list size:${list.size}")
-//        sortpriceHisRecordGDBean(list)
+        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
+        LogUtil.d("getPriceHisFileLog list size:${list.size}")
+        sortpriceHisRecordGDBean(list)
 
-        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+//        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
             detailCodeList.add(it.code)
         }
@@ -623,7 +623,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun sortpriceHisRecordGDBean(list: List<PriceHisRecordGDBean>?) {
         Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
             override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
-                return p1.conformSize.compareTo(p0.conformSize)
+                return p1.result.split("---percent:")[1].split("%---curPercent")[0].toDouble().compareTo(p0.result.split("---percent:")[1].split("%---curPercent")[0].toDouble())
             }
         })
     }
