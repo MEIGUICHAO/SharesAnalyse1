@@ -40,11 +40,13 @@ class NewApiViewModel : BaseViewModel() {
     var curCode = 1
     var curDate = 1
     var curDateStr = "1"
+    var hqCurCode = "1"
 
     val DEAL_DETAIL_NEXT_DATE = 1
     val DEAL_DETAIL_NEXT_CODE = 2
     val CHECK_DEAL_DETAIL = 3
     val CHECK_ALL_CODE = 4
+    val CHECK_HQ_CODE = 5
     var GetCodeIndex = 0
 
     private val mHandler: Handler =
@@ -79,6 +81,13 @@ class NewApiViewModel : BaseViewModel() {
                         if (msg.arg1 == GetCodeIndex) {
                             getAllCodeApi()
                         }
+                    }
+                    CHECK_HQ_CODE -> {
+                        val code= msg.obj as String
+                        if (code == hqCurCode) {
+                            getHisHq(code)
+                        }
+
                     }
 
                 }
@@ -122,6 +131,8 @@ class NewApiViewModel : BaseViewModel() {
         }
         if (GetCodeIndex < 52) {
             getAllCodeApi()
+        } else {
+            initCodeList()
         }
 
     }
@@ -161,7 +172,8 @@ class NewApiViewModel : BaseViewModel() {
             curDate = DateUtils.parse(date, FormatterEnum.YYYY_MM_DD).toInt() / 1000
             message.what = CHECK_DEAL_DETAIL
             mHandler.sendMessageDelayed(message, 50 * 1000)
-            launchNetDealDetail(code, date)
+            requestDealDetailNext(code)
+//            launchNetDealDetail(code, date)
         } else {
             LogUtil.d("skip needNetRequest!!!:$needNetRequest code:$code---date:$date")
             val message = mHandler.obtainMessage()
@@ -188,12 +200,12 @@ class NewApiViewModel : BaseViewModel() {
         code: String,
         date: String
     ) {
-        var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
         var tableBean = DealDetailTableBean()
         tableBean.code = code
-        tableBean.allsize = sinaDealList.size
         LogUtil.d("requestDealDetail")
-        if (json != "[]") {
+        if (json != "[]"&&json != "false") {
+            var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
+            tableBean.allsize = sinaDealList.size
             var pair = classifyDealDetail(sinaDealList)
             tableBean.name = sinaDealList[0].name
             tableBean.sizeBean = pair.first
@@ -382,13 +394,23 @@ class NewApiViewModel : BaseViewModel() {
         if (null != bean) {
             val today = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             LogUtil.d("today:$today bean.date:${bean.date} ${today != bean.date}")
-            if (today != bean.date || debug) {
+            if ((today != bean.date && DateUtils.isWeekDay(System.currentTimeMillis()).first) || debug) {
+                val msg = mHandler.obtainMessage()
+                msg.what = CHECK_HQ_CODE
+                msg.obj = code
+                hqCurCode = code
+                mHandler.sendMessageDelayed(msg, 20 * 1000)
                 requestHisPriceHq(false, start, end, code)
             } else {
                 LogUtil.d("cache_${Datas.sohuStockUrl}--------$code")
                 loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
             }
         } else {
+            val msg = mHandler.obtainMessage()
+            msg.what = CHECK_HQ_CODE
+            msg.obj = code
+            hqCurCode = code
+            mHandler.sendMessageDelayed(msg, 20 * 1000)
             requestHisPriceHq(true, start, end, code)
         }
 
@@ -458,21 +480,21 @@ class NewApiViewModel : BaseViewModel() {
 //        val mineInfoJson = GsonHelper.toJson(mineInfoList)
 //        val xqInfoJson = GsonHelper.toJson(XQInfoList)
 
+        LogUtil.d("updateInTxHisPriceInfo")
         val bean = PricesHisGDBean()
         bean.code = code
-        if (isinsertInTx) {
-            bean.id = code.toLong()
-        }
+        bean.id = code.toLong()
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         bean.json = json
 //        bean.mineInfo = mineInfoJson
 //        bean.xqInfo = xqInfoJson
 //        LogUtil.d("xqInfo:\n$xqInfoJson")
-        if (isinsertInTx) {
-            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insertInTx(bean)
-        } else {
-            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateInTx(bean)
-        }
+        DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
+//        if (isinsertInTx) {
+//            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insertInTx(bean)
+//        } else {
+//            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateInTx(bean)
+//        }
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
     }
@@ -500,25 +522,33 @@ class NewApiViewModel : BaseViewModel() {
     //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
     fun getHisHqAnalyseResult(
         hqList: List<List<String>>,
-        codeSum: String, code: String, stat: List<String>
+        codeSum: String, code: String, stat: List<String>?
     ) {
 //        val baseDays = hqList.size/2
-        val baseDays = 15
+        var baseDays = 15
         var baseDealAmount = 0.toDouble()
         var baseDealPercent = 0.toDouble()
+        baseDays = if (baseDays >= hqList.size) hqList.size - 1 else baseDays
         for (index in (hqList.size - 1) downTo baseDays) {
             baseDealAmount = baseDealAmount + getHisHqDayDealAmount(hqList[index])
             baseDealPercent = baseDealPercent + getHisHqDayDealPercent(hqList[index])
         }
-        val baseAvgDealAmount =
+        var baseAvgDealAmount =
             BigDecimalUtils.div(baseDealAmount, (hqList.size - baseDays).toDouble())
-        val baseAvgDealPercent =
+        var baseAvgDealPercent =
             BigDecimalUtils.div(baseDealPercent, (hqList.size - baseDays).toDouble())
         val basePrices = getHisHqDayClosePrice(hqList[baseDays])
         var needLog = false
         var logStr = codeSum
         var conformSize = 0
         for (index in 0 until baseDays) {
+            DBUtils.updateDDPercentByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}",code,getcurPercent(hqList[index]).replace("%",""))
+            if (baseAvgDealAmount == 0.toDouble()) {
+                baseAvgDealAmount = 1.toDouble()
+            }
+            if (baseAvgDealPercent == 0.toDouble()) {
+                baseAvgDealPercent = 1.toDouble()
+            }
             val dealTimes =
                 BigDecimalUtils.div(getHisHqDayDealAmount(hqList[index]), baseAvgDealAmount)
             val percentTimes =
@@ -529,7 +559,7 @@ class NewApiViewModel : BaseViewModel() {
             )
             //连续三天3，b时机 待验证
             var needLogTag = ""
-            if (dealTimes >= 3 && percentTimes >= 3) {
+            if (dealTimes >= 2 && percentTimes >= 2) {
                 conformSize++
                 needLogTag = "!!!!!"
             }
@@ -545,18 +575,15 @@ class NewApiViewModel : BaseViewModel() {
                 ) * 100}%---curPercent:${getcurPercent(hqList[index])}---dealAmount:${getHisHqDayDealAmount(hqList[index])}"
 
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
-            DBUtils.updateDDPercentByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}",code,getcurPercent(hqList[index]).replace("%",""))
-            if (needLog) {
-                var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
-                bean?.let {
-                    logStr = logStr.putTogetherAndChangeLineLogic(
-                        "DealDetail-->" + getHisHqDay(hqList[index]).replace(
-                            "-",
-                            ""
-                        ) + bean.getToString(getHisHqDayDealAmount(hqList[index]))
-                    )
-                    logStr = logStr.putTogetherAndChangeLineLogic("-----------------------------------------------------------")
-                }
+            var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
+            bean?.let {
+                logStr = logStr.putTogetherAndChangeLineLogic(
+                    "DealDetail-->" + getHisHqDay(hqList[index]).replace(
+                        "-",
+                        ""
+                    ) + bean.getToString(getHisHqDayDealAmount(hqList[index]))
+                )
+                logStr = logStr.putTogetherAndChangeLineLogic("-----------------------------------------------------------")
             }
         }
         LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
@@ -566,9 +593,17 @@ class NewApiViewModel : BaseViewModel() {
             bean.code = code
             bean.id = code.toLong()
             bean.conformSize = conformSize
-            bean.dealAmount = stat[7].toDouble()
-            bean.dealAvgAmount = stat[7].toDouble() / hqList.size
-            bean.turnOverRate = stat[8].replace("%", "").toDouble()
+            bean.dealAmount = stat?.get(7)?.toDouble() ?: 0.toDouble()
+            bean.dealAvgAmount = stat?.get(7)?.toDouble() ?: 0.toDouble() / hqList.size
+            var tostr = stat?.get(8)?.replace("%", "")
+            tostr?.let {
+                var str = it
+                if (str.isEmpty()) {
+                    str = "0"
+                }
+                bean.turnOverRate = str.toDouble()
+            }
+
             bean.result =
                 "===conformSize:$conformSize===dealAvgAmount:${bean.dealAvgAmount}===turnOverRate:${bean.turnOverRate}===\n$$logStr"
             bean.baseComparePercent = BigDecimalUtils.div(
@@ -604,6 +639,7 @@ class NewApiViewModel : BaseViewModel() {
 
     val detailCodeList = ArrayList<String>()
     fun getPriceHisFileLog() {
+        SPUtils.put(Datas.SPGetHQCodeDate, DateUtils.formatToDay(FormatterEnum.YYYYMMDD))
         //300185！！！
         detailCodeList.clear()
         var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()

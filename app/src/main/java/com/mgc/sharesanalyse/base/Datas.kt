@@ -15,6 +15,7 @@ object Datas {
     var dealDetailTableName = "DD_"
     var limitSize = 160
     var basebase = 30
+    var SPGetHQCodeDate = "SPGetHQCodeDate"
     var baseNum = 30/basebase
     var limitPerAmount = 500 * baseNum
     var intervalTime = basebase * 1000 * baseNum

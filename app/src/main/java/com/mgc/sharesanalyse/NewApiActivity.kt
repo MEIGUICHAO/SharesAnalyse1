@@ -110,7 +110,7 @@ class NewApiActivity : AppCompatActivity() {
     }
 
     private fun getHisHq() {
-        var code = viewModel.stocksNameArray[progressIndex].split("####")[0].replace("sz", "")
+        var code = viewModel.codeNameList[progressIndex].split("####")[0].replace("sz", "")
             .replace("sh", "")
         viewModel.getHisHq(code)
     }
@@ -150,18 +150,22 @@ class NewApiActivity : AppCompatActivity() {
                         }
                         viewModel.REQUEST_HIS_HQ -> {
                             val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
-                            var sumStr =
-                                "${viewModel.stocksNameArray[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[3]},lowest:${hisHqBean[0].stat[4]},highest:${hisHqBean[0].stat[5]}"
-                            sumStr = String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace(
-                                "��",
-                                "至"
-                            )
+                            var sumStr = ""
+                            if (null != hisHqBean[0].stat) {
+                                sumStr =
+                                    "${viewModel.codeNameList[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[3]},lowest:${hisHqBean[0].stat[4]},highest:${hisHqBean[0].stat[5]}"
+                                sumStr = String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace(
+                                    "��",
+                                    "至"
+                                )
+                            }
+
 
                             viewModel.getHisHqAnalyseResult(
                                 hisHqBean[0].hq,
                                 sumStr,
                                 hisHqBean[0].code.replace("cn_", ""),
-                                hisHqBean[0].stat
+                                (if (null==hisHqBean[0].stat) null else hisHqBean[0].stat)
                             )
 
                         }
@@ -178,7 +182,11 @@ class NewApiActivity : AppCompatActivity() {
                         viewModel.REQUEST_HIS_HQ -> {
                             progressIndex++
 //                            if (progressIndex < 5) {
-                            if (progressIndex < viewModel.stocksArray.size) {
+                            val date = SPUtils.get(Datas.SPGetHQCodeDate, "")
+
+                            if (date == DateUtils.formatToDay(FormatterEnum.YYYYMMDD)) {
+                                viewModel.getPriceHisFileLog()
+                            } else if (progressIndex < viewModel.codeNameList.size) {
                                 getHisHq()
                             } else {
                                 viewModel.getPriceHisFileLog()
