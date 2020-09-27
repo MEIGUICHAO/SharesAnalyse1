@@ -583,6 +583,26 @@ class NewApiViewModel : BaseViewModel() {
                         ""
                     ) + bean.getToString(getHisHqDayDealAmount(hqList[index]))
                 )
+                if (null != bean.sizeBean.m100List) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=100m:" + GsonHelper.toJson(bean.sizeBean.m100List))
+                }
+                if (null != bean.sizeBean.m50List) {
+                    logStr = logStr.putTogetherAndChangeLineLogic(">=50m:" + GsonHelper.toJson(bean.sizeBean.m50List))
+                }
+                if (null != bean.sizeBean.m30List) {
+                    logStr = logStr.putTogetherAndChangeLineLogic(">=30m:" + GsonHelper.toJson(bean.sizeBean.m30List))
+                }
+                if (null != bean.sizeBean.m10List) {
+                    logStr = logStr.putTogetherAndChangeLineLogic(">=10m:" + GsonHelper.toJson(bean.sizeBean.m10List))
+                }
+                if (null != bean.sizeBean.m5List) {
+                    logStr = logStr.putTogetherAndChangeLineLogic(">=5m:" + GsonHelper.toJson(bean.sizeBean.m5List))
+                }
+                if (null != bean.sizeBean.m1List) {
+                    logStr = logStr.putTogetherAndChangeLineLogic(">=1m:" + GsonHelper.toJson(bean.sizeBean.m1List))
+                }
+
                 logStr = logStr.putTogetherAndChangeLineLogic("-----------------------------------------------------------")
             }
         }
