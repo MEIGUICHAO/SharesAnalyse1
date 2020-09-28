@@ -31,7 +31,6 @@ open class BaseViewModel:ViewModel() {
     var tag = "sh"
     var path = "sh"
 
-    var codeList = ArrayList<String>()
     var splitTag = "####"
     var codeNameList = ArrayList<String>()
 
@@ -48,6 +47,10 @@ open class BaseViewModel:ViewModel() {
     var bcw1Begin = false
     var bcw2Begin = false
     var bcw3Begin = false
+
+    init {
+        initCodeList()
+    }
 
     fun bwc() {
         var json = RetrofitManager.reqApi.getBwcDpList()
@@ -127,6 +130,14 @@ open class BaseViewModel:ViewModel() {
                 }
         })
 
+    }
+
+
+    fun initCodeList() {
+        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        list.forEach {
+            codeNameList.add("${it.code}$splitTag${it.name}")
+        }
     }
 
     fun setActivity(activity: AppCompatActivity) {

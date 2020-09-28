@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.mgc.sharesanalyse.base.json2Array
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
+import com.mgc.sharesanalyse.entity.PricesHisGDBean
 
 
 object DBUtils {
@@ -27,6 +28,18 @@ object DBUtils {
         }
     }
 
+
+    fun insertHHq2DateTable(dbName: String, hisHqBean: PricesHisGDBean) {
+        createHHqTable(dbName)
+        if (!queryHHqIsExsitByCode(dbName, hisHqBean.code)) {
+            var insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,JSON,MINEINFO)" +
+                    " VALUES(${hisHqBean.code},'${hisHqBean.json}'，'${hisHqBean.mineInfo}')"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        }
+    }
+
     fun insertEmptyDealDetail2DateTable(dbName: String, dealDetailTableBean: DealDetailTableBean) {
         createDealDetailTable(dbName)
         if (!queryDealDetailIsExsitByCode(dbName, dealDetailTableBean.code)) {
@@ -41,19 +54,54 @@ object DBUtils {
     fun dropTable(dbName: String) {
         val dropTable = "DROP TABLE IF EXISTS $dbName"
         db.execSQL(dropTable)
+    }
 
+    fun queryHHqIsExsitByCode(dbName: String, code: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(dbName)) {
+            LogUtil.d("code:$code")
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
     }
 
     fun queryDealDetailIsExsitByCode(dbName: String, code: String): Boolean {
-        createDealDetailTable(dbName)
+        var isexsit = false
         LogUtil.d("code:$code")
-        var cursor =
-            db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
-        var isexsit = cursor.count > 0
-        LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
-        cursor.close()
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
         return isexsit
     }
+
+    fun queryHHqBeanByCode(dbName: String, code: String): PricesHisGDBean? {
+        var hHqBean: PricesHisGDBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            if (null != cursor && cursor.moveToFirst()) {
+                hHqBean = PricesHisGDBean()
+                var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
+                val code = cursor.getString(cursor.getColumnIndex("CODE"))
+                val json = cursor.getString(cursor.getColumnIndex("JSON"))
+                val mineInfo = cursor.getString(cursor.getColumnIndex("MINEINFO"))
+                hHqBean.code = code
+                hHqBean.json = json
+                hHqBean.mineInfo = mineInfo
+            }
+            cursor.close()
+        }
+        return hHqBean
+    }
+
 
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
         var dealDetailTableBean: DealDetailTableBean? = null
@@ -114,6 +162,15 @@ object DBUtils {
             cursor.close()
         }
         return dealDetailTableBean
+    }
+
+    fun createHHqTable(dbName: String) {
+//        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, JSON TEXT, MINEINFO TEXT);"
+            db.execSQL(sqlStr)
+        }
     }
 
     fun createDealDetailTable(dbName: String) {

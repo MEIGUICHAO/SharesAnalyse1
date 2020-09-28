@@ -55,6 +55,11 @@ object DateUtils {
         return simpleDateFormat.format(date)
     }
 
+    fun ifAfterToday1530():Boolean {
+        var date = "${formatToDay(FormatterEnum.YYYYMMDD)} 15:02:00"
+        return System.currentTimeMillis() > parse(date, FormatterEnum.YYYYMMDD__HH_MM_SS)
+    }
+
 
     @SuppressLint("SimpleDateFormat")
     fun formatYesterDayTimeStamp(): Long {

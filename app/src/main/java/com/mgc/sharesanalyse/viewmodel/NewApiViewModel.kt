@@ -74,6 +74,7 @@ class NewApiViewModel : BaseViewModel() {
                                 code,
                                 curDateStr
                             )
+                            LogUtil.d("requestDealDetail!!!")
                         }
 
                     }
@@ -137,6 +138,7 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
+
     fun getDealDetail(code: String, date: String) {
         dealDetailBeginDate = date
         dealDetailIndex = 0
@@ -145,6 +147,7 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("getDealDetail")
             needGoOn = true
             requestDealDetail(code, date)
+            LogUtil.d("requestDealDetail!!!")
         }
 
     }
@@ -153,7 +156,6 @@ class NewApiViewModel : BaseViewModel() {
         code: String,
         date: String
     ) {
-        LogUtil.d("requestDealDetail")
 
         var needNetRequest =
             !DBUtils.queryDealDetailIsExsitByCode(
@@ -162,6 +164,7 @@ class NewApiViewModel : BaseViewModel() {
                     ""
                 ), code
             )
+        LogUtil.d("requestDealDetail needNetRequest:${needNetRequest},code:$code,date:$date")
 
         if (needNetRequest) {
             val message = mHandler.obtainMessage()
@@ -172,8 +175,8 @@ class NewApiViewModel : BaseViewModel() {
             curDate = DateUtils.parse(date, FormatterEnum.YYYY_MM_DD).toInt() / 1000
             message.what = CHECK_DEAL_DETAIL
             mHandler.sendMessageDelayed(message, 50 * 1000)
-            requestDealDetailNext(code)
-//            launchNetDealDetail(code, date)
+//            requestDealDetailNext(code)
+            launchNetDealDetail(code, date)
         } else {
             LogUtil.d("skip needNetRequest!!!:$needNetRequest code:$code---date:$date")
             val message = mHandler.obtainMessage()
@@ -244,6 +247,7 @@ class NewApiViewModel : BaseViewModel() {
             if (pair.first) {
 //                var dealDetailBean: DealDetailBean =DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(DealDetailBeanDao.Properties.Id.eq(code.toLong()))[0]
                 requestDealDetail(code, pair.second)
+                LogUtil.d("requestDealDetail!!! pair:${pair.first},${pair.second}")
             } else {
                 requestDealDetailNext(code)
                 LogUtil.d("requestDealDetailNext")
@@ -252,11 +256,11 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun judeWeekDay(): Pair<Boolean, String> {
-        dealDetailIndex++
         val dateMillis = DateUtils.parse(
             dealDetailBeginDate,
             FormatterEnum.YYYY_MM_DD
         ) - dealDetailIndex * dayMillis
+        dealDetailIndex++
         val pair = DateUtils.isWeekDay(dateMillis)
         if (pair.first) {
             DealDetailDaysWeekDayIndex = DealDetailDaysWeekDayIndex + 1
@@ -388,7 +392,8 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getHisHq(code: String, start: String = "", end: String = "") {
         var bean =
-            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
+            DBUtils.queryHHqBeanByCode("HHQ_${DateUtils.formatToDay(FormatterEnum.YYYYMMDD)}",code)
+//            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
 
 
         if (null != bean) {
@@ -483,18 +488,10 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("updateInTxHisPriceInfo")
         val bean = PricesHisGDBean()
         bean.code = code
-        bean.id = code.toLong()
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         bean.json = json
-//        bean.mineInfo = mineInfoJson
-//        bean.xqInfo = xqInfoJson
-//        LogUtil.d("xqInfo:\n$xqInfoJson")
-        DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
-//        if (isinsertInTx) {
-//            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.insertInTx(bean)
-//        } else {
-//            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateInTx(bean)
-//        }
+//        DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
+        DBUtils.insertHHq2DateTable("HHQ_${DateUtils.formatToDay(FormatterEnum.YYYYMMDD)}",bean)
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
     }
@@ -583,23 +580,23 @@ class NewApiViewModel : BaseViewModel() {
                         ""
                     ) + bean.getToString(getHisHqDayDealAmount(hqList[index]))
                 )
-                if (null != bean.sizeBean.m100List) {
+                if (null != bean.sizeBean.m100List && bean.sizeBean.m100List.size > 0) {
                     logStr =
                         logStr.putTogetherAndChangeLineLogic(">=100m:" + GsonHelper.toJson(bean.sizeBean.m100List))
                 }
-                if (null != bean.sizeBean.m50List) {
+                if (null != bean.sizeBean.m50List&& bean.sizeBean.m50List.size > 0) {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=50m:" + GsonHelper.toJson(bean.sizeBean.m50List))
                 }
-                if (null != bean.sizeBean.m30List) {
+                if (null != bean.sizeBean.m30List&& bean.sizeBean.m30List.size > 0) {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=30m:" + GsonHelper.toJson(bean.sizeBean.m30List))
                 }
-                if (null != bean.sizeBean.m10List) {
+                if (null != bean.sizeBean.m10List&& bean.sizeBean.m10List.size > 0) {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=10m:" + GsonHelper.toJson(bean.sizeBean.m10List))
                 }
-                if (null != bean.sizeBean.m5List) {
+                if (null != bean.sizeBean.m5List&& bean.sizeBean.m5List.size > 0) {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=5m:" + GsonHelper.toJson(bean.sizeBean.m5List))
                 }
-                if (null != bean.sizeBean.m1List) {
+                if (null != bean.sizeBean.m1List&& bean.sizeBean.m1List.size > 0) {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=1m:" + GsonHelper.toJson(bean.sizeBean.m1List))
                 }
 

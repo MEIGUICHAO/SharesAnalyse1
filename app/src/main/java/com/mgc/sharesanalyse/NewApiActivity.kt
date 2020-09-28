@@ -20,8 +20,14 @@ class NewApiActivity : AppCompatActivity() {
     lateinit var viewModel: NewApiViewModel
     var progressIndex = 0
     var judeWeekDayIndex = 0
-    var yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp()
-    var dealDetailBeginDate = DateUtils.formatYesterDay(FormatterEnum.YYYY_MM_DD)
+    var dealDetailBeginDateTimeStamp =
+        if (DateUtils.ifAfterToday1530()) System.currentTimeMillis() else DateUtils.formatYesterDayTimeStamp()
+    var dealDetailBeginDate =
+        if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYY_MM_DD) else DateUtils.formatYesterDay(
+            FormatterEnum.YYYY_MM_DD
+        )
+
+    var needLogAfterDD = false
 
 
     private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
@@ -74,13 +80,20 @@ class NewApiActivity : AppCompatActivity() {
 //            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
         btnRequestDealDetail.setOnClickListener {
+            LogUtil.d("dealDetailBeginDate:$dealDetailBeginDate")
+            needLogAfterDD = false
+            viewModel.detailCodeList.clear()
+            var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+            list.forEach {
+                viewModel.detailCodeList.add(it.code)
+            }
             requestDealDetailBtn()
         }
         btnRequestPricehis.setOnClickListener {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-            yesterDayDateTimeStamp = DateUtils.formatYesterDayTimeStamp()
+            needLogAfterDD = true
             judeWeekDayIndex = 0
             progressIndex = 0
 //            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
@@ -97,14 +110,16 @@ class NewApiActivity : AppCompatActivity() {
     }
 
     fun requestDealDetailBtn() {
-        var pair = DateUtils.isWeekDay(yesterDayDateTimeStamp)
+        var pair = DateUtils.isWeekDay(dealDetailBeginDateTimeStamp)
+        LogUtil.d("requestDealDetailBtn:${pair.first},${pair.second}")
         if (pair.first) {
             progressIndex = 0
             var code = viewModel.detailCodeList[progressIndex]
             viewModel.getDealDetail(code, dealDetailBeginDate)
         } else {
             judeWeekDayIndex++
-            yesterDayDateTimeStamp = yesterDayDateTimeStamp - judeWeekDayIndex * 24 * 60 * 60 * 1000
+            dealDetailBeginDateTimeStamp =
+                dealDetailBeginDateTimeStamp - judeWeekDayIndex * 24 * 60 * 60 * 1000
             requestDealDetailBtn()
         }
     }
@@ -154,10 +169,11 @@ class NewApiActivity : AppCompatActivity() {
                             if (null != hisHqBean[0].stat) {
                                 sumStr =
                                     "${viewModel.codeNameList[progressIndex]}===累计:${hisHqBean[0].stat[1]},pencent:${hisHqBean[0].stat[3]},lowest:${hisHqBean[0].stat[4]},highest:${hisHqBean[0].stat[5]}"
-                                sumStr = String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace(
-                                    "��",
-                                    "至"
-                                )
+                                sumStr =
+                                    String(sumStr.toByteArray(), Charset.forName("UTF-8")).replace(
+                                        "��",
+                                        "至"
+                                    )
                             }
 
 
@@ -165,7 +181,7 @@ class NewApiActivity : AppCompatActivity() {
                                 hisHqBean[0].hq,
                                 sumStr,
                                 hisHqBean[0].code.replace("cn_", ""),
-                                (if (null==hisHqBean[0].stat) null else hisHqBean[0].stat)
+                                (if (null == hisHqBean[0].stat) null else hisHqBean[0].stat)
                             )
 
                         }
@@ -200,9 +216,12 @@ class NewApiActivity : AppCompatActivity() {
                                 var code = viewModel.detailCodeList[progressIndex]
                                 viewModel.getDealDetail(
                                     code,
-                                    dealDetailBeginDate)
+                                    dealDetailBeginDate
+                                )
                             } else {
-                                viewModel.logDealDetailHqSum()
+                                if (needLogAfterDD) {
+                                    viewModel.logDealDetailHqSum()
+                                }
 
                             }
                         }
