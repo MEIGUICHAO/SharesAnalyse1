@@ -215,6 +215,34 @@ object DBUtils {
         return result
     }
 
+
+    fun foreachDBTable() {
+        var result = false
+        var cursor: Cursor? = null
+        try {
+            val sql =
+                "select name from Sqlite_master  where type ='table'"
+
+            cursor = db.rawQuery(sql, null)
+            while (cursor.moveToNext()) {
+                var name = cursor.getString(cursor.getColumnIndex("name"))
+                LogUtil.d("foreachDBTable name:$name")
+                val sqlstr =
+                    "select * from $name"
+                val mCursor = db.rawQuery(sqlstr, null)
+                LogUtil.d("foreachDBTable mCursor:${mCursor.count}")
+                if (name.contains("DD_")&&mCursor.count==0) {
+                    dropTable(name)
+                }
+
+            }
+        } catch (e: Exception) {
+            // TODO: handle exception
+        } finally {
+            cursor?.close()
+        }
+    }
+
     fun updateDDPercentByCode(
         dbname: String,
         code: String,
