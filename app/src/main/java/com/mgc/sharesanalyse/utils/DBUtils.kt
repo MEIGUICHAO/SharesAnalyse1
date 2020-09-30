@@ -31,10 +31,10 @@ object DBUtils {
 
     fun insertHHq2DateTable(dbName: String, hisHqBean: PricesHisGDBean) {
         createHHqTable(dbName)
-        if (!queryHHqIsExsitByCode(dbName, hisHqBean.code)) {
+        if (!queryHHqIsExsitByCode(dbName, hisHqBean.code.toInt().toString())) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,JSON,MINEINFO)" +
-                    " VALUES(${hisHqBean.code},'${hisHqBean.json}'，'${hisHqBean.mineInfo}')"
+                    " VALUES(${hisHqBean.code},'${hisHqBean.json}','${hisHqBean.mineInfo}')"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         }

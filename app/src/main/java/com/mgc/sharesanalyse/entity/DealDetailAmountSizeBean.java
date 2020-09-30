@@ -18,10 +18,10 @@ public class DealDetailAmountSizeBean {
                 (m1Size > 0 ? ",m1Size=" + m1Size : "") +
                 (m05Size > 0 ? ",m05Size=" + m05Size : "") +
                 (m01Size > 0 ? ",m01Size=" + m01Size : "") +
-                (getGt5000() > 0 ? ",>5000=" + getGt5000()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt5000(),dealAmount)+";" : "") +
-                (getGt1000() > 0 ? ",>1000=" + getGt1000()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt1000(),dealAmount)+";" : "") +
-                (getGt500() > 0 ? ",>500=" + getGt500()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt500(),dealAmount)+";" : "") +
-                (getGt100() > 0 ? ",>100=" + getGt100()+",percent:"+ BigDecimalUtils.INSTANCE.div(getGt100(),dealAmount)+";" : "") +
+                (getGt5000() > 0 ? ",>5000=" + getGt5000()+",>5000percent:"+ BigDecimalUtils.INSTANCE.div(getGt5000(),dealAmount)+";" : "") +
+                (getGt1000() > 0 ? ",>1000=" + getGt1000()+",>1000percent:"+ BigDecimalUtils.INSTANCE.div(getGt1000(),dealAmount)+";" : "") +
+                (getGt500() > 0 ? ",>500=" + getGt500()+",>500percent:"+ BigDecimalUtils.INSTANCE.div(getGt500(),dealAmount)+";" : "") +
+                (getGt100() > 0 ? ",>100=" + getGt100()+",>100percent:"+ BigDecimalUtils.INSTANCE.div(getGt100(),dealAmount)+";" : "") +
                 '}';
     }
 

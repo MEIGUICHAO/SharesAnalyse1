@@ -69,16 +69,13 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnGetALlCode.setOnClickListener {
+//            DBUtils.dropTable("HHQ_20200929")
 //            DBUtils.foreachDBTable()
             viewModel.getAllCode()
-//            copyDB()
-//            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
 
         btnCopy.setOnClickListener {
-//            viewModel.foreachDDInfo()
             copyDB()
-//            DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.deleteAll()
         }
         btnRequestDealDetail.setOnClickListener {
             LogUtil.d("dealDetailBeginDate:$dealDetailBeginDate")
@@ -198,11 +195,11 @@ class NewApiActivity : AppCompatActivity() {
                     when (it.type) {
                         viewModel.REQUEST_HIS_HQ -> {
                             progressIndex++
-//                            if (progressIndex < 5) {
                             val date = SPUtils.get(Datas.SPGetHQCodeDate, "")
-
-                            if (date == DateUtils.formatToDay(FormatterEnum.YYYYMMDD)) {
+                            val compareDate = if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(FormatterEnum.YYYYMMDD)
+                            if (date == compareDate) {
                                 viewModel.getPriceHisFileLog()
+//                            } else if (progressIndex < 1) {
                             } else if (progressIndex < viewModel.codeNameList.size) {
                                 getHisHq()
                             } else {
@@ -211,7 +208,7 @@ class NewApiActivity : AppCompatActivity() {
                         }
                         viewModel.REQUEST_DealDETAIL -> {
                             progressIndex++
-                            LogUtil.d("progressIndex:$progressIndex")
+                            LogUtil.d("-----${viewModel.detailCodeList.size}-----progressIndex:$progressIndex")
 //                            if (progressIndex < 2) {
                             if (progressIndex < viewModel.detailCodeList.size) {
                                 var code = viewModel.detailCodeList[progressIndex]
@@ -219,12 +216,13 @@ class NewApiActivity : AppCompatActivity() {
                                     code,
                                     dealDetailBeginDate
                                 )
-                            } else {
-                                if (needLogAfterDD) {
-                                    viewModel.logDealDetailHqSum()
-                                }
-
                             }
+//                            else {
+//                                if (needLogAfterDD) {
+//                                    viewModel.logDealDetailHqSum()
+//                                }
+//
+//                            }
                         }
                     }
                 }
