@@ -533,6 +533,15 @@ class NewApiViewModel : BaseViewModel() {
         var needLog = false
         var logStr = codeSum
         var conformSize = 0
+        var txtname = ""
+        if (code.toInt() > 600000) {
+            txtname = "sh_"
+        } else if (code.toInt() > 300000) {
+            txtname = "cy_"
+        } else {
+            txtname = "sz_"
+        }
+        FileLogUtil.d("${parentBasePath}${txtname}_before0930", "============$code============")
         for (index in 0 until baseDays) {
             DBUtils.updateDDPercentByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}",code,getcurPercent(hqList[index]).replace("%",""))
             if (baseAvgDealAmount == 0.toDouble()) {
@@ -568,18 +577,9 @@ class NewApiViewModel : BaseViewModel() {
 
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
             var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
-            var txtname = ""
-            if (code.toInt() > 600000) {
-                txtname = "sh_"
-            } else if (code.toInt() > 300000) {
-                txtname = "cy_"
-            } else {
-                txtname = "sz_"
-            }
-            FileLogUtil.d("${parentBasePath}${txtname}_before0930", "============$code,${getHisHqDay(hqList[index])}============")
+
 
             bean?.let {
-
 
                 logStr = logStr.putTogetherAndChangeLineLogic(
                     "DealDetail-->" + getHisHqDay(hqList[index]).replace(
@@ -591,6 +591,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr =
                         logStr.putTogetherAndChangeLineLogic(">=100m size = ${bean.sizeBean.m100List.size}:")
                      var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m100List.size-1 downTo 0 ) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m100List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m100List.get(i).amount.toString())
                         str = str +  "(amount=${bean.sizeBean.m100List.get(i).amount},prices=${bean.sizeBean.m100List.get(i).price},time=${bean.sizeBean.m100List.get(i).time})---"
@@ -601,6 +602,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=50m size = ${bean.sizeBean.m50List.size}:")
 
                     var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m50List.size-1 downTo 0 ) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m50List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m50List.get(i).amount.toString())
                         str = str +  "(amount=${bean.sizeBean.m50List.get(i).amount},prices=${bean.sizeBean.m50List.get(i).price},time=${bean.sizeBean.m50List.get(i).time})---"
@@ -611,6 +613,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=30m size = ${bean.sizeBean.m30List.size}:")
 
                     var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m30List.size-1 downTo 0) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m30List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m30List.get(i).amount.toString())
                         str = str +  "(amount=${bean.sizeBean.m30List.get(i).amount},prices=${bean.sizeBean.m30List.get(i).price},time=${bean.sizeBean.m30List.get(i).time})---"
@@ -621,6 +624,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=10m size = ${bean.sizeBean.m10List.size}:")
 
                     var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m10List.size-1 downTo 0 ) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m10List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m10List.get(i).amount.toString())
                         str = str +  "(amount=${bean.sizeBean.m10List.get(i).amount},prices=${bean.sizeBean.m10List.get(i).price},time=${bean.sizeBean.m10List.get(i).time})---"
@@ -631,6 +635,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=5m size = ${bean.sizeBean.m5List.size}:")
 
                     var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m5List.size-1 downTo 0 ) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m5List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m5List.get(i).amount.toString())
 
@@ -642,6 +647,7 @@ class NewApiViewModel : BaseViewModel() {
                     logStr = logStr.putTogetherAndChangeLineLogic(">=1m size = ${bean.sizeBean.m1List.size}:")
 
                     var str = "   "
+                    FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
                     for (i in bean.sizeBean.m1List.size-1 downTo 0 ) {
                         logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m1List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m1List.get(i).amount.toString())
                         str = str + "(amount=${bean.sizeBean.m1List.get(i).amount},prices=${bean.sizeBean.m1List.get(i).price},time=${bean.sizeBean.m1List.get(i).time})---"
@@ -698,7 +704,7 @@ class NewApiViewModel : BaseViewModel() {
 
         var time = curDay +" $time"
         if (DateUtils.parse(time,FormatterEnum.YYYY_MM_DD__HH_MM_SS)<DateUtils.parse(curDay+" 09:30:00",FormatterEnum.YYYY_MM_DD__HH_MM_SS)){
-            var befor930Txt ="code:$code,$time,$percent,amount:$amount\n"
+            var befor930Txt ="code:$code,$time,$percent,amount:$amount------"
             FileLogUtil.d("${parentBasePath}${txtname}_before0930", befor930Txt)
         }
     }
