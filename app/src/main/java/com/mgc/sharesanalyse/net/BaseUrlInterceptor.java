@@ -25,22 +25,24 @@ public class BaseUrlInterceptor implements Interceptor {
         Request.Builder builder = request.newBuilder();
         //从request中获取headers，通过给定的键url_name
         List<String> headerValues = request.headers("urlname");
+        List<String> agentrValues = request.headers("User-Agent");
+        List<String> contentType = request.headers("Content-Type");
+        List<String> cookieType = request.headers("Cookie");
+        if (agentrValues.size() > 0) {
+            builder.removeHeader("User-Agent");
+            builder.addHeader("User-Agent", agentrValues.get(0));
+        }
+
+        if (contentType.size() > 0) {
+            builder.removeHeader("Content-Type");
+            builder.addHeader("Content-Type", contentType.get(0));
+        }
+
+        if (cookieType.size() > 0) {
+            builder.removeHeader("Cookie");
+            builder.addHeader("Cookie", cookieType.get(0));
+        }
         if (headerValues.size() > 0) {
-            List<String> agentrValues = request.headers("User-Agent");
-            List<String> contentType = request.headers("Content-Type");
-            List<String> cookieType = request.headers("Cookie");
-            if (agentrValues.size() > 0) {
-                builder.removeHeader("User-Agent");
-                builder.addHeader("User-Agent", agentrValues.get(0));
-            }
-            if (contentType.size() > 0) {
-                builder.removeHeader("Content-Type");
-                builder.addHeader("Content-Type", contentType.get(0));
-            }
-            if (cookieType.size() > 0) {
-                builder.removeHeader("Cookie");
-                builder.addHeader("Cookie", cookieType.get(0));
-            }
             //如果有这个header，先将配置的header删除，因此header仅用作app和okhttp之间使用
             builder.removeHeader("urlname");
             //匹配获得新的BaseUrl
