@@ -70,8 +70,8 @@ class NewApiActivity : AppCompatActivity() {
 
         btnGetALlCode.setOnClickListener {
 //            DBUtils.dropTable("HHQ_20200929")
-//            DBUtils.foreachDBTable()
-            viewModel.getAllCode()
+            DBUtils.foreachDBTable()
+//            viewModel.getAllCode()
         }
 
         btnCopy.setOnClickListener {

@@ -234,6 +234,13 @@ object DBUtils {
                 if (name.contains("DD_")&&mCursor.count==0) {
                     dropTable(name)
                 }
+                if (name.contains("DD_")) {
+                    val date = name.replace("DD_","")
+                    val ts = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+                    if (ts > System.currentTimeMillis()) {
+                        dropTable(name)
+                    }
+                }
 
             }
         } catch (e: Exception) {

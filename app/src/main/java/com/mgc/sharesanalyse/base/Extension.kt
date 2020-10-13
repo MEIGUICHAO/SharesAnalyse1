@@ -4,6 +4,7 @@ import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.GsonHelper
+import com.mgc.sharesanalyse.utils.LogUtil
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList

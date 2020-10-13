@@ -22,7 +22,7 @@ class NewApiViewModel : BaseViewModel() {
     val debug = false
     var needGoOn = false
     var dealDetailIndex = 0
-    val dayMillis = 24 * 60 * 60 * 1000
+    val dayMillis = (24 * 60 * 60 * 1000).toLong()
 
 //        val DealDetailDays = 14//15天
     val DealDetailDays = 13//15天
