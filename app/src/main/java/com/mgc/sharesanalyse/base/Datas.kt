@@ -13,6 +13,7 @@ object Datas {
 
     var tableName = "stock_"
     var dealDetailTableName = "DD_"
+    var sdd = "SDD_"
     var limitSize = 160
     var basebase = 30
     var SPGetHQCodeDate = "SPGetHQCodeDate"

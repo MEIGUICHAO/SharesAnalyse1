@@ -2,10 +2,12 @@ package com.mgc.sharesanalyse.utils
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.json2Array
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.entity.PricesHisGDBean
+import com.mgc.sharesanalyse.entity.SumDDBean
 
 
 object DBUtils {
@@ -19,7 +21,7 @@ object DBUtils {
 
     fun insertDealDetail2DateTable(dbName: String, dealDetailTableBean: DealDetailTableBean) {
         createDealDetailTable(dbName)
-        if (!queryDealDetailIsExsitByCode(dbName, dealDetailTableBean.code)) {
+        if (!queryItemIsExsitByCode(dbName, dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J)" +
                     " VALUES${dealDetailTableBean.toSqlValues()}"
@@ -28,12 +30,31 @@ object DBUtils {
         }
     }
 
+    fun insertOrUpdateSumDD2DateTable(
+        dbName: String,
+        sumDDBean: SumDDBean,
+        ddbean: DealDetailTableBean
+    ) {
+        createDealDetailTable(dbName)
+        ddbean.sizeBean.date = dbName.replace(Datas.sdd,"")
+        if (!queryItemIsExsitByCode(dbName, ddbean.code)) {
+            var insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
+                    " VALUES${ddbean.toInsertSqlSumValues(ddbean,ddbean.allsize)}"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        } else {
+            var sql = "UPDATE $dbName SET ALLSIZE=${percent} WHERE CODE=${code.toInt()}"
+            db.execSQL(sql)
+        }
+    }
+
 
     fun insertHHq2DateTable(dbName: String, hisHqBean: PricesHisGDBean) {
         createHHqTable(dbName)
         if (!queryHHqIsExsitByCode(dbName, hisHqBean.code.toInt().toString())) {
             var insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,JSON,MINEINFO)" +
+                    "(CODE,JSON,MINEINFO)" +ALLSIZE
                     " VALUES(${hisHqBean.code},'${hisHqBean.json}','${hisHqBean.mineInfo}')"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -42,7 +63,7 @@ object DBUtils {
 
     fun insertEmptyDealDetail2DateTable(dbName: String, dealDetailTableBean: DealDetailTableBean) {
         createDealDetailTable(dbName)
-        if (!queryDealDetailIsExsitByCode(dbName, dealDetailTableBean.code)) {
+        if (!queryItemIsExsitByCode(dbName, dealDetailTableBean.code)) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME)" +
                     " VALUES(${dealDetailTableBean.code},${dealDetailTableBean.name})"
@@ -69,7 +90,7 @@ object DBUtils {
         return isexsit
     }
 
-    fun queryDealDetailIsExsitByCode(dbName: String, code: String): Boolean {
+    fun queryItemIsExsitByCode(dbName: String, code: String): Boolean {
         var isexsit = false
         LogUtil.d("code:$code")
         if (tabbleIsExist(dbName)) {

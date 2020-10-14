@@ -11,6 +11,7 @@ import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
+import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.Deferred
 import org.jsoup.Jsoup
 import java.text.DecimalFormat
@@ -158,7 +159,7 @@ class NewApiViewModel : BaseViewModel() {
     ) {
 
         var needNetRequest =
-            !DBUtils.queryDealDetailIsExsitByCode(
+            !DBUtils.queryItemIsExsitByCode(
                 "${Datas.dealDetailTableName}$date".replace(
                     "-",
                     ""
@@ -778,6 +779,10 @@ class NewApiViewModel : BaseViewModel() {
 //            }
         }
         LogUtil.d("logDealDetailHqSum---completed----------------------------")
+        if (mActivity is NewApiActivity) {
+            (mActivity as NewApiActivity).btnRequestDealDetail.setText("DealDetail_Completed")
+            (mActivity as NewApiActivity).clickHHQ()
+        }
     }
 
     fun foreachDDInfo() {
@@ -791,6 +796,7 @@ class NewApiViewModel : BaseViewModel() {
 //            ddBean?.let {
 //                if (it.code.toDouble() > 600000) {
 //                    shList.add(it)
+
 //                } else if (it.code.toDouble() > 300000) {
 //                    szCyList.add(it)
 //                } else {

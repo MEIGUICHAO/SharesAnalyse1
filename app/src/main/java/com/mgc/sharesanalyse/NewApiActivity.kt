@@ -78,6 +78,7 @@ class NewApiActivity : AppCompatActivity() {
             copyDB()
         }
         btnRequestDealDetail.setOnClickListener {
+            btnRequestDealDetail.setText("DealDetail_Working")
             LogUtil.d("dealDetailBeginDate:$dealDetailBeginDate")
             needLogAfterDD = false
             viewModel.detailCodeList.clear()
@@ -91,20 +92,21 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-            needLogAfterDD = true
-            judeWeekDayIndex = 0
-            progressIndex = 0
-//            DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.deleteAll()
-            viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
-            getHisHq()
-
-
-//            viewModel.getPriceHisFileLog()
+            clickHHQ()
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()
         }
 
+    }
+
+    fun clickHHQ() {
+        btnRequestHisHq.setText("HHQ_WORKING")
+        needLogAfterDD = true
+        judeWeekDayIndex = 0
+        progressIndex = 0
+        viewModel.setFilelogPath(DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM_SS))
+        getHisHq()
     }
 
     fun requestDealDetailBtn() {

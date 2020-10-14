@@ -2,8 +2,15 @@ package com.mgc.sharesanalyse.entity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class DealDetailTableBean {
+public class SumDDBean {
+
     private String code;
+    private String name;
+    private double percent;
+    private double maxPer;
+    private int allsize;
+    private DealDetailAmountSizeBean sizeBean;
+
 
     public String getName() {
         return name;
@@ -13,9 +20,6 @@ public class DealDetailTableBean {
         this.name = name;
     }
 
-    private String name;
-    private double percent;
-    private int allsize;
 
     public String getCode() {
         return code;
@@ -55,7 +59,6 @@ public class DealDetailTableBean {
                 ", sizeBean=" + sizeBean.getToString(dealAmount);
     }
 
-    private DealDetailAmountSizeBean sizeBean;
 
 
 
@@ -66,12 +69,14 @@ public class DealDetailTableBean {
                 "," + percent + sizeBean.toValues();
     }
 
-    public String toInsertSqlSumValues(DealDetailTableBean ddbean, int allsize) {
-        return "(" + code +
-                "," + "'" + name + "'" +
-                "," + allsize +
+
+    public String toUpdateSqlSumValues(DealDetailTableBean ddbean) {
+        return "(" + (ddbean.getAllsize()+allsize) +
                 "," + percent
-                + sizeBean.toInsertSumDDValues(ddbean.getSizeBean(),allsize);
+                + sizeBean.toUpdateSumDDValues(sumDDBean.sizeBean);
     }
+
+
+
 
 }
