@@ -828,15 +828,15 @@ class NewApiViewModel : BaseViewModel() {
         val ddlist = getDDList()
         var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
 //        for (idnex in 0 until ddlist.size)  {
-        for (ddidnex in 0 until 2)  {
-            for (codeidnex in 0 until 2) {
+        for (ddidnex in 0 until 4)  {
+            for (codeidnex in 0 until 4) {
 //            for (idnex in 0 until codelist.size) {
-                LogUtil.d("ddlist:"+ddlist[ddidnex])
+                LogUtil.d("ddlist:"+ddlist[ddidnex]+"code:${codelist[codeidnex].code}")
                 val ddBean = DBUtils.queryDealDetailByCode(ddlist[ddidnex],codelist[codeidnex].code)
+                LogUtil.d("ddBean m10Size:${ddBean?.sizeBean?.m10Size}")
                 val sumDDBean = DBUtils.querySumDDBeanByCode(sddTableName,codelist[codeidnex].code)
                 DBUtils.insertOrUpdateSumDD2DateTable(ddlist[ddidnex].replace(Datas.dealDetailTableName,""),sddTableName,sumDDBean,ddBean!!)
             }
-
         }
     }
 

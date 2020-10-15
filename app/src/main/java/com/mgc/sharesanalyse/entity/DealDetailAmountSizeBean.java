@@ -273,14 +273,14 @@ public class DealDetailAmountSizeBean {
         String m01SDJ = "'" + " " + "'";
 
         allsizeSDJ = "'" + curDDSBean.date + ":" + lastDDASBean.getAllsize() + "_" + this.allsizeSDJ + "'";
-        m100SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM100Size() + "_" + this.m100SDJ + "'";
-        m50SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM50SDJ() + "_" + this.m50SDJ + "'";
-        m30SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM30SDJ() + "_" + this.m30SDJ + "'";
-        m10SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM10SDJ() + "_" + this.m10SDJ + "'";
-        m5SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM5SDJ() + "_" + this.m5SDJ + "'";
-        m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM1SDJ() + "_" + this.m1SDJ + "'";
-        m05SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM05SDJ() + "_" + this.m05SDJ + "'";
-        m01SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM01SDJ() + "_" + this.m01SDJ + "'";
+        m100SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m100Size + "_" + this.m100SDJ + "'";
+        m50SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m50Size + "_" + this.m50SDJ + "'";
+        m30SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m30Size + "_" + this.m30SDJ + "'";
+        m10SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m10Size + "_" + this.m10SDJ + "'";
+        m5SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m5Size + "_" + this.m5SDJ + "'";
+        m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m1Size + "_" + this.m1SDJ + "'";
+        m05SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m05Size + "_" + this.m05SDJ + "'";
+        m01SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m01Size + "_" + this.m01SDJ + "'";
 
 //        if (!TextUtils.isEmpty(curDDSBean.getM100SDJ()) && TextUtils.isEmpty(this.m100SDJ)) {
 //            m100SDJ = "'" + curDDSBean.date + ":"+curDDSBean.m100Size + "_" + this.m100SDJ + "'";
@@ -342,34 +342,16 @@ public class DealDetailAmountSizeBean {
         String m1SDJ = "'" + " " + "'";
         String m05SDJ = "'" + " " + "'";
         String m01SDJ = "'" + " " + "'";
+
         allsizeSDJ = "'" + date + ":" + allsize + "'";
-
-        if (ddsBean.m100Size > 0) {
-            m100SDJ = "'" + date + ":" + ddsBean.m100Size + "'";
-        }
-        if (ddsBean.m50Size > 0) {
-            m50SDJ = "'" + date + ":" + ddsBean.m50Size + "'";
-        }
-
-        if (ddsBean.m30Size > 0) {
-            m30SDJ = "'" + date + ":" + ddsBean.m30Size + "'";
-        }
-
-        if (ddsBean.m10Size > 0) {
-            m10SDJ = "'" + date + ":" + ddsBean.m10Size + "'";
-        }
-
-        if (ddsBean.m1Size > 0) {
-            m1SDJ = "'" + date + ":" + ddsBean.m1Size + "'";
-        }
-
-        if (ddsBean.m05Size > 0) {
-            m05SDJ = "'" + date + ":" + ddsBean.m05Size + "'";
-        }
-
-        if (ddsBean.m01Size > 0) {
-            m01SDJ = "'" + date + ":" + ddsBean.m01Size + "'";
-        }
+        m100SDJ = "'" + date + ":" + ddsBean.m100Size + "'";
+        m50SDJ = "'" + date + ":" + ddsBean.m50Size + "'";
+        m30SDJ = "'" + date + ":" + ddsBean.m30Size + "'";
+        m10SDJ = "'" + date + ":" + ddsBean.m10Size + "'";
+        m5SDJ = "'" + date + ":" + ddsBean.m5Size + "'";
+        m1SDJ = "'" + date + ":" + ddsBean.m1Size + "'";
+        m05SDJ = "'" + date + ":" + ddsBean.m05Size + "'";
+        m01SDJ = "'" + date + ":" + ddsBean.m01Size + "'";
 
         return allsizeSDJ + "," + m100SDJ + "," + m50SDJ + "," + m30SDJ + "," + m10SDJ + "," + m5SDJ + "," + m1SDJ + "," + m05SDJ + "," + m01SDJ;
     }
@@ -396,7 +378,9 @@ public class DealDetailAmountSizeBean {
 
     public String toUpdateSumDDValues(DealDetailTableBean lastDDASBean) {
         DealDetailAmountSizeBean mSizeBean = lastDDASBean.getSizeBean();
-        LogUtil.d("mSizeBean:"+mSizeBean.toString());
+
+        LogUtil.d("!!ddBean m50Size:"+mSizeBean.m50Size);
+        LogUtil.d("!!M50S:"+(mSizeBean.m50Size + m50Size));
         return
                 ",M100S=" + (mSizeBean.m100Size + m100Size) +
                         ",M50S=" + (mSizeBean.m50Size + m50Size) +

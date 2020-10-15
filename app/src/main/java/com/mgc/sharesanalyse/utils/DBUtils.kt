@@ -36,6 +36,7 @@ object DBUtils {
         sumDDBean: SumDDBean?,
         ddbean: DealDetailTableBean
     ) {
+        LogUtil.d("@@ddBean m10Size:${ddbean.sizeBean.m10Size}")
         createSDD(dbName)
         ddbean.sizeBean.date = date.replace(Datas.sdd,"")
         if (!queryItemIsExsitByCode(dbName, ddbean.code)) {
