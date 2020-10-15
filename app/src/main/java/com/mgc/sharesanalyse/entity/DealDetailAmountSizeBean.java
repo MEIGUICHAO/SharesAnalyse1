@@ -27,6 +27,40 @@ public class DealDetailAmountSizeBean {
                 '}';
     }
 
+    @Override
+    public String toString() {
+        return "DealDetailAmountSizeBean{" +
+                "gt5000Mamount=" + gt5000Mamount +
+                ", gt1000Mamount=" + gt1000Mamount +
+                ", gt500Mamount=" + gt500Mamount +
+                ", gt100Mamount=" + gt100Mamount +
+                ", allsizeSDJ='" + allsizeSDJ + '\'' +
+                ", m100SDJ='" + m100SDJ + '\'' +
+                ", m50SDJ='" + m50SDJ + '\'' +
+                ", m30SDJ='" + m30SDJ + '\'' +
+                ", m10SDJ='" + m10SDJ + '\'' +
+                ", m5SDJ='" + m5SDJ + '\'' +
+                ", m1SDJ='" + m1SDJ + '\'' +
+                ", m05SDJ='" + m05SDJ + '\'' +
+                ", m01SDJ='" + m01SDJ + '\'' +
+                ", date='" + date + '\'' +
+                ", m100List=" + m100List +
+                ", m100Size=" + m100Size +
+                ", m50List=" + m50List +
+                ", m50Size=" + m50Size +
+                ", m30List=" + m30List +
+                ", m30Size=" + m30Size +
+                ", m10List=" + m10List +
+                ", m10Size=" + m10Size +
+                ", m5List=" + m5List +
+                ", m5Size=" + m5Size +
+                ", m1List=" + m1List +
+                ", m1Size=" + m1Size +
+                ", m05Size=" + m05Size +
+                ", m01Size=" + m01Size +
+                '}';
+    }
+
     private double getGt5000() {
         double beiging = 0;
         if (null != m100List) {
@@ -101,6 +135,16 @@ public class DealDetailAmountSizeBean {
     private long gt1000Mamount;
     private long gt500Mamount;
     private long gt100Mamount;
+
+    public String getAllsizeSDJ() {
+        return allsizeSDJ;
+    }
+
+    public void setAllsizeSDJ(String allsizeSDJ) {
+        this.allsizeSDJ = allsizeSDJ;
+    }
+
+    private String allsizeSDJ;
     private String m100SDJ;
     private String m50SDJ;
     private String m30SDJ;
@@ -216,89 +260,115 @@ public class DealDetailAmountSizeBean {
         this.date = date;
     }
 
-    public String getSDJstr(DealDetailAmountSizeBean lastDDASBean) {
+    public String getSDJstr(DealDetailAmountSizeBean curDDSBean, DealDetailTableBean lastDDASBean) {
 
-        String m100SDJ = "";
-        String m50SDJ = "";
-        String m30SDJ = "";
-        String m10SDJ = "";
-        String m5SDJ = "";
-        String m1SDJ = "";
-        if (!TextUtils.isEmpty(lastDDASBean.getM100SDJ()) && TextUtils.isEmpty(this.m100SDJ)) {
-            m100SDJ = lastDDASBean.getM100SDJ() + "_" + date + ":" + this.m100SDJ;
-        } else if (!TextUtils.isEmpty(this.m100SDJ)) {
-            m100SDJ = date + ":" + this.m100SDJ;
-        }
-        if (!TextUtils.isEmpty(lastDDASBean.getM50SDJ()) && TextUtils.isEmpty(this.m50SDJ)) {
-            m50SDJ = lastDDASBean.getM50SDJ() + "_" + date + ":" + this.m50SDJ;
-        } else if (!TextUtils.isEmpty(this.m50SDJ)) {
-            m50SDJ = date + ":" + this.m50SDJ;
-        }
+        String allsizeSDJ = "'" + " " + "'";
+        String m100SDJ = "'" + " " + "'";
+        String m50SDJ = "'" + " " + "'";
+        String m30SDJ = "'" + " " + "'";
+        String m10SDJ = "'" + " " + "'";
+        String m5SDJ = "'" + " " + "'";
+        String m1SDJ = "'" + " " + "'";
+        String m05SDJ = "'" + " " + "'";
+        String m01SDJ = "'" + " " + "'";
 
-        if (!TextUtils.isEmpty(lastDDASBean.getM30SDJ()) && TextUtils.isEmpty(this.m30SDJ)) {
-            m30SDJ = lastDDASBean.getM30SDJ() + "_" + date + ":" + this.m30SDJ;
-        } else if (!TextUtils.isEmpty(this.m30SDJ)) {
-            m30SDJ = date + ":" + this.m30SDJ;
-        }
+        allsizeSDJ = "'" + curDDSBean.date + ":" + lastDDASBean.getAllsize() + "_" + this.allsizeSDJ + "'";
+        m100SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM100Size() + "_" + this.m100SDJ + "'";
+        m50SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM50SDJ() + "_" + this.m50SDJ + "'";
+        m30SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM30SDJ() + "_" + this.m30SDJ + "'";
+        m10SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM10SDJ() + "_" + this.m10SDJ + "'";
+        m5SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM5SDJ() + "_" + this.m5SDJ + "'";
+        m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM1SDJ() + "_" + this.m1SDJ + "'";
+        m05SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM05SDJ() + "_" + this.m05SDJ + "'";
+        m01SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM01SDJ() + "_" + this.m01SDJ + "'";
 
-        if (!TextUtils.isEmpty(lastDDASBean.getM10SDJ()) && TextUtils.isEmpty(this.m10SDJ)) {
-            m10SDJ = lastDDASBean.getM10SDJ() + "_" + date + ":" + this.m10SDJ;
-        } else if (!TextUtils.isEmpty(this.m100SDJ)) {
-            m10SDJ = date + ":" + this.m10SDJ;
-        }
+//        if (!TextUtils.isEmpty(curDDSBean.getM100SDJ()) && TextUtils.isEmpty(this.m100SDJ)) {
+//            m100SDJ = "'" + curDDSBean.date + ":"+curDDSBean.m100Size + "_" + this.m100SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM100SDJ())) {
+//            m100SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM100SDJ() + "'";
+//        }
+//        if (!TextUtils.isEmpty(curDDSBean.getM50SDJ()) && TextUtils.isEmpty(this.m50SDJ)) {
+//            m50SDJ = "'" + curDDSBean.getM50SDJ() + "_" + curDDSBean.date + ":" + this.m50SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM50SDJ())) {
+//            m50SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM50SDJ() + "'";
+//        }
 
-        if (!TextUtils.isEmpty(lastDDASBean.getM5SDJ()) && TextUtils.isEmpty(this.m5SDJ)) {
-            m5SDJ = lastDDASBean.getM5SDJ() + "_" + date + ":" + this.m5SDJ;
-        } else if (!TextUtils.isEmpty(this.m5SDJ)) {
-            m5SDJ = date + ":" + this.m5SDJ;
-        }
-
-        if (!TextUtils.isEmpty(lastDDASBean.getM1SDJ()) && TextUtils.isEmpty(this.m1SDJ)) {
-            m1SDJ = lastDDASBean.getM1SDJ() + "_" + date + ":" + m1SDJ;
-        } else if (!TextUtils.isEmpty(this.m1SDJ)) {
-            m1SDJ = date + ":" + this.m1SDJ;
-        }
-
-        return m100SDJ + "," + m50SDJ + "," + m30SDJ + "," + m10SDJ + "," + m5SDJ+ "," + m1SDJ;
+//        if (!TextUtils.isEmpty(curDDSBean.getM30SDJ()) && TextUtils.isEmpty(this.m30SDJ)) {
+//            m30SDJ = "'" + curDDSBean.getM30SDJ() + "_" + curDDSBean.date + ":" + this.m30SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM30SDJ())) {
+//            m30SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM30SDJ() + "'";
+//        }
+//
+//        if (!TextUtils.isEmpty(curDDSBean.getM10SDJ()) && TextUtils.isEmpty(this.m10SDJ)) {
+//            m10SDJ = "'" + curDDSBean.getM10SDJ() + "_" + curDDSBean.date + ":" + this.m10SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM10SDJ())) {
+//            m10SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM10SDJ() + "'";
+//        }
+//
+//        if (!TextUtils.isEmpty(curDDSBean.getM5SDJ()) && TextUtils.isEmpty(this.m5SDJ)) {
+//            m5SDJ = "'" + curDDSBean.getM5SDJ() + "_" + curDDSBean.date + ":" + this.m5SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM5SDJ())) {
+//            m5SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM5SDJ() + "'";
+//        }
+//
+//        if (!TextUtils.isEmpty(curDDSBean.getM1SDJ()) && TextUtils.isEmpty(this.m1SDJ)) {
+//            m1SDJ = "'" + curDDSBean.getM1SDJ() + "_" + curDDSBean.date + ":" + this.m1SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM1SDJ())) {
+//            m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM1SDJ() + "'";
+//        }
+//
+//        if (!TextUtils.isEmpty(curDDSBean.getM05SDJ()) && TextUtils.isEmpty(this.m05SDJ)) {
+//            m1SDJ = "'" + curDDSBean.getM05SDJ() + "_" + curDDSBean.date + ":" + this.m05SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM05SDJ())) {
+//            m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM05SDJ() + "'";
+//        }
+//
+//        if (!TextUtils.isEmpty(curDDSBean.getM01SDJ()) && TextUtils.isEmpty(this.m01SDJ)) {
+//            m1SDJ = "'" + curDDSBean.getM01SDJ() + "_" + curDDSBean.date + ":" + this.m01SDJ + "'";
+//        } else if (!TextUtils.isEmpty(curDDSBean.getM01SDJ())) {
+//            m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.getM01SDJ() + "'";
+//        }
+        return "ALLSIZESDJ=" + allsizeSDJ + ",M100SDJ=" + m100SDJ + ",M50SDJ=" + m50SDJ + ",M30SDJ=" + m30SDJ + ",M10SDJ=" + m10SDJ + ",M5SDJ=" + m5SDJ + ",M1SDJ=" + m1SDJ + ",M05SDJ=" + m05SDJ + ",M01SDJ=" + m01SDJ;
     }
 
     public String getInsertSDJstr(DealDetailAmountSizeBean ddsBean, int allsize) {
 
-        String allsizeSDJ = "";
-        String m100SDJ = "";
-        String m50SDJ = "";
-        String m30SDJ = "";
-        String m10SDJ = "";
-        String m5SDJ = "";
-        String m1SDJ = "";
-        String m05SDJ = "";
-        String m01SDJ = "";
-        allsizeSDJ = date + ":" + allsize;
+        String allsizeSDJ = "'" + " " + "'";
+        String m100SDJ = "'" + " " + "'";
+        String m50SDJ = "'" + " " + "'";
+        String m30SDJ = "'" + " " + "'";
+        String m10SDJ = "'" + " " + "'";
+        String m5SDJ = "'" + " " + "'";
+        String m1SDJ = "'" + " " + "'";
+        String m05SDJ = "'" + " " + "'";
+        String m01SDJ = "'" + " " + "'";
+        allsizeSDJ = "'" + date + ":" + allsize + "'";
+
         if (ddsBean.m100Size > 0) {
-            m100SDJ = date + ":" + ddsBean.m100Size;
+            m100SDJ = "'" + date + ":" + ddsBean.m100Size + "'";
         }
         if (ddsBean.m50Size > 0) {
-            m50SDJ = date + ":" + ddsBean.m50Size;
+            m50SDJ = "'" + date + ":" + ddsBean.m50Size + "'";
         }
 
         if (ddsBean.m30Size > 0) {
-            m30SDJ = date + ":" + ddsBean.m30Size;
+            m30SDJ = "'" + date + ":" + ddsBean.m30Size + "'";
         }
 
         if (ddsBean.m10Size > 0) {
-            m10SDJ = date + ":" + ddsBean.m10Size;
+            m10SDJ = "'" + date + ":" + ddsBean.m10Size + "'";
         }
 
         if (ddsBean.m1Size > 0) {
-            m1SDJ = date + ":" + ddsBean.m1Size;
+            m1SDJ = "'" + date + ":" + ddsBean.m1Size + "'";
         }
 
         if (ddsBean.m05Size > 0) {
-            m05SDJ = date + ":" + ddsBean.m05Size;
+            m05SDJ = "'" + date + ":" + ddsBean.m05Size + "'";
         }
 
         if (ddsBean.m01Size > 0) {
-            m01SDJ = date + ":" + ddsBean.m01Size;
+            m01SDJ = "'" + date + ":" + ddsBean.m01Size + "'";
         }
 
         return allsizeSDJ + "," + m100SDJ + "," + m50SDJ + "," + m30SDJ + "," + m10SDJ + "," + m5SDJ + "," + m1SDJ + "," + m05SDJ + "," + m01SDJ;
@@ -307,38 +377,41 @@ public class DealDetailAmountSizeBean {
 
     public String toInsertSumDDValues(DealDetailAmountSizeBean ddBean, int allsize) {
         return
-                "," + (m100Size) +
-                        "," + ( m50Size) +
+                "," + (date) +
+                        "," + (m100Size) +
+                        "," + (m50Size) +
                         "," + (m30Size) +
                         "," + (m10Size) +
-                        "," + ( m5Size) +
-                        "," + ( m1Size) +
+                        "," + (m5Size) +
+                        "," + (m1Size) +
                         "," + (m05Size) +
                         "," + (m01Size) +
                         "," + (getGt5000()) +
-                        "," + ( getGt1000()) +
+                        "," + (getGt1000()) +
                         "," + (getGt500()) +
                         "," + (getGt100()) +
-                        "," + getInsertSDJstr(ddBean,allsize) +
+                        "," + getInsertSDJstr(ddBean, allsize) +
                         ");";
     }
 
-    public String toUpdateSumDDValues(DealDetailAmountSizeBean lastDDASBean) {
+    public String toUpdateSumDDValues(DealDetailTableBean lastDDASBean) {
+        DealDetailAmountSizeBean mSizeBean = lastDDASBean.getSizeBean();
+        LogUtil.d("mSizeBean:"+mSizeBean.toString());
         return
-                "," + (lastDDASBean.m100Size + m100Size) +
-                        "," + (lastDDASBean.m50Size + m50Size) +
-                        "," + (lastDDASBean.m30Size + m30Size) +
-                        "," + (lastDDASBean.m10Size + m10Size) +
-                        "," + (lastDDASBean.m5Size + m5Size) +
-                        "," + (lastDDASBean.m1Size + m1Size) +
-                        "," + (lastDDASBean.m05Size + m05Size) +
-                        "," + (lastDDASBean.m01Size + m01Size) +
-                        "," + (lastDDASBean.gt5000Mamount + getGt5000()) +
-                        "," + (lastDDASBean.gt1000Mamount + getGt1000()) +
-                        "," + (lastDDASBean.gt500Mamount + getGt500()) +
-                        "," + (lastDDASBean.gt100Mamount + getGt100()) +
-                        "," + getSDJstr(lastDDASBean) +
-                        ");";
+                ",M100S=" + (mSizeBean.m100Size + m100Size) +
+                        ",M50S=" + (mSizeBean.m50Size + m50Size) +
+                        ",M30S=" + (mSizeBean.m30Size + m30Size) +
+                        ",M10S=" + (mSizeBean.m10Size + m10Size) +
+                        ",M5S=" + (mSizeBean.m5Size + m5Size) +
+                        ",M1S=" + (mSizeBean.m1Size + m1Size) +
+                        ",M05S=" + (mSizeBean.m05Size + m05Size) +
+                        ",M01S=" + (mSizeBean.m01Size + m01Size) +
+                        ",G5000M=" + (mSizeBean.gt5000Mamount + getGt5000()) +
+                        ",G1000M=" + (mSizeBean.gt1000Mamount + getGt1000()) +
+                        ",G500M=" + (mSizeBean.gt500Mamount + getGt500()) +
+                        ",G100M=" + (mSizeBean.gt100Mamount + getGt100()) +
+                        "," + getSDJstr(mSizeBean,lastDDASBean) +
+                        "";
     }
 
     private <T> String array2Json(ArrayList<T> array) {

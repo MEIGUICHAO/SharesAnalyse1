@@ -31,30 +31,40 @@ object DBUtils {
     }
 
     fun insertOrUpdateSumDD2DateTable(
+        date: String,
         dbName: String,
-        sumDDBean: SumDDBean,
+        sumDDBean: SumDDBean?,
         ddbean: DealDetailTableBean
     ) {
-        createDealDetailTable(dbName)
-        ddbean.sizeBean.date = dbName.replace(Datas.sdd,"")
+        createSDD(dbName)
+        ddbean.sizeBean.date = date.replace(Datas.sdd,"")
         if (!queryItemIsExsitByCode(dbName, ddbean.code)) {
-            var insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,NAME,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
+            val insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,NAME,ALLSIZE,DATE,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
                     " VALUES${ddbean.toInsertSqlSumValues(ddbean,ddbean.allsize)}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            var sql = "UPDATE $dbName SET ALLSIZE=${percent} WHERE CODE=${code.toInt()}"
-            db.execSQL(sql)
+            val ts = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
+            val ts2 = DateUtils.parse(sumDDBean!!.sizeBean!!.date, FormatterEnum.YYYYMMDD)
+            LogUtil.d("ts:$date,ts2:${sumDDBean.sizeBean!!.date}")
+            if (ts > ts2) {
+                val sql = "UPDATE $dbName SET ${sumDDBean.toUpdateSqlSumValues(ddbean)},DATE =${date.replace(Datas.sdd,"")}  WHERE CODE=${ddbean.code}"
+                LogUtil.d("updateSqlStr:$sql")
+                db.execSQL(sql)
+            }
         }
     }
-
+//    (CODE,NAME,,,,,,,,,,,,,,
+//    ,,,,,,,,)
+//    (1,'平安银行',ALLSIZE 2074,M100S 0,M50S 2,M30S 0,M10S 6,M5S 25,M1S 455,M05S 527,M01S 1059,G5000M 13675.268635,G1000M 22820.396535000003,G500M 40074.291105000004,G100M 122086.51915499999,
+//    ALLSIZESDJ 20201015:2074,M100SDJ ,M50SDJ 20201015:2,M30SDJ ,M10SDJ 20201015:6,M5SDJ ,M1SDJ 20201015:455,M05SDJ 20201015:527,M01SDJ 20201015:1059)
 
     fun insertHHq2DateTable(dbName: String, hisHqBean: PricesHisGDBean) {
         createHHqTable(dbName)
         if (!queryHHqIsExsitByCode(dbName, hisHqBean.code.toInt().toString())) {
             var insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,JSON,MINEINFO)" +ALLSIZE
+                    "(CODE,JSON,MINEINFO)" +
                     " VALUES(${hisHqBean.code},'${hisHqBean.json}','${hisHqBean.mineInfo}')"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -185,6 +195,82 @@ object DBUtils {
         return dealDetailTableBean
     }
 
+
+    fun querySumDDBeanByCode(dbName: String, code: String): SumDDBean? {
+        var sumDDBean: SumDDBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+
+            if (null != cursor && cursor.moveToFirst()) {
+                sumDDBean = SumDDBean()
+                var dealDetailAmountSizeBean = DealDetailAmountSizeBean()
+                //"(CODE,NAME,ALLSIZE,MAXPER,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)"
+                val code = cursor.getString(cursor.getColumnIndex("CODE"))
+                val name = cursor.getString(cursor.getColumnIndex("NAME"))
+                val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
+                val maxper = cursor.getDouble(cursor.getColumnIndex("MAXPER"))
+                val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
+                val m100s = cursor.getInt(cursor.getColumnIndex("M100S"))
+                val m50s = cursor.getInt(cursor.getColumnIndex("M50S"))
+                val m30s = cursor.getInt(cursor.getColumnIndex("M30S"))
+                val m10s = cursor.getInt(cursor.getColumnIndex("M10S"))
+                val m5s = cursor.getInt(cursor.getColumnIndex("M5S"))
+                val m1s = cursor.getInt(cursor.getColumnIndex("M1S"))
+                val m05s = cursor.getInt(cursor.getColumnIndex("M05S"))
+                val m01s = cursor.getInt(cursor.getColumnIndex("M01S"))
+                val G5000M: Long? = cursor.getLong(cursor.getColumnIndex("G5000M"))
+                val G1000M: Long? = cursor.getLong(cursor.getColumnIndex("G1000M"))
+                val G500M: Long? = cursor.getLong(cursor.getColumnIndex("G500M"))
+                val G100M: Long? = cursor.getLong(cursor.getColumnIndex("G100M"))
+                val ALLSIZESDJ: String? = cursor.getString(cursor.getColumnIndex("ALLSIZESDJ"))
+                val M100SDJ: String? = cursor.getString(cursor.getColumnIndex("M100SDJ"))
+                val M50SDJ: String? = cursor.getString(cursor.getColumnIndex("M50SDJ"))
+                val M30SDJ: String? = cursor.getString(cursor.getColumnIndex("M30SDJ"))
+                val M10SDJ: String? = cursor.getString(cursor.getColumnIndex("M10SDJ"))
+                val M5SDJ: String? = cursor.getString(cursor.getColumnIndex("M5SDJ"))
+                val M1SDJ: String? = cursor.getString(cursor.getColumnIndex("M1SDJ"))
+                val M05SDJ: String? = cursor.getString(cursor.getColumnIndex("M05SDJ"))
+                val M01SDJ: String? = cursor.getString(cursor.getColumnIndex("M01SDJ"))
+                val DATE: String? = cursor.getString(cursor.getColumnIndex("DATE"))
+
+                dealDetailAmountSizeBean.m100Size = m100s
+                dealDetailAmountSizeBean.m50Size = m50s
+                dealDetailAmountSizeBean.m30Size = m30s
+                dealDetailAmountSizeBean.m10Size = m10s
+                dealDetailAmountSizeBean.m5Size = m5s
+                dealDetailAmountSizeBean.m1Size = m1s
+                dealDetailAmountSizeBean.m05Size = m05s
+                dealDetailAmountSizeBean.m01Size = m01s
+
+                dealDetailAmountSizeBean.gt5000Mamount = G5000M!!
+                dealDetailAmountSizeBean.gt1000Mamount =G1000M!!
+                dealDetailAmountSizeBean.gt500Mamount = G500M!!
+                dealDetailAmountSizeBean.gt100Mamount =G100M!!
+
+                dealDetailAmountSizeBean.allsizeSDJ =ALLSIZESDJ
+                dealDetailAmountSizeBean.m100SDJ =M100SDJ
+                dealDetailAmountSizeBean.m50SDJ =M50SDJ
+                dealDetailAmountSizeBean.m30SDJ =M30SDJ
+                dealDetailAmountSizeBean.m10SDJ =M10SDJ
+                dealDetailAmountSizeBean.m5SDJ =M5SDJ
+                dealDetailAmountSizeBean.m1SDJ =M1SDJ
+                dealDetailAmountSizeBean.m05SDJ =M05SDJ
+                dealDetailAmountSizeBean.m01SDJ =M01SDJ
+                dealDetailAmountSizeBean.date = DATE
+
+                sumDDBean.code = code
+                sumDDBean.name = name
+                sumDDBean.allsize = allsize
+                sumDDBean.percent = percent
+                sumDDBean.sizeBean = dealDetailAmountSizeBean
+
+            }
+            cursor.close()
+        }
+        return sumDDBean
+    }
+
     fun createHHqTable(dbName: String) {
 //        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
@@ -201,6 +287,17 @@ object DBUtils {
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, PERCENT INTEGER" +
                         ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER" +
                         ", M100J TEXT, M50J TEXT, M30J TEXT, M10J TEXT, M5J TEXT, M1J TEXT, M05J TEXT, M01J TEXT);"
+            db.execSQL(sqlStr)
+        }
+    }
+
+    fun createSDD(dbName: String) {
+//        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, MAXPER INTEGER, PERCENT INTEGER" +
+                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, G5000M INTEGER, G1000M INTEGER, G500M INTEGER, G100M INTEGER" +
+                        ", ALLSIZESDJ TEXT, M100SDJ TEXT, M50SDJ TEXT, M30SDJ TEXT, M10SDJ TEXT, M5SDJ TEXT, M1SDJ TEXT, M05SDJ TEXT, M01SDJ TEXT, DATE TEXT);"
             db.execSQL(sqlStr)
         }
     }

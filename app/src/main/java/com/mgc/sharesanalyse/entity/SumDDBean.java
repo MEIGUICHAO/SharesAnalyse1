@@ -62,18 +62,9 @@ public class SumDDBean {
 
 
 
-    public String toSqlValues() {
-        return "(" + code +
-                "," + "'" + name + "'" +
-                "," + allsize +
-                "," + percent + sizeBean.toValues();
-    }
-
 
     public String toUpdateSqlSumValues(DealDetailTableBean ddbean) {
-        return "(" + (ddbean.getAllsize()+allsize) +
-                "," + percent
-                + sizeBean.toUpdateSumDDValues(sumDDBean.sizeBean);
+        return "ALLSIZE="+(ddbean.getAllsize()+allsize)  + sizeBean.toUpdateSumDDValues(ddbean);
     }
 
 

@@ -69,8 +69,8 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnGetALlCode.setOnClickListener {
-//            DBUtils.dropTable("HHQ_20200929")
-            DBUtils.foreachDBTable()
+            DBUtils.dropTable("SDD_20201015")
+//            DBUtils.foreachDBTable()
 //            viewModel.getAllCode()
         }
 
@@ -96,6 +96,9 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnBwcList.setOnClickListener {
             viewModel.bwc()
+        }
+        btnRequestSumDd.setOnClickListener {
+            viewModel.getSumDD()
         }
 
     }

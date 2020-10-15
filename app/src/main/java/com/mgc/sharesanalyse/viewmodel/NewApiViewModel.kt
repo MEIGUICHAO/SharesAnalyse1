@@ -1,5 +1,6 @@
 package com.mgc.sharesanalyse.viewmodel
 
+import android.database.Cursor
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -820,6 +821,57 @@ class NewApiViewModel : BaseViewModel() {
 //            FileLogUtil.d("${parentBasePath}sz_hishq$pathDate", it.toString())
 //        }
 
+    }
+
+    fun getSumDD() {
+        val sddTableName = Datas.sdd+DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val ddlist = getDDList()
+        var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+//        for (idnex in 0 until ddlist.size)  {
+        for (ddidnex in 0 until 2)  {
+            for (codeidnex in 0 until 2) {
+//            for (idnex in 0 until codelist.size) {
+                LogUtil.d("ddlist:"+ddlist[ddidnex])
+                val ddBean = DBUtils.queryDealDetailByCode(ddlist[ddidnex],codelist[codeidnex].code)
+                val sumDDBean = DBUtils.querySumDDBeanByCode(sddTableName,codelist[codeidnex].code)
+                DBUtils.insertOrUpdateSumDD2DateTable(ddlist[ddidnex].replace(Datas.dealDetailTableName,""),sddTableName,sumDDBean,ddBean!!)
+            }
+
+        }
+    }
+
+    private fun getDDList(): ArrayList<String> {
+        var result = false
+        var cursor: Cursor? = null
+        var ddList = ArrayList<String>()
+        try {
+            val sql =
+                "select name from Sqlite_master  where type ='table'"
+
+            cursor = DBUtils.db.rawQuery(sql, null)
+            while (cursor.moveToNext()) {
+                var name = cursor.getString(cursor.getColumnIndex("name"))
+                val sqlstr =
+                    "select * from $name"
+                val mCursor = DBUtils.db.rawQuery(sqlstr, null)
+                LogUtil.d("foreachDBTable mCursor:${mCursor.count}")
+                if (name.contains("DD_")&&!name.contains("SDD_")) {
+                    ddList.add(name)
+                }
+
+            }
+        } catch (e: Exception) {
+            // TODO: handle exception
+        } finally {
+            cursor?.close()
+        }
+
+        Collections.sort(ddList, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return DateUtils.parse(p0.replace(Datas.dealDetailTableName,""),FormatterEnum.YYYYMMDD).compareTo(DateUtils.parse(p1.replace(Datas.dealDetailTableName,""),FormatterEnum.YYYYMMDD))
+            }
+        })
+        return ddList
     }
 
 

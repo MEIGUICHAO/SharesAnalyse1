@@ -70,8 +70,7 @@ public class DealDetailTableBean {
         return "(" + code +
                 "," + "'" + name + "'" +
                 "," + allsize +
-                "," + percent
-                + sizeBean.toInsertSumDDValues(ddbean.getSizeBean(),allsize);
+                sizeBean.toInsertSumDDValues(ddbean.getSizeBean(),allsize);
     }
 
 }
