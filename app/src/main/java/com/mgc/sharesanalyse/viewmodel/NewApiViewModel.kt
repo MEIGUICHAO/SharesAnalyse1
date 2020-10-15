@@ -827,23 +827,29 @@ class NewApiViewModel : BaseViewModel() {
         val sddTableName = Datas.sdd+DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         val ddlist = getDDList()
         var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
-//        for (idnex in 0 until ddlist.size)  {
-        for (ddidnex in 0 until 4)  {
-            for (codeidnex in 0 until 4) {
-//            for (idnex in 0 until codelist.size) {
+        for (ddidnex in 0 until ddlist.size)  {
+//        for (ddidnex in 0 until 4)  {
+//            for (codeidnex in 0 until 4) {
+            for (codeidnex in 0 until codelist.size) {
                 LogUtil.d("ddlist:"+ddlist[ddidnex]+"code:${codelist[codeidnex].code}")
                 val ddBean = DBUtils.queryDealDetailByCode(ddlist[ddidnex],codelist[codeidnex].code)
-                LogUtil.d("ddBean m10Size:${ddBean?.sizeBean?.m10Size}")
-                val sumDDBean = DBUtils.querySumDDBeanByCode(sddTableName,codelist[codeidnex].code)
-                DBUtils.insertOrUpdateSumDD2DateTable(ddlist[ddidnex].replace(Datas.dealDetailTableName,""),sddTableName,sumDDBean,ddBean!!)
+                ddBean?.let {
+                    LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
+                    val sumDDBean = DBUtils.querySumDDBeanByCode(sddTableName,codelist[codeidnex].code)
+                    DBUtils.insertOrUpdateSumDD2DateTable(ddlist[ddidnex].replace(Datas.dealDetailTableName,""),sddTableName,sumDDBean,ddBean)
+                }
             }
         }
+
+
+//        val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
     }
 
     private fun getDDList(): ArrayList<String> {
         var result = false
         var cursor: Cursor? = null
         var ddList = ArrayList<String>()
+        var hhqList = ArrayList<String>()
         try {
             val sql =
                 "select name from Sqlite_master  where type ='table'"
