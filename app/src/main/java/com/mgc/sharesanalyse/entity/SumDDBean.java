@@ -8,6 +8,24 @@ public class SumDDBean {
     private String name;
     private double percent;
     private double maxPer;
+    private String mpd;
+
+    public double getMaxPer() {
+        return maxPer;
+    }
+
+    public void setMaxPer(double maxPer) {
+        this.maxPer = maxPer;
+    }
+
+    public String getMpd() {
+        return mpd;
+    }
+
+    public void setMpd(String mpd) {
+        this.mpd = mpd;
+    }
+
     private int allsize;
     private DealDetailAmountSizeBean sizeBean;
 

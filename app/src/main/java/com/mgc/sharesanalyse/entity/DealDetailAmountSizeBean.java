@@ -73,6 +73,7 @@ public class DealDetailAmountSizeBean {
                 beiging = beiging + m50List.get(i).amount;
             }
         }
+        LogUtil.d("getGt5000:"+beiging);
         return beiging;
     }
 
@@ -368,6 +369,7 @@ public class DealDetailAmountSizeBean {
                         "," + (m1Size) +
                         "," + (m05Size) +
                         "," + (m01Size) +
+                        "," + (allsize - m100Size - m50Size - m30Size - m10Size - m5Size - m1Size - m05Size - m01Size) +
                         "," + (getGt5000()) +
                         "," + (getGt1000()) +
                         "," + (getGt500()) +
@@ -379,8 +381,6 @@ public class DealDetailAmountSizeBean {
     public String toUpdateSumDDValues(DealDetailTableBean lastDDASBean) {
         DealDetailAmountSizeBean mSizeBean = lastDDASBean.getSizeBean();
 
-        LogUtil.d("!!ddBean m50Size:"+mSizeBean.m50Size);
-        LogUtil.d("!!M50S:"+(mSizeBean.m50Size + m50Size));
         return
                 ",M100S=" + (mSizeBean.m100Size + m100Size) +
                         ",M50S=" + (mSizeBean.m50Size + m50Size) +
@@ -390,11 +390,12 @@ public class DealDetailAmountSizeBean {
                         ",M1S=" + (mSizeBean.m1Size + m1Size) +
                         ",M05S=" + (mSizeBean.m05Size + m05Size) +
                         ",M01S=" + (mSizeBean.m01Size + m01Size) +
-                        ",G5000M=" + (mSizeBean.gt5000Mamount + getGt5000()) +
-                        ",G1000M=" + (mSizeBean.gt1000Mamount + getGt1000()) +
-                        ",G500M=" + (mSizeBean.gt500Mamount + getGt500()) +
-                        ",G100M=" + (mSizeBean.gt100Mamount + getGt100()) +
-                        "," + getSDJstr(mSizeBean,lastDDASBean) +
+                        ",L01S=" + ((lastDDASBean.getAllsize()-mSizeBean.m100Size-mSizeBean.m50Size-mSizeBean.m30Size-mSizeBean.m10Size-mSizeBean.m5Size-mSizeBean.m1Size-mSizeBean.m05Size-mSizeBean.m01Size) + l01Size) +
+                        ",G5000M=" + (mSizeBean.getGt5000() + gt5000Mamount) +
+                        ",G1000M=" + (mSizeBean.getGt1000() + gt1000Mamount) +
+                        ",G500M=" + (mSizeBean.getGt500() + gt500Mamount) +
+                        ",G100M=" + (mSizeBean.getGt100() + gt100Mamount) +
+                        "," + getSDJstr(mSizeBean, lastDDASBean) +
                         "";
     }
 
@@ -726,5 +727,13 @@ public class DealDetailAmountSizeBean {
     }
 
     private int m01Size;
+    private int l01Size;
 
+    public int getL01Size() {
+        return l01Size;
+    }
+
+    public void setL01Size(int l01Size) {
+        this.l01Size = l01Size;
+    }
 }

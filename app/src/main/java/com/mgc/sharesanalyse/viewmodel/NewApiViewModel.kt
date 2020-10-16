@@ -26,7 +26,7 @@ class NewApiViewModel : BaseViewModel() {
     var dealDetailIndex = 0
     val dayMillis = (24 * 60 * 60 * 1000).toLong()
 
-//        val DealDetailDays = 14//15天
+    //        val DealDetailDays = 14//15天
     val DealDetailDays = 13//15天
 
     //    val DealDetailDays = 1
@@ -86,7 +86,7 @@ class NewApiViewModel : BaseViewModel() {
                         }
                     }
                     CHECK_HQ_CODE -> {
-                        val code= msg.obj as String
+                        val code = msg.obj as String
                         if (code == hqCurCode) {
                             getHisHq(code)
                         }
@@ -208,7 +208,7 @@ class NewApiViewModel : BaseViewModel() {
         var tableBean = DealDetailTableBean()
         tableBean.code = code
         LogUtil.d("requestDealDetail")
-        if (json != "[]"&&json != "false") {
+        if (json != "[]" && json != "false") {
             var sinaDealList = GsonHelper.parseArray(json, SinaDealDatailBean::class.java)
             tableBean.allsize = sinaDealList.size
             var pair = classifyDealDetail(sinaDealList)
@@ -394,7 +394,7 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getHisHq(code: String, start: String = "", end: String = "") {
         var bean =
-            DBUtils.queryHHqBeanByCode(getHHQTableName(),code)
+            DBUtils.queryHHqBeanByCode(getHHQTableName(), code)
 //            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
 
 
@@ -482,12 +482,12 @@ class NewApiViewModel : BaseViewModel() {
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         bean.json = json
 //        DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.updateOrInsertById(bean,code.toLong())
-        DBUtils.insertHHq2DateTable(getHHQTableName(),bean)
+        DBUtils.insertHHq2DateTable(getHHQTableName(), bean)
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
     }
 
-    fun getHHQTableName():String {
+    fun getHHQTableName(): String {
         return "HHQ_" + if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
             FormatterEnum.YYYYMMDD
         )
@@ -545,7 +545,11 @@ class NewApiViewModel : BaseViewModel() {
         }
         FileLogUtil.d("${parentBasePath}${txtname}_before0930", "============$code============")
         for (index in 0 until baseDays) {
-            DBUtils.updateDDPercentByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}",code,getcurPercent(hqList[index]).replace("%",""))
+            DBUtils.updateDDPercentByCode(
+                "DD_${getHisHqDay(hqList[index]).replace("-", "")}",
+                code,
+                getcurPercent(hqList[index]).replace("%", "")
+            )
             if (baseAvgDealAmount == 0.toDouble()) {
                 baseAvgDealAmount = 1.toDouble()
             }
@@ -575,10 +579,15 @@ class NewApiViewModel : BaseViewModel() {
                 )}---difPrices:${diffPrices}---percent:${BigDecimalUtils.div(
                     diffPrices,
                     basePrices
-                ) * 100}%---curPercent:${getcurPercent(hqList[index])}---dealAmount:${getHisHqDayDealAmount(hqList[index])}"
+                ) * 100}%---curPercent:${getcurPercent(hqList[index])}---dealAmount:${getHisHqDayDealAmount(
+                    hqList[index]
+                )}"
 
             logStr = logStr.putTogetherAndChangeLineLogic(addStr)
-            var bean = DBUtils.queryDealDetailByCode("DD_${getHisHqDay(hqList[index]).replace("-","")}", code)
+            var bean = DBUtils.queryDealDetailByCode(
+                "DD_${getHisHqDay(hqList[index]).replace("-", "")}",
+                code
+            )
 
 
             bean?.let {
@@ -592,72 +601,138 @@ class NewApiViewModel : BaseViewModel() {
                 if (null != bean.sizeBean.m100List && bean.sizeBean.m100List.size > 0) {
                     logStr =
                         logStr.putTogetherAndChangeLineLogic(">=100m size = ${bean.sizeBean.m100List.size}:")
-                     var str = "   "
+                    var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m100List.size-1 downTo 0 ) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m100List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m100List.get(i).amount.toString())
-                        str = str +  "(amount=${bean.sizeBean.m100List.get(i).amount},prices=${bean.sizeBean.m100List.get(i).price},time=${bean.sizeBean.m100List.get(i).time})---"
+                    for (i in bean.sizeBean.m100List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m100List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m100List.get(i).amount.toString()
+                        )
+                        str =
+                            str + "(amount=${bean.sizeBean.m100List.get(i).amount},prices=${bean.sizeBean.m100List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m100List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
-                if (null != bean.sizeBean.m50List&& bean.sizeBean.m50List.size > 0) {
-                    logStr = logStr.putTogetherAndChangeLineLogic(">=50m size = ${bean.sizeBean.m50List.size}:")
+                if (null != bean.sizeBean.m50List && bean.sizeBean.m50List.size > 0) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=50m size = ${bean.sizeBean.m50List.size}:")
 
                     var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m50List.size-1 downTo 0 ) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m50List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m50List.get(i).amount.toString())
-                        str = str +  "(amount=${bean.sizeBean.m50List.get(i).amount},prices=${bean.sizeBean.m50List.get(i).price},time=${bean.sizeBean.m50List.get(i).time})---"
+                    for (i in bean.sizeBean.m50List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m50List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m50List.get(i).amount.toString()
+                        )
+                        str =
+                            str + "(amount=${bean.sizeBean.m50List.get(i).amount},prices=${bean.sizeBean.m50List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m50List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
-                if (null != bean.sizeBean.m30List&& bean.sizeBean.m30List.size > 0) {
-                    logStr = logStr.putTogetherAndChangeLineLogic(">=30m size = ${bean.sizeBean.m30List.size}:")
+                if (null != bean.sizeBean.m30List && bean.sizeBean.m30List.size > 0) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=30m size = ${bean.sizeBean.m30List.size}:")
 
                     var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m30List.size-1 downTo 0) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m30List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m30List.get(i).amount.toString())
-                        str = str +  "(amount=${bean.sizeBean.m30List.get(i).amount},prices=${bean.sizeBean.m30List.get(i).price},time=${bean.sizeBean.m30List.get(i).time})---"
+                    for (i in bean.sizeBean.m30List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m30List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m30List.get(i).amount.toString()
+                        )
+                        str =
+                            str + "(amount=${bean.sizeBean.m30List.get(i).amount},prices=${bean.sizeBean.m30List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m30List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
-                if (null != bean.sizeBean.m10List&& bean.sizeBean.m10List.size > 0) {
-                    logStr = logStr.putTogetherAndChangeLineLogic(">=10m size = ${bean.sizeBean.m10List.size}:")
+                if (null != bean.sizeBean.m10List && bean.sizeBean.m10List.size > 0) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=10m size = ${bean.sizeBean.m10List.size}:")
 
                     var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m10List.size-1 downTo 0 ) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m10List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m10List.get(i).amount.toString())
-                        str = str +  "(amount=${bean.sizeBean.m10List.get(i).amount},prices=${bean.sizeBean.m10List.get(i).price},time=${bean.sizeBean.m10List.get(i).time})---"
+                    for (i in bean.sizeBean.m10List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m10List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m10List.get(i).amount.toString()
+                        )
+                        str =
+                            str + "(amount=${bean.sizeBean.m10List.get(i).amount},prices=${bean.sizeBean.m10List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m10List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
-                if (null != bean.sizeBean.m5List&& bean.sizeBean.m5List.size > 0) {
-                    logStr = logStr.putTogetherAndChangeLineLogic(">=5m size = ${bean.sizeBean.m5List.size}:")
+                if (null != bean.sizeBean.m5List && bean.sizeBean.m5List.size > 0) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=5m size = ${bean.sizeBean.m5List.size}:")
 
                     var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m5List.size-1 downTo 0 ) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m5List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m5List.get(i).amount.toString())
+                    for (i in bean.sizeBean.m5List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m5List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m5List.get(i).amount.toString()
+                        )
 
-                        str = str + "(amount=${bean.sizeBean.m5List.get(i).amount},prices=${bean.sizeBean.m5List.get(i).price},time=${bean.sizeBean.m5List.get(i).time})---"
+                        str =
+                            str + "(amount=${bean.sizeBean.m5List.get(i).amount},prices=${bean.sizeBean.m5List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m5List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
-                if (null != bean.sizeBean.m1List&& bean.sizeBean.m1List.size > 0) {
-                    logStr = logStr.putTogetherAndChangeLineLogic(">=1m size = ${bean.sizeBean.m1List.size}:")
+                if (null != bean.sizeBean.m1List && bean.sizeBean.m1List.size > 0) {
+                    logStr =
+                        logStr.putTogetherAndChangeLineLogic(">=1m size = ${bean.sizeBean.m1List.size}:")
 
                     var str = "   "
                     FileLogUtil.d("${parentBasePath}${txtname}_before0930", "\n")
-                    for (i in bean.sizeBean.m1List.size-1 downTo 0 ) {
-                        logFileBefor930(txtname,getHisHqDay(hqList[index]),bean.sizeBean.m1List.get(i).time,code,getcurPercent(hqList[index]),bean.sizeBean.m1List.get(i).amount.toString())
-                        str = str + "(amount=${bean.sizeBean.m1List.get(i).amount},prices=${bean.sizeBean.m1List.get(i).price},time=${bean.sizeBean.m1List.get(i).time})---"
+                    for (i in bean.sizeBean.m1List.size - 1 downTo 0) {
+                        logFileBefor930(
+                            txtname,
+                            getHisHqDay(hqList[index]),
+                            bean.sizeBean.m1List.get(i).time,
+                            code,
+                            getcurPercent(hqList[index]),
+                            bean.sizeBean.m1List.get(i).amount.toString()
+                        )
+                        str =
+                            str + "(amount=${bean.sizeBean.m1List.get(i).amount},prices=${bean.sizeBean.m1List.get(
+                                i
+                            ).price},time=${bean.sizeBean.m1List.get(i).time})---"
                     }
                     logStr = logStr.putTogetherAndChangeLineLogic(str)
                 }
 
-                logStr = logStr.putTogetherAndChangeLineLogic("----------------------------------------------------------------------------------------------------------------------")
+                logStr =
+                    logStr.putTogetherAndChangeLineLogic("----------------------------------------------------------------------------------------------------------------------")
             }
         }
         LogUtil.d("getPriceHisFileLog conformSize:${conformSize} code:$code")
@@ -702,17 +777,29 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
-    fun logFileBefor930(txtname:String,curDay:String,time:String,code: String,percent:String,amount:String) {
+    fun logFileBefor930(
+        txtname: String,
+        curDay: String,
+        time: String,
+        code: String,
+        percent: String,
+        amount: String
+    ) {
 
-        var time = curDay +" $time"
-        if (DateUtils.parse(time,FormatterEnum.YYYY_MM_DD__HH_MM_SS)<DateUtils.parse(curDay+" 09:30:00",FormatterEnum.YYYY_MM_DD__HH_MM_SS)){
-            var befor930Txt ="code:$code,$time,$percent,amount:$amount------"
+        var time = curDay + " $time"
+        if (DateUtils.parse(
+                time,
+                FormatterEnum.YYYY_MM_DD__HH_MM_SS
+            ) < DateUtils.parse(curDay + " 09:30:00", FormatterEnum.YYYY_MM_DD__HH_MM_SS)
+        ) {
+            var befor930Txt = "code:$code,$time,$percent,amount:$amount------"
             FileLogUtil.d("${parentBasePath}${txtname}_before0930", befor930Txt)
         }
     }
 
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
     fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
+    fun getcurPercentDouble(dayDatas: List<String>) = dayDatas[4].replace("%", "").toDouble()
     fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toDouble()
     fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble()
     fun getHisHqDayDealPercent(dayDatas: List<String>) =
@@ -724,7 +811,10 @@ class NewApiViewModel : BaseViewModel() {
 
     val detailCodeList = ArrayList<String>()
     fun getPriceHisFileLog() {
-        var date = if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(FormatterEnum.YYYYMMDD)
+        var date =
+            if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
+                FormatterEnum.YYYYMMDD
+            )
         SPUtils.put(Datas.SPGetHQCodeDate, date)
         //300185！！！
         detailCodeList.clear()
@@ -746,7 +836,8 @@ class NewApiViewModel : BaseViewModel() {
     private fun sortpriceHisRecordGDBean(list: List<PriceHisRecordGDBean>?) {
         Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
             override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
-                return p1.result.split("---percent:")[1].split("%---curPercent")[0].toDouble().compareTo(p0.result.split("---percent:")[1].split("%---curPercent")[0].toDouble())
+                return p1.result.split("---percent:")[1].split("%---curPercent")[0].toDouble()
+                    .compareTo(p0.result.split("---percent:")[1].split("%---curPercent")[0].toDouble())
             }
         })
     }
@@ -824,28 +915,94 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getSumDD() {
-        val sddTableName = Datas.sdd+DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
-        val ddlist = getDDList()
+        val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val pair = getDDList()
+        val ddlist = pair.first
+        val hhqlist = pair.second
         var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
-        for (ddidnex in 0 until ddlist.size)  {
-//        for (ddidnex in 0 until 4)  {
-//            for (codeidnex in 0 until 4) {
-            for (codeidnex in 0 until codelist.size) {
-                LogUtil.d("ddlist:"+ddlist[ddidnex]+"code:${codelist[codeidnex].code}")
-                val ddBean = DBUtils.queryDealDetailByCode(ddlist[ddidnex],codelist[codeidnex].code)
-                ddBean?.let {
-                    LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
-                    val sumDDBean = DBUtils.querySumDDBeanByCode(sddTableName,codelist[codeidnex].code)
-                    DBUtils.insertOrUpdateSumDD2DateTable(ddlist[ddidnex].replace(Datas.dealDetailTableName,""),sddTableName,sumDDBean,ddBean)
-                }
+
+        val initHHQbean =
+            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], 1.toString())
+        val hisHqBeans = GsonHelper.parseArray(initHHQbean?.json, HisHqBean::class.java)[0].hq
+        var hhqBeginIndex = 0
+        var hhqVeryBeginIndex = 0
+        for (index in 0 until hisHqBeans.size-1) {
+
+            LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
+            if (ddlist[0].replace(
+                    Datas.dealDetailTableName,
+                    ""
+                ) == hisHqBeans[index][0].replace("-", "")
+            ) {
+                hhqBeginIndex = index
+                hhqVeryBeginIndex = index
+                LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
             }
         }
+        for (ddidnex in 0 until ddlist.size)  {
+//        for (ddidnex in 0 until 4) {
+            val date = ddlist[ddidnex].replace(
+                Datas.dealDetailTableName,
+                ""
+            )
+//            for (codeidnex in 0 until 4) {
+            for (codeidnex in 0 until codelist.size) {
+                LogUtil.d("ddlist:" + ddlist[ddidnex] + "code:${codelist[codeidnex].code}")
+                val ddBean =
+                    DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
+                ddBean?.let {
+                    LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
+                    val sumDDBean =
+                        DBUtils.querySumDDBeanByCode(sddTableName, codelist[codeidnex].code)
+                    DBUtils.insertOrUpdateSumDD2DateTable(
+                        date, sddTableName, sumDDBean, ddBean
+                    )
 
+                    val bean =
+                        DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], codelist[codeidnex].code)
+                    val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
+                    val hhqbean = hisHqBean[0].hq
+                    if (null == sumDDBean) {
+                        DBUtils.setSDDPercent(
+                            sddTableName,
+                            getcurPercentDouble(hhqbean[hhqBeginIndex]),
+                            codelist[codeidnex].code
+                        )
+                    } else {
+                        LogUtil.d("maxMax:${hhqBeginIndex}----------${hhqVeryBeginIndex}")
+                        LogUtil.d("maxMax:${hhqbean[hhqBeginIndex]}----------${hhqbean[hhqVeryBeginIndex]}")
+                        val beginClosePrice = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+                        val diffPrices = BigDecimalUtils.sub(
+                            getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),
+                            getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+                        )
+                        val percent = BigDecimalUtils.div(
+                            diffPrices,
+                            beginClosePrice
+                        )
+                        DBUtils.setSDDPercent(
+                            sddTableName,
+                            percent,
+                            codelist[codeidnex].code
+                        )
+                        if (percent > sumDDBean.percent) {
+                            DBUtils.setSDDMaxPercent(
+                                sddTableName,
+                                percent,
+                                date,
+                                codelist[codeidnex].code
+                            )
+                        }
+                    }
+                }
+            }
+            hhqBeginIndex--
+        }
+        //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
-//        val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
     }
 
-    private fun getDDList(): ArrayList<String> {
+    private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         var result = false
         var cursor: Cursor? = null
         var ddList = ArrayList<String>()
@@ -861,8 +1018,11 @@ class NewApiViewModel : BaseViewModel() {
                     "select * from $name"
                 val mCursor = DBUtils.db.rawQuery(sqlstr, null)
                 LogUtil.d("foreachDBTable mCursor:${mCursor.count}")
-                if (name.contains("DD_")&&!name.contains("SDD_")) {
+                if (name.contains("DD_") && !name.contains("SDD_")) {
                     ddList.add(name)
+                }
+                if (name.contains("HHQ")) {
+                    hhqList.add(name)
                 }
 
             }
@@ -874,10 +1034,32 @@ class NewApiViewModel : BaseViewModel() {
 
         Collections.sort(ddList, object : Comparator<String> {
             override fun compare(p0: String, p1: String): Int {
-                return DateUtils.parse(p0.replace(Datas.dealDetailTableName,""),FormatterEnum.YYYYMMDD).compareTo(DateUtils.parse(p1.replace(Datas.dealDetailTableName,""),FormatterEnum.YYYYMMDD))
+                return DateUtils.parse(
+                    p0.replace(Datas.dealDetailTableName, ""),
+                    FormatterEnum.YYYYMMDD
+                ).compareTo(
+                    DateUtils.parse(
+                        p1.replace(Datas.dealDetailTableName, ""),
+                        FormatterEnum.YYYYMMDD
+                    )
+                )
             }
         })
-        return ddList
+        Collections.sort(hhqList, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return DateUtils.parse(
+                    p0.replace("HHQ_", ""),
+                    FormatterEnum.YYYYMMDD
+                ).compareTo(
+                    DateUtils.parse(
+                        p1.replace("HHQ_", ""),
+                        FormatterEnum.YYYYMMDD
+                    )
+                )
+            }
+        })
+        return Pair(ddList, hhqList)
+
     }
 
 

@@ -70,7 +70,9 @@ class NewApiActivity : AppCompatActivity() {
         viewModelObserve()
 
         btnGetALlCode.setOnClickListener {
-            DBUtils.dropTable("SDD_20201015")
+
+            val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+            DBUtils.dropTable(sddTableName)
 //            DBUtils.foreachDBTable()
 //            viewModel.getAllCode()
         }

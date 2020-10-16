@@ -41,7 +41,7 @@ object DBUtils {
         ddbean.sizeBean.date = date.replace(Datas.sdd,"")
         if (!queryItemIsExsitByCode(dbName, ddbean.code)) {
             val insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,NAME,ALLSIZE,DATE,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
+                    "(CODE,NAME,ALLSIZE,DATE,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,L01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
                     " VALUES${ddbean.toInsertSqlSumValues(ddbean,ddbean.allsize)}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -56,6 +56,19 @@ object DBUtils {
             }
         }
     }
+
+    fun setSDDPercent(dbName: String,percent:Double,code: String) {
+        val sql = "UPDATE $dbName SET PERCENT = ${percent}  WHERE CODE=${code}"
+        LogUtil.d("setSDDPercent:$sql")
+        db.execSQL(sql)
+    }
+
+    fun setSDDMaxPercent(dbName: String,percent:Double,maxdate: String,code: String) {
+        val sql = "UPDATE $dbName SET MAXPER = ${percent*100},MPD = ${maxdate}  WHERE CODE=${code}"
+        LogUtil.d("setSDDMaxPercent:$sql")
+        db.execSQL(sql)
+    }
+
 //    (CODE,NAME,,,,,,,,,,,,,,
 //    ,,,,,,,,)
 //    (1,'平安银行',ALLSIZE 2074,M100S 0,M50S 2,M30S 0,M10S 6,M5S 25,M1S 455,M05S 527,M01S 1059,G5000M 13675.268635,G1000M 22820.396535000003,G500M 40074.291105000004,G100M 122086.51915499999,
@@ -209,6 +222,7 @@ object DBUtils {
                 //"(CODE,NAME,ALLSIZE,MAXPER,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)"
                 val code = cursor.getString(cursor.getColumnIndex("CODE"))
                 val name = cursor.getString(cursor.getColumnIndex("NAME"))
+                val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
                 val maxper = cursor.getDouble(cursor.getColumnIndex("MAXPER"))
                 val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
@@ -220,6 +234,7 @@ object DBUtils {
                 val m1s = cursor.getInt(cursor.getColumnIndex("M1S"))
                 val m05s = cursor.getInt(cursor.getColumnIndex("M05S"))
                 val m01s = cursor.getInt(cursor.getColumnIndex("M01S"))
+                val L01S = cursor.getInt(cursor.getColumnIndex("L01S"))
                 val G5000M: Long? = cursor.getLong(cursor.getColumnIndex("G5000M"))
                 val G1000M: Long? = cursor.getLong(cursor.getColumnIndex("G1000M"))
                 val G500M: Long? = cursor.getLong(cursor.getColumnIndex("G500M"))
@@ -243,6 +258,7 @@ object DBUtils {
                 dealDetailAmountSizeBean.m1Size = m1s
                 dealDetailAmountSizeBean.m05Size = m05s
                 dealDetailAmountSizeBean.m01Size = m01s
+                dealDetailAmountSizeBean.l01Size = L01S
 
                 dealDetailAmountSizeBean.gt5000Mamount = G5000M!!
                 dealDetailAmountSizeBean.gt1000Mamount =G1000M!!
@@ -263,6 +279,8 @@ object DBUtils {
                 sumDDBean.code = code
                 sumDDBean.name = name
                 sumDDBean.allsize = allsize
+                sumDDBean.maxPer = maxper
+                sumDDBean.mpd = MPD
                 sumDDBean.percent = percent
                 sumDDBean.sizeBean = dealDetailAmountSizeBean
 
@@ -297,8 +315,8 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, MAXPER INTEGER, PERCENT INTEGER" +
-                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, G5000M INTEGER, G1000M INTEGER, G500M INTEGER, G100M INTEGER" +
-                        ", ALLSIZESDJ TEXT, M100SDJ TEXT, M50SDJ TEXT, M30SDJ TEXT, M10SDJ TEXT, M5SDJ TEXT, M1SDJ TEXT, M05SDJ TEXT, M01SDJ TEXT, DATE TEXT);"
+                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, G5000M INTEGER, G1000M INTEGER, G500M INTEGER, G100M INTEGER" +
+                        ", ALLSIZESDJ TEXT, M100SDJ TEXT, M50SDJ TEXT, M30SDJ TEXT, M10SDJ TEXT, M5SDJ TEXT, M1SDJ TEXT, M05SDJ TEXT, M01SDJ TEXT, DATE TEXT,MPD TEXT);"
             db.execSQL(sqlStr)
         }
     }
