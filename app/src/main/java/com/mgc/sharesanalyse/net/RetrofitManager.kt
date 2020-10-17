@@ -23,7 +23,6 @@ object RetrofitManager {
 
     val reqApi by lazy {
 
-        LogUtil.d("mgc", "RetrofitManager lazy init")
         //日志拦截器
         var httpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         //Okhttp对象

@@ -927,6 +927,12 @@ class NewApiViewModel : BaseViewModel() {
         val hisHqBeans = GsonHelper.parseArray(initHHQbean?.json, HisHqBean::class.java)[0].hq
         var hhqBeginIndex = 0
         var hhqVeryBeginIndex = 0
+        var vbts = DateUtils.parse(
+            ddlist[0].replace(
+                Datas.dealDetailTableName,
+                ""
+            ), FormatterEnum.YYYYMMDD
+        )
         for (index in 0 until hisHqBeans.size-1) {
 
             LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
@@ -940,23 +946,6 @@ class NewApiViewModel : BaseViewModel() {
                 LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
             }
         }
-//        300301  300313
-
-        val bea1 = AllCodeGDBean()
-        bea1.code = "300301"
-        val bea2 = AllCodeGDBean()
-        bea2.code = "300313"
-        val bea3 = AllCodeGDBean()
-        bea3.code = "002594"
-        codelist.clear()
-        codelist.add(bea1)
-        codelist.add(bea2)
-        codelist.add(bea3)
-        val ddbeginDate = ddlist[0].replace(
-            Datas.dealDetailTableName,
-            ""
-        )
-        val ddbegints = DateUtils.parse(ddbeginDate,FormatterEnum.YYYYMMDD)
         for (ddidnex in 0 until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
@@ -980,9 +969,6 @@ class NewApiViewModel : BaseViewModel() {
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], codelist[codeidnex].code)
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
                     val hhqbean = hisHqBean[0].hq
-                    val a1 = getHisHqDayClosePrice(hhqbean[hhqBeginIndex])
-                    val a2 = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
-                    LogUtil.d("!!!date:$date,code:${codelist[codeidnex].code},a1:$a1,a2:$a2,verybeginTS:${getHisHqDay(hhqbean[hhqVeryBeginIndex])},curTs:${getHisHqDay(hhqbean[hhqBeginIndex])}")
                     if (null == sumDDBean) {
                         if (hhqBeginIndex < hhqbean.size) {
                             DBUtils.setSDDPercent(
@@ -992,34 +978,55 @@ class NewApiViewModel : BaseViewModel() {
                             )
                         }
                     } else {
-                        val verybeginTS = DateUtils.parse(getHisHqDay(hhqbean[hhqVeryBeginIndex]),FormatterEnum.YYYY_MM_DD)
+                        var changeVeryBeginIndex = hhqVeryBeginIndex
+                        while (changeVeryBeginIndex >=hhqbean.size) {
+                            changeVeryBeginIndex--
+                        }
+                        var verybeginTS = DateUtils.parse(getHisHqDay(hhqbean[changeVeryBeginIndex]),FormatterEnum.YYYY_MM_DD)
+                        if (hhqBeginIndex >= hhqbean.size) {
+                            return@let
+                        }
                         val curTs = DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]),FormatterEnum.YYYY_MM_DD)
-                        if (hhqBeginIndex < hhqbean.size && hhqVeryBeginIndex < hhqbean.size && curTs >= verybeginTS) {
-                            LogUtil.d("maxMax:${hhqBeginIndex}----------${hhqVeryBeginIndex}")
-                            LogUtil.d("maxMax:${hhqbean[hhqBeginIndex]}----------${hhqbean[hhqVeryBeginIndex]}")
-                            val beginClosePrice = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
-                            val diffPrices = BigDecimalUtils.sub(
-                                getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),
-                                getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
-                            )
-                            val percent = BigDecimalUtils.div(
-                                diffPrices,
-                                beginClosePrice
-                            )
-                            DBUtils.setSDDPercent(
-                                sddTableName,
-                                percent,
-                                codelist[codeidnex].code
-                            )
-                            if (percent > sumDDBean.percent) {
-                                DBUtils.setSDDMaxPercent(
-                                    sddTableName,
-                                    percent,
-                                    date,
-                                    codelist[codeidnex].code
+
+                        if (verybeginTS < vbts) {
+                            while (verybeginTS < vbts) {
+                                changeVeryBeginIndex--
+                                if (changeVeryBeginIndex < 0) {
+                                    return@let
+                                }
+                                verybeginTS = DateUtils.parse(
+                                    getHisHqDay(hhqbean[changeVeryBeginIndex]),
+                                    FormatterEnum.YYYY_MM_DD
                                 )
                             }
+                            setSDDPercent(
+                                hhqBeginIndex,
+                                hhqbean,
+                                changeVeryBeginIndex,
+                                curTs,
+                                vbts,
+                                sddTableName,
+                                codelist,
+                                codeidnex,
+                                sumDDBean,
+                                date
+                            )
+                        } else {
+                            setSDDPercent(
+                                hhqBeginIndex,
+                                hhqbean,
+                                hhqVeryBeginIndex,
+                                curTs,
+                                verybeginTS,
+                                sddTableName,
+                                codelist,
+                                codeidnex,
+                                sumDDBean,
+                                date
+                            )
                         }
+
+
                     }
                 }
             }
@@ -1027,6 +1034,46 @@ class NewApiViewModel : BaseViewModel() {
         }
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
+    }
+
+    private fun setSDDPercent(
+        hhqBeginIndex: Int,
+        hhqbean: MutableList<MutableList<String>>,
+        hhqVeryBeginIndex: Int,
+        curTs: Long,
+        verybeginTS: Long,
+        sddTableName: String,
+        codelist: MutableList<AllCodeGDBean>,
+        codeidnex: Int,
+        sumDDBean: SumDDBean,
+        date: String
+    ) {
+        if (hhqBeginIndex < hhqbean.size && hhqVeryBeginIndex < hhqbean.size && curTs >= verybeginTS) {
+            LogUtil.d("maxMax:${hhqBeginIndex}----------${hhqVeryBeginIndex}")
+            LogUtil.d("maxMax:${hhqbean[hhqBeginIndex]}----------${hhqbean[hhqVeryBeginIndex]}")
+            val beginClosePrice = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+            val diffPrices = BigDecimalUtils.sub(
+                getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),
+                getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+            )
+            val percent = BigDecimalUtils.div(
+                diffPrices,
+                beginClosePrice
+            )
+            DBUtils.setSDDPercent(
+                sddTableName,
+                percent,
+                codelist[codeidnex].code
+            )
+            if (percent > sumDDBean.percent) {
+                DBUtils.setSDDMaxPercent(
+                    sddTableName,
+                    percent,
+                    date,
+                    codelist[codeidnex].code
+                )
+            }
+        }
     }
 
     private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
