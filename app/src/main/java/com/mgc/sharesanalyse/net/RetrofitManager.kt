@@ -17,6 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitManager {
+    val baseUrlInterceptor by lazy {
+        BaseUrlInterceptor()
+    }
 
     val reqApi by lazy {
 
@@ -26,7 +29,7 @@ object RetrofitManager {
         //Okhttp对象
         var okHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(BaseUrlInterceptor())
+            .addInterceptor(baseUrlInterceptor)
             .build()
         var gson = Gson()
         val retrofit =
@@ -38,6 +41,11 @@ object RetrofitManager {
                 .build()
         return@lazy retrofit.create(RequestService::class.java)
     }
+
+    fun setRefer(refer: String) {
+        baseUrlInterceptor.referer =refer
+    }
+
 
 
 }

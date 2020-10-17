@@ -12,7 +12,8 @@ interface RequestService {
     fun getSharesDatas(@Path("path") string: String): Deferred<String>
 
 
-    @Headers("urlname:${Datas.sinaVipStockUrl}")
+
+    @Headers("urlname:${Datas.sinaVipStockUrl}","sec-fetch-dest:empty","sec-fetch-mode:cors","sec-fetch-site:same-origin")
     @GET("/quotes_service/api/json_v2.php/CN_Bill.GetBillList")
     fun getDealDetai(@Query("symbol") symbol: String, @Query("day") day: String, @Query("sort") sort: String="ticktime", @Query("amount") amount: String="0", @Query("type") type: String="0", @Query("num") num: String="60000",
                      @Query("asc") asc: String="0", @Query("volume") volume: String="0"): Deferred<String>

@@ -10,6 +10,7 @@ object Datas {
     const val sinaMarketUrl = "http://market.finance.sina.com.cn"
     const val sohuStockUrl = "https://q.stock.sohu.com/"
     const val xqUrl = "https://xueqiu.com"
+    const val sinaVipStockUrlRefer = "https://vip.stock.finance.sina.com.cn/quotes_service/view/cn_bill.php?symbol="
 
     var tableName = "stock_"
     var dealDetailTableName = "DD_"

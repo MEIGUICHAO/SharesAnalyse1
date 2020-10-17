@@ -192,6 +192,7 @@ class NewApiViewModel : BaseViewModel() {
         code: String,
         date: String
     ) {
+        RetrofitManager.baseUrlInterceptor.referer = "${Datas.sinaVipStockUrlRefer}${code.toSinaCode()}"
         var result = RetrofitManager.reqApi.getDealDetai(code.toSinaCode(), date)
         launch({
             var json = result.await()
@@ -939,6 +940,23 @@ class NewApiViewModel : BaseViewModel() {
                 LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
             }
         }
+//        300301  300313
+
+        val bea1 = AllCodeGDBean()
+        bea1.code = "300301"
+        val bea2 = AllCodeGDBean()
+        bea2.code = "300313"
+        val bea3 = AllCodeGDBean()
+        bea3.code = "002594"
+        codelist.clear()
+        codelist.add(bea1)
+        codelist.add(bea2)
+        codelist.add(bea3)
+        val ddbeginDate = ddlist[0].replace(
+            Datas.dealDetailTableName,
+            ""
+        )
+        val ddbegints = DateUtils.parse(ddbeginDate,FormatterEnum.YYYYMMDD)
         for (ddidnex in 0 until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
@@ -962,36 +980,45 @@ class NewApiViewModel : BaseViewModel() {
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], codelist[codeidnex].code)
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
                     val hhqbean = hisHqBean[0].hq
+                    val a1 = getHisHqDayClosePrice(hhqbean[hhqBeginIndex])
+                    val a2 = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+                    LogUtil.d("!!!date:$date,code:${codelist[codeidnex].code},a1:$a1,a2:$a2,verybeginTS:${getHisHqDay(hhqbean[hhqVeryBeginIndex])},curTs:${getHisHqDay(hhqbean[hhqBeginIndex])}")
                     if (null == sumDDBean) {
-                        DBUtils.setSDDPercent(
-                            sddTableName,
-                            getcurPercentDouble(hhqbean[hhqBeginIndex]),
-                            codelist[codeidnex].code
-                        )
-                    } else {
-                        LogUtil.d("maxMax:${hhqBeginIndex}----------${hhqVeryBeginIndex}")
-                        LogUtil.d("maxMax:${hhqbean[hhqBeginIndex]}----------${hhqbean[hhqVeryBeginIndex]}")
-                        val beginClosePrice = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
-                        val diffPrices = BigDecimalUtils.sub(
-                            getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),
-                            getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
-                        )
-                        val percent = BigDecimalUtils.div(
-                            diffPrices,
-                            beginClosePrice
-                        )
-                        DBUtils.setSDDPercent(
-                            sddTableName,
-                            percent,
-                            codelist[codeidnex].code
-                        )
-                        if (percent > sumDDBean.percent) {
-                            DBUtils.setSDDMaxPercent(
+                        if (hhqBeginIndex < hhqbean.size) {
+                            DBUtils.setSDDPercent(
                                 sddTableName,
-                                percent,
-                                date,
+                                getcurPercentDouble(hhqbean[hhqBeginIndex]),
                                 codelist[codeidnex].code
                             )
+                        }
+                    } else {
+                        val verybeginTS = DateUtils.parse(getHisHqDay(hhqbean[hhqVeryBeginIndex]),FormatterEnum.YYYY_MM_DD)
+                        val curTs = DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]),FormatterEnum.YYYY_MM_DD)
+                        if (hhqBeginIndex < hhqbean.size && hhqVeryBeginIndex < hhqbean.size && curTs >= verybeginTS) {
+                            LogUtil.d("maxMax:${hhqBeginIndex}----------${hhqVeryBeginIndex}")
+                            LogUtil.d("maxMax:${hhqbean[hhqBeginIndex]}----------${hhqbean[hhqVeryBeginIndex]}")
+                            val beginClosePrice = getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+                            val diffPrices = BigDecimalUtils.sub(
+                                getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),
+                                getHisHqDayClosePrice(hhqbean[hhqVeryBeginIndex])
+                            )
+                            val percent = BigDecimalUtils.div(
+                                diffPrices,
+                                beginClosePrice
+                            )
+                            DBUtils.setSDDPercent(
+                                sddTableName,
+                                percent,
+                                codelist[codeidnex].code
+                            )
+                            if (percent > sumDDBean.percent) {
+                                DBUtils.setSDDMaxPercent(
+                                    sddTableName,
+                                    percent,
+                                    date,
+                                    codelist[codeidnex].code
+                                )
+                            }
                         }
                     }
                 }

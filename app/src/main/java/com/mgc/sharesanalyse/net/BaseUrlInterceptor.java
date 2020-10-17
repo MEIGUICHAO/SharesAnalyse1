@@ -1,5 +1,6 @@
 package com.mgc.sharesanalyse.net;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.mgc.sharesanalyse.base.Datas;
@@ -15,6 +16,16 @@ import okhttp3.Response;
 
 public class BaseUrlInterceptor implements Interceptor {
 
+    private String referer;
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         //获取request
@@ -28,6 +39,10 @@ public class BaseUrlInterceptor implements Interceptor {
         List<String> agentrValues = request.headers("User-Agent");
         List<String> contentType = request.headers("Content-Type");
         List<String> cookieType = request.headers("Cookie");
+        if (!TextUtils.isEmpty(referer)) {
+            builder.addHeader("referer", referer);
+            referer = "";
+        }
         if (agentrValues.size() > 0) {
             builder.removeHeader("User-Agent");
             builder.addHeader("User-Agent", agentrValues.get(0));
