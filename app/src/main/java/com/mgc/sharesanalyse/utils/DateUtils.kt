@@ -71,8 +71,10 @@ object DateUtils {
     fun isWeekDay(timestamp: Long):Pair<Boolean,String> {
         val simpleDateFormat = SimpleDateFormat(FormatterEnum.YYYY_MM_DD.format)
         val date = format(timestamp,FormatterEnum.YYYY_MM_DD)
-        LogUtil.d("isWeekDay date:$date")
         calendar.time = simpleDateFormat.parse(date)
+        LogUtil.d("isWeekDay date:$date")
+        LogUtil.d("isWeekDay calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY:${calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY}")
+        LogUtil.d("isWeekDay calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY:${calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY}")
         if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
             var isWorkDay = true
             holiday.forEach {

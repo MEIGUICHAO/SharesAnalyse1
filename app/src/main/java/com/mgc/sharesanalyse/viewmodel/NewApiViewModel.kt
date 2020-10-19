@@ -76,7 +76,7 @@ class NewApiViewModel : BaseViewModel() {
                                 code,
                                 curDateStr
                             )
-                            LogUtil.d("requestDealDetail!!!")
+                            LogUtil.d("@@@requestDealDetail!!!")
                         }
 
                     }
@@ -149,7 +149,7 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("getDealDetail")
             needGoOn = true
             requestDealDetail(code, date)
-            LogUtil.d("requestDealDetail!!!")
+            LogUtil.d("@@@requestDealDetail!!!")
         }
 
     }
@@ -250,7 +250,7 @@ class NewApiViewModel : BaseViewModel() {
             if (pair.first) {
 //                var dealDetailBean: DealDetailBean =DaoUtilsStore.getInstance().dealDetailBeanCommonDaoUtils.queryByQueryBuilder(DealDetailBeanDao.Properties.Id.eq(code.toLong()))[0]
                 requestDealDetail(code, pair.second)
-                LogUtil.d("requestDealDetail!!! pair:${pair.first},${pair.second}")
+                LogUtil.d("@@@requestDealDetail!!! pair:${pair.first},${pair.second}")
             } else {
                 requestDealDetailNext(code)
                 LogUtil.d("requestDealDetailNext")

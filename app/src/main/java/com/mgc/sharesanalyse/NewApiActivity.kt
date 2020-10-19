@@ -22,11 +22,24 @@ class NewApiActivity : AppCompatActivity() {
     var progressIndex = 0
     var judeWeekDayIndex = 0
     var dealDetailBeginDateTimeStamp =
-        if (DateUtils.ifAfterToday1530()) System.currentTimeMillis() else DateUtils.formatYesterDayTimeStamp()
+        if (DateUtils.ifAfterToday1530()) System.currentTimeMillis() else {
+            var ysdts = DateUtils.formatYesterDayTimeStamp()
+            while (!DateUtils.isWeekDay(ysdts).first) {
+                ysdts = ysdts - 24 * 60 * 60 * 1000
+            }
+            ysdts
+        }
     var dealDetailBeginDate =
-        if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYY_MM_DD) else DateUtils.formatYesterDay(
-            FormatterEnum.YYYY_MM_DD
-        )
+        if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYY_MM_DD) else {
+            var ysdts = DateUtils.formatYesterDayTimeStamp()
+            while (!DateUtils.isWeekDay(ysdts).first) {
+                ysdts = ysdts - 24 * 60 * 60 * 1000
+            }
+            DateUtils.format(
+                ysdts,
+                FormatterEnum.YYYY_MM_DD
+            )
+        }
 
     var needLogAfterDD = false
 
@@ -73,6 +86,8 @@ class NewApiActivity : AppCompatActivity() {
 
             val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             DBUtils.dropTable(sddTableName)
+//            DBUtils.dropTable("DD_20201015")
+//            DBUtils.dropTable("DD_20201016")
 //            DBUtils.foreachDBTable()
 //            viewModel.getAllCode()
         }
