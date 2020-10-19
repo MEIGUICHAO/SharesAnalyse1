@@ -87,7 +87,7 @@ class NewApiActivity : AppCompatActivity() {
             val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
             DBUtils.dropTable(sddTableName)
 //            DBUtils.dropTable("DD_20201015")
-//            DBUtils.dropTable("DD_20201016")
+//            DBUtils.dropTable("DD_20201018")
 //            DBUtils.foreachDBTable()
 //            viewModel.getAllCode()
         }

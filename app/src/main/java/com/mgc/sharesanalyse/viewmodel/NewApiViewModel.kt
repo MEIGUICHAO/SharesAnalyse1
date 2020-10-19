@@ -947,8 +947,8 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.dealDetailTableName,
                 ""
             )
-            for (codeidnex in 0 until 40) {
-//            for (codeidnex in 0 until codelist.size) {
+//            for (codeidnex in 0 until 40) {
+            for (codeidnex in 0 until codelist.size) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -963,11 +963,6 @@ class NewApiViewModel : BaseViewModel() {
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
                     val hhqbean = hisHqBean[0].hq
 
-                    LogUtil.d(
-                        "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
-                            hhqbean[hhqBeginIndex]
-                        )}"
-                    )
                     if (null == sumDDBean) {
                         if (hhqBeginIndex < hhqbean.size) {
                             DBUtils.setSDDPercent(
@@ -1024,6 +1019,12 @@ class NewApiViewModel : BaseViewModel() {
                                 date
                             )
                         }
+
+                        LogUtil.d(
+                            "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
+                                hhqbean[hhqBeginIndex]
+                            )}"
+                        )
 
 
                     }
