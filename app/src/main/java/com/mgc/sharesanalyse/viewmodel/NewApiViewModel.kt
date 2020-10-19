@@ -928,6 +928,25 @@ class NewApiViewModel : BaseViewModel() {
                 ""
             ), FormatterEnum.YYYYMMDD
         )
+
+        val sumDDBeginBean =
+            DBUtils.querySumDDBeanByCode(sddTableName, codelist[0].code)
+        var sumDateIndexTs = 0.toLong()
+        var sumDateBeginIndex = 0
+        if (null != sumDDBeginBean) {
+            sumDateIndexTs = DateUtils.parse(sumDDBeginBean.sizeBean.date, FormatterEnum.YYYYMMDD)
+            for (i in 0 until ddlist.size - 1) {
+                val date = ddlist[i].replace(Datas.dealDetailTableName,"")
+                val curts = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
+                if (sumDateIndexTs >= curts) {
+                    sumDateBeginIndex = i
+                }
+            }
+        }
+        LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex")
+
+
+
         for (index in 0 until hisHqBeans.size-1) {
 
             LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
@@ -941,7 +960,7 @@ class NewApiViewModel : BaseViewModel() {
                 LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
             }
         }
-        for (ddidnex in 0 until ddlist.size)  {
+        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
                 Datas.dealDetailTableName,
