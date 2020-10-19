@@ -6,13 +6,11 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
-import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
-import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.Deferred
 import org.jsoup.Jsoup
 import java.text.DecimalFormat
@@ -872,10 +870,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
         }
         LogUtil.d("logDealDetailHqSum---completed----------------------------")
-        if (mActivity is NewApiActivity) {
-            (mActivity as NewApiActivity).btnRequestDealDetail.setText("DealDetail_Completed")
-            (mActivity as NewApiActivity).clickHHQ()
-        }
+
     }
 
     fun foreachDDInfo() {
@@ -952,9 +947,8 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.dealDetailTableName,
                 ""
             )
-//            for (codeidnex in 0 until 4) {
-            for (codeidnex in 0 until codelist.size) {
-                LogUtil.d("ddlist:" + ddlist[ddidnex] + "code:${codelist[codeidnex].code}")
+            for (codeidnex in 0 until 40) {
+//            for (codeidnex in 0 until codelist.size) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -964,11 +958,16 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertOrUpdateSumDD2DateTable(
                         date, sddTableName, sumDDBean, ddBean
                     )
-
                     val bean =
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], codelist[codeidnex].code)
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
                     val hhqbean = hisHqBean[0].hq
+
+                    LogUtil.d(
+                        "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
+                            hhqbean[hhqBeginIndex]
+                        )}"
+                    )
                     if (null == sumDDBean) {
                         if (hhqBeginIndex < hhqbean.size) {
                             DBUtils.setSDDPercent(
@@ -1031,6 +1030,9 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
             hhqBeginIndex--
+            if (hhqBeginIndex < 0) {
+                break
+            }
         }
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
@@ -1059,14 +1061,23 @@ class NewApiViewModel : BaseViewModel() {
             val percent = BigDecimalUtils.div(
                 diffPrices,
                 beginClosePrice
-            )
+            ) * 100
+            LogUtil.d("set_SDDPercent,code:${codelist[codeidnex].code},date:$date,beginClosePrice:$beginClosePrice,diffPrices:$diffPrices,percent:${percent}")
             DBUtils.setSDDPercent(
                 sddTableName,
                 percent,
                 codelist[codeidnex].code
             )
-            if (percent > sumDDBean.percent) {
+            if (percent > sumDDBean.maxPer) {
                 DBUtils.setSDDMaxPercent(
+                    sddTableName,
+                    percent,
+                    date,
+                    codelist[codeidnex].code
+                )
+            }
+            if (percent < sumDDBean.lowPer) {
+                DBUtils.setSDDLowPercent(
                     sddTableName,
                     percent,
                     date,

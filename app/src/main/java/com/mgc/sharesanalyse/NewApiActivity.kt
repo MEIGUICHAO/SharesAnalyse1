@@ -241,6 +241,9 @@ class NewApiActivity : AppCompatActivity() {
                                     code,
                                     dealDetailBeginDate
                                 )
+                            } else if (progressIndex == viewModel.detailCodeList.size) {
+                                btnRequestDealDetail.setText("DealDetail_Completed")
+                                clickHHQ()
                             }
 //                            else {
 //                                if (needLogAfterDD) {

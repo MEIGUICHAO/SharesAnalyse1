@@ -64,7 +64,13 @@ object DBUtils {
     }
 
     fun setSDDMaxPercent(dbName: String,percent:Double,maxdate: String,code: String) {
-        val sql = "UPDATE $dbName SET MAXPER = ${percent*100},MPD = ${maxdate}  WHERE CODE=${code}"
+        val sql = "UPDATE $dbName SET MAXPER = ${percent},MPD = ${maxdate}  WHERE CODE=${code}"
+        LogUtil.d("setSDDMaxPercent:$sql")
+        db.execSQL(sql)
+    }
+
+    fun setSDDLowPercent(dbName: String, percent:Double, lowdate: String, code: String) {
+        val sql = "UPDATE $dbName SET LOWPER = ${percent},LPD = ${lowdate}  WHERE CODE=${code}"
         LogUtil.d("setSDDMaxPercent:$sql")
         db.execSQL(sql)
     }
@@ -225,6 +231,7 @@ object DBUtils {
                 val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
                 val maxper = cursor.getDouble(cursor.getColumnIndex("MAXPER"))
+                val LOWPER = cursor.getDouble(cursor.getColumnIndex("LOWPER"))
                 val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
                 val m100s = cursor.getInt(cursor.getColumnIndex("M100S"))
                 val m50s = cursor.getInt(cursor.getColumnIndex("M50S"))
@@ -280,6 +287,7 @@ object DBUtils {
                 sumDDBean.name = name
                 sumDDBean.allsize = allsize
                 sumDDBean.maxPer = maxper
+                sumDDBean.lowPer = LOWPER
                 sumDDBean.mpd = MPD
                 sumDDBean.percent = percent
                 sumDDBean.sizeBean = dealDetailAmountSizeBean
@@ -314,9 +322,9 @@ object DBUtils {
 //        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, MAXPER INTEGER, PERCENT INTEGER" +
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, NAME TEXT, ALLSIZE INTEGER, MAXPER INTEGER, LOWPER INTEGER, PERCENT INTEGER" +
                         ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, G5000M INTEGER, G1000M INTEGER, G500M INTEGER, G100M INTEGER" +
-                        ", ALLSIZESDJ TEXT, M100SDJ TEXT, M50SDJ TEXT, M30SDJ TEXT, M10SDJ TEXT, M5SDJ TEXT, M1SDJ TEXT, M05SDJ TEXT, M01SDJ TEXT, DATE TEXT,MPD TEXT);"
+                        ", ALLSIZESDJ TEXT, M100SDJ TEXT, M50SDJ TEXT, M30SDJ TEXT, M10SDJ TEXT, M5SDJ TEXT, M1SDJ TEXT, M05SDJ TEXT, M01SDJ TEXT, DATE TEXT,MPD TEXT,LPD TEXT);"
             db.execSQL(sqlStr)
         }
     }

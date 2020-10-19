@@ -1,13 +1,21 @@
 package com.mgc.sharesanalyse.entity;
 
-import org.jetbrains.annotations.NotNull;
-
 public class SumDDBean {
 
     private String code;
     private String name;
     private double percent;
     private double maxPer;
+
+    public double getLowPer() {
+        return lowPer;
+    }
+
+    public void setLowPer(double lowPer) {
+        this.lowPer = lowPer;
+    }
+
+    private double lowPer;
     private String mpd;
 
     public double getMaxPer() {
