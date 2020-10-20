@@ -919,7 +919,17 @@ class NewApiViewModel : BaseViewModel() {
 
         val initHHQbean =
             DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], 1.toString())
+        val initHHQbean1 =
+            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], 601216.toString())
+        val initHHQbean2 =
+            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], 858.toString())
+        val initHHQbean3 =
+            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], 300059.toString())
         val hisHqBeans = GsonHelper.parseArray(initHHQbean?.json, HisHqBean::class.java)[0].hq
+        val hisHqBeans1 = GsonHelper.parseArray(initHHQbean1?.json, HisHqBean::class.java)[0].hq
+        val hisHqBeans2 = GsonHelper.parseArray(initHHQbean2?.json, HisHqBean::class.java)[0].hq
+        val hisHqBeans3 = GsonHelper.parseArray(initHHQbean3?.json, HisHqBean::class.java)[0].hq
+        val hhbeansList = listOf(hisHqBeans,hisHqBeans1,hisHqBeans2,hisHqBeans3)
         var hhqBeginIndex = 0
         var hhqVeryBeginIndex = 0
         var vbts = DateUtils.parse(
@@ -946,28 +956,33 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex")
 
 
+        hhbeansList.forEach {
 
-        for (index in 0 until hisHqBeans.size-1) {
+            for (index in 0 until hisHqBeans.size-1) {
 
-            LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
-            if (ddlist[0].replace(
-                    Datas.dealDetailTableName,
-                    ""
-                ) == hisHqBeans[index][0].replace("-", "")
-            ) {
-                hhqBeginIndex = index
-                hhqVeryBeginIndex = index
-                LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
+                LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
+                if (ddlist[0].replace(
+                        Datas.dealDetailTableName,
+                        ""
+                    ) == hisHqBeans[index][0].replace("-", "")
+                ) {
+                    if (index > hhqBeginIndex) {
+                        hhqBeginIndex = index
+                        hhqVeryBeginIndex = index
+                        LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
+                    }
+                }
             }
         }
+
         for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
                 Datas.dealDetailTableName,
                 ""
             )
-//            for (codeidnex in 0 until 40) {
-            for (codeidnex in 0 until codelist.size) {
+            for (codeidnex in 0 until 40) {
+//            for (codeidnex in 0 until codelist.size) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -991,6 +1006,12 @@ class NewApiViewModel : BaseViewModel() {
                             )
                         }
                     } else {
+
+                        val mSumDateIndexTs = DateUtils.parse(sumDDBean.sizeBean.date, FormatterEnum.YYYYMMDD)
+                        if (sumDateIndexTs == mSumDateIndexTs) {
+                            LogUtil.d("相同跳过")
+                            return@let
+                        }
                         var changeVeryBeginIndex = hhqVeryBeginIndex
                         while (changeVeryBeginIndex >=hhqbean.size) {
                             changeVeryBeginIndex--
