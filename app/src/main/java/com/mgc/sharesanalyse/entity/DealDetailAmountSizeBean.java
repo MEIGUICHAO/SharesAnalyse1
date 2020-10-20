@@ -264,24 +264,40 @@ public class DealDetailAmountSizeBean {
     public String getSDJstr(DealDetailAmountSizeBean curDDSBean, DealDetailTableBean lastDDASBean) {
 
         String allsizeSDJ = "'" + " " + "'";
-        String m100SDJ = "'" + " " + "'";
-        String m50SDJ = "'" + " " + "'";
-        String m30SDJ = "'" + " " + "'";
-        String m10SDJ = "'" + " " + "'";
-        String m5SDJ = "'" + " " + "'";
-        String m1SDJ = "'" + " " + "'";
-        String m05SDJ = "'" + " " + "'";
-        String m01SDJ = "'" + " " + "'";
+        String m100SDJ ="'" + this.m100SDJ + "'";
+        String m50SDJ = "'" +this.m50SDJ + "'";
+        String m30SDJ ="'" + this.m30SDJ + "'";
+        String m10SDJ = "'" +this.m10SDJ + "'";
+        String m5SDJ = "'" +this.m5SDJ + "'";
+        String m1SDJ =  "'" +this.m05SDJ+ "'";
+        String m05SDJ = "'" + this.m1SDJ + "'";
+        String m01SDJ = "'" +  this.m01SDJ + "'";
 
         allsizeSDJ = "'" + curDDSBean.date + ":" + lastDDASBean.getAllsize() + "_" + this.allsizeSDJ + "'";
-        m100SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m100Size + "_" + this.m100SDJ + "'";
-        m50SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m50Size + "_" + this.m50SDJ + "'";
-        m30SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m30Size + "_" + this.m30SDJ + "'";
-        m10SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m10Size + "_" + this.m10SDJ + "'";
-        m5SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m5Size + "_" + this.m5SDJ + "'";
-        m1SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m1Size + "_" + this.m1SDJ + "'";
-        m05SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m05Size + "_" + this.m05SDJ + "'";
-        m01SDJ = "'" + curDDSBean.date + ":" + curDDSBean.m01Size + "_" + this.m01SDJ + "'";
+        if (curDDSBean.m100Size > 0) {
+            m100SDJ = "'" + this.m100SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m100Size + "'";
+        }
+        if (curDDSBean.m50Size > 0) {
+            m50SDJ = "'" + this.m50SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m50Size + "'";
+        }
+        if (curDDSBean.m30Size > 0) {
+            m30SDJ = "'" + this.m30SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m30Size + "'";
+        }
+        if (curDDSBean.m10Size > 0) {
+            m10SDJ = "'" + this.m10SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m10Size + "'";
+        }
+        if (curDDSBean.m5Size > 0) {
+            m5SDJ = "'" + this.m5SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m5Size  +"'";
+        }
+        if (curDDSBean.m1Size > 0) {
+            m1SDJ = "'" + this.m1SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m1Size  +"'";
+        }
+        if (curDDSBean.m05Size > 0) {
+            m05SDJ = "'" + this.m05SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m05Size  +"'";
+        }
+        if (curDDSBean.m01Size > 0) {
+            m01SDJ = "'" + this.m01SDJ + "_" + curDDSBean.date + ":" + curDDSBean.m01Size  +"'";
+        }
 
 //        if (!TextUtils.isEmpty(curDDSBean.getM100SDJ()) && TextUtils.isEmpty(this.m100SDJ)) {
 //            m100SDJ = "'" + curDDSBean.date + ":"+curDDSBean.m100Size + "_" + this.m100SDJ + "'";
@@ -345,14 +361,30 @@ public class DealDetailAmountSizeBean {
         String m01SDJ = "'" + " " + "'";
 
         allsizeSDJ = "'" + date + ":" + allsize + "'";
-        m100SDJ = "'" + date + ":" + ddsBean.m100Size + "'";
-        m50SDJ = "'" + date + ":" + ddsBean.m50Size + "'";
-        m30SDJ = "'" + date + ":" + ddsBean.m30Size + "'";
-        m10SDJ = "'" + date + ":" + ddsBean.m10Size + "'";
-        m5SDJ = "'" + date + ":" + ddsBean.m5Size + "'";
-        m1SDJ = "'" + date + ":" + ddsBean.m1Size + "'";
-        m05SDJ = "'" + date + ":" + ddsBean.m05Size + "'";
-        m01SDJ = "'" + date + ":" + ddsBean.m01Size + "'";
+        if (ddsBean.m100Size > 0) {
+            m100SDJ = "'" + date + ":" + ddsBean.m100Size + "'";
+        }
+        if (ddsBean.m50Size > 0) {
+            m50SDJ = "'" + date + ":" + ddsBean.m50Size + "'";
+        }
+        if (ddsBean.m30Size >0) {
+            m30SDJ = "'" + date + ":" + ddsBean.m30Size + "'";
+        }
+        if (ddsBean.m10Size>0) {
+            m10SDJ = "'" + date + ":" + ddsBean.m10Size + "'";
+        }
+        if (ddsBean.m5Size > 0) {
+            m5SDJ = "'" + date + ":" + ddsBean.m5Size + "'";
+        }
+        if (ddsBean.m1Size > 0) {
+            m1SDJ = "'" + date + ":" + ddsBean.m1Size + "'";
+        }
+        if (ddsBean.m05Size > 0) {
+            m05SDJ = "'" + date + ":" + ddsBean.m05Size + "'";
+        }
+        if (ddsBean.m01Size > 0) {
+            m01SDJ = "'" + date + ":" + ddsBean.m01Size + "'";
+        }
 
         return allsizeSDJ + "," + m100SDJ + "," + m50SDJ + "," + m30SDJ + "," + m10SDJ + "," + m5SDJ + "," + m1SDJ + "," + m05SDJ + "," + m01SDJ;
     }

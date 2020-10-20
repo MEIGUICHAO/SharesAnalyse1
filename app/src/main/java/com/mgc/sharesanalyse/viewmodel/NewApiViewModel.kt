@@ -911,7 +911,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getSumDD() {
-        val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
+        val sddTableNameALL = Datas.sddALL
         val pair = getDDList()
         val ddlist = pair.first
         val hhqlist = pair.second
@@ -940,7 +941,7 @@ class NewApiViewModel : BaseViewModel() {
         )
 
         val sumDDBeginBean =
-            DBUtils.querySumDDBeanByCode(sddTableName, codelist[0].code)
+            DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[0].code)
         var sumDateIndexTs = 0.toLong()
         var sumDateBeginIndex = 0
         if (null != sumDDBeginBean) {
@@ -974,6 +975,8 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
+        val curMonthTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01",FormatterEnum.YYYY_MM_DD)
+        val curYearTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01",FormatterEnum.YYYY_MM_DD)
 
         for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
@@ -981,93 +984,38 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.dealDetailTableName,
                 ""
             )
+            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
             for (codeidnex in 0 until 40) {
 //            for (codeidnex in 0 until codelist.size) {
-                val ddBean =
-                    DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
-                ddBean?.let {
-                    LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
-                    val sumDDBean =
-                        DBUtils.querySumDDBeanByCode(sddTableName, codelist[codeidnex].code)
-                    DBUtils.insertOrUpdateSumDD2DateTable(
-                        date, sddTableName, sumDDBean, ddBean
-                    )
-                    val bean =
-                        DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size-1], codelist[codeidnex].code)
-                    val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
-                    val hhqbean = hisHqBean[0].hq
-
-                    if (null == sumDDBean) {
-                        if (hhqBeginIndex < hhqbean.size) {
-                            DBUtils.setSDDPercent(
-                                sddTableName,
-                                getcurPercentDouble(hhqbean[hhqBeginIndex]),
-                                codelist[codeidnex].code
-                            )
-                        }
-                    } else {
-
-                        val mSumDateIndexTs = DateUtils.parse(sumDDBean.sizeBean.date, FormatterEnum.YYYYMMDD)
-                        if (sumDateIndexTs == mSumDateIndexTs) {
-                            LogUtil.d("相同跳过")
-                            return@let
-                        }
-                        var changeVeryBeginIndex = hhqVeryBeginIndex
-                        while (changeVeryBeginIndex >=hhqbean.size) {
-                            changeVeryBeginIndex--
-                        }
-                        var verybeginTS = DateUtils.parse(getHisHqDay(hhqbean[changeVeryBeginIndex]),FormatterEnum.YYYY_MM_DD)
-                        if (hhqBeginIndex >= hhqbean.size) {
-                            return@let
-                        }
-                        val curTs = DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]),FormatterEnum.YYYY_MM_DD)
-
-                        if (verybeginTS < vbts) {
-                            while (verybeginTS < vbts) {
-                                changeVeryBeginIndex--
-                                if (changeVeryBeginIndex < 0) {
-                                    return@let
-                                }
-                                verybeginTS = DateUtils.parse(
-                                    getHisHqDay(hhqbean[changeVeryBeginIndex]),
-                                    FormatterEnum.YYYY_MM_DD
-                                )
-                            }
-                            setSDDPercent(
-                                hhqBeginIndex,
-                                hhqbean,
-                                changeVeryBeginIndex,
-                                curTs,
-                                vbts,
-                                sddTableName,
-                                codelist,
-                                codeidnex,
-                                sumDDBean,
-                                date
-                            )
-                        } else {
-                            setSDDPercent(
-                                hhqBeginIndex,
-                                hhqbean,
-                                hhqVeryBeginIndex,
-                                curTs,
-                                verybeginTS,
-                                sddTableName,
-                                codelist,
-                                codeidnex,
-                                sumDDBean,
-                                date
-                            )
-                        }
-
-                        LogUtil.d(
-                            "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
-                                hhqbean[hhqBeginIndex]
-                            )}"
+                if (curIndexTs >= curYearTS) {
+                    if (curIndexTs >= curMonthTS) {
+                        operaSddDB(
+                            ddlist,
+                            ddidnex,
+                            codelist,
+                            codeidnex,
+                            sddTableName,
+                            date,
+                            hhqlist,
+                            hhqBeginIndex,
+                            sumDateIndexTs,
+                            hhqVeryBeginIndex,
+                            vbts
                         )
-
-
                     }
+                    operaSddDB(
+                        ddlist,
+                        ddidnex,
+                        codelist,
+                        codeidnex,
+                        sddTableNameALL,
+                        date,
+                        hhqlist,
+                        hhqBeginIndex,
+                        sumDateIndexTs,
+                        hhqVeryBeginIndex,
+                        vbts
+                    )
                 }
             }
             hhqBeginIndex--
@@ -1077,6 +1025,112 @@ class NewApiViewModel : BaseViewModel() {
         }
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
+    }
+
+    private fun operaSddDB(
+        ddlist: ArrayList<String>,
+        ddidnex: Int,
+        codelist: MutableList<AllCodeGDBean>,
+        codeidnex: Int,
+        sddTableNameALL: String,
+        date: String,
+        hhqlist: ArrayList<String>,
+        hhqBeginIndex: Int,
+        sumDateIndexTs: Long,
+        hhqVeryBeginIndex: Int,
+        vbts: Long
+    ) {
+        val ddBean =
+            DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
+        ddBean?.let {
+            LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
+            val sumDDBean =
+                DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[codeidnex].code)
+            DBUtils.insertOrUpdateSumDD2DateTable(
+                date, sddTableNameALL, sumDDBean, ddBean
+            )
+            val bean =
+                DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex].code)
+            val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
+            val hhqbean = hisHqBean[0].hq
+
+            if (null == sumDDBean) {
+                if (hhqBeginIndex < hhqbean.size) {
+                    DBUtils.setSDDPercent(
+                        sddTableNameALL,
+                        getcurPercentDouble(hhqbean[hhqBeginIndex]),
+                        codelist[codeidnex].code
+                    )
+                }
+            } else {
+
+                val mSumDateIndexTs =
+                    DateUtils.parse(sumDDBean.sizeBean.date, FormatterEnum.YYYYMMDD)
+                if (sumDateIndexTs == mSumDateIndexTs) {
+                    LogUtil.d("相同跳过")
+                    return@let
+                }
+                var changeVeryBeginIndex = hhqVeryBeginIndex
+                while (changeVeryBeginIndex >= hhqbean.size) {
+                    changeVeryBeginIndex--
+                }
+                var verybeginTS = DateUtils.parse(
+                    getHisHqDay(hhqbean[changeVeryBeginIndex]),
+                    FormatterEnum.YYYY_MM_DD
+                )
+                if (hhqBeginIndex >= hhqbean.size) {
+                    return@let
+                }
+                val curTs =
+                    DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]), FormatterEnum.YYYY_MM_DD)
+
+                if (verybeginTS < vbts) {
+                    while (verybeginTS < vbts) {
+                        changeVeryBeginIndex--
+                        if (changeVeryBeginIndex < 0) {
+                            return@let
+                        }
+                        verybeginTS = DateUtils.parse(
+                            getHisHqDay(hhqbean[changeVeryBeginIndex]),
+                            FormatterEnum.YYYY_MM_DD
+                        )
+                    }
+                    setSDDPercent(
+                        hhqBeginIndex,
+                        hhqbean,
+                        changeVeryBeginIndex,
+                        curTs,
+                        vbts,
+                        sddTableNameALL,
+                        codelist,
+                        codeidnex,
+                        sumDDBean,
+                        date
+                    )
+                } else {
+                    setSDDPercent(
+                        hhqBeginIndex,
+                        hhqbean,
+                        hhqVeryBeginIndex,
+                        curTs,
+                        verybeginTS,
+                        sddTableNameALL,
+                        codelist,
+                        codeidnex,
+                        sumDDBean,
+                        date
+                    )
+                }
+
+                LogUtil.d(
+                    "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
+                        hhqbean[hhqBeginIndex]
+                    )}"
+                )
+
+
+            }
+        }
     }
 
     private fun setSDDPercent(

@@ -1,5 +1,8 @@
 package com.mgc.sharesanalyse.base
 
+import com.mgc.sharesanalyse.utils.DateUtils
+import com.mgc.sharesanalyse.utils.FormatterEnum
+
 object Datas {
 
     const val WinChromeAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
@@ -15,6 +18,7 @@ object Datas {
     var tableName = "stock_"
     var dealDetailTableName = "DD_"
     var sdd = "SDD_"
+    var sddALL = "SDD_ALL_"+DateUtils.formatToDay(FormatterEnum.YYYY)
     var limitSize = 160
     var basebase = 30
     var SPGetHQCodeDate = "SPGetHQCodeDate"
