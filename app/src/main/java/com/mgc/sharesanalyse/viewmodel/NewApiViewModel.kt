@@ -933,6 +933,7 @@ class NewApiViewModel : BaseViewModel() {
         val hhbeansList = listOf(hisHqBeans,hisHqBeans1,hisHqBeans2,hisHqBeans3)
         var hhqBeginIndex = 0
         var hhqVeryBeginIndex = 0
+        var hhqMonthVeryBeginIndex = 0
         var vbts = DateUtils.parse(
             ddlist[0].replace(
                 Datas.dealDetailTableName,
@@ -956,12 +957,14 @@ class NewApiViewModel : BaseViewModel() {
         }
         LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex")
 
+        val curMonthTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01",FormatterEnum.YYYY_MM_DD)
+        val curYearTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01",FormatterEnum.YYYY_MM_DD)
 
         hhbeansList.forEach {
 
             for (index in 0 until hisHqBeans.size-1) {
 
-                LogUtil.d("hhqBeginIndex:${hisHqBeans[index][0].replace("-", "")}")
+                LogUtil.d("hhbeansList date:${hisHqBeans[index][0].replace("-", "")}")
                 if (ddlist[0].replace(
                         Datas.dealDetailTableName,
                         ""
@@ -973,10 +976,14 @@ class NewApiViewModel : BaseViewModel() {
                         LogUtil.d("hhqBeginIndex@@:$hhqBeginIndex")
                     }
                 }
+                if (DateUtils.parse(hisHqBeans[index][0], FormatterEnum.YYYY_MM_DD) >= curMonthTS) {
+                    if (index > hhqMonthVeryBeginIndex) {
+                        hhqMonthVeryBeginIndex = index
+                        LogUtil.d("hhqMonthVeryBeginIndex@@:$hhqMonthVeryBeginIndex")
+                    }
+                }
             }
         }
-        val curMonthTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01",FormatterEnum.YYYY_MM_DD)
-        val curYearTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01",FormatterEnum.YYYY_MM_DD)
 
         for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in 0 until 4) {
@@ -987,6 +994,8 @@ class NewApiViewModel : BaseViewModel() {
             val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
             for (codeidnex in 0 until 40) {
 //            for (codeidnex in 0 until codelist.size) {
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
                 if (curIndexTs >= curYearTS) {
                     if (curIndexTs >= curMonthTS) {
                         operaSddDB(
@@ -999,8 +1008,8 @@ class NewApiViewModel : BaseViewModel() {
                             hhqlist,
                             hhqBeginIndex,
                             sumDateIndexTs,
-                            hhqVeryBeginIndex,
-                            vbts
+                            hhqMonthVeryBeginIndex,
+                            curMonthTS
                         )
                     }
                     operaSddDB(
@@ -1040,8 +1049,10 @@ class NewApiViewModel : BaseViewModel() {
         hhqVeryBeginIndex: Int,
         vbts: Long
     ) {
+
         val ddBean =
             DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
+
         ddBean?.let {
             LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
             val sumDDBean =
@@ -1049,10 +1060,12 @@ class NewApiViewModel : BaseViewModel() {
             DBUtils.insertOrUpdateSumDD2DateTable(
                 date, sddTableNameALL, sumDDBean, ddBean
             )
+
             val bean =
                 DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex].code)
             val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
             val hhqbean = hisHqBean[0].hq
+
 
             if (null == sumDDBean) {
                 if (hhqBeginIndex < hhqbean.size) {
@@ -1062,6 +1075,7 @@ class NewApiViewModel : BaseViewModel() {
                         codelist[codeidnex].code
                     )
                 }
+
             } else {
 
                 val mSumDateIndexTs =
@@ -1107,6 +1121,7 @@ class NewApiViewModel : BaseViewModel() {
                         sumDDBean,
                         date
                     )
+
                 } else {
                     setSDDPercent(
                         hhqBeginIndex,
@@ -1120,18 +1135,22 @@ class NewApiViewModel : BaseViewModel() {
                         sumDDBean,
                         date
                     )
+
+
                 }
 
-                LogUtil.d(
-                    "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
-                        hhqbean[hhqBeginIndex]
-                    )}"
-                )
-
-
             }
+
+            LogUtil.d("${codelist[codeidnex].code} operaSddDB tableName:$sddTableNameALL")
+
+            LogUtil.d(
+                "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
+                    hhqbean[hhqBeginIndex]
+                )}"
+            )
         }
     }
+
 
     private fun setSDDPercent(
         hhqBeginIndex: Int,
@@ -1187,6 +1206,8 @@ class NewApiViewModel : BaseViewModel() {
         var cursor: Cursor? = null
         var ddList = ArrayList<String>()
         var hhqList = ArrayList<String>()
+        val curYts = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"0101", FormatterEnum.YYYYMMDD)
+        val curYEndts = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"1230", FormatterEnum.YYYYMMDD)
         try {
             val sql =
                 "select name from Sqlite_master  where type ='table'"
@@ -1199,7 +1220,10 @@ class NewApiViewModel : BaseViewModel() {
                 val mCursor = DBUtils.db.rawQuery(sqlstr, null)
                 LogUtil.d("foreachDBTable mCursor:${mCursor.count}")
                 if (name.contains("DD_") && !name.contains("SDD_")) {
-                    ddList.add(name)
+                    val ts = DateUtils.parse(name.replace("DD_", ""), FormatterEnum.YYYYMMDD)
+                    if (ts >= curYts && ts < curYEndts) {
+                        ddList.add(name)
+                    }
                 }
                 if (name.contains("HHQ")) {
                     hhqList.add(name)
