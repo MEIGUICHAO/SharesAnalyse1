@@ -846,11 +846,11 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("complete==========================")
         var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
         var txtname: String
-//        var dbDateList = ArrayList<String>()
-//        dbDateList.getWeekDayS(DateUtils.formatYesterDayTimeStamp(), 15)
-//        dbDateList.forEach {
-//            LogUtil.d("dbDateList:$it")
-//        }
+        val hhqList = getDDList().second
+        for (i in 0 until hhqList.size - 1) {
+            DBUtils.dropTable(hhqList[i])
+        }
+
         sortpriceHisRecordGDBean(list)
         list.forEach {
             if (it.id > 600000) {
@@ -861,13 +861,6 @@ class NewApiViewModel : BaseViewModel() {
                 txtname = "sz_"
             }
             FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
-//            dbDateList.forEach {date->
-//                var bean = DBUtils.queryDealDetailByCode("DD_${date.replace("-","")}", it.code)
-//                bean?.let {
-//                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "DealDetail_code:${bean.code}_name:${bean.name}---------------------------------------------------------")
-//                    FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", date+bean.toString())
-//                }
-//            }
         }
         LogUtil.d("logDealDetailHqSum---completed----------------------------")
 
@@ -992,8 +985,8 @@ class NewApiViewModel : BaseViewModel() {
                 ""
             )
             val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
-            for (codeidnex in 0 until 40) {
-//            for (codeidnex in 0 until codelist.size) {
+//            for (codeidnex in 0 until 40) {
+            for (codeidnex in 0 until codelist.size) {
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
                 if (curIndexTs >= curYearTS) {
