@@ -1,12 +1,49 @@
 package com.mgc.sharesanalyse.entity;
 
-class CodeHDDBean {
-    //     "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, P INTEGER, AUP INTEGER, DV INTEGER, DA INTEGER, AS INTEGER" +
-//             ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, PP100M INTEGER, PP50M INTEGER, PP30M INTEGER, PP10M INTEGER, PP5M INTEGER, PP1M INTEGER, PP05M INTEGER, PP01M INTEGER, PP01L INTEGER" +
-//             ", DAA INTEGER, DA5000 INTEGER, DA1000 INTEGER, DA500 INTEGER, DA100 INTEGER);"
+public class CodeHDDBean {
+
     private String name;
     private String DATE;
+    private String TR;
+    private double OP;
+
+    public String getTR() {
+        return TR;
+    }
+
+    public void setTR(String TR) {
+        this.TR = TR;
+    }
+
+    private double CP;
+    private double PP;
+
+    public double getPP() {
+        return PP;
+    }
+
+    public void setPP(double PP) {
+        this.PP = PP;
+    }
+
     private double P;
+
+    public double getOP() {
+        return OP;
+    }
+
+    public void setOP(double OP) {
+        this.OP = OP;
+    }
+
+    public double getCP() {
+        return CP;
+    }
+
+    public void setCP(double CP) {
+        this.CP = CP;
+    }
+
     private double AUP;
     private double DV;
     private double DA;
@@ -195,29 +232,6 @@ class CodeHDDBean {
         this.PP1M = PP1M;
     }
 
-    public double getPP05M() {
-        return PP05M;
-    }
-
-    public void setPP05M(double PP05M) {
-        this.PP05M = PP05M;
-    }
-
-    public double getPP01M() {
-        return PP01M;
-    }
-
-    public void setPP01M(double PP01M) {
-        this.PP01M = PP01M;
-    }
-
-    public double getPP01L() {
-        return PP01L;
-    }
-
-    public void setPP01L(double PP01L) {
-        this.PP01L = PP01L;
-    }
 
     public double getDAA() {
         return DAA;
@@ -266,10 +280,57 @@ class CodeHDDBean {
     private double PP30M;
     private double PP10M;
     private double PP5M;
+
+
+    public String toInsertDBValues(String dbName) {
+        return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
+                ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
+                ", DAA , DA5000 , DA1000 , DA500 , DA100 ) " +
+                "VALUES('" + name + "'" +
+                ",'" + DATE + "'" +
+                ", " + OP +
+                ", " + CP +
+                ", " + PP +
+                ", " + P +
+                ", " + AUP +
+                ",'" + TR +
+                "', " + DV +
+                ", " + DA +
+                ", " + AS +
+                ", " + M100S +
+                ", " + M50S +
+                ", " + M30S +
+                ", " + M10S +
+                ", " + M5S +
+                ", " + M1S +
+                ", " + M05S +
+                ", " + M01S +
+                ", " + L01S +
+                ", " + PP100M +
+                ", " + PP50M +
+                ", " + PP30M +
+                ", " + PP10M +
+                ", " + PP5M +
+                ", " + PP1M +
+                ", " + PPL1M +
+                ", " + DAA +
+                ", " + DA5000 +
+                ", " + DA1000 +
+                ", " + DA500 +
+                ", " + DA100 + ")";
+    }
+
     private double PP1M;
-    private double PP05M;
-    private double PP01M;
-    private double PP01L;
+    private double PPL1M;
+
+    public double getPPL1M() {
+        return PPL1M;
+    }
+
+    public void setPPL1M(double PPL1M) {
+        this.PPL1M = PPL1M;
+    }
+
     private double DAA;
     private double DA5000;
     private double DA1000;

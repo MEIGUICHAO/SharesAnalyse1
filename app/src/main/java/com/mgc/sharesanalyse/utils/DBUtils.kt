@@ -4,10 +4,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.json2Array
-import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean
-import com.mgc.sharesanalyse.entity.DealDetailTableBean
-import com.mgc.sharesanalyse.entity.PricesHisGDBean
-import com.mgc.sharesanalyse.entity.SumDDBean
+import com.mgc.sharesanalyse.entity.*
 
 
 object DBUtils {
@@ -330,14 +327,36 @@ object DBUtils {
     }
 
     fun createCodeHDD(dbName: String) {
-//        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, P INTEGER, AUP INTEGER, DV INTEGER, DA INTEGER, AS INTEGER" +
-                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, PP100M INTEGER, PP50M INTEGER, PP30M INTEGER, PP10M INTEGER, PP5M INTEGER, PP1M INTEGER, PP05M INTEGER, PP01M INTEGER, PP01L INTEGER" +
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER, DV INTEGER, DA INTEGER, AS INTEGER" +
+                        ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, PP100M INTEGER, PP50M INTEGER, PP30M INTEGER, PP10M INTEGER, PP5M INTEGER, PP1M INTEGER, PPL1M INTEGER" +
                         ", DAA INTEGER, DA5000 INTEGER, DA1000 INTEGER, DA500 INTEGER, DA100 INTEGER);"
             db.execSQL(sqlStr)
         }
+    }
+
+    fun insertCodeHDD(dbName: String, codeHDDBean: CodeHDDBean) {
+        createCodeHDD(dbName)
+        if (!queryCodeHDDIsExsitByDate(dbName, codeHDDBean.date)) {
+            val insertSqlStr = codeHDDBean.toInsertDBValues(dbName)
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        }
+    }
+
+
+    fun queryCodeHDDIsExsitByDate(dbName: String, DATE: String): Boolean {
+        var isexsit = false
+        LogUtil.d("DATE:$DATE")
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE DATE =?", arrayOf(DATE))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
     }
 
 

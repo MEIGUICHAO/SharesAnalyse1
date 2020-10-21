@@ -1,13 +1,11 @@
 package com.mgc.sharesanalyse.base
 
+import android.annotation.SuppressLint
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.GsonHelper
-import com.mgc.sharesanalyse.utils.LogUtil
 import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
@@ -44,4 +42,10 @@ fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
     } else if (this.size < requestSize) {
         this.getWeekDayS(time - 24 * 60 * 60 * 1000, requestSize)
     }
+}
+
+
+@SuppressLint("DefaultLocale")
+fun Double.toKeep6():Double {
+   return java.lang.String.format("%.6f", this).toDouble()
 }

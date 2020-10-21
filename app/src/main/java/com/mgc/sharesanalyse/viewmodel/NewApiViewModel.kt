@@ -1130,17 +1130,17 @@ class NewApiViewModel : BaseViewModel() {
                     )
 
 
+//                    LogUtil.d(
+//                        "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
+//                            hhqbean[hhqBeginIndex]
+//                        )}"
+//                    )
                 }
 
             }
 
             LogUtil.d("${codelist[codeidnex].code} operaSddDB tableName:$sddTableNameALL")
 
-            LogUtil.d(
-                "ddlist:" + ddlist[ddidnex] + ",code:${codelist[codeidnex].code},hhqBeginIndex:$hhqBeginIndex,hhqDate:${getHisHqDay(
-                    hhqbean[hhqBeginIndex]
-                )}"
-            )
         }
     }
 
