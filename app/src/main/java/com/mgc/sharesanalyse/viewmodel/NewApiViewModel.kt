@@ -487,9 +487,9 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getHHQTableName(): String {
-        return "HHQ_" + if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
-            FormatterEnum.YYYYMMDD
-        )
+//        return "HHQ_" + if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
+//            FormatterEnum.YYYYMMDD
+        return "HHQ_" + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
     }
 
     private fun getXQInfo(xq1Bean: XQInfoBean?): ArrayList<InfoDateBean> {

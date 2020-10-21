@@ -84,14 +84,14 @@ class NewApiActivity : AppCompatActivity() {
 
         btnGetALlCode.setOnClickListener {
 
-            val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
-            val sddTableNameAll = Datas.sddALL
-            DBUtils.dropTable(sddTableName)
-            DBUtils.dropTable(sddTableNameAll)
-//            DBUtils.dropTable("DD_20201019")
+//            val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
+//            val sddTableNameAll = Datas.sddALL
+//            DBUtils.dropTable(sddTableName)
+//            DBUtils.dropTable(sddTableNameAll)
+//            DBUtils.dropTable("HHQ_20201021")
 //            DBUtils.dropTable("DD_20201018")
 //            DBUtils.foreachDBTable()
-//            viewModel.getAllCode()
+            viewModel.getAllCode()
         }
 
         btnCopy.setOnClickListener {
@@ -222,12 +222,7 @@ class NewApiActivity : AppCompatActivity() {
                     when (it.type) {
                         viewModel.REQUEST_HIS_HQ -> {
                             progressIndex++
-                            val date = SPUtils.get(Datas.SPGetHQCodeDate, "")
-                            val compareDate = if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(FormatterEnum.YYYYMMDD)
-                            if (date == compareDate) {
-                                viewModel.getPriceHisFileLog()
-//                            } else if (progressIndex < 1) {
-                            } else if (progressIndex < viewModel.codeNameList.size) {
+                            if (progressIndex < viewModel.codeNameList.size) {
                                 getHisHq()
                             } else {
                                 viewModel.getPriceHisFileLog()
