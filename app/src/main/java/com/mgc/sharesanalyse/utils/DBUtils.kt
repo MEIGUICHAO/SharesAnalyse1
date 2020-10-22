@@ -213,6 +213,18 @@ object DBUtils {
     }
 
 
+    fun querySumDDBeanLastDate(dbName: String): String {
+        var DATE = ""
+        if (tabbleIsExist(dbName)) {
+            var cursor = db.rawQuery("SELECT TOP 1 * FROM $dbName order by _ID desc", arrayOf(""))
+            if (null != cursor && cursor.moveToFirst()) {
+                DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+            }
+        }
+        return DATE
+    }
+
+
     fun querySumDDBeanByCode(dbName: String, code: String): SumDDBean? {
         var sumDDBean: SumDDBean? = null
         if (tabbleIsExist(dbName)) {
@@ -360,6 +372,7 @@ object DBUtils {
     }
 
 
+
     /**
      * 判断某张表是否存在
      *
@@ -434,6 +447,59 @@ object DBUtils {
             var sql = "UPDATE $dbname SET PERCENT=${percent} WHERE CODE=${code.toInt()}"
             db.execSQL(sql)
         }
+    }
+
+
+
+
+    fun createSHDD(dbName: String) {
+//        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, C TEXT, N TEXT, AUP INTEGER, MP% INTEGER, LP% INTEGER" +
+                        ",AV INTEGER, AV100 INTEGER, AV50 INTEGER, AV30 INTEGER, AV10 INTEGER, AV5 INTEGER, AV1 INTEGER,AD INTEGER, AD100 INTEGER, AD50 INTEGER, AD30 INTEGER, AD10 INTEGER, AD5 INTEGER, AD1 INTEGER" +
+                        ",PP INTEGER, PP100 INTEGER, PP50 INTEGER, PP30 INTEGER, PP10 INTEGER, PP5 INTEGER, PP1 INTEGER, MP INTEGER, LP INTEGER,MPD TEXT,LPD TEXT, DATE TEXT);"
+            db.execSQL(sqlStr)
+        }
+    }
+
+    fun insertOrUpdateSHDDTable(
+        dbName: String,
+        curdate: String,
+        shddBean: SHDDBean
+    ) {
+
+        createSDD(dbName)
+        if (!querySHDDIsExsitByCode(dbName, shddBean.c)) {
+            val insertSqlStr = "INSERT INTO $dbName" +
+                    "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,G500M,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
+                    " VALUES${shddBean.toInsert()}"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        } else {
+            val ts = DateUtils.parse(curdate, FormatterEnum.YYYYMMDD)
+            val ts2 = DateUtils.parse(shddBean.date, FormatterEnum.YYYYMMDD)
+            if (ts > ts2) {
+                shddBean.date = curdate
+                val sql = "UPDATE $dbName SET ${shddBean.toUpdateSqlSumValues()}  WHERE CODE=${shddBean.c}"
+                LogUtil.d("updateSqlStr:$sql")
+                db.execSQL(sql)
+            }
+        }
+    }
+
+
+    fun querySHDDIsExsitByCode(dbName: String, DATE: String): Boolean {
+        var isexsit = false
+        LogUtil.d("DATE:$DATE")
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE C =?", arrayOf(DATE))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
     }
 
 }

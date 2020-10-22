@@ -948,7 +948,13 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
-        LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex")
+        val lastDate = DBUtils.querySumDDBeanLastDate(sddTableNameALL)
+        val lastDatets = DateUtils.parse(lastDate, FormatterEnum.YYYYMMDD)
+        //need test
+        if (sumDateIndexTs == lastDatets) {
+            sumDateBeginIndex++
+        }
+        LogUtil.d("querySumDDBeanLastDate:$lastDate")
 
         val curMonthTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01",FormatterEnum.YYYY_MM_DD)
         val curYearTS = DateUtils.parse(DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01",FormatterEnum.YYYY_MM_DD)
@@ -1018,6 +1024,34 @@ class NewApiViewModel : BaseViewModel() {
                         hhqVeryBeginIndex,
                         vbts
                     )
+                }
+            }
+            hhqBeginIndex--
+            if (hhqBeginIndex < 0) {
+                break
+            }
+        }
+
+
+
+        //TODO
+        hhqBeginIndex = hhqVeryBeginIndex
+        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
+//        for (ddidnex in 0 until 4) {
+            val date = ddlist[ddidnex].replace(
+                Datas.dealDetailTableName,
+                ""
+            )
+            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+//            for (codeidnex in 0 until 40) {
+            for (codeidnex in 0 until codelist.size) {
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+                if (curIndexTs >= curYearTS) {
+                    if (curIndexTs >= curMonthTS) {
+
+                    }
+
                 }
             }
             hhqBeginIndex--
