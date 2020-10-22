@@ -99,6 +99,16 @@ public class DaoManager {
         DaoUtilsStore.getInstance().resetDaoUtilsStore();
     }
 
+    public  void switchDB(String dbName) {
+        sHelper = new CommonOpenHelper(context, dbName, null);
+        sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
+        DB_NAME = dbName;
+        sDaoSession = null;
+        getDaoSession();
+        DBUtils.INSTANCE.setDb(getDB());
+        DaoUtilsStore.getInstance().resetDaoUtilsStore();
+    }
+
     /**
      * 完成对数据库的添加、删除、修改、查询操作，仅仅是一个接口
      *

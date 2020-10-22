@@ -61,7 +61,7 @@ public class DealDetailAmountSizeBean {
                 '}';
     }
 
-    private double getGt5000() {
+    public double getGt5000() {
         double beiging = 0;
         if (null != m100List) {
             for (int i = 0; i < m100List.size(); i++) {
@@ -77,7 +77,7 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    private double getGt1000() {
+    public double getGt1000() {
         double beiging = getGt5000();
         if (null != m30List) {
             for (int i = 0; i < m30List.size(); i++) {
@@ -92,7 +92,7 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    private double getGt500() {
+    public double getGt500() {
         double beiging = getGt1000();
         if (null != m5List) {
             for (int i = 0; i < m5List.size(); i++) {
@@ -102,7 +102,7 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    private double getGt100() {
+    public double getGt100() {
         double beiging = getGt500();
         if (null != m1List) {
             for (int i = 0; i < m1List.size(); i++) {

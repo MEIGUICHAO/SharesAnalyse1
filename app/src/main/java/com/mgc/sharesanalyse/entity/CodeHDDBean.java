@@ -48,13 +48,13 @@ public class CodeHDDBean {
     private double DV;
     private double DA;
     private double AS;
-    private double M100S;
-    private double M50S;
-    private double M30S;
-    private double M10S;
-    private double M5S;
-    private double M1S;
-    private double M05S;
+    private int M100S;
+    private int M50S;
+    private int M30S;
+    private int M10S;
+    private int M5S;
+    private int M1S;
+    private int M05S;
 
     public String getName() {
         return name;
@@ -112,75 +112,75 @@ public class CodeHDDBean {
         this.AS = AS;
     }
 
-    public double getM100S() {
+    public int getM100S() {
         return M100S;
     }
 
-    public void setM100S(double m100S) {
+    public void setM100S(int m100S) {
         M100S = m100S;
     }
 
-    public double getM50S() {
+    public int getM50S() {
         return M50S;
     }
 
-    public void setM50S(double m50S) {
+    public void setM50S(int m50S) {
         M50S = m50S;
     }
 
-    public double getM30S() {
+    public int getM30S() {
         return M30S;
     }
 
-    public void setM30S(double m30S) {
+    public void setM30S(int m30S) {
         M30S = m30S;
     }
 
-    public double getM10S() {
+    public int getM10S() {
         return M10S;
     }
 
-    public void setM10S(double m10S) {
+    public void setM10S(int m10S) {
         M10S = m10S;
     }
 
-    public double getM5S() {
+    public int getM5S() {
         return M5S;
     }
 
-    public void setM5S(double m5S) {
+    public void setM5S(int m5S) {
         M5S = m5S;
     }
 
-    public double getM1S() {
+    public int getM1S() {
         return M1S;
     }
 
-    public void setM1S(double m1S) {
+    public void setM1S(int m1S) {
         M1S = m1S;
     }
 
-    public double getM05S() {
+    public int getM05S() {
         return M05S;
     }
 
-    public void setM05S(double m05S) {
+    public void setM05S(int m05S) {
         M05S = m05S;
     }
 
-    public double getM01S() {
+    public int getM01S() {
         return M01S;
     }
 
-    public void setM01S(double m01S) {
+    public void setM01S(int m01S) {
         M01S = m01S;
     }
 
-    public double getL01S() {
+    public int getL01S() {
         return L01S;
     }
 
-    public void setL01S(double l01S) {
+    public void setL01S(int l01S) {
         L01S = l01S;
     }
 
@@ -233,13 +233,6 @@ public class CodeHDDBean {
     }
 
 
-    public double getDAA() {
-        return DAA;
-    }
-
-    public void setDAA(double DAA) {
-        this.DAA = DAA;
-    }
 
     public double getDA5000() {
         return DA5000;
@@ -273,8 +266,8 @@ public class CodeHDDBean {
         this.DA100 = DA100;
     }
 
-    private double M01S;
-    private double L01S;
+    private int M01S;
+    private int L01S;
     private double PP100M;
     private double PP50M;
     private double PP30M;
@@ -285,7 +278,7 @@ public class CodeHDDBean {
     public String toInsertDBValues(String dbName) {
         return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
                 ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
-                ", DAA , DA5000 , DA1000 , DA500 , DA100 ) " +
+                " , DA5000 , DA1000 , DA500 , DA100 ) " +
                 "VALUES('" + name + "'" +
                 ",'" + DATE + "'" +
                 ", " + OP +
@@ -313,7 +306,6 @@ public class CodeHDDBean {
                 ", " + PP5M +
                 ", " + PP1M +
                 ", " + PPL1M +
-                ", " + DAA +
                 ", " + DA5000 +
                 ", " + DA1000 +
                 ", " + DA500 +
@@ -331,7 +323,6 @@ public class CodeHDDBean {
         this.PPL1M = PPL1M;
     }
 
-    private double DAA;
     private double DA5000;
     private double DA1000;
     private double DA500;

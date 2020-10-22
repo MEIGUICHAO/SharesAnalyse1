@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
+import com.mgc.sharesanalyse.utils.FormatterEnum
 import com.mgc.sharesanalyse.utils.GsonHelper
 import java.util.*
 
@@ -48,4 +49,14 @@ fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
 @SuppressLint("DefaultLocale")
 fun Double.toKeep6():Double {
    return java.lang.String.format("%.6f", this).toDouble()
+}
+
+fun String.toCodeHDD():String {
+    if (this.toInt() > 600000) {
+        return "SH_CHDD_"+DateUtils.formatToDay(FormatterEnum.YYMM)
+    } else if (this.toInt() < 300000) {
+        return "CY_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
+    } else {
+        return "SZ_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
+    }
 }
