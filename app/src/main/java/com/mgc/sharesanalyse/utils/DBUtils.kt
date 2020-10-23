@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.json2Array
-import com.mgc.sharesanalyse.base.toCodeHDD
 import com.mgc.sharesanalyse.entity.*
 
 
@@ -475,10 +474,10 @@ object DBUtils {
         shddBean: SHDDBean
     ) {
 
-        createSDD(dbName)
+        createSHDD(dbName)
         if (!querySHDDIsExsitByCode(dbName, shddBean.c)) {
             val insertSqlStr = "INSERT INTO $dbName" +
-                    "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,G500M,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
+                    "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
                     " VALUES${shddBean.toInsert()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -492,6 +491,83 @@ object DBUtils {
                 db.execSQL(sql)
             }
         }
+    }
+
+
+
+    fun querySHDDByCode(dbName: String, code: String): SHDDBean? {
+        App.getmManager().switchDB(Datas.dataNamesDefault)
+        var shddBean: SHDDBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+
+            if (null != cursor && cursor.moveToFirst()) {
+                shddBean = SHDDBean()
+                val code = cursor.getString(cursor.getColumnIndex("C"))
+                val name = cursor.getString(cursor.getColumnIndex("N"))
+                val AUP = cursor.getDouble(cursor.getColumnIndex("AUP"))
+                val MPER = cursor.getDouble(cursor.getColumnIndex("MP%"))
+                val LPER = cursor.getDouble(cursor.getColumnIndex("LP%"))
+                val AV = cursor.getDouble(cursor.getColumnIndex("AV"))
+                val AV100 = cursor.getDouble(cursor.getColumnIndex("AV100"))
+                val AV50 = cursor.getDouble(cursor.getColumnIndex("AV50"))
+                val AV30 = cursor.getDouble(cursor.getColumnIndex("AV30"))
+                val AV10 = cursor.getDouble(cursor.getColumnIndex("AV10"))
+                val AV5 = cursor.getDouble(cursor.getColumnIndex("AV5"))
+                val AV1 = cursor.getDouble(cursor.getColumnIndex("AV1"))
+                val AD = cursor.getDouble(cursor.getColumnIndex("AD"))
+                val AD100 = cursor.getDouble(cursor.getColumnIndex("AD100"))
+                val AD50 = cursor.getDouble(cursor.getColumnIndex("AD50"))
+                val AD30 = cursor.getDouble(cursor.getColumnIndex("AD30"))
+                val AD10 = cursor.getDouble(cursor.getColumnIndex("AD10"))
+                val AD5 = cursor.getDouble(cursor.getColumnIndex("AD5"))
+                val AD1 = cursor.getDouble(cursor.getColumnIndex("AD1"))
+                val PP100 = cursor.getDouble(cursor.getColumnIndex("PP100"))
+                val PP50 = cursor.getDouble(cursor.getColumnIndex("PP50"))
+                val PP30 = cursor.getDouble(cursor.getColumnIndex("PP30"))
+                val PP10 = cursor.getDouble(cursor.getColumnIndex("PP10"))
+                val PP5 = cursor.getDouble(cursor.getColumnIndex("PP5"))
+                val PP1 = cursor.getDouble(cursor.getColumnIndex("PP1"))
+                val MP = cursor.getDouble(cursor.getColumnIndex("MP"))
+                val LP = cursor.getDouble(cursor.getColumnIndex("LP"))
+                val MPD = cursor.getDouble(cursor.getColumnIndex("MPD"))
+                val LPD = cursor.getDouble(cursor.getColumnIndex("LPD"))
+                val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+                //        "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
+                shddBean.aup = AUP
+                shddBean.mper = MPER
+                shddBean.lper = LPER
+                shddBean.av = AV
+                shddBean.aV100 = AV100
+                shddBean.aV50 = AV50
+                shddBean.aV30 = AV30
+                shddBean.aV10 = AV10
+                shddBean.aV5 = AV5
+                shddBean.aV1 = AV1
+                shddBean.ad = AD
+                shddBean.aD100 = AD100
+                shddBean.aD50 = AD50
+                shddBean.aD30 = AD30
+                shddBean.aD10 = AD10
+                shddBean.aD5 = AD5
+                shddBean.aD1 = AD1
+                shddBean.pP100 = PP100
+                shddBean.pP50 = PP50
+                shddBean.pP30 = PP30
+                shddBean.pP10 = PP10
+                shddBean.pP5 = PP5
+                shddBean.pP1 = PP1
+                shddBean.mp = MP
+                shddBean.lp = LP
+                shddBean.mpd = MPD
+                shddBean.lpd = LPD
+                shddBean.date = DATE
+
+            }
+            cursor.close()
+        }
+        return shddBean
     }
 
 

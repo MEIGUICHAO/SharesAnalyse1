@@ -1082,7 +1082,6 @@ class NewApiViewModel : BaseViewModel() {
                         }
 
                     }
-
                 }
 //                "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
 //                        ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
@@ -1233,7 +1232,7 @@ class NewApiViewModel : BaseViewModel() {
         }
         val beginOP = DBUtils.queryFirstOPByCodeHDD(tbName)
         if (beginOP > 0) {
-            val diff = BigDecimalUtils.div(getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),beginOP)
+            val diff = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),beginOP)
             codeHDDBean.aup = BigDecimalUtils.div(diff, beginOP)
         }
         DBUtils.insertCodeHDD(tbName, codeHDDBean)
