@@ -988,57 +988,58 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
-        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
-//        for (ddidnex in 0 until 4) {
-            val date = ddlist[ddidnex].replace(
-                Datas.dealDetailTableName,
-                ""
-            )
-            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
-//            for (codeidnex in 0 until 40) {
-            for (codeidnex in 0 until codelist.size) {
-                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
-                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
-                if (curIndexTs >= curYearTS) {
-                    if (curIndexTs >= curMonthTS) {
-                        operaSddDB(
-                            ddlist,
-                            ddidnex,
-                            codelist,
-                            codeidnex,
-                            sddTableName,
-                            date,
-                            hhqlist,
-                            hhqBeginIndex,
-                            sumDateIndexTs,
-                            hhqMonthVeryBeginIndex,
-                            curMonthTS
-                        )
-                    }
-                    operaSddDB(
-                        ddlist,
-                        ddidnex,
-                        codelist,
-                        codeidnex,
-                        sddTableNameALL,
-                        date,
-                        hhqlist,
-                        hhqBeginIndex,
-                        sumDateIndexTs,
-                        hhqVeryBeginIndex,
-                        vbts
-                    )
-                }
-            }
-            hhqBeginIndex--
-            if (hhqBeginIndex < 0) {
-                break
-            }
-        }
+//        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
+////        for (ddidnex in 0 until 4) {
+//            val date = ddlist[ddidnex].replace(
+//                Datas.dealDetailTableName,
+//                ""
+//            )
+//            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+////            for (codeidnex in 0 until 40) {
+//            for (codeidnex in 0 until codelist.size) {
+//                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
+//                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+//                if (curIndexTs >= curYearTS) {
+//                    if (curIndexTs >= curMonthTS) {
+//                        operaSddDB(
+//                            ddlist,
+//                            ddidnex,
+//                            codelist,
+//                            codeidnex,
+//                            sddTableName,
+//                            date,
+//                            hhqlist,
+//                            hhqBeginIndex,
+//                            sumDateIndexTs,
+//                            hhqMonthVeryBeginIndex,
+//                            curMonthTS
+//                        )
+//                    }
+//                    operaSddDB(
+//                        ddlist,
+//                        ddidnex,
+//                        codelist,
+//                        codeidnex,
+//                        sddTableNameALL,
+//                        date,
+//                        hhqlist,
+//                        hhqBeginIndex,
+//                        sumDateIndexTs,
+//                        hhqVeryBeginIndex,
+//                        vbts
+//                    )
+//                }
+//            }
+//            hhqBeginIndex--
+//            if (hhqBeginIndex < 0) {
+//                break
+//            }
+//        }
 
 
 
         operaSHDDAndCHDD(
+            hhqlist,
             hhqVeryBeginIndex,
             sumDateBeginIndex,
             ddlist,
@@ -1051,6 +1052,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun operaSHDDAndCHDD(
+        hhqlist: ArrayList<String>,
         hhqVeryBeginIndex: Int,
         sumDateBeginIndex: Int,
         ddlist: ArrayList<String>,
@@ -1060,146 +1062,23 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         //TODO
         var hhqBeginIndex = hhqVeryBeginIndex
-        for (ddidnex in sumDateBeginIndex until ddlist.size) {
+        for (ddidnex in 0 until ddlist.size) {
     //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
                 Datas.dealDetailTableName,
                 ""
             )
+            LogUtil.d("date:$date")
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
     //            for (codeidnex in 0 until 40) {
-            for (codeidnex in 0 until codelist.size) {
-
+            for (codeidnex in 0 until codelist.size step 100) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
-                    App.getmManager().switchDB(ddBean.code.toCodeHDD())
                     if (curIndexTs >= curYearTS) {
                         if (curIndexTs >= curMonthTS) {
-
-                            val bean =
-                                DBUtils.queryHHqBeanByCode(getHHQTableName(), ddBean.code)
-                            val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
-                            val hhqbean = hisHqBean[0].hq
-                            val tbName = DecimalFormat("000000").format(ddBean.code)
-                            val codeHDDBean = CodeHDDBean()
-                            codeHDDBean.name = ddBean.name
-                            codeHDDBean.`as` = ddBean.allsize.toDouble()
-                            val mSizeBean = ddBean.sizeBean
-                            codeHDDBean.dA5000 = mSizeBean.getGt5000()
-                            codeHDDBean.dA1000 = mSizeBean.getGt1000()
-                            codeHDDBean.dA500 = mSizeBean.getGt500()
-                            codeHDDBean.dA100 = mSizeBean.getGt100()
-                            codeHDDBean.date = date
-                            codeHDDBean.da = getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex])/100000000
-                            codeHDDBean.op = getHisHqDayOpenPrice(hhqbean[hhqBeginIndex])
-                            codeHDDBean.cp = getHisHqDayClosePrice(hhqbean[hhqBeginIndex])
-                            codeHDDBean.pp = BigDecimalUtils.div(getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex]),getHisHqDayDealVolume(hhqbean[hhqBeginIndex]))
-                            codeHDDBean.p = getcurPercentDouble(hhqbean[hhqBeginIndex])
-                            codeHDDBean.tr = getHisHqDayTurnRate(hhqbean[hhqBeginIndex])
-                            codeHDDBean.dv = getHisHqDayDealVolume(hhqbean[hhqBeginIndex])
-                            codeHDDBean.m100S = mSizeBean.m100Size
-                            codeHDDBean.m50S = mSizeBean.m50Size
-                            codeHDDBean.m10S = mSizeBean.m10Size
-                            codeHDDBean.m5S = mSizeBean.m5Size
-                            codeHDDBean.m1S = mSizeBean.m1Size
-                            codeHDDBean.m05S = mSizeBean.m05Size
-                            codeHDDBean.m01S = mSizeBean.m01Size
-                            codeHDDBean.l01S = mSizeBean.l01Size
-                            codeHDDBean.pP100M = mSizeBean.m100List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-                            var auV = 0.toDouble()
-                            codeHDDBean.pP50M = mSizeBean.m50List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                auV = auV + volume
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-                            codeHDDBean.pP10M = mSizeBean.m10List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                auV = auV + volume
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-                            codeHDDBean.pP30M = mSizeBean.m30List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                auV = auV + volume
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-                            codeHDDBean.pP5M = mSizeBean.m5List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                auV = auV + volume
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-
-                            codeHDDBean.pP1M = mSizeBean.m1List.run {
-                                var amount = 0.toDouble()
-                                var volume  = 0.toDouble()
-                                this.forEach {
-                                    amount = amount + it.amount
-                                    volume = volume + BigDecimalUtils.div(it.amount, it.price)
-                                }
-                                auV = auV + volume
-                                if (volume > 0) {
-                                    BigDecimalUtils.div(amount,volume)
-                                } else {
-                                    0.toDouble()
-                                }
-                            }
-                            val leftV = BigDecimalUtils.sub(getHisHqDayDealVolume(hhqbean[hhqBeginIndex]),auV)
-                            if (leftV > 0) {
-                                codeHDDBean.ppL1M = BigDecimalUtils.div(
-                                    BigDecimalUtils.sub(
-                                        getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex]),
-                                        mSizeBean.getGt100()
-                                    ), leftV
-                                )
-                            }
+                            LogUtil.d("operaSHDDAndCHDD code:${codelist[codeidnex].code},curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+                            insertOrUpdateCodeHDD(hhqlist,ddBean, date, hhqBeginIndex)
                         }
 
                     }
@@ -1216,6 +1095,148 @@ class NewApiViewModel : BaseViewModel() {
                 break
             }
         }
+    }
+
+    private fun insertOrUpdateCodeHDD(
+        hhqlist: ArrayList<String>,
+        ddBean: DealDetailTableBean,
+        date: String,
+        hhqBeginIndex: Int
+    ) {
+        val bean =
+            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], ddBean.code)
+        App.getmManager().switchDB(ddBean.code.toCodeHDD())
+        val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
+        val hhqbean = hisHqBean[0].hq
+        val tbName = Datas.CHDD + ddBean.code
+        LogUtil.d("tbName:$tbName")
+        val codeHDDBean = CodeHDDBean()
+        codeHDDBean.name = ddBean.name
+        codeHDDBean.`as` = ddBean.allsize.toDouble()
+        val mSizeBean = ddBean.sizeBean
+        codeHDDBean.dA5000 = mSizeBean.getGt5000() / Datas.NUM_100M
+        codeHDDBean.dA1000 = mSizeBean.getGt1000() / Datas.NUM_100M
+        codeHDDBean.dA500 = mSizeBean.getGt500() / Datas.NUM_100M
+        codeHDDBean.dA100 = mSizeBean.getGt100() / Datas.NUM_100M
+        codeHDDBean.date = date
+        codeHDDBean.da = getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex]) / Datas.NUM_100M
+        codeHDDBean.op = getHisHqDayOpenPrice(hhqbean[hhqBeginIndex])
+        codeHDDBean.cp = getHisHqDayClosePrice(hhqbean[hhqBeginIndex])
+        codeHDDBean.pp = BigDecimalUtils.div(
+            getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex]),
+            getHisHqDayDealVolume(hhqbean[hhqBeginIndex])
+        )
+        codeHDDBean.p = getcurPercentDouble(hhqbean[hhqBeginIndex])
+        codeHDDBean.tr = getHisHqDayTurnRate(hhqbean[hhqBeginIndex])
+        codeHDDBean.dv = getHisHqDayDealVolume(hhqbean[hhqBeginIndex]) / Datas.NUM_WAN
+        codeHDDBean.m100S = mSizeBean.m100Size
+        codeHDDBean.m50S = mSizeBean.m50Size
+        codeHDDBean.m10S = mSizeBean.m10Size
+        codeHDDBean.m5S = mSizeBean.m5Size
+        codeHDDBean.m1S = mSizeBean.m1Size
+        codeHDDBean.m05S = mSizeBean.m05Size
+        codeHDDBean.m01S = mSizeBean.m01Size
+        codeHDDBean.l01S = mSizeBean.l01Size
+        codeHDDBean.pP100M = mSizeBean.m100List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+        var auV = 0.toDouble()
+        codeHDDBean.pP50M = mSizeBean.m50List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            auV = auV + volume
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+        codeHDDBean.pP10M = mSizeBean.m10List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            auV = auV + volume
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+        codeHDDBean.pP30M = mSizeBean.m30List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            auV = auV + volume
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+        codeHDDBean.pP5M = mSizeBean.m5List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            auV = auV + volume
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+
+        codeHDDBean.pP1M = mSizeBean.m1List.run {
+            var amount = 0.toDouble()
+            var volume = 0.toDouble()
+            this.forEach {
+                amount = amount + it.amount
+                volume = volume + BigDecimalUtils.div(it.amount, it.price)
+            }
+            auV = auV + volume
+            if (volume > 0) {
+                BigDecimalUtils.div(amount, volume)
+            } else {
+                0.toDouble()
+            }
+        }
+        val leftV = BigDecimalUtils.sub(getHisHqDayDealVolume(hhqbean[hhqBeginIndex]), auV)
+        if (leftV > 0) {
+            codeHDDBean.ppL1M = BigDecimalUtils.div(
+                BigDecimalUtils.sub(
+                    getHisHqDayWholeDealAmount(hhqbean[hhqBeginIndex]),
+                    mSizeBean.getGt100()
+                ), leftV
+            )
+        }
+        val beginOP = DBUtils.queryFirstOPByCodeHDD(tbName)
+        if (beginOP > 0) {
+            val diff = BigDecimalUtils.div(getHisHqDayClosePrice(hhqbean[hhqBeginIndex]),beginOP)
+            codeHDDBean.aup = BigDecimalUtils.div(diff, beginOP)
+        }
+        DBUtils.insertCodeHDD(tbName, codeHDDBean)
     }
 
     private fun operaSddDB(

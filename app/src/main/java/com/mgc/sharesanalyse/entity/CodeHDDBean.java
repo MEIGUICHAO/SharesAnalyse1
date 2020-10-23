@@ -276,7 +276,7 @@ public class CodeHDDBean {
 
 
     public String toInsertDBValues(String dbName) {
-        return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
+        return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AllS " +
                 ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
                 " , DA5000 , DA1000 , DA500 , DA100 ) " +
                 "VALUES('" + name + "'" +

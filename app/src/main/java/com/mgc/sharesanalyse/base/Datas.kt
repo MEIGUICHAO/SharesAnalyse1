@@ -5,6 +5,7 @@ import com.mgc.sharesanalyse.utils.FormatterEnum
 
 object Datas {
 
+    const val CHDD = "DD_"
     const val WinChromeAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
     const val bwcUrl = "https://bwc.waimaimingtang.com"
     const val UserAgent = "Mozilla/5.0 (Linux; Android 10; Pixel XL Build/QQ3A.200805.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/78.0.3904.62 XWEB/2691 MMWEBSDK/200801 Mobile Safari/537.36 MMWEBID/7894 MicroMessenger/7.0.18.1740(0x27001239) Process/appbrand0 WeChat/arm64 NetType/WIFI Language/zh_CN ABI/arm64"
@@ -13,6 +14,8 @@ object Datas {
     const val sinaMarketUrl = "http://market.finance.sina.com.cn"
     const val sohuStockUrl = "https://q.stock.sohu.com/"
     const val xqUrl = "https://xueqiu.com"
+    const val NUM_100M = 100000000
+    const val NUM_WAN = 10000
     const val sinaVipStockUrlRefer = "https://vip.stock.finance.sina.com.cn/quotes_service/view/cn_bill.php?symbol="
 
     var tableName = "stock_"

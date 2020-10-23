@@ -89,9 +89,9 @@ class NewApiActivity : AppCompatActivity() {
 //            DBUtils.dropTable(sddTableName)
 //            DBUtils.dropTable(sddTableNameAll)
 //            DBUtils.dropTable("HHQ_20201021")
-//            DBUtils.dropTable("DD_20201018")
+            DBUtils.dropTable("DD_20201013")
 //            DBUtils.foreachDBTable()
-            viewModel.getAllCode()
+//            viewModel.getAllCode()
         }
 
         btnCopy.setOnClickListener {

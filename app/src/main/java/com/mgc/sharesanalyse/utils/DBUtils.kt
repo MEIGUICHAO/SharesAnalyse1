@@ -2,8 +2,10 @@ package com.mgc.sharesanalyse.utils
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.json2Array
+import com.mgc.sharesanalyse.base.toCodeHDD
 import com.mgc.sharesanalyse.entity.*
 
 
@@ -131,6 +133,7 @@ object DBUtils {
     }
 
     fun queryHHqBeanByCode(dbName: String, code: String): PricesHisGDBean? {
+        App.getmManager().switchDB(Datas.dataNamesDefault)
         var hHqBean: PricesHisGDBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =
@@ -152,6 +155,7 @@ object DBUtils {
 
 
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
+        App.getmManager().switchDB(Datas.dataNamesDefault)
         var dealDetailTableBean: DealDetailTableBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =
@@ -216,9 +220,11 @@ object DBUtils {
     fun querySumDDBeanLastDate(dbName: String): String {
         var DATE = ""
         if (tabbleIsExist(dbName)) {
-            var cursor = db.rawQuery("SELECT TOP 1 * FROM $dbName order by _ID desc", arrayOf(""))
+            var cursor = db.rawQuery("SELECT * FROM $dbName order by _ID desc",null)
             if (null != cursor && cursor.moveToFirst()) {
                 DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+                var CODE = cursor.getString(cursor.getColumnIndex("CODE"))
+                LogUtil.d("CODE:$CODE")
             }
         }
         return DATE
@@ -341,7 +347,7 @@ object DBUtils {
     fun createCodeHDD(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER, DV INTEGER, DA INTEGER, AS INTEGER" +
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER, DV INTEGER, DA INTEGER, AllS INTEGER" +
                         ", M100S INTEGER, M50S INTEGER, M30S INTEGER, M10S INTEGER, M5S INTEGER, M1S INTEGER, M05S INTEGER, M01S INTEGER, L01S INTEGER, PP100M INTEGER, PP50M INTEGER, PP30M INTEGER, PP10M INTEGER, PP5M INTEGER, PP1M INTEGER, PPL1M INTEGER" +
                         ", DA5000 INTEGER, DA1000 INTEGER, DA500 INTEGER, DA100 INTEGER);"
             db.execSQL(sqlStr)
@@ -500,6 +506,24 @@ object DBUtils {
             cursor.close()
         }
         return isexsit
+    }
+
+    fun queryFirstOPByCodeHDD(tbName: String): Double {
+        var op = 0.toDouble()
+        if (tabbleIsExist(tbName)) {
+            val cursor = db.rawQuery("SELECT * FROM $tbName order by _ID asc",null)
+            if (null != cursor && cursor.moveToFirst()) {
+                op = cursor.getDouble(cursor.getColumnIndex("OP"))
+                var Date = cursor.getDouble(cursor.getColumnIndex("DATE"))
+                while (op==0.toDouble()) {
+                    cursor.moveToNext()
+                    op = cursor.getDouble(cursor.getColumnIndex("OP"))
+                    Date = cursor.getDouble(cursor.getColumnIndex("DATE"))
+                }
+                LogUtil.d("queryFirstOPByCodeHDD Date:$Date")
+            }
+        }
+        return op
     }
 
 }
