@@ -12,6 +12,16 @@ public class SHDDBean {
     private double AUP;
     private double MPER;
     private double LPER;
+
+    public double getAUTR() {
+        return AUTR;
+    }
+
+    public void setAUTR(double AUTR) {
+        this.AUTR = AUTR;
+    }
+
+    private double AUTR;
     private double AV;
     private double AV100;
     private double AV50;
@@ -30,14 +40,13 @@ public class SHDDBean {
     private double PP100;
     private double PP50;
     private double PP30;
-    private double PP20;
     private double PP10;
     private double PP5;
     private double PP1;
     private double MP;
     private double LP;
-    private double MPD;
-    private double LPD;
+    private String MPD;
+    private String LPD;
     private String DATE;
 
     public String getC() {
@@ -224,13 +233,6 @@ public class SHDDBean {
         this.PP30 = PP30;
     }
 
-    public double getPP20() {
-        return PP20;
-    }
-
-    public void setPP20(double PP20) {
-        this.PP20 = PP20;
-    }
 
     public double getPP10() {
         return PP10;
@@ -272,19 +274,19 @@ public class SHDDBean {
         this.LP = LP;
     }
 
-    public double getMPD() {
+    public String getMPD() {
         return MPD;
     }
 
-    public void setMPD(double MPD) {
+    public void setMPD(String MPD) {
         this.MPD = MPD;
     }
 
-    public double getLPD() {
+    public String getLPD() {
         return LPD;
     }
 
-    public void setLPD(double LPD) {
+    public void setLPD(String LPD) {
         this.LPD = LPD;
     }
 
@@ -302,6 +304,7 @@ public class SHDDBean {
                 "', " + AUP +
                 ", " + MPER +
                 ", " + LPER +
+                ", " + AUTR +
                 ", " + AV +
                 ", " + AV100 +
                 ", " + AV50 +
@@ -320,7 +323,6 @@ public class SHDDBean {
                 ", " + PP100 +
                 ", " + PP50 +
                 ", " + PP30 +
-                ", " + PP20 +
                 ", " + PP10 +
                 ", " + PP5 +
                 ", " + PP1 +
@@ -336,6 +338,7 @@ public class SHDDBean {
                 " AUP=" + AUP +
                 ", MPER=" + MPER +
                 ", LPER=" + LPER +
+                ", AUTR=" + AUTR +
                 ", AV=" + AV +
                 ", AV100=" + AV100 +
                 ", AV50=" + AV50 +
@@ -354,7 +357,6 @@ public class SHDDBean {
                 ", PP100=" + PP100 +
                 ", PP50=" + PP50 +
                 ", PP30=" + PP30 +
-                ", PP20=" + PP20 +
                 ", PP10=" + PP10 +
                 ", PP5=" + PP5 +
                 ", PP1=" + PP1 +

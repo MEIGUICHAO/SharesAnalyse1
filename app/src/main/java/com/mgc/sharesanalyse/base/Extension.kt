@@ -7,6 +7,7 @@ import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
 import com.mgc.sharesanalyse.utils.GsonHelper
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
@@ -24,7 +25,7 @@ fun <T> ArrayList<T>.array2Json(): String {
     return GsonHelper.toJson(this)
 }
 
-fun  List<DealDetailTableBean>.sortDDBeanDescByAllsize() {
+fun List<DealDetailTableBean>.sortDDBeanDescByAllsize() {
     Collections.sort(this, object : Comparator<DealDetailTableBean> {
         override fun compare(p0: DealDetailTableBean, p1: DealDetailTableBean): Int {
             return p1.allsize.compareTo(p0.allsize)
@@ -47,16 +48,34 @@ fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
 
 
 @SuppressLint("DefaultLocale")
-fun Double.toKeep6():Double {
-   return java.lang.String.format("%.6f", this).toDouble()
+fun Double.toKeep6(): Double {
+    return java.lang.String.format("%.6f", this).toDouble()
 }
 
-fun String.toCodeHDD():String {
+fun String.toCodeHDD(): String {
     if (this.toInt() > 600000) {
-        return "SH_CHDD_"+DateUtils.formatToDay(FormatterEnum.YYMM)
+        return "SH_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
     } else if (this.toInt() < 300000) {
         return "CY_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
     } else {
         return "SZ_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
     }
+}
+
+
+
+fun ArrayList<String>.sortStringDateAsc(formatterEnum: FormatterEnum) {
+    Collections.sort(this, object : Comparator<String> {
+        override fun compare(p0: String, p1: String): Int {
+            return DateUtils.parse(
+                p0,
+                formatterEnum
+            ).compareTo(
+                DateUtils.parse(
+                    p1,
+                    formatterEnum
+                )
+            )
+        }
+    })
 }

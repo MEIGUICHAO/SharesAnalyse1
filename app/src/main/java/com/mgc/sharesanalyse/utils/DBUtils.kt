@@ -2,9 +2,7 @@ package com.mgc.sharesanalyse.utils
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.mgc.sharesanalyse.base.App
-import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.base.json2Array
+import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 
 
@@ -152,6 +150,39 @@ object DBUtils {
         return hHqBean
     }
 
+    fun switchDBName(name: String) {
+        App.getmManager().switchDB(name)
+    }
+
+
+    fun queryOPByCHDD(code: String, isAll: Boolean):Double {
+        val pathList = FileUtil.getFileNameList(Datas.DBPath)
+        var op = 0.toDouble()
+        if (isAll) {
+            val mList = ArrayList<String>()
+            pathList.forEach {
+                if (it.contains("CHDD")&&!it.contains("journal")) {
+                    mList.add(it.replace("SZ_CHDD_","").replace("SH_CHDD_","").replace("CY_CHDD_",""))
+                }
+            }
+            mList.sortStringDateAsc(FormatterEnum.YYMM)
+            if (mList.size > 0) {
+                switchDBName(mList[0])
+                val tbName = Datas.CHDD + code
+                op = queryFirstOPByCodeHDD(tbName)
+            }
+        } else {
+            val dbName =code.toCodeHDD()+DateUtils.formatToDay(FormatterEnum.YYMM)
+            if (pathList.contains(dbName)) {
+                switchDBName(dbName)
+                val tbName = Datas.CHDD + code
+                op = queryFirstOPByCodeHDD(tbName)
+            }
+
+        }
+
+        return op
+    }
 
     fun queryDealDetailByCode(dbName: String, code: String): DealDetailTableBean? {
         App.getmManager().switchDB(Datas.dataNamesDefault)
@@ -461,7 +492,7 @@ object DBUtils {
 //        "(CODE,ALLSIZE,PERCENT,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,M100J,M50J,M30J,M10J,M5J,M1J,M05J,M01J)"
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, C TEXT, N TEXT, AUP INTEGER, MP% INTEGER, LP% INTEGER" +
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, C TEXT, N TEXT, AUP INTEGER, MPP INTEGER, LPP INTEGER, AUTR INTEGER" +
                         ",AV INTEGER, AV100 INTEGER, AV50 INTEGER, AV30 INTEGER, AV10 INTEGER, AV5 INTEGER, AV1 INTEGER,AD INTEGER, AD100 INTEGER, AD50 INTEGER, AD30 INTEGER, AD10 INTEGER, AD5 INTEGER, AD1 INTEGER" +
                         ",PP INTEGER, PP100 INTEGER, PP50 INTEGER, PP30 INTEGER, PP10 INTEGER, PP5 INTEGER, PP1 INTEGER, MP INTEGER, LP INTEGER,MPD TEXT,LPD TEXT, DATE TEXT);"
             db.execSQL(sqlStr)
@@ -474,10 +505,11 @@ object DBUtils {
         shddBean: SHDDBean
     ) {
 
+        switchDBName(Datas.dataNamesDefault)
         createSHDD(dbName)
         if (!querySHDDIsExsitByCode(dbName, shddBean.c)) {
             val insertSqlStr = "INSERT INTO $dbName" +
-                    "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
+                    "(C,N,AUP,MPP,LPP,AUTR,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
                     " VALUES${shddBean.toInsert()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -507,8 +539,8 @@ object DBUtils {
                 val code = cursor.getString(cursor.getColumnIndex("C"))
                 val name = cursor.getString(cursor.getColumnIndex("N"))
                 val AUP = cursor.getDouble(cursor.getColumnIndex("AUP"))
-                val MPER = cursor.getDouble(cursor.getColumnIndex("MP%"))
-                val LPER = cursor.getDouble(cursor.getColumnIndex("LP%"))
+                val MPER = cursor.getDouble(cursor.getColumnIndex("MPP"))
+                val LPER = cursor.getDouble(cursor.getColumnIndex("LPP"))
                 val AV = cursor.getDouble(cursor.getColumnIndex("AV"))
                 val AV100 = cursor.getDouble(cursor.getColumnIndex("AV100"))
                 val AV50 = cursor.getDouble(cursor.getColumnIndex("AV50"))
@@ -531,10 +563,12 @@ object DBUtils {
                 val PP1 = cursor.getDouble(cursor.getColumnIndex("PP1"))
                 val MP = cursor.getDouble(cursor.getColumnIndex("MP"))
                 val LP = cursor.getDouble(cursor.getColumnIndex("LP"))
-                val MPD = cursor.getDouble(cursor.getColumnIndex("MPD"))
-                val LPD = cursor.getDouble(cursor.getColumnIndex("LPD"))
+                val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
+                val LPD = cursor.getString(cursor.getColumnIndex("LPD"))
                 val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
                 //        "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
+                shddBean.n = name
+                shddBean.c = code
                 shddBean.aup = AUP
                 shddBean.mper = MPER
                 shddBean.lper = LPER
@@ -573,7 +607,7 @@ object DBUtils {
 
     fun querySHDDIsExsitByCode(dbName: String, DATE: String): Boolean {
         var isexsit = false
-        LogUtil.d("DATE:$DATE")
+        LogUtil.d("CODE:$DATE")
         if (tabbleIsExist(dbName)) {
             var cursor =
                 db.rawQuery("SELECT * FROM $dbName WHERE C =?", arrayOf(DATE))

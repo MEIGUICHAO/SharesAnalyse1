@@ -1,13 +1,10 @@
 package com.mgc.sharesanalyse.viewmodel
 
-import android.util.Log
 import android.util.SparseArray
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.galanz.rxretrofit.network.RetrofitManager
-import com.mgc.sharesanalyse.NewApiActivity
-import com.mgc.sharesanalyse.R
 import com.mgc.sharesanalyse.entity.BWCDPJsonBean
 import com.mgc.sharesanalyse.entity.BWCQPResultBean
 import com.mgc.sharesanalyse.net.LoadState

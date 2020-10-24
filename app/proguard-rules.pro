@@ -82,6 +82,12 @@
 #content+date####
 #content2+date####
 
+#                //        "(C,N,AUP,MP%,LP%,autr,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
+
+
+
+
+
 
 # ####!!(
 # !!(
