@@ -48,6 +48,15 @@ public class SHDDBean {
     private String MPD;
     private String LPD;
     private String DATE;
+    private String AVJ;
+
+    public String getAVJ() {
+        return AVJ;
+    }
+
+    public void setAVJ(String AVJ) {
+        this.AVJ = AVJ;
+    }
 
     public String getC() {
         return C;
@@ -305,13 +314,6 @@ public class SHDDBean {
                 ", " + MPER +
                 ", " + LPER +
                 ", " + AUTR +
-                ", " + AV +
-                ", " + AV100 +
-                ", " + AV50 +
-                ", " + AV30 +
-                ", " + AV10 +
-                ", " + AV5 +
-                ", " + AV1 +
                 ", " + AD +
                 ", " + AD100 +
                 ", " + AD50 +
@@ -330,22 +332,16 @@ public class SHDDBean {
                 ", " + LP +
                 ", " + MPD +
                 ", " + LPD +
-                ", '" + DATE+"')";
+                ", '" + DATE+"'"+
+                ", '" + AVJ+"')";
     }
 
     public String toUpdateSqlSumValues() {
         return "" +
                 " AUP=" + AUP +
-                ", MPER=" + MPER +
-                ", LPER=" + LPER +
+                ", MPP=" + MPER +
+                ", LPP=" + LPER +
                 ", AUTR=" + AUTR +
-                ", AV=" + AV +
-                ", AV100=" + AV100 +
-                ", AV50=" + AV50 +
-                ", AV30=" + AV30 +
-                ", AV10=" + AV10 +
-                ", AV5=" + AV5 +
-                ", AV1=" + AV1 +
                 ", AD=" + AD +
                 ", AD100=" + AD100 +
                 ", AD50=" + AD50 +
@@ -364,6 +360,7 @@ public class SHDDBean {
                 ", LP=" + LP +
                 ", MPD=" + MPD +
                 ", LPD=" + LPD +
-                ", DATE='" + DATE + '\'';
+                ", DATE='" + DATE +
+                "', AVJ='" + AVJ+"'";
     }
 }

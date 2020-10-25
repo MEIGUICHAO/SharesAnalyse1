@@ -493,8 +493,8 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, C TEXT, N TEXT, AUP INTEGER, MPP INTEGER, LPP INTEGER, AUTR INTEGER" +
-                        ",AV INTEGER, AV100 INTEGER, AV50 INTEGER, AV30 INTEGER, AV10 INTEGER, AV5 INTEGER, AV1 INTEGER,AD INTEGER, AD100 INTEGER, AD50 INTEGER, AD30 INTEGER, AD10 INTEGER, AD5 INTEGER, AD1 INTEGER" +
-                        ",PP INTEGER, PP100 INTEGER, PP50 INTEGER, PP30 INTEGER, PP10 INTEGER, PP5 INTEGER, PP1 INTEGER, MP INTEGER, LP INTEGER,MPD TEXT,LPD TEXT, DATE TEXT);"
+                        ",AD INTEGER, AD100 INTEGER, AD50 INTEGER, AD30 INTEGER, AD10 INTEGER, AD5 INTEGER, AD1 INTEGER" +
+                        ",PP INTEGER, PP100 INTEGER, PP50 INTEGER, PP30 INTEGER, PP10 INTEGER, PP5 INTEGER, PP1 INTEGER, MP INTEGER, LP INTEGER,MPD TEXT,LPD TEXT, DATE TEXT, AVJ TEXT);"
             db.execSQL(sqlStr)
         }
     }
@@ -509,7 +509,7 @@ object DBUtils {
         createSHDD(dbName)
         if (!querySHDDIsExsitByCode(dbName, shddBean.c)) {
             val insertSqlStr = "INSERT INTO $dbName" +
-                    "(C,N,AUP,MPP,LPP,AUTR,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)" +
+                    "(C,N,AUP,MPP,LPP,AUTR,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE,AVJ)" +
                     " VALUES${shddBean.toInsert()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -518,7 +518,7 @@ object DBUtils {
             val ts2 = DateUtils.parse(shddBean.date, FormatterEnum.YYYYMMDD)
             if (ts > ts2) {
                 shddBean.date = curdate
-                val sql = "UPDATE $dbName SET ${shddBean.toUpdateSqlSumValues()}  WHERE CODE=${shddBean.c}"
+                val sql = "UPDATE $dbName SET ${shddBean.toUpdateSqlSumValues()}  WHERE C=${shddBean.c}"
                 LogUtil.d("updateSqlStr:$sql")
                 db.execSQL(sql)
             }
@@ -532,8 +532,9 @@ object DBUtils {
         var shddBean: SHDDBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+                db.rawQuery("SELECT * FROM $dbName WHERE C =?", arrayOf(code.toInt().toString()))
 
+            LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
                 shddBean = SHDDBean()
                 val code = cursor.getString(cursor.getColumnIndex("C"))
@@ -541,13 +542,13 @@ object DBUtils {
                 val AUP = cursor.getDouble(cursor.getColumnIndex("AUP"))
                 val MPER = cursor.getDouble(cursor.getColumnIndex("MPP"))
                 val LPER = cursor.getDouble(cursor.getColumnIndex("LPP"))
-                val AV = cursor.getDouble(cursor.getColumnIndex("AV"))
-                val AV100 = cursor.getDouble(cursor.getColumnIndex("AV100"))
-                val AV50 = cursor.getDouble(cursor.getColumnIndex("AV50"))
-                val AV30 = cursor.getDouble(cursor.getColumnIndex("AV30"))
-                val AV10 = cursor.getDouble(cursor.getColumnIndex("AV10"))
-                val AV5 = cursor.getDouble(cursor.getColumnIndex("AV5"))
-                val AV1 = cursor.getDouble(cursor.getColumnIndex("AV1"))
+//                val AV = cursor.getDouble(cursor.getColumnIndex("AV"))
+//                val AV100 = cursor.getDouble(cursor.getColumnIndex("AV100"))
+//                val AV50 = cursor.getDouble(cursor.getColumnIndex("AV50"))
+//                val AV30 = cursor.getDouble(cursor.getColumnIndex("AV30"))
+//                val AV10 = cursor.getDouble(cursor.getColumnIndex("AV10"))
+//                val AV5 = cursor.getDouble(cursor.getColumnIndex("AV5"))
+//                val AV1 = cursor.getDouble(cursor.getColumnIndex("AV1"))
                 val AD = cursor.getDouble(cursor.getColumnIndex("AD"))
                 val AD100 = cursor.getDouble(cursor.getColumnIndex("AD100"))
                 val AD50 = cursor.getDouble(cursor.getColumnIndex("AD50"))
@@ -566,19 +567,20 @@ object DBUtils {
                 val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val LPD = cursor.getString(cursor.getColumnIndex("LPD"))
                 val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+                val AVJ = cursor.getString(cursor.getColumnIndex("AVJ"))
                 //        "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
                 shddBean.n = name
                 shddBean.c = code
                 shddBean.aup = AUP
                 shddBean.mper = MPER
                 shddBean.lper = LPER
-                shddBean.av = AV
-                shddBean.aV100 = AV100
-                shddBean.aV50 = AV50
-                shddBean.aV30 = AV30
-                shddBean.aV10 = AV10
-                shddBean.aV5 = AV5
-                shddBean.aV1 = AV1
+//                shddBean.av = AV
+//                shddBean.aV100 = AV100
+//                shddBean.aV50 = AV50
+//                shddBean.aV30 = AV30
+//                shddBean.aV10 = AV10
+//                shddBean.aV5 = AV5
+//                shddBean.aV1 = AV1
                 shddBean.ad = AD
                 shddBean.aD100 = AD100
                 shddBean.aD50 = AD50
@@ -597,6 +599,17 @@ object DBUtils {
                 shddBean.mpd = MPD
                 shddBean.lpd = LPD
                 shddBean.date = DATE
+                shddBean.avj = AVJ
+                if (!AVJ.isEmpty()) {
+                    val avJsonBean = GsonHelper.parse(AVJ, AvJsonBean::class.java)
+                    shddBean.av = avJsonBean.av
+                    shddBean.aV100 = avJsonBean.aV100
+                    shddBean.aV50 = avJsonBean.aV50
+                    shddBean.aV30 = avJsonBean.aV30
+                    shddBean.aV10 = avJsonBean.aV10
+                    shddBean.aV5 = avJsonBean.aV5
+                    shddBean.aV1 = avJsonBean.aV1
+                }
 
             }
             cursor.close()
@@ -605,12 +618,12 @@ object DBUtils {
     }
 
 
-    fun querySHDDIsExsitByCode(dbName: String, DATE: String): Boolean {
+    fun querySHDDIsExsitByCode(dbName: String, code: String): Boolean {
         var isexsit = false
-        LogUtil.d("CODE:$DATE")
+        LogUtil.d("CODE:$code")
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE C =?", arrayOf(DATE))
+                db.rawQuery("SELECT * FROM $dbName WHERE C =?", arrayOf(code))
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
