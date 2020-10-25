@@ -155,7 +155,7 @@ object DBUtils {
     }
 
 
-    fun queryOPByCHDD(code: String, isAll: Boolean):Double {
+    fun queryOPByCHDD(code: String, isAll: Boolean,chddDateYM:String):Double {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
         var op = 0.toDouble()
         if (isAll) {
@@ -167,12 +167,12 @@ object DBUtils {
             }
             mList.sortStringDateAsc(FormatterEnum.YYMM)
             if (mList.size > 0) {
-                switchDBName(mList[0])
+                switchDBName(code.toCodeHDD(mList[0],FormatterEnum.YYMM))
                 val tbName = Datas.CHDD + code
                 op = queryFirstOPByCodeHDD(tbName)
             }
         } else {
-            val dbName =code.toCodeHDD()+DateUtils.formatToDay(FormatterEnum.YYMM)
+            val dbName = code.toCodeHDD(chddDateYM,FormatterEnum.YYMM)
             if (pathList.contains(dbName)) {
                 switchDBName(dbName)
                 val tbName = Datas.CHDD + code
@@ -528,7 +528,7 @@ object DBUtils {
 
 
     fun querySHDDByCode(dbName: String, code: String): SHDDBean? {
-        App.getmManager().switchDB(Datas.dataNamesDefault)
+        switchDBName(Datas.dataNamesDefault)
         var shddBean: SHDDBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =

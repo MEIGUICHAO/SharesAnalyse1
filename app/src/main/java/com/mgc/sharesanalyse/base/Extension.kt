@@ -52,13 +52,13 @@ fun Double.toKeep6(): Double {
     return java.lang.String.format("%.6f", this).toDouble()
 }
 
-fun String.toCodeHDD(): String {
+fun String.toCodeHDD(date:String,formatterEnum: FormatterEnum): String {
     if (this.toInt() > 600000) {
-        return "SH_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
+        return "SH_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
     } else if (this.toInt() < 300000) {
-        return "CY_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
+        return "CY_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
     } else {
-        return "SZ_CHDD_" + DateUtils.formatToDay(FormatterEnum.YYMM)
+        return "SZ_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
     }
 }
 

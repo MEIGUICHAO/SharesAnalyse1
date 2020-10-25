@@ -13,7 +13,6 @@ import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import kotlinx.coroutines.Deferred
 import org.jsoup.Jsoup
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -910,7 +909,6 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getSumDD() {
-        val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
         val sddTableNameALL = Datas.sddALL
         val pair = getDDList()
         val ddlist = pair.first
@@ -1043,6 +1041,8 @@ class NewApiViewModel : BaseViewModel() {
 
 
         DBUtils.dropTable(Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM))
+        DBUtils.dropTable(Datas.shdd+"2009")
+        DBUtils.dropTable(Datas.shddAll)
         operaSHDDAndCHDD(
             hhqlist,
             hhqVeryBeginIndex,
@@ -1084,23 +1084,31 @@ class NewApiViewModel : BaseViewModel() {
 
                     val bean =
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], ddBean.code)
-                    App.getmManager().switchDB(ddBean.code.toCodeHDD())
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
                     val hhqbean = hisHqBean[0].hq[hhqBeginIndex]
+                    //TODO test
                     if (curIndexTs >= curYearTS) {
-                        if (curIndexTs >= curMonthTS) {
-                            insertOrUpdateCodeHDD(hhqbean,ddBean, date)
-                            val curSHHDTBName = Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM)
-                            val shddBean = DBUtils.querySHDDByCode(curSHHDTBName, codelist[codeidnex].code)
-                            LogUtil.d("operaSHDDAndCHDD date:$date, code:${codelist[codeidnex].code},null == shddBean:${null == shddBean},curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
-
-                            if (null == shddBean) {
-                                insertSHDDBean(curSHHDTBName,hhqbean,ddBean,date)
-                            } else {
-                                updateSHDDBean(curSHHDTBName,hhqbean,ddBean,date)
-                            }
-                        }
+                        insertOrUpdateCodeHDD(hhqbean, ddBean, date)
+                        val curMonthSHHDTBName =
+                            Datas.shdd + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM)
+                        operaSHDDMonth(
+                            curMonthSHHDTBName,
+                            codelist,
+                            codeidnex,
+                            date,
+                            hhqbean,
+                            ddBean,false
+                        )
+                        operaSHDDMonth(
+                            Datas.shddAll,
+                            codelist,
+                            codeidnex,
+                            date,
+                            hhqbean,
+                            ddBean,true
+                        )
                     }
+
                 }
 //                "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
 //                        ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
@@ -1115,149 +1123,170 @@ class NewApiViewModel : BaseViewModel() {
         }
     }
 
-    private fun updateSHDDBean(tbName:String,hhqbean: List<String>, ddBean: DealDetailTableBean, date: String) {
+    private fun operaSHDDMonth(
+        curMonthSHHDTBName: String,
+        codelist: MutableList<AllCodeGDBean>,
+        codeidnex: Int,
+        date: String,
+        hhqbean: MutableList<String>,
+        ddBean: DealDetailTableBean,
+        isAll: Boolean
+    ) {
+        val shddBean =
+            DBUtils.querySHDDByCode(curMonthSHHDTBName, codelist[codeidnex].code)
+
+        if (null == shddBean) {
+            insertSHDDBean(curMonthSHHDTBName, hhqbean, ddBean, date)
+        } else {
+            updateSHDDBean(
+                curMonthSHHDTBName,
+                hhqbean,
+                ddBean,
+                date,
+                isAll,
+                DateUtils.changeFormatter(
+                    DateUtils.parse(date, FormatterEnum.YYYYMMDD),
+                    FormatterEnum.YYMM
+                )
+            )
+        }
+    }
+
+    private fun updateSHDDBean(tbName:String,hhqbean: List<String>, ddBean: DealDetailTableBean, date: String,isAll:Boolean,shddDateYM:String) {
         val lastSHDDBean = DBUtils.querySHDDByCode(tbName,ddBean.code)!!
-        LogUtil.d("updateSHDDBean!!")
-        val curSHDDBean = SHDDBean()
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.c = ddBean.code
-        curSHDDBean.n = ddBean.name
-        curSHDDBean.date = lastSHDDBean.date
-        LogUtil.d("updateSHDDBean!!")
-        val op = DBUtils.queryOPByCHDD(ddBean.code,true)
-        curSHDDBean.aup = getcurPercentDouble(hhqbean)
-        if (op > 0) {
-            val diffP = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean),op)
-            curSHDDBean.aup = BigDecimalUtils.div(diffP,op)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        if (curSHDDBean.aup > lastSHDDBean.mper) {
-            curSHDDBean.mper = curSHDDBean.aup
-            curSHDDBean.mpd = date
-            curSHDDBean.mp = getHisHqDayClosePrice(hhqbean)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        if (curSHDDBean.aup < lastSHDDBean.lper) {
-            curSHDDBean.lper = curSHDDBean.aup
-            curSHDDBean.lpd = date
-            curSHDDBean.lp = getHisHqDayClosePrice(hhqbean)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateDouble(hhqbean)
-        curSHDDBean.av = lastSHDDBean.av + getAvValue(getHisHqDayDealVolume(hhqbean))
-        LogUtil.d("curSHDDBean.av:${curSHDDBean.av},lastSHDDBean.av:${lastSHDDBean.av},getAvValue:${getAvValue(getHisHqDayDealVolume(hhqbean))}")
-        curSHDDBean.ad = lastSHDDBean.ad + getHisHqDayWholeDealAmount(hhqbean)/Datas.NUM_100M
-        val avJsonBean = GsonHelper.parse(lastSHDDBean.avj,AvJsonBean::class.java)
+        if (date != lastSHDDBean.date) {
+            val curSHDDBean = SHDDBean()
+            curSHDDBean.c = ddBean.code
+            curSHDDBean.n = ddBean.name
+            curSHDDBean.date = lastSHDDBean.date
+            val op = DBUtils.queryOPByCHDD(ddBean.code, isAll, shddDateYM)
+            if (op > 0) {
+                val diffP = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean),op)
+                curSHDDBean.aup = BigDecimalUtils.safeDiv(diffP, op) * 100
+                LogUtil.d("$tbName $isAll updateSHDDBean----,date:$date,diffP:$diffP,op:$op,cp:${getHisHqDayClosePrice(hhqbean)},aup:${curSHDDBean.aup},YM:$shddDateYM,lastSHDDBean.mper:${lastSHDDBean.mper},${curSHDDBean.aup > lastSHDDBean.mper}")
+            }
+            if (curSHDDBean.aup > lastSHDDBean.mper) {
+                curSHDDBean.mper = curSHDDBean.aup
+                curSHDDBean.mpd = date
+                curSHDDBean.mp = getHisHqDayClosePrice(hhqbean)
+            } else {
+                curSHDDBean.mper = lastSHDDBean.mper
+            }
+            if (curSHDDBean.aup < lastSHDDBean.lper) {
+                curSHDDBean.lper = curSHDDBean.aup
+                curSHDDBean.lpd = date
+                curSHDDBean.lp = getHisHqDayClosePrice(hhqbean)
+            } else {
+                curSHDDBean.lper = lastSHDDBean.lper
+            }
 
-        LogUtil.d("updateSHDDBean!!")
-        val mSizeBean = ddBean.sizeBean
-        curSHDDBean.aV100 = avJsonBean.aV100 + mSizeBean.m100List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000, it.price)
-            }
-            getAvValue(value)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.aV50 = avJsonBean.aV50+mSizeBean.m50List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000,it.price)
-            }
-            getAvValue(value )
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.aV30 = avJsonBean.aV30+mSizeBean.m30List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000,it.price)
-            }
-            getAvValue(value )
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.aV10 = avJsonBean.aV10+mSizeBean.m10List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000,it.price)
-            }
-            getAvValue(value)
-        }
-        curSHDDBean.aV5 = avJsonBean.aV5+mSizeBean.m5List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000,it.price)
-            }
-            getAvValue(value)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.aV1 = avJsonBean.aV1+mSizeBean.m1List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value + BigDecimalUtils.div(it.amount*10000,it.price)
-            }
-            getAvValue(value)
-        }
-        curSHDDBean.aD100 =lastSHDDBean.aD100+ mSizeBean.m100List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.aD50 = lastSHDDBean.aD50+mSizeBean.m50List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        curSHDDBean.aD30 = lastSHDDBean.aD30+mSizeBean.m30List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        curSHDDBean.aD10 = lastSHDDBean.aD10+mSizeBean.m10List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        curSHDDBean.aD5 = lastSHDDBean.aD5+mSizeBean.m5List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        curSHDDBean.aD1 = lastSHDDBean.aD1+mSizeBean.m1List.run {
-            var value = 0.toDouble()
-            this?.forEach {
-                value = value+ it.amount
-            }
-            getAdValue(value)
-        }
-        LogUtil.d("updateSHDDBean!!")
-        curSHDDBean.pp = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.ad,curSHDDBean.av)
-        curSHDDBean.pP100 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD100,curSHDDBean.aV100)
-        curSHDDBean.pP50 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD50,curSHDDBean.aV50)
-        curSHDDBean.pP30 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD30,curSHDDBean.aV30)
-        curSHDDBean.pP10 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD10,curSHDDBean.aV10)
-        curSHDDBean.pP5 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD5,curSHDDBean.aV5)
-        curSHDDBean.pP1 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD1,curSHDDBean.aV1)
-        curSHDDBean.avj = getAvJson(curSHDDBean)
-        LogUtil.d("updateSHDDBean!!")
+            curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateDouble(hhqbean)
+            curSHDDBean.av = lastSHDDBean.av + getAvValue(getHisHqDayDealVolume(hhqbean))
+            LogUtil.d("curSHDDBean.av:${curSHDDBean.av},lastSHDDBean.av:${lastSHDDBean.av},getAvValue:${getAvValue(getHisHqDayDealVolume(hhqbean))}")
+            curSHDDBean.ad = lastSHDDBean.ad + getHisHqDayWholeDealAmount(hhqbean)/Datas.NUM_100M
+            val avJsonBean = GsonHelper.parse(lastSHDDBean.avj,AvJsonBean::class.java)
 
-        LogUtil.d("shddBean.pp:${curSHDDBean.pp}")
-        LogUtil.d("shddBean.ad:${curSHDDBean.ad}")
-        LogUtil.d("shddBean.av:${curSHDDBean.av}")
-        DBUtils.insertOrUpdateSHDDTable(tbName,date,curSHDDBean)
+            val mSizeBean = ddBean.sizeBean
+            curSHDDBean.aV100 = avJsonBean.aV100 + mSizeBean.m100List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000, it.price)
+                }
+                getAvValue(value)
+            }
+            curSHDDBean.aV50 = avJsonBean.aV50+mSizeBean.m50List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000,it.price)
+                }
+                getAvValue(value )
+            }
+            curSHDDBean.aV30 = avJsonBean.aV30+mSizeBean.m30List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000,it.price)
+                }
+                getAvValue(value )
+            }
+            curSHDDBean.aV10 = avJsonBean.aV10+mSizeBean.m10List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000,it.price)
+                }
+                getAvValue(value)
+            }
+            curSHDDBean.aV5 = avJsonBean.aV5+mSizeBean.m5List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000,it.price)
+                }
+                getAvValue(value)
+            }
+            curSHDDBean.aV1 = avJsonBean.aV1+mSizeBean.m1List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value + BigDecimalUtils.div(it.amount*10000,it.price)
+                }
+                getAvValue(value)
+            }
+            curSHDDBean.aD100 =lastSHDDBean.aD100+ mSizeBean.m100List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.aD50 = lastSHDDBean.aD50+mSizeBean.m50List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.aD30 = lastSHDDBean.aD30+mSizeBean.m30List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.aD10 = lastSHDDBean.aD10+mSizeBean.m10List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.aD5 = lastSHDDBean.aD5+mSizeBean.m5List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.aD1 = lastSHDDBean.aD1+mSizeBean.m1List.run {
+                var value = 0.toDouble()
+                this?.forEach {
+                    value = value+ it.amount
+                }
+                getAdValue(value)
+            }
+            curSHDDBean.pp = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.ad,curSHDDBean.av)
+            curSHDDBean.pP100 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD100,curSHDDBean.aV100)
+            curSHDDBean.pP50 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD50,curSHDDBean.aV50)
+            curSHDDBean.pP30 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD30,curSHDDBean.aV30)
+            curSHDDBean.pP10 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD10,curSHDDBean.aV10)
+            curSHDDBean.pP5 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD5,curSHDDBean.aV5)
+            curSHDDBean.pP1 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD1,curSHDDBean.aV1)
+            curSHDDBean.avj = getAvJson(curSHDDBean)
 
-        LogUtil.d("updateSHDDBean!!")
-        
+            LogUtil.d("shddBean.pp:${curSHDDBean.pp}")
+            LogUtil.d("shddBean.ad:${curSHDDBean.ad}")
+            LogUtil.d("shddBean.av:${curSHDDBean.av}")
+            DBUtils.insertOrUpdateSHDDTable(tbName,date,curSHDDBean)
+        }
+
+
     }
 
     private fun insertSHDDBean(tbName:String,hhqbean: List<String>, ddBean: DealDetailTableBean, date: String) {
@@ -1398,6 +1427,7 @@ class NewApiViewModel : BaseViewModel() {
         ddBean: DealDetailTableBean,
         date: String
     ) {
+        DBUtils.switchDBName(ddBean.code.toCodeHDD(date,FormatterEnum.YYYYMMDD))
         val tbName = Datas.CHDD + ddBean.code
         LogUtil.d("tbName:$tbName")
         val codeHDDBean = CodeHDDBean()
