@@ -29,8 +29,8 @@ public class SinaCodeListBean {
     private String code;
     private String name;
     private String trade;
-    private double pricechange;
-    private double changepercent;
+    private float pricechange;
+    private float changepercent;
     private String buy;
     private String sell;
     private String settlement;
@@ -40,11 +40,11 @@ public class SinaCodeListBean {
     private int volume;
     private int amount;
     private String ticktime;
-    private double per;
-    private double pb;
-    private double mktcap;
-    private double nmc;
-    private double turnoverratio;
+    private float per;
+    private float pb;
+    private float mktcap;
+    private float nmc;
+    private float turnoverratio;
 
     public String getSymbol() {
         return symbol;
@@ -78,19 +78,19 @@ public class SinaCodeListBean {
         this.trade = trade;
     }
 
-    public double getPricechange() {
+    public float getPricechange() {
         return pricechange;
     }
 
-    public void setPricechange(double pricechange) {
+    public void setPricechange(float pricechange) {
         this.pricechange = pricechange;
     }
 
-    public double getChangepercent() {
+    public float getChangepercent() {
         return changepercent;
     }
 
-    public void setChangepercent(double changepercent) {
+    public void setChangepercent(float changepercent) {
         this.changepercent = changepercent;
     }
 
@@ -166,43 +166,43 @@ public class SinaCodeListBean {
         this.ticktime = ticktime;
     }
 
-    public double getPer() {
+    public float getPer() {
         return per;
     }
 
-    public void setPer(double per) {
+    public void setPer(float per) {
         this.per = per;
     }
 
-    public double getPb() {
+    public float getPb() {
         return pb;
     }
 
-    public void setPb(double pb) {
+    public void setPb(float pb) {
         this.pb = pb;
     }
 
-    public double getMktcap() {
+    public float getMktcap() {
         return mktcap;
     }
 
-    public void setMktcap(double mktcap) {
+    public void setMktcap(float mktcap) {
         this.mktcap = mktcap;
     }
 
-    public double getNmc() {
+    public float getNmc() {
         return nmc;
     }
 
-    public void setNmc(double nmc) {
+    public void setNmc(float nmc) {
         this.nmc = nmc;
     }
 
-    public double getTurnoverratio() {
+    public float getTurnoverratio() {
         return turnoverratio;
     }
 
-    public void setTurnoverratio(double turnoverratio) {
+    public void setTurnoverratio(float turnoverratio) {
         this.turnoverratio = turnoverratio;
     }
 }

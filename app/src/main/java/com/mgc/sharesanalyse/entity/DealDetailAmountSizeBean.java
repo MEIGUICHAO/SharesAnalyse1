@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DealDetailAmountSizeBean {
 
-    public String getToString(double dealAmount) {
+    public String getToString(float dealAmount) {
         return "{" +
                 (m100Size > 0 ? ",m100Size=" + m100Size : "") +
                 (m50Size > 0 ? ",m50Size=" + m50Size : "") +
@@ -61,8 +61,8 @@ public class DealDetailAmountSizeBean {
                 '}';
     }
 
-    public double getGt5000() {
-        double beiging = 0;
+    public float getGt5000() {
+        float beiging = 0;
         if (null != m100List) {
             for (int i = 0; i < m100List.size(); i++) {
                 beiging = beiging + m100List.get(i).amount;
@@ -77,8 +77,8 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    public double getGt1000() {
-        double beiging = getGt5000();
+    public float getGt1000() {
+        float beiging = getGt5000();
         if (null != m30List) {
             for (int i = 0; i < m30List.size(); i++) {
                 beiging = beiging + m30List.get(i).amount;
@@ -92,8 +92,8 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    public double getGt500() {
-        double beiging = getGt1000();
+    public float getGt500() {
+        float beiging = getGt1000();
         if (null != m5List) {
             for (int i = 0; i < m5List.size(); i++) {
                 beiging = beiging + m5List.get(i).amount;
@@ -102,8 +102,8 @@ public class DealDetailAmountSizeBean {
         return beiging;
     }
 
-    public double getGt100() {
-        double beiging = getGt500();
+    public float getGt100() {
+        float beiging = getGt500();
         if (null != m1List) {
             for (int i = 0; i < m1List.size(); i++) {
                 beiging = beiging + m1List.get(i).amount;
@@ -442,17 +442,17 @@ public class DealDetailAmountSizeBean {
 
     public static class M100 {
         private String time;
-        private double amount;
+        private float amount;
 
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
-        private double price;
+        private float price;
 
         public String getTime() {
             return time;
@@ -462,11 +462,11 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
     }
@@ -475,17 +475,17 @@ public class DealDetailAmountSizeBean {
     private int m50Size;
 
     public static class M50 {
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
-        private double price;
+        private float price;
         private String time;
-        private double amount;
+        private float amount;
 
         public String getTime() {
             return time;
@@ -495,11 +495,11 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
     }
@@ -508,11 +508,11 @@ public class DealDetailAmountSizeBean {
     private int m30Size;
 
     public static class M30 {
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
@@ -524,34 +524,34 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
 
-        private double price;
+        private float price;
         private String time;
-        private double amount;
+        private float amount;
     }
 
     private ArrayList<M10> m10List;
     private int m10Size;
 
     public static class M10 {
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
-        private double price;
+        private float price;
         private String time;
-        private double amount;
+        private float amount;
 
         public String getTime() {
             return time;
@@ -561,11 +561,11 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
     }
@@ -575,17 +575,17 @@ public class DealDetailAmountSizeBean {
     private int m5Size;
 
     public static class M5 {
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
-        private double price;
+        private float price;
         private String time;
-        private double amount;
+        private float amount;
 
         public String getTime() {
             return time;
@@ -595,11 +595,11 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
     }
@@ -608,17 +608,17 @@ public class DealDetailAmountSizeBean {
     private int m1Size;
 
     public static class M1 {
-        public double getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 
-        private double price;
+        private float price;
         private String time;
-        private double amount;
+        private float amount;
 
         public String getTime() {
             return time;
@@ -628,11 +628,11 @@ public class DealDetailAmountSizeBean {
             this.time = time;
         }
 
-        public double getAmount() {
+        public float getAmount() {
             return amount;
         }
 
-        public void setAmount(double amount) {
+        public void setAmount(float amount) {
             this.amount = amount;
         }
     }

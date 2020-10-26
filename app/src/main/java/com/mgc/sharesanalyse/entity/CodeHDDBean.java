@@ -5,7 +5,7 @@ public class CodeHDDBean {
     private String name;
     private String DATE;
     private String TR;
-    private double OP;
+    private float OP;
 
     public String getTR() {
         return TR;
@@ -15,39 +15,39 @@ public class CodeHDDBean {
         this.TR = TR;
     }
 
-    private double CP;
-    private double PP;
+    private float CP;
+    private float PP;
 
-    public double getPP() {
+    public float getPP() {
         return PP;
     }
 
-    public void setPP(double PP) {
+    public void setPP(float PP) {
         this.PP = PP;
     }
 
-    private double P;
+    private float P;
 
-    public double getOP() {
+    public float getOP() {
         return OP;
     }
 
-    public void setOP(double OP) {
+    public void setOP(float OP) {
         this.OP = OP;
     }
 
-    public double getCP() {
+    public float getCP() {
         return CP;
     }
 
-    public void setCP(double CP) {
+    public void setCP(float CP) {
         this.CP = CP;
     }
 
-    private double AUP;
-    private double DV;
-    private double DA;
-    private double AS;
+    private float AUP;
+    private float DV;
+    private float DA;
+    private float AS;
     private int M100S;
     private int M50S;
     private int M30S;
@@ -72,43 +72,43 @@ public class CodeHDDBean {
         this.DATE = DATE;
     }
 
-    public double getP() {
+    public float getP() {
         return P;
     }
 
-    public void setP(double p) {
+    public void setP(float p) {
         P = p;
     }
 
-    public double getAUP() {
+    public float getAUP() {
         return AUP;
     }
 
-    public void setAUP(double AUP) {
+    public void setAUP(float AUP) {
         this.AUP = AUP;
     }
 
-    public double getDV() {
+    public float getDV() {
         return DV;
     }
 
-    public void setDV(double DV) {
+    public void setDV(float DV) {
         this.DV = DV;
     }
 
-    public double getDA() {
+    public float getDA() {
         return DA;
     }
 
-    public void setDA(double DA) {
+    public void setDA(float DA) {
         this.DA = DA;
     }
 
-    public double getAS() {
+    public float getAS() {
         return AS;
     }
 
-    public void setAS(double AS) {
+    public void setAS(float AS) {
         this.AS = AS;
     }
 
@@ -184,95 +184,95 @@ public class CodeHDDBean {
         L01S = l01S;
     }
 
-    public double getPP100M() {
+    public float getPP100M() {
         return PP100M;
     }
 
-    public void setPP100M(double PP100M) {
+    public void setPP100M(float PP100M) {
         this.PP100M = PP100M;
     }
 
-    public double getPP50M() {
+    public float getPP50M() {
         return PP50M;
     }
 
-    public void setPP50M(double PP50M) {
+    public void setPP50M(float PP50M) {
         this.PP50M = PP50M;
     }
 
-    public double getPP30M() {
+    public float getPP30M() {
         return PP30M;
     }
 
-    public void setPP30M(double PP30M) {
+    public void setPP30M(float PP30M) {
         this.PP30M = PP30M;
     }
 
-    public double getPP10M() {
+    public float getPP10M() {
         return PP10M;
     }
 
-    public void setPP10M(double PP10M) {
+    public void setPP10M(float PP10M) {
         this.PP10M = PP10M;
     }
 
-    public double getPP5M() {
+    public float getPP5M() {
         return PP5M;
     }
 
-    public void setPP5M(double PP5M) {
+    public void setPP5M(float PP5M) {
         this.PP5M = PP5M;
     }
 
-    public double getPP1M() {
+    public float getPP1M() {
         return PP1M;
     }
 
-    public void setPP1M(double PP1M) {
+    public void setPP1M(float PP1M) {
         this.PP1M = PP1M;
     }
 
 
 
-    public double getDA5000() {
+    public float getDA5000() {
         return DA5000;
     }
 
-    public void setDA5000(double DA5000) {
+    public void setDA5000(float DA5000) {
         this.DA5000 = DA5000;
     }
 
-    public double getDA1000() {
+    public float getDA1000() {
         return DA1000;
     }
 
-    public void setDA1000(double DA1000) {
+    public void setDA1000(float DA1000) {
         this.DA1000 = DA1000;
     }
 
-    public double getDA500() {
+    public float getDA500() {
         return DA500;
     }
 
-    public void setDA500(double DA500) {
+    public void setDA500(float DA500) {
         this.DA500 = DA500;
     }
 
-    public double getDA100() {
+    public float getDA100() {
         return DA100;
     }
 
-    public void setDA100(double DA100) {
+    public void setDA100(float DA100) {
         this.DA100 = DA100;
     }
 
     private int M01S;
     private int L01S;
-    private double PP100M;
-    private double PP50M;
-    private double PP30M;
-    private double PP10M;
-    private double PP5M;
+    private float PP100M;
+    private float PP50M;
+    private float PP30M;
+    private float PP10M;
+    private float PP5M;
 
 
     public String toInsertDBValues(String dbName) {
@@ -312,19 +312,19 @@ public class CodeHDDBean {
                 ", " + DA100 + ")";
     }
 
-    private double PP1M;
-    private double PPL1M;
+    private float PP1M;
+    private float PPL1M;
 
-    public double getPPL1M() {
+    public float getPPL1M() {
         return PPL1M;
     }
 
-    public void setPPL1M(double PPL1M) {
+    public void setPPL1M(float PPL1M) {
         this.PPL1M = PPL1M;
     }
 
-    private double DA5000;
-    private double DA1000;
-    private double DA500;
-    private double DA100;
+    private float DA5000;
+    private float DA1000;
+    private float DA500;
+    private float DA100;
 }

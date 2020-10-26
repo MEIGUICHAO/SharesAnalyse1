@@ -272,10 +272,10 @@ class NewApiViewModel : BaseViewModel() {
         return pair
     }
 
-    private fun classifyDealDetail(sinaDealList: java.util.ArrayList<SinaDealDatailBean>): Pair<DealDetailAmountSizeBean, Double> {
+    private fun classifyDealDetail(sinaDealList: java.util.ArrayList<SinaDealDatailBean>): Pair<DealDetailAmountSizeBean, Float> {
 
-        var percent = sinaDealList[0].price.toDouble()
-            .getPercent(sinaDealList[sinaDealList.size - 1].price.toDouble())
+        var percent = sinaDealList[0].price.toFloat()
+            .getPercent(sinaDealList[sinaDealList.size - 1].price.toFloat())
         val dealDetailAmountSizeBean = DealDetailAmountSizeBean()
         dealDetailAmountSizeBean.m100List = ArrayList()
         dealDetailAmountSizeBean.m50List = ArrayList()
@@ -286,89 +286,89 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("classifyDealDetail")
         sinaDealList.forEach {
             if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 100 * 1000000
             ) {
                 val m100 = M100()
                 dealDetailAmountSizeBean.m100Size = dealDetailAmountSizeBean.m100Size + 1
-                m100.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m100.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m100.time = it.ticktime
-                m100.price = it.price.toDouble()
+                m100.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m100List.add(m100)
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 50 * 1000000
             ) {
                 val m50 = DealDetailAmountSizeBean.M50()
                 dealDetailAmountSizeBean.m50Size = dealDetailAmountSizeBean.m50Size + 1
-                m50.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m50.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m50.time = it.ticktime
-                m50.price = it.price.toDouble()
+                m50.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m50List.add(m50)
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 30 * 1000000
             ) {
                 val m30 = DealDetailAmountSizeBean.M30()
                 dealDetailAmountSizeBean.m30Size = dealDetailAmountSizeBean.m30Size + 1
-                m30.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m30.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m30.time = it.ticktime
-                m30.price = it.price.toDouble()
+                m30.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m30List.add(m30)
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 10 * 1000000
             ) {
                 val m10 = DealDetailAmountSizeBean.M10()
                 dealDetailAmountSizeBean.m10Size = dealDetailAmountSizeBean.m10Size + 1
-                m10.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m10.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m10.time = it.ticktime
-                m10.price = it.price.toDouble()
+                m10.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m10List.add(m10)
 
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 5 * 1000000
             ) {
                 val m5 = DealDetailAmountSizeBean.M5()
                 dealDetailAmountSizeBean.m5Size = dealDetailAmountSizeBean.m5Size + 1
-                m5.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m5.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m5.time = it.ticktime
-                m5.price = it.price.toDouble()
+                m5.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m5List.add(m5)
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 1 * 1000000
             ) {
                 val m1 = DealDetailAmountSizeBean.M1()
                 dealDetailAmountSizeBean.m1Size = dealDetailAmountSizeBean.m1Size + 1
-                m1.amount = it.price.toDouble() * it.volume.toDouble() / 10000
+                m1.amount = it.price.toFloat() * it.volume.toFloat() / 10000
                 m1.time = it.ticktime
-                m1.price = it.price.toDouble()
+                m1.price = it.price.toFloat()
                 dealDetailAmountSizeBean.m1List.add(m1)
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 0.5 * 1000000
             ) {
                 dealDetailAmountSizeBean.m05Size = dealDetailAmountSizeBean.m05Size + 1
 
             } else if (BigDecimalUtils.mul(
-                    it.price.toDouble(),
-                    it.volume.toDouble(),
+                    it.price.toFloat(),
+                    it.volume.toFloat(),
                     3
                 ) >= 0.1 * 1000000
             ) {
@@ -519,17 +519,17 @@ class NewApiViewModel : BaseViewModel() {
     ) {
 //        val baseDays = hqList.size/2
         var baseDays = 15
-        var baseDealAmount = 0.toDouble()
-        var baseDealPercent = 0.toDouble()
+        var baseDealAmount = 0.toFloat()
+        var baseDealPercent = 0.toFloat()
         baseDays = if (baseDays >= hqList.size) hqList.size - 1 else baseDays
         for (index in (hqList.size - 1) downTo baseDays) {
             baseDealAmount = baseDealAmount + getHisHqDayDealAmount(hqList[index])
             baseDealPercent = baseDealPercent + getHisHqDayDealPercent(hqList[index])
         }
         var baseAvgDealAmount =
-            BigDecimalUtils.div(baseDealAmount, (hqList.size - baseDays).toDouble())
+            BigDecimalUtils.div(baseDealAmount, (hqList.size - baseDays).toFloat())
         var baseAvgDealPercent =
-            BigDecimalUtils.div(baseDealPercent, (hqList.size - baseDays).toDouble())
+            BigDecimalUtils.div(baseDealPercent, (hqList.size - baseDays).toFloat())
         val basePrices = getHisHqDayClosePrice(hqList[baseDays])
         var needLog = false
         var logStr = codeSum
@@ -549,11 +549,11 @@ class NewApiViewModel : BaseViewModel() {
                 code,
                 getcurPercent(hqList[index]).replace("%", "")
             )
-            if (baseAvgDealAmount == 0.toDouble()) {
-                baseAvgDealAmount = 1.toDouble()
+            if (baseAvgDealAmount == 0.toFloat()) {
+                baseAvgDealAmount = 1.toFloat()
             }
-            if (baseAvgDealPercent == 0.toDouble()) {
-                baseAvgDealPercent = 1.toDouble()
+            if (baseAvgDealPercent == 0.toFloat()) {
+                baseAvgDealPercent = 1.toFloat()
             }
             val dealTimes =
                 BigDecimalUtils.div(getHisHqDayDealAmount(hqList[index]), baseAvgDealAmount)
@@ -741,15 +741,15 @@ class NewApiViewModel : BaseViewModel() {
             bean.code = code
             bean.id = code.toLong()
             bean.conformSize = conformSize
-            bean.dealAmount = stat?.get(7)?.toDouble() ?: 0.toDouble()
-            bean.dealAvgAmount = stat?.get(7)?.toDouble() ?: 0.toDouble() / hqList.size
+            bean.dealAmount = stat?.get(7)?.toFloat() ?: 0.toFloat()
+            bean.dealAvgAmount = stat?.get(7)?.toFloat() ?: 0.toFloat() / hqList.size
             var tostr = stat?.get(8)?.replace("%", "")
             tostr?.let {
                 var str = it
                 if (str.isEmpty()) {
                     str = "0"
                 }
-                bean.turnOverRate = str.toDouble()
+                bean.turnOverRate = str.toFloat()
             }
 
             bean.result =
@@ -798,16 +798,16 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
     fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
-    fun getcurPercentDouble(dayDatas: List<String>) = dayDatas[4].replace("%", "").toDouble()
-    fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toDouble()
-    fun getHisHqDayOpenPrice(dayDatas: List<String>) = dayDatas[1].toDouble()
-    fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble()
-    fun getHisHqDayWholeDealAmount(dayDatas: List<String>) = dayDatas[8].toDouble() * 10000
-    fun getHisHqDayDealVolume(dayDatas: List<String>) = dayDatas[7].toDouble() * 100
+    fun getcurPercentFloat(dayDatas: List<String>) = dayDatas[4].replace("%", "").toFloat()
+    fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toFloat()
+    fun getHisHqDayOpenPrice(dayDatas: List<String>) = dayDatas[1].toFloat()
+    fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toFloat()
+    fun getHisHqDayWholeDealAmount(dayDatas: List<String>) = dayDatas[8].toFloat() * 10000
+    fun getHisHqDayDealVolume(dayDatas: List<String>) = dayDatas[7].toFloat() * 100
     fun getHisHqDayTurnRate(dayDatas: List<String>) = dayDatas[9]
-    fun getHisHqDayTurnRateDouble(dayDatas: List<String>) = dayDatas[9].replace("%", "").toDouble()
+    fun getHisHqDayTurnRateFloat(dayDatas: List<String>) = dayDatas[9].replace("%", "").toFloat()
     fun getHisHqDayDealPercent(dayDatas: List<String>) =
-        if (dayDatas[9] == "-") 0.toDouble() else dayDatas[9].replace("%", "").toDouble()
+        if (dayDatas[9] == "-") 0.toFloat() else dayDatas[9].replace("%", "").toFloat()
 
     fun setFilelogPath(formatToDay: String) {
         pathDate = formatToDay
@@ -840,8 +840,8 @@ class NewApiViewModel : BaseViewModel() {
     private fun sortpriceHisRecordGDBean(list: List<PriceHisRecordGDBean>?) {
         Collections.sort(list, object : Comparator<PriceHisRecordGDBean> {
             override fun compare(p0: PriceHisRecordGDBean, p1: PriceHisRecordGDBean): Int {
-                return p1.result.split("---percent:")[1].split("%---curPercent")[0].toDouble()
-                    .compareTo(p0.result.split("---percent:")[1].split("%---curPercent")[0].toDouble())
+                return p1.result.split("---percent:")[1].split("%---curPercent")[0].toFloat()
+                    .compareTo(p0.result.split("---percent:")[1].split("%---curPercent")[0].toFloat())
             }
         })
     }
@@ -880,10 +880,10 @@ class NewApiViewModel : BaseViewModel() {
 //        list.forEach {
 //            var ddBean = DBUtils.queryDealDetailByCode("DD_20200924", it.code)
 //            ddBean?.let {
-//                if (it.code.toDouble() > 600000) {
+//                if (it.code.toFloat() > 600000) {
 //                    shList.add(it)
 
-//                } else if (it.code.toDouble() > 300000) {
+//                } else if (it.code.toFloat() > 300000) {
 //                    szCyList.add(it)
 //                } else {
 //                    szList.add(it)
@@ -1162,7 +1162,7 @@ class NewApiViewModel : BaseViewModel() {
             val op = DBUtils.queryOPByCHDD(ddBean.code, isAll, shddDateYM)
             if (op > 0) {
                 val diffP = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean),op)
-                curSHDDBean.aup = BigDecimalUtils.safeDiv(diffP, op) * 100
+                curSHDDBean.aup = (BigDecimalUtils.safeDiv(diffP, op) * 100)
                 LogUtil.d("$tbName $isAll updateSHDDBean----,date:$date,diffP:$diffP,op:$op,cp:${getHisHqDayClosePrice(hhqbean)},aup:${curSHDDBean.aup},YM:$shddDateYM,lastSHDDBean.mper:${lastSHDDBean.mper},${curSHDDBean.aup > lastSHDDBean.mper}")
             }
             if (curSHDDBean.aup > lastSHDDBean.mper) {
@@ -1180,7 +1180,7 @@ class NewApiViewModel : BaseViewModel() {
                 curSHDDBean.lper = lastSHDDBean.lper
             }
 
-            curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateDouble(hhqbean)
+            curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateFloat(hhqbean)
             curSHDDBean.av = lastSHDDBean.av + getAvValue(getHisHqDayDealVolume(hhqbean))
             LogUtil.d("curSHDDBean.av:${curSHDDBean.av},lastSHDDBean.av:${lastSHDDBean.av},getAvValue:${getAvValue(getHisHqDayDealVolume(hhqbean))}")
             curSHDDBean.ad = lastSHDDBean.ad + getHisHqDayWholeDealAmount(hhqbean)/Datas.NUM_100M
@@ -1188,84 +1188,84 @@ class NewApiViewModel : BaseViewModel() {
 
             val mSizeBean = ddBean.sizeBean
             curSHDDBean.aV100 = avJsonBean.aV100 + mSizeBean.m100List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000, it.price)
                 }
                 getAvValue(value)
             }
             curSHDDBean.aV50 = avJsonBean.aV50+mSizeBean.m50List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000,it.price)
                 }
                 getAvValue(value )
             }
             curSHDDBean.aV30 = avJsonBean.aV30+mSizeBean.m30List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000,it.price)
                 }
                 getAvValue(value )
             }
             curSHDDBean.aV10 = avJsonBean.aV10+mSizeBean.m10List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000,it.price)
                 }
                 getAvValue(value)
             }
             curSHDDBean.aV5 = avJsonBean.aV5+mSizeBean.m5List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000,it.price)
                 }
                 getAvValue(value)
             }
             curSHDDBean.aV1 = avJsonBean.aV1+mSizeBean.m1List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount*10000,it.price)
                 }
                 getAvValue(value)
             }
             curSHDDBean.aD100 =lastSHDDBean.aD100+ mSizeBean.m100List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
                 getAdValue(value)
             }
             curSHDDBean.aD50 = lastSHDDBean.aD50+mSizeBean.m50List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
                 getAdValue(value)
             }
             curSHDDBean.aD30 = lastSHDDBean.aD30+mSizeBean.m30List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
                 getAdValue(value)
             }
             curSHDDBean.aD10 = lastSHDDBean.aD10+mSizeBean.m10List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
                 getAdValue(value)
             }
             curSHDDBean.aD5 = lastSHDDBean.aD5+mSizeBean.m5List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
                 getAdValue(value)
             }
             curSHDDBean.aD1 = lastSHDDBean.aD1+mSizeBean.m1List.run {
-                var value = 0.toDouble()
+                var value = 0.toFloat()
                 this?.forEach {
                     value = value+ it.amount
                 }
@@ -1296,24 +1296,24 @@ class NewApiViewModel : BaseViewModel() {
         shddBean.mpd = date
         shddBean.lpd = date
         shddBean.date = date
-        shddBean.aup = getcurPercentDouble(hhqbean)
-        shddBean.mper = getcurPercentDouble(hhqbean)
-        shddBean.lper = getcurPercentDouble(hhqbean)
+        shddBean.aup = getcurPercentFloat(hhqbean)
+        shddBean.mper = getcurPercentFloat(hhqbean)
+        shddBean.lper = getcurPercentFloat(hhqbean)
         shddBean.mp = getHisHqDayClosePrice(hhqbean)
         shddBean.lp = getHisHqDayClosePrice(hhqbean)
         shddBean.av = getAvValue(getHisHqDayDealVolume(hhqbean))
         shddBean.ad = getHisHqDayWholeDealAmount(hhqbean)/Datas.NUM_100M
-        shddBean.autr = getHisHqDayTurnRateDouble(hhqbean)
+        shddBean.autr = getHisHqDayTurnRateFloat(hhqbean)
         val mSizeBean = ddBean.sizeBean
         shddBean.aV100 = mSizeBean.m100List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount*10000,it.price)
             }
             getAvValue(value)
         }
         shddBean.aV50 = mSizeBean.m50List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount*10000,it.price)
             }
@@ -1321,56 +1321,56 @@ class NewApiViewModel : BaseViewModel() {
         }
         LogUtil.d("shddBean.aV50:${shddBean.aV50}")
         shddBean.aV30 = mSizeBean.m30List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount*10000,it.price)
             }
             getAvValue(value)
         }
         shddBean.aV10 = mSizeBean.m10List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount * 10000, it.price)
             }
             getAvValue(value)
         }
         shddBean.aV5 = mSizeBean.m5List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount*10000,it.price)
             }
             getAvValue(value)
         }
         shddBean.aV1 = mSizeBean.m1List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value + BigDecimalUtils.div(it.amount*10000,it.price)
             }
             getAvValue(value)
         }
         shddBean.aD100 = mSizeBean.m100List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
             getAdValue(value)
         }
         shddBean.aD50 = mSizeBean.m50List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
             getAdValue(value)
         }
         shddBean.aD30 = mSizeBean.m30List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
             getAdValue(value)
         }
         shddBean.aD10 = mSizeBean.m10List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
@@ -1378,14 +1378,14 @@ class NewApiViewModel : BaseViewModel() {
         }
 
         shddBean.aD5 = mSizeBean.m5List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
             getAdValue(value)
         }
         shddBean.aD1 = mSizeBean.m1List.run {
-            var value = 0.toDouble()
+            var value = 0.toFloat()
             this?.forEach {
                 value = value+ it.amount
             }
@@ -1420,7 +1420,7 @@ class NewApiViewModel : BaseViewModel() {
         return GsonHelper.toJson(avJB)
     }
 
-    private fun getAdValue(value: Double) = String.format("%.4f", value * 10000 / Datas.NUM_100M).toDouble()
+    private fun getAdValue(value: Float) = String.format("%.4f", value * 10000 / Datas.NUM_100M).toFloat()
 
     private fun insertOrUpdateCodeHDD(
         hhqbean: List<String>,
@@ -1432,7 +1432,7 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("tbName:$tbName")
         val codeHDDBean = CodeHDDBean()
         codeHDDBean.name = ddBean.name
-        codeHDDBean.`as` = ddBean.allsize.toDouble()
+        codeHDDBean.`as` = ddBean.allsize.toFloat()
         val mSizeBean = ddBean.sizeBean
         codeHDDBean.dA5000 = mSizeBean.getGt5000() / Datas.NUM_100M
         codeHDDBean.dA1000 = mSizeBean.getGt1000() / Datas.NUM_100M
@@ -1446,7 +1446,7 @@ class NewApiViewModel : BaseViewModel() {
             getHisHqDayWholeDealAmount(hhqbean),
             getHisHqDayDealVolume(hhqbean)
         )
-        codeHDDBean.p = getcurPercentDouble(hhqbean)
+        codeHDDBean.p = getcurPercentFloat(hhqbean)
         codeHDDBean.tr = getHisHqDayTurnRate(hhqbean)
         codeHDDBean.dv = getAvValue(getHisHqDayDealVolume(hhqbean))
         codeHDDBean.m100S = mSizeBean.m100Size
@@ -1459,8 +1459,8 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.m01S = mSizeBean.m01Size
         codeHDDBean.l01S = mSizeBean.l01Size
         codeHDDBean.pP100M = mSizeBean.m100List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1468,13 +1468,13 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
-        var auV = 0.toDouble()
+        var auV = 0.toFloat()
         codeHDDBean.pP50M = mSizeBean.m50List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1483,12 +1483,12 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
         codeHDDBean.pP10M = mSizeBean.m10List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1497,12 +1497,12 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
         codeHDDBean.pP30M = mSizeBean.m30List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1511,12 +1511,12 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
         codeHDDBean.pP5M = mSizeBean.m5List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1525,13 +1525,13 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
 
         codeHDDBean.pP1M = mSizeBean.m1List.run {
-            var amount = 0.toDouble()
-            var volume = 0.toDouble()
+            var amount = 0.toFloat()
+            var volume = 0.toFloat()
             this?.forEach {
                 amount = amount + it.amount
                 volume = volume + BigDecimalUtils.div(it.amount, it.price)
@@ -1540,7 +1540,7 @@ class NewApiViewModel : BaseViewModel() {
             if (volume > 0) {
                 BigDecimalUtils.div(amount, volume)
             } else {
-                0.toDouble()
+                0.toFloat()
             }
         }
         val leftV = BigDecimalUtils.sub(getHisHqDayDealVolume(hhqbean), auV)
@@ -1560,7 +1560,7 @@ class NewApiViewModel : BaseViewModel() {
         DBUtils.insertCodeHDD(tbName, codeHDDBean)
     }
 
-    private fun getAvValue(value: Double) = String.format("%.4f", value / Datas.NUM_WAN).toDouble()
+    private fun getAvValue(value: Float) = String.format("%.4f", value / Datas.NUM_WAN).toFloat()
 
     private fun operaSddDB(
         ddlist: ArrayList<String>,
@@ -1597,7 +1597,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (hhqBeginIndex < hhqbean.size) {
                     DBUtils.setSDDPercent(
                         sddTableNameALL,
-                        getcurPercentDouble(hhqbean[hhqBeginIndex]),
+                        getcurPercentFloat(hhqbean[hhqBeginIndex]),
                         codelist[codeidnex].code
                     )
                 }

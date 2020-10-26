@@ -3,13 +3,13 @@ package com.mgc.sharesanalyse.entity;
 public class DealDetailWholeJsonBean {
     private String date;
     private String json;
-    private double percent;
+    private float percent;
 
-    public double getPercent() {
+    public float getPercent() {
         return percent;
     }
 
-    public void setPercent(double percent) {
+    public void setPercent(float percent) {
         this.percent = percent;
     }
 

@@ -9,42 +9,42 @@ public class SHDDBean {
 //                        ",PP INTEGER, PP100 INTEGER, PP50 INTEGER, PP30 INTEGER, PP20 INTEGER, PP5 INTEGER, PP1 INTEGER, MP INTEGER, LP INTEGER,MPD TEXT,LPD TEXT, DATE TEXT);"
     private String C;
     private String N;
-    private double AUP;
-    private double MPER;
-    private double LPER;
+    private float AUP;
+    private float MPER;
+    private float LPER;
 
-    public double getAUTR() {
+    public float getAUTR() {
         return AUTR;
     }
 
-    public void setAUTR(double AUTR) {
+    public void setAUTR(float AUTR) {
         this.AUTR = AUTR;
     }
 
-    private double AUTR;
-    private double AV;
-    private double AV100;
-    private double AV50;
-    private double AV30;
-    private double AV10;
-    private double AV5;
-    private double AV1;
-    private double AD;
-    private double AD100;
-    private double AD50;
-    private double AD30;
-    private double AD10;
-    private double AD5;
-    private double AD1;
-    private double PP;
-    private double PP100;
-    private double PP50;
-    private double PP30;
-    private double PP10;
-    private double PP5;
-    private double PP1;
-    private double MP;
-    private double LP;
+    private float AUTR;
+    private float AV;
+    private float AV100;
+    private float AV50;
+    private float AV30;
+    private float AV10;
+    private float AV5;
+    private float AV1;
+    private float AD;
+    private float AD100;
+    private float AD50;
+    private float AD30;
+    private float AD10;
+    private float AD5;
+    private float AD1;
+    private float PP;
+    private float PP100;
+    private float PP50;
+    private float PP30;
+    private float PP10;
+    private float PP5;
+    private float PP1;
+    private float MP;
+    private float LP;
     private String MPD;
     private String LPD;
     private String DATE;
@@ -74,212 +74,212 @@ public class SHDDBean {
         N = n;
     }
 
-    public double getAUP() {
+    public float getAUP() {
         return AUP;
     }
 
-    public void setAUP(double AUP) {
+    public void setAUP(float AUP) {
         this.AUP = AUP;
     }
 
-    public double getMPER() {
+    public float getMPER() {
         return MPER;
     }
 
-    public void setMPER(double MPER) {
+    public void setMPER(float MPER) {
         this.MPER = MPER;
     }
 
-    public double getLPER() {
+    public float getLPER() {
         return LPER;
     }
 
-    public void setLPER(double LPER) {
+    public void setLPER(float LPER) {
         this.LPER = LPER;
     }
 
-    public double getAV() {
+    public float getAV() {
         return AV;
     }
 
-    public void setAV(double AV) {
+    public void setAV(float AV) {
         this.AV = AV;
     }
 
-    public double getAV100() {
+    public float getAV100() {
         return AV100;
     }
 
-    public void setAV100(double AV100) {
+    public void setAV100(float AV100) {
         this.AV100 = AV100;
     }
 
-    public double getAV50() {
+    public float getAV50() {
         return AV50;
     }
 
-    public void setAV50(double AV50) {
+    public void setAV50(float AV50) {
         this.AV50 = AV50;
     }
 
-    public double getAV30() {
+    public float getAV30() {
         return AV30;
     }
 
-    public void setAV30(double AV30) {
+    public void setAV30(float AV30) {
         this.AV30 = AV30;
     }
 
-    public double getAV10() {
+    public float getAV10() {
         return AV10;
     }
 
-    public void setAV10(double AV10) {
+    public void setAV10(float AV10) {
         this.AV10 = AV10;
     }
 
-    public double getAV5() {
+    public float getAV5() {
         return AV5;
     }
 
-    public void setAV5(double AV5) {
+    public void setAV5(float AV5) {
         this.AV5 = AV5;
     }
 
-    public double getAV1() {
+    public float getAV1() {
         return AV1;
     }
 
-    public void setAV1(double AV1) {
+    public void setAV1(float AV1) {
         this.AV1 = AV1;
     }
 
-    public double getAD() {
+    public float getAD() {
         return AD;
     }
 
-    public void setAD(double AD) {
+    public void setAD(float AD) {
         this.AD = AD;
     }
 
-    public double getAD100() {
+    public float getAD100() {
         return AD100;
     }
 
-    public void setAD100(double AD100) {
+    public void setAD100(float AD100) {
         this.AD100 = AD100;
     }
 
-    public double getAD50() {
+    public float getAD50() {
         return AD50;
     }
 
-    public void setAD50(double AD50) {
+    public void setAD50(float AD50) {
         this.AD50 = AD50;
     }
 
-    public double getAD30() {
+    public float getAD30() {
         return AD30;
     }
 
-    public void setAD30(double AD30) {
+    public void setAD30(float AD30) {
         this.AD30 = AD30;
     }
 
-    public double getAD10() {
+    public float getAD10() {
         return AD10;
     }
 
-    public void setAD10(double AD10) {
+    public void setAD10(float AD10) {
         this.AD10 = AD10;
     }
 
-    public double getAD5() {
+    public float getAD5() {
         return AD5;
     }
 
-    public void setAD5(double AD5) {
+    public void setAD5(float AD5) {
         this.AD5 = AD5;
     }
 
-    public double getAD1() {
+    public float getAD1() {
         return AD1;
     }
 
-    public void setAD1(double AD1) {
+    public void setAD1(float AD1) {
         this.AD1 = AD1;
     }
 
-    public double getPP() {
+    public float getPP() {
         return PP;
     }
 
-    public void setPP(double PP) {
+    public void setPP(float PP) {
         this.PP = PP;
     }
 
-    public double getPP100() {
+    public float getPP100() {
         return PP100;
     }
 
-    public void setPP100(double PP100) {
+    public void setPP100(float PP100) {
         this.PP100 = PP100;
     }
 
-    public double getPP50() {
+    public float getPP50() {
         return PP50;
     }
 
-    public void setPP50(double PP50) {
+    public void setPP50(float PP50) {
         this.PP50 = PP50;
     }
 
-    public double getPP30() {
+    public float getPP30() {
         return PP30;
     }
 
-    public void setPP30(double PP30) {
+    public void setPP30(float PP30) {
         this.PP30 = PP30;
     }
 
 
-    public double getPP10() {
+    public float getPP10() {
         return PP10;
     }
 
-    public void setPP10(double PP10) {
+    public void setPP10(float PP10) {
         this.PP10 = PP10;
     }
 
-    public double getPP5() {
+    public float getPP5() {
         return PP5;
     }
 
-    public void setPP5(double PP5) {
+    public void setPP5(float PP5) {
         this.PP5 = PP5;
     }
 
-    public double getPP1() {
+    public float getPP1() {
         return PP1;
     }
 
-    public void setPP1(double PP1) {
+    public void setPP1(float PP1) {
         this.PP1 = PP1;
     }
 
-    public double getMP() {
+    public float getMP() {
         return MP;
     }
 
-    public void setMP(double MP) {
+    public void setMP(float MP) {
         this.MP = MP;
     }
 
-    public double getLP() {
+    public float getLP() {
         return LP;
     }
 
-    public void setLP(double LP) {
+    public void setLP(float LP) {
         this.LP = LP;
     }
 

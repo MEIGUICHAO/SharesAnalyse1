@@ -2,9 +2,9 @@ package com.mgc.sharesanalyse.entity;
 
 public class RecordBean {
 
-    public double bAmount;
-    public double sAmount;
-    public double bsDiffAmount;
+    public float bAmount;
+    public float sAmount;
+    public float bsDiffAmount;
 
     public String getTime() {
         return time;
@@ -16,47 +16,47 @@ public class RecordBean {
 
     public String time;
 
-    public double getbAmount() {
+    public float getbAmount() {
         return bAmount;
     }
 
-    public void setbAmount(double bAmount) {
+    public void setbAmount(float bAmount) {
         this.bAmount = bAmount;
     }
 
-    public double getsAmount() {
+    public float getsAmount() {
         return sAmount;
     }
 
-    public void setsAmount(double sAmount) {
+    public void setsAmount(float sAmount) {
         this.sAmount = sAmount;
     }
 
-    public double getBsDiffAmount() {
+    public float getBsDiffAmount() {
         return bsDiffAmount;
     }
 
-    public void setBsDiffAmount(double bsDiffAmount) {
+    public void setBsDiffAmount(float bsDiffAmount) {
         this.bsDiffAmount = bsDiffAmount;
     }
 
-    public double getbPercent() {
+    public float getbPercent() {
         return bPercent;
     }
 
-    public void setbPercent(double bPercent) {
+    public void setbPercent(float bPercent) {
         this.bPercent = bPercent;
     }
 
-    public double bPercent;
-    public double cPercent;
-    public double perAmount;
+    public float bPercent;
+    public float cPercent;
+    public float perAmount;
 
-    public double getcPercent() {
+    public float getcPercent() {
         return cPercent;
     }
 
-    public void setcPercent(double cPercent) {
+    public void setcPercent(float cPercent) {
         this.cPercent = cPercent;
     }
 }

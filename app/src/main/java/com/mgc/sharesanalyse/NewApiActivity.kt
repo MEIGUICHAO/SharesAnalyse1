@@ -178,9 +178,9 @@ class NewApiActivity : AppCompatActivity() {
                             chars.forEach {
                                 val priceHisBean = PriceHisBean()
                                 priceHisBean.dealPrice =
-                                    it.getElementsByTag("td")[0].text().toDouble()
+                                    it.getElementsByTag("td")[0].text().toFloat()
                                 priceHisBean.dealStocks =
-                                    it.getElementsByTag("td")[1].text().toDouble()
+                                    it.getElementsByTag("td")[1].text().toFloat()
                                 priceHisBean.dealPercent = it.getElementsByTag("td")[2].text()
                                 priceHisDealList.add(priceHisBean)
                             }

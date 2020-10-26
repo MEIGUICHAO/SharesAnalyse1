@@ -9,7 +9,6 @@ import com.mgc.sharesanalyse.base.Datas;
 import com.mgc.sharesanalyse.entity.AllCodeGDBeanDao;
 import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
-import com.mgc.sharesanalyse.entity.PriceHisRecordGDBeanDao;
 import com.mgc.sharesanalyse.entity.PricesHisGDBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;

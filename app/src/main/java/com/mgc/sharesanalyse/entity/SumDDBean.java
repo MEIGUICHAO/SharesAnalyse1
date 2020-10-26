@@ -4,25 +4,25 @@ public class SumDDBean {
 
     private String code;
     private String name;
-    private double percent;
-    private double maxPer;
+    private float percent;
+    private float maxPer;
 
-    public double getLowPer() {
+    public float getLowPer() {
         return lowPer;
     }
 
-    public void setLowPer(double lowPer) {
+    public void setLowPer(float lowPer) {
         this.lowPer = lowPer;
     }
 
-    private double lowPer;
+    private float lowPer;
     private String mpd;
 
-    public double getMaxPer() {
+    public float getMaxPer() {
         return maxPer;
     }
 
-    public void setMaxPer(double maxPer) {
+    public void setMaxPer(float maxPer) {
         this.maxPer = maxPer;
     }
 
@@ -55,11 +55,11 @@ public class SumDDBean {
         this.code = code;
     }
 
-    public double getPercent() {
+    public float getPercent() {
         return percent;
     }
 
-    public void setPercent(double percent) {
+    public void setPercent(float percent) {
         this.percent = percent;
     }
 
@@ -79,7 +79,7 @@ public class SumDDBean {
         this.sizeBean = sizeBean;
     }
 
-    public String getToString(double dealAmount) {
+    public String getToString(float dealAmount) {
         return "" +
                 ", allsize=" + allsize +
                 ", sizeBean=" + sizeBean.getToString(dealAmount);

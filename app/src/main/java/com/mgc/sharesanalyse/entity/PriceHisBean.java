@@ -2,24 +2,24 @@ package com.mgc.sharesanalyse.entity;
 
 public class PriceHisBean {
 
-    private double dealPrice;
-    private double dealStocks;
+    private float dealPrice;
+    private float dealStocks;
     private String dealPercent;
 
 
-    public double getDealPrice() {
+    public float getDealPrice() {
         return dealPrice;
     }
 
-    public void setDealPrice(double dealPrice) {
+    public void setDealPrice(float dealPrice) {
         this.dealPrice = dealPrice;
     }
 
-    public double getDealStocks() {
+    public float getDealStocks() {
         return dealStocks;
     }
 
-    public void setDealStocks(double dealStocks) {
+    public void setDealStocks(float dealStocks) {
         this.dealStocks = dealStocks;
     }
 

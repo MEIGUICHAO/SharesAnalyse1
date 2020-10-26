@@ -13,8 +13,10 @@ fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
 }
 
-fun Double.getPercent(begin: Double) {
-    BigDecimalUtils.div(BigDecimalUtils.sub(this, begin), begin) * 100
+
+
+fun Float.getPercent(begin: Float):Float {
+    return BigDecimalUtils.div(BigDecimalUtils.sub(this, begin), begin) * 100f
 }
 
 fun <T> String.json2Array(cls: Class<T>?): ArrayList<T>? {

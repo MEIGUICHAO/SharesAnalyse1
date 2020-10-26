@@ -14,7 +14,7 @@ public class DealDetailTableBean {
     }
 
     private String name;
-    private double percent;
+    private float percent;
     private int allsize;
 
     public String getCode() {
@@ -25,11 +25,11 @@ public class DealDetailTableBean {
         this.code = code;
     }
 
-    public double getPercent() {
+    public float getPercent() {
         return percent;
     }
 
-    public void setPercent(double percent) {
+    public void setPercent(float percent) {
         this.percent = percent;
     }
 
@@ -49,7 +49,7 @@ public class DealDetailTableBean {
         this.sizeBean = sizeBean;
     }
 
-    public String getToString(double dealAmount) {
+    public String getToString(float dealAmount) {
         return "" +
                 ", allsize=" + allsize +
                 ", sizeBean=" + sizeBean.getToString(dealAmount);

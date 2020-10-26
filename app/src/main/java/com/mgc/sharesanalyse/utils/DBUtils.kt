@@ -53,19 +53,19 @@ object DBUtils {
         }
     }
 
-    fun setSDDPercent(dbName: String,percent:Double,code: String) {
+    fun setSDDPercent(dbName: String,percent:Float,code: String) {
         val sql = "UPDATE $dbName SET PERCENT = ${percent}  WHERE CODE=${code}"
         LogUtil.d("setSDDPercent:$sql")
         db.execSQL(sql)
     }
 
-    fun setSDDMaxPercent(dbName: String,percent:Double,maxdate: String,code: String) {
+    fun setSDDMaxPercent(dbName: String,percent:Float,maxdate: String,code: String) {
         val sql = "UPDATE $dbName SET MAXPER = ${percent},MPD = ${maxdate}  WHERE CODE=${code}"
         LogUtil.d("setSDDMaxPercent:$sql")
         db.execSQL(sql)
     }
 
-    fun setSDDLowPercent(dbName: String, percent:Double, lowdate: String, code: String) {
+    fun setSDDLowPercent(dbName: String, percent:Float, lowdate: String, code: String) {
         val sql = "UPDATE $dbName SET LOWPER = ${percent},LPD = ${lowdate}  WHERE CODE=${code}"
         LogUtil.d("setSDDMaxPercent:$sql")
         db.execSQL(sql)
@@ -155,9 +155,9 @@ object DBUtils {
     }
 
 
-    fun queryOPByCHDD(code: String, isAll: Boolean,chddDateYM:String):Double {
+    fun queryOPByCHDD(code: String, isAll: Boolean,chddDateYM:String):Float {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
-        var op = 0.toDouble()
+        var op = 0.toFloat()
         if (isAll) {
             val mList = ArrayList<String>()
             pathList.forEach {
@@ -197,7 +197,7 @@ object DBUtils {
                 val code = cursor.getString(cursor.getColumnIndex("CODE"))
                 val name = cursor.getString(cursor.getColumnIndex("NAME"))
                 val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
-                val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
+                val percent = cursor.getFloat(cursor.getColumnIndex("PERCENT"))
                 val m100s = cursor.getInt(cursor.getColumnIndex("M100S"))
                 val m50s = cursor.getInt(cursor.getColumnIndex("M50S"))
                 val m30s = cursor.getInt(cursor.getColumnIndex("M30S"))
@@ -275,9 +275,9 @@ object DBUtils {
                 val name = cursor.getString(cursor.getColumnIndex("NAME"))
                 val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val allsize = cursor.getInt(cursor.getColumnIndex("ALLSIZE"))
-                val maxper = cursor.getDouble(cursor.getColumnIndex("MAXPER"))
-                val LOWPER = cursor.getDouble(cursor.getColumnIndex("LOWPER"))
-                val percent = cursor.getDouble(cursor.getColumnIndex("PERCENT"))
+                val maxper = cursor.getFloat(cursor.getColumnIndex("MAXPER"))
+                val LOWPER = cursor.getFloat(cursor.getColumnIndex("LOWPER"))
+                val percent = cursor.getFloat(cursor.getColumnIndex("PERCENT"))
                 val m100s = cursor.getInt(cursor.getColumnIndex("M100S"))
                 val m50s = cursor.getInt(cursor.getColumnIndex("M50S"))
                 val m30s = cursor.getInt(cursor.getColumnIndex("M30S"))
@@ -539,31 +539,31 @@ object DBUtils {
                 shddBean = SHDDBean()
                 val code = cursor.getString(cursor.getColumnIndex("C"))
                 val name = cursor.getString(cursor.getColumnIndex("N"))
-                val AUP = cursor.getDouble(cursor.getColumnIndex("AUP"))
-                val MPER = cursor.getDouble(cursor.getColumnIndex("MPP"))
-                val LPER = cursor.getDouble(cursor.getColumnIndex("LPP"))
-//                val AV = cursor.getDouble(cursor.getColumnIndex("AV"))
-//                val AV100 = cursor.getDouble(cursor.getColumnIndex("AV100"))
-//                val AV50 = cursor.getDouble(cursor.getColumnIndex("AV50"))
-//                val AV30 = cursor.getDouble(cursor.getColumnIndex("AV30"))
-//                val AV10 = cursor.getDouble(cursor.getColumnIndex("AV10"))
-//                val AV5 = cursor.getDouble(cursor.getColumnIndex("AV5"))
-//                val AV1 = cursor.getDouble(cursor.getColumnIndex("AV1"))
-                val AD = cursor.getDouble(cursor.getColumnIndex("AD"))
-                val AD100 = cursor.getDouble(cursor.getColumnIndex("AD100"))
-                val AD50 = cursor.getDouble(cursor.getColumnIndex("AD50"))
-                val AD30 = cursor.getDouble(cursor.getColumnIndex("AD30"))
-                val AD10 = cursor.getDouble(cursor.getColumnIndex("AD10"))
-                val AD5 = cursor.getDouble(cursor.getColumnIndex("AD5"))
-                val AD1 = cursor.getDouble(cursor.getColumnIndex("AD1"))
-                val PP100 = cursor.getDouble(cursor.getColumnIndex("PP100"))
-                val PP50 = cursor.getDouble(cursor.getColumnIndex("PP50"))
-                val PP30 = cursor.getDouble(cursor.getColumnIndex("PP30"))
-                val PP10 = cursor.getDouble(cursor.getColumnIndex("PP10"))
-                val PP5 = cursor.getDouble(cursor.getColumnIndex("PP5"))
-                val PP1 = cursor.getDouble(cursor.getColumnIndex("PP1"))
-                val MP = cursor.getDouble(cursor.getColumnIndex("MP"))
-                val LP = cursor.getDouble(cursor.getColumnIndex("LP"))
+                val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
+                val MPER = cursor.getFloat(cursor.getColumnIndex("MPP"))
+                val LPER = cursor.getFloat(cursor.getColumnIndex("LPP"))
+//                val AV = cursor.getFloat(cursor.getColumnIndex("AV"))
+//                val AV100 = cursor.getFloat(cursor.getColumnIndex("AV100"))
+//                val AV50 = cursor.getFloat(cursor.getColumnIndex("AV50"))
+//                val AV30 = cursor.getFloat(cursor.getColumnIndex("AV30"))
+//                val AV10 = cursor.getFloat(cursor.getColumnIndex("AV10"))
+//                val AV5 = cursor.getFloat(cursor.getColumnIndex("AV5"))
+//                val AV1 = cursor.getFloat(cursor.getColumnIndex("AV1"))
+                val AD = cursor.getFloat(cursor.getColumnIndex("AD"))
+                val AD100 = cursor.getFloat(cursor.getColumnIndex("AD100"))
+                val AD50 = cursor.getFloat(cursor.getColumnIndex("AD50"))
+                val AD30 = cursor.getFloat(cursor.getColumnIndex("AD30"))
+                val AD10 = cursor.getFloat(cursor.getColumnIndex("AD10"))
+                val AD5 = cursor.getFloat(cursor.getColumnIndex("AD5"))
+                val AD1 = cursor.getFloat(cursor.getColumnIndex("AD1"))
+                val PP100 = cursor.getFloat(cursor.getColumnIndex("PP100"))
+                val PP50 = cursor.getFloat(cursor.getColumnIndex("PP50"))
+                val PP30 = cursor.getFloat(cursor.getColumnIndex("PP30"))
+                val PP10 = cursor.getFloat(cursor.getColumnIndex("PP10"))
+                val PP5 = cursor.getFloat(cursor.getColumnIndex("PP5"))
+                val PP1 = cursor.getFloat(cursor.getColumnIndex("PP1"))
+                val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
+                val LP = cursor.getFloat(cursor.getColumnIndex("LP"))
                 val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val LPD = cursor.getString(cursor.getColumnIndex("LPD"))
                 val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
@@ -571,7 +571,7 @@ object DBUtils {
                 //        "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
                 shddBean.n = name
                 shddBean.c = code
-                shddBean.aup = AUP
+                shddBean.aup = AUP.toFloat()
                 shddBean.mper = MPER
                 shddBean.lper = LPER
 //                shddBean.av = AV
@@ -631,17 +631,17 @@ object DBUtils {
         return isexsit
     }
 
-    fun queryFirstOPByCodeHDD(tbName: String): Double {
-        var op = 0.toDouble()
+    fun queryFirstOPByCodeHDD(tbName: String): Float {
+        var op = 0.toFloat()
         if (tabbleIsExist(tbName)) {
             val cursor = db.rawQuery("SELECT * FROM $tbName order by _ID asc",null)
             if (null != cursor && cursor.moveToFirst()) {
-                op = cursor.getDouble(cursor.getColumnIndex("OP"))
-                var Date = cursor.getDouble(cursor.getColumnIndex("DATE"))
-                while (op==0.toDouble()) {
+                op = cursor.getFloat(cursor.getColumnIndex("OP"))
+                var Date = cursor.getFloat(cursor.getColumnIndex("DATE"))
+                while (op==0.toFloat()) {
                     cursor.moveToNext()
-                    op = cursor.getDouble(cursor.getColumnIndex("OP"))
-                    Date = cursor.getDouble(cursor.getColumnIndex("DATE"))
+                    op = cursor.getFloat(cursor.getColumnIndex("OP"))
+                    Date = cursor.getFloat(cursor.getColumnIndex("DATE"))
                 }
                 LogUtil.d("queryFirstOPByCodeHDD Date:$Date")
             }

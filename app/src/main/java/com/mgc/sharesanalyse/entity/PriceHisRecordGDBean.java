@@ -10,16 +10,16 @@ public class PriceHisRecordGDBean {
     private long id;
     private String code;
     private int conformSize;
-    private double baseComparePercent;
-    private double dealAmount;
-    private double dealAvgAmount;
-    private double turnOverRate;
+    private float baseComparePercent;
+    private float dealAmount;
+    private float dealAvgAmount;
+    private float turnOverRate;
     private String result;
 
     @Generated(hash = 993254973)
     public PriceHisRecordGDBean(long id, String code, int conformSize,
-            double baseComparePercent, double dealAmount, double dealAvgAmount,
-            double turnOverRate, String result) {
+            float baseComparePercent, float dealAmount, float dealAvgAmount,
+            float turnOverRate, String result) {
         this.id = id;
         this.code = code;
         this.conformSize = conformSize;
@@ -58,35 +58,35 @@ public class PriceHisRecordGDBean {
         this.conformSize = conformSize;
     }
 
-    public double getBaseComparePercent() {
+    public float getBaseComparePercent() {
         return baseComparePercent;
     }
 
-    public void setBaseComparePercent(double baseComparePercent) {
+    public void setBaseComparePercent(float baseComparePercent) {
         this.baseComparePercent = baseComparePercent;
     }
 
-    public double getDealAmount() {
+    public float getDealAmount() {
         return dealAmount;
     }
 
-    public void setDealAmount(double dealAmount) {
+    public void setDealAmount(float dealAmount) {
         this.dealAmount = dealAmount;
     }
 
-    public double getDealAvgAmount() {
+    public float getDealAvgAmount() {
         return dealAvgAmount;
     }
 
-    public void setDealAvgAmount(double dealAvgAmount) {
+    public void setDealAvgAmount(float dealAvgAmount) {
         this.dealAvgAmount = dealAvgAmount;
     }
 
-    public double getTurnOverRate() {
+    public float getTurnOverRate() {
         return turnOverRate;
     }
 
-    public void setTurnOverRate(double turnOverRate) {
+    public void setTurnOverRate(float turnOverRate) {
         this.turnOverRate = turnOverRate;
     }
 
