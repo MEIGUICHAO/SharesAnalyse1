@@ -16,7 +16,10 @@ public class PriceHisRecordGDBean {
     private float turnOverRate;
     private String result;
 
-    @Generated(hash = 993254973)
+    public PriceHisRecordGDBean() {
+    }
+
+    @Generated(hash = 928119174)
     public PriceHisRecordGDBean(long id, String code, int conformSize,
             float baseComparePercent, float dealAmount, float dealAvgAmount,
             float turnOverRate, String result) {
@@ -28,10 +31,6 @@ public class PriceHisRecordGDBean {
         this.dealAvgAmount = dealAvgAmount;
         this.turnOverRate = turnOverRate;
         this.result = result;
-    }
-
-    @Generated(hash = 550760379)
-    public PriceHisRecordGDBean() {
     }
 
     public long getId() {

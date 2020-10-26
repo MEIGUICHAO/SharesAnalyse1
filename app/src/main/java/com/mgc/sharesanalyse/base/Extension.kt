@@ -58,9 +58,9 @@ fun String.toCodeHDD(date:String,formatterEnum: FormatterEnum): String {
     if (this.toInt() > 600000) {
         return "SH_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
     } else if (this.toInt() < 300000) {
-        return "CY_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
-    } else {
         return "SZ_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
+    } else {
+        return "CY_CHDD_" + DateUtils.changeFormatter(DateUtils.parse(date,formatterEnum),FormatterEnum.YYMM)
     }
 }
 

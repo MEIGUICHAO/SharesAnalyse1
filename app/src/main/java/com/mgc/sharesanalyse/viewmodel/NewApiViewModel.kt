@@ -909,7 +909,11 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getSumDD() {
+
+//        DBUtils.dropTable(Datas.sdd+"2010")
+//        DBUtils.dropTable(Datas.sddALL)
         val sddTableNameALL = Datas.sddALL
+        val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
         val pair = getDDList()
         val ddlist = pair.first
         val hhqlist = pair.second
@@ -990,68 +994,76 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
+        if (sumDateBeginIndex > 0) {
+            hhqBeginIndex = ddlist.size - sumDateBeginIndex
+        }
+        LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex ddlist.size:${ddlist.size} hhqBeginIndex:$hhqBeginIndex")
+
+        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
-////        for (ddidnex in 0 until 4) {
-//            val date = ddlist[ddidnex].replace(
-//                Datas.dealDetailTableName,
-//                ""
-//            )
-//            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
-////            for (codeidnex in 0 until 40) {
+//        for (ddidnex in 0 until 4) {
+            val date = ddlist[ddidnex].replace(
+                Datas.dealDetailTableName,
+                ""
+            )
+
+            LogUtil.d("for date:$date ,hhqBeginIndex:$hhqBeginIndex")
+            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+            for (codeidnex in 0 until 1) {
 //            for (codeidnex in 0 until codelist.size) {
-//                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
-//                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
-//                if (curIndexTs >= curYearTS) {
-//                    if (curIndexTs >= curMonthTS) {
-//                        operaSddDB(
-//                            ddlist,
-//                            ddidnex,
-//                            codelist,
-//                            codeidnex,
-//                            sddTableName,
-//                            date,
-//                            hhqlist,
-//                            hhqBeginIndex,
-//                            sumDateIndexTs,
-//                            hhqMonthVeryBeginIndex,
-//                            curMonthTS
-//                        )
-//                    }
-//                    operaSddDB(
-//                        ddlist,
-//                        ddidnex,
-//                        codelist,
-//                        codeidnex,
-//                        sddTableNameALL,
-//                        date,
-//                        hhqlist,
-//                        hhqBeginIndex,
-//                        sumDateIndexTs,
-//                        hhqVeryBeginIndex,
-//                        vbts
-//                    )
-//                }
-//            }
-//            hhqBeginIndex--
-//            if (hhqBeginIndex < 0) {
-//                break
-//            }
-//        }
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+                if (curIndexTs >= curYearTS) {
+                    if (curIndexTs >= curMonthTS) {
+                        operaSddDB(
+                            ddlist,
+                            ddidnex,
+                            codelist,
+                            codeidnex,
+                            sddTableName,
+                            date,
+                            hhqlist,
+                            hhqBeginIndex,
+                            sumDateIndexTs,
+                            hhqMonthVeryBeginIndex,
+                            curMonthTS
+                        )
+                    }
+                    operaSddDB(
+                        ddlist,
+                        ddidnex,
+                        codelist,
+                        codeidnex,
+                        sddTableNameALL,
+                        date,
+                        hhqlist,
+                        hhqBeginIndex,
+                        sumDateIndexTs,
+                        hhqVeryBeginIndex,
+                        vbts
+                    )
+                }
+            }
+            hhqBeginIndex--
+            if (hhqBeginIndex < 0) {
+                break
+            }
+        }
 
 
 
-        DBUtils.dropTable(Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM))
-        DBUtils.dropTable(Datas.shdd+"2009")
-        DBUtils.dropTable(Datas.shddAll)
-        operaSHDDAndCHDD(
-            hhqlist,
-            hhqVeryBeginIndex,
-            sumDateBeginIndex,
-            ddlist,
-            codelist,
-            curYearTS,
-            curMonthTS
-        )
+//        DBUtils.dropTable(Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM))
+//        DBUtils.dropTable(Datas.shdd+"2009")
+//        DBUtils.dropTable(Datas.shddAll)
+//        operaSHDDAndCHDD(
+//            hhqlist,
+//            hhqVeryBeginIndex,
+//            sumDateBeginIndex,
+//            ddlist,
+//            codelist,
+//            curYearTS,
+//            curMonthTS
+//        )
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
     }
@@ -1076,8 +1088,8 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("date:$date")
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
     //            for (codeidnex in 0 until 40) {
-            for (codeidnex in 0 until 1 step 1) {
-//            for (codeidnex in 0 until codelist.size step 100) {
+//            for (codeidnex in 0 until codelist.size step 1) {
+            for (codeidnex in 0 until codelist.size step 50) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -1085,7 +1097,12 @@ class NewApiViewModel : BaseViewModel() {
                     val bean =
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], ddBean.code)
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
+
+                    if (hhqBeginIndex >= hisHqBean[0].hq.size) {
+                        return@let
+                    }
                     val hhqbean = hisHqBean[0].hq[hhqBeginIndex]
+
                     //TODO test
                     if (curIndexTs >= curYearTS) {
                         insertOrUpdateCodeHDD(hhqbean, ddBean, date)
@@ -1165,19 +1182,19 @@ class NewApiViewModel : BaseViewModel() {
                 curSHDDBean.aup = (BigDecimalUtils.safeDiv(diffP, op) * 100)
                 LogUtil.d("$tbName $isAll updateSHDDBean----,date:$date,diffP:$diffP,op:$op,cp:${getHisHqDayClosePrice(hhqbean)},aup:${curSHDDBean.aup},YM:$shddDateYM,lastSHDDBean.mper:${lastSHDDBean.mper},${curSHDDBean.aup > lastSHDDBean.mper}")
             }
+
+            curSHDDBean.lper = lastSHDDBean.lper
+            curSHDDBean.lpd = lastSHDDBean.lpd
+            curSHDDBean.mpd =  lastSHDDBean.mpd
             if (curSHDDBean.aup > lastSHDDBean.mper) {
                 curSHDDBean.mper = curSHDDBean.aup
                 curSHDDBean.mpd = date
                 curSHDDBean.mp = getHisHqDayClosePrice(hhqbean)
-            } else {
-                curSHDDBean.mper = lastSHDDBean.mper
             }
             if (curSHDDBean.aup < lastSHDDBean.lper) {
                 curSHDDBean.lper = curSHDDBean.aup
                 curSHDDBean.lpd = date
                 curSHDDBean.lp = getHisHqDayClosePrice(hhqbean)
-            } else {
-                curSHDDBean.lper = lastSHDDBean.lper
             }
 
             curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateFloat(hhqbean)
@@ -1605,9 +1622,9 @@ class NewApiViewModel : BaseViewModel() {
             } else {
 
                 val mSumDateIndexTs =
-                    DateUtils.parse(sumDDBean.sizeBean.date, FormatterEnum.YYYYMMDD)
+                    DateUtils.parse(date, FormatterEnum.YYYYMMDD)
                 if (sumDateIndexTs == mSumDateIndexTs) {
-                    LogUtil.d("相同跳过")
+                    LogUtil.d("相同跳过 ${date}")
                     return@let
                 }
                 var changeVeryBeginIndex = hhqVeryBeginIndex
@@ -1647,8 +1664,10 @@ class NewApiViewModel : BaseViewModel() {
                         sumDDBean,
                         date
                     )
+                    LogUtil.d("set_SDDPercent")
 
                 } else {
+                    LogUtil.d("set_SDDPercent")
                     setSDDPercent(
                         hhqBeginIndex,
                         hhqbean,
@@ -1702,7 +1721,8 @@ class NewApiViewModel : BaseViewModel() {
                 diffPrices,
                 beginClosePrice
             ) * 100
-            LogUtil.d("set_SDDPercent,code:${codelist[codeidnex].code},date:$date,beginClosePrice:$beginClosePrice,diffPrices:$diffPrices,percent:${percent}")
+            LogUtil.d("$sddTableName set_SDDPercent,code:${codelist[codeidnex].code},date:$date,beginClosePrice:$beginClosePrice,diffPrices:$diffPrices,percent:${percent}")
+            LogUtil.d("$sddTableName set_SDDPercent,hhqBeginIndex:$hhqBeginIndex,cur:${hhqbean[hhqBeginIndex]}\n ,begin:${hhqbean[hhqVeryBeginIndex]}")
             DBUtils.setSDDPercent(
                 sddTableName,
                 percent,

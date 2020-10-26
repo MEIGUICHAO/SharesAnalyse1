@@ -3,6 +3,7 @@ package com.mgc.sharesanalyse.utils;
 import com.mgc.sharesanalyse.entity.AllCodeGDBean;
 import com.mgc.sharesanalyse.entity.AllCodeGDBeanDao;
 import com.mgc.sharesanalyse.entity.PriceHisRecordGDBean;
+import com.mgc.sharesanalyse.entity.PriceHisRecordGDBeanDao;
 import com.mgc.sharesanalyse.entity.PricesHisGDBean;
 import com.mgc.sharesanalyse.entity.PricesHisGDBeanDao;
 
