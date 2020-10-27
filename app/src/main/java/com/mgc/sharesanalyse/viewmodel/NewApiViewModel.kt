@@ -1119,7 +1119,7 @@ class NewApiViewModel : BaseViewModel() {
                         FormatterEnum.YYYYMMDD
                     )
                 ) {
-                    break
+                    continue
                 }
             }
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
