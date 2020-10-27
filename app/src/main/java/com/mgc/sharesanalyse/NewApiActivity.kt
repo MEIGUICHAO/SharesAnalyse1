@@ -125,6 +125,18 @@ class NewApiActivity : AppCompatActivity() {
 
     }
 
+    fun setBtnHHQInfo(info: String) {
+        btnRequestHisHq.post {
+            btnRequestHisHq.setText(info)
+        }
+    }
+
+    fun setBtnSumDDInfo(info: String) {
+        btnRequestSumDd.post {
+            btnRequestSumDd.setText(info)
+        }
+    }
+
     fun clickHHQ() {
         btnRequestHisHq.setText("HHQ_WORKING")
         needLogAfterDD = true
@@ -201,13 +213,14 @@ class NewApiActivity : AppCompatActivity() {
                                     )
                             }
 
-
+                            setBtnHHQInfo("hhq_"+hisHqBean[0].code.replace("cn_", ""))
                             viewModel.getHisHqAnalyseResult(
                                 hisHqBean[0].hq,
                                 sumStr,
                                 hisHqBean[0].code.replace("cn_", ""),
                                 (if (null == hisHqBean[0].stat) null else hisHqBean[0].stat)
                             )
+
 
                         }
                     }
@@ -246,6 +259,8 @@ class NewApiActivity : AppCompatActivity() {
 //                                if (needLogAfterDD) {
 //                                    viewModel.logDealDetailHqSum()
 //                                }
+
+
 //
 //                            }
                         }

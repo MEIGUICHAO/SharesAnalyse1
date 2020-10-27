@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
@@ -1011,6 +1012,7 @@ class NewApiViewModel : BaseViewModel() {
             val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
             for (codeidnex in 0 until 1) {
 //            for (codeidnex in 0 until codelist.size) {
+                (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex].code}")
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
                 if (curIndexTs >= curYearTS) {
@@ -1055,15 +1057,15 @@ class NewApiViewModel : BaseViewModel() {
 //        DBUtils.dropTable(Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM))
 //        DBUtils.dropTable(Datas.shdd+"2009")
 //        DBUtils.dropTable(Datas.shddAll)
-//        operaSHDDAndCHDD(
-//            hhqlist,
-//            hhqVeryBeginIndex,
-//            sumDateBeginIndex,
-//            ddlist,
-//            codelist,
-//            curYearTS,
-//            curMonthTS
-//        )
+        operaSHDDAndCHDD(
+            hhqlist,
+            hhqVeryBeginIndex,
+            sumDateBeginIndex,
+            ddlist,
+            codelist,
+            curYearTS,
+            curMonthTS
+        )
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
     }
@@ -1090,6 +1092,7 @@ class NewApiViewModel : BaseViewModel() {
     //            for (codeidnex in 0 until 40) {
 //            for (codeidnex in 0 until codelist.size step 1) {
             for (codeidnex in 0 until codelist.size step 50) {
+                (mActivity as NewApiActivity).setBtnSumDDInfo("CHDD_${date}_${codelist[codeidnex].code}")
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
