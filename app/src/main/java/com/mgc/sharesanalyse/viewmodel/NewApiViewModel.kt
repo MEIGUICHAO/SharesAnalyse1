@@ -799,14 +799,24 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
     fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
-    fun getcurPercentFloat(dayDatas: List<String>) = dayDatas[4].replace("%", "").toFloat()
+    fun getcurPercentFloat(dayDatas: List<String>) = try {
+        dayDatas[4].replace("%", "").toFloat()
+    } catch (e: Exception) {
+        0.toFloat()
+    }
+
     fun getHisHqDayClosePrice(dayDatas: List<String>) = dayDatas[2].toFloat()
     fun getHisHqDayOpenPrice(dayDatas: List<String>) = dayDatas[1].toFloat()
     fun getHisHqDayDealAmount(dayDatas: List<String>) = dayDatas[8].toFloat()
     fun getHisHqDayWholeDealAmount(dayDatas: List<String>) = dayDatas[8].toFloat() * 10000
     fun getHisHqDayDealVolume(dayDatas: List<String>) = dayDatas[7].toFloat() * 100
     fun getHisHqDayTurnRate(dayDatas: List<String>) = dayDatas[9]
-    fun getHisHqDayTurnRateFloat(dayDatas: List<String>) = dayDatas[9].replace("%", "").toFloat()
+    fun getHisHqDayTurnRateFloat(dayDatas: List<String>) = try {
+        dayDatas[9].replace("%", "").toFloat()
+    } catch (e: Exception) {
+        0.toFloat()
+    }
+
     fun getHisHqDayDealPercent(dayDatas: List<String>) =
         if (dayDatas[9] == "-") 0.toFloat() else dayDatas[9].replace("%", "").toFloat()
 
@@ -949,11 +959,12 @@ class NewApiViewModel : BaseViewModel() {
         var sumDateBeginIndex = 0
         if (null != sumDDBeginBean) {
             sumDateIndexTs = DateUtils.parse(sumDDBeginBean.sizeBean.date, FormatterEnum.YYYYMMDD)
-            for (i in 0 until ddlist.size - 1) {
+            for (i in 0 until ddlist.size) {
                 val date = ddlist[i].replace(Datas.dealDetailTableName,"")
                 val curts = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
                 if (sumDateIndexTs >= curts) {
                     sumDateBeginIndex = i
+                    LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex,date:$date,indexDate:${sumDDBeginBean.sizeBean.date}")
                 }
             }
         }
@@ -1010,8 +1021,8 @@ class NewApiViewModel : BaseViewModel() {
 
             LogUtil.d("for date:$date ,hhqBeginIndex:$hhqBeginIndex")
             val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
-            for (codeidnex in 0 until 1) {
-//            for (codeidnex in 0 until codelist.size) {
+//            for (codeidnex in 0 until 1) {
+            for (codeidnex in 0 until codelist.size) {
                 (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex].code}")
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
                 LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
@@ -1081,6 +1092,8 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         //TODO
         var hhqBeginIndex = hhqVeryBeginIndex
+        val allList = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        val allLastCode = allList[allList.size-1].code
         for (ddidnex in 0 until ddlist.size) {
     //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
@@ -1088,11 +1101,31 @@ class NewApiViewModel : BaseViewModel() {
                 ""
             )
             LogUtil.d("date:$date")
+            DBUtils.switchDBName(allLastCode.toCodeHDD(date,FormatterEnum.YYYYMMDD))
+            val date1 = DBUtils.queryDateInCodeDDByDbName("${Datas.CHDD}$allLastCode")
+            val date2 = DBUtils.queryDateInSDDDByDbName(Datas.shdd + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM),allLastCode)
+            val date3 = DBUtils.queryDateInSDDDByDbName(Datas.shddAll + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM),allLastCode)
+            if (!date1.isEmpty()&&!date2.isEmpty()&&!date3.isEmpty()) {
+                if (DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                        date1,
+                        FormatterEnum.YYYYMMDD
+                    ) &&
+                    DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                        date2,
+                        FormatterEnum.YYYYMMDD
+                    ) &&
+                    DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                        date3,
+                        FormatterEnum.YYYYMMDD
+                    )
+                ) {
+                    break
+                }
+            }
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
     //            for (codeidnex in 0 until 40) {
 //            for (codeidnex in 0 until codelist.size step 1) {
-            for (codeidnex in 0 until codelist.size step 50) {
-                (mActivity as NewApiActivity).setBtnSumDDInfo("CHDD_${date}_${codelist[codeidnex].code}")
+            for (codeidnex in 0 until codelist.size) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -1119,6 +1152,8 @@ class NewApiViewModel : BaseViewModel() {
                             hhqbean,
                             ddBean,false
                         )
+
+                        (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
                         operaSHDDMonth(
                             Datas.shddAll,
                             codelist,

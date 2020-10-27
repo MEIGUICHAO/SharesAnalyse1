@@ -408,6 +408,30 @@ object DBUtils {
     }
 
 
+    fun queryDateInCodeDDByDbName(dbName: String): String {
+        var DATE = ""
+        if (tabbleIsExist(dbName)) {
+            var cursor = db.rawQuery("SELECT * FROM $dbName",null)
+            if (null != cursor && cursor.moveToLast()) {
+                DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+            }
+        }
+        return DATE
+    }
+
+    fun queryDateInSDDDByDbName(dbName: String,code: String): String {
+        switchDBName(Datas.dataNamesDefault)
+        var DATE = ""
+        if (tabbleIsExist(dbName)) {
+            var cursor = db.rawQuery("SELECT * FROM $dbName WHERE C = ?", arrayOf(code))
+            if (null != cursor && cursor.moveToLast()) {
+                DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+            }
+        }
+        return DATE
+    }
+
+
 
     /**
      * 判断某张表是否存在
