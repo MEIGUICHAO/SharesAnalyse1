@@ -921,6 +921,7 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getSumDD() {
 
+//        DBUtils.dropTable(Datas.sdd+"20201019")
 //        DBUtils.dropTable(Datas.sdd+"2010")
 //        DBUtils.dropTable(Datas.sddALL)
         val sddTableNameALL = Datas.sddALL

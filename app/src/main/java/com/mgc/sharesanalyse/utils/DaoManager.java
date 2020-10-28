@@ -100,13 +100,15 @@ public class DaoManager {
     }
 
     public  void switchDB(String dbName) {
-        sHelper = new CommonOpenHelper(context, dbName, null);
-        sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
-        DB_NAME = dbName;
-        sDaoSession = null;
-        getDaoSession();
-        DBUtils.INSTANCE.setDb(getDB());
-        DaoUtilsStore.getInstance().resetDaoUtilsStore();
+        if (!dbName.equals(DB_NAME)) {
+            sHelper = new CommonOpenHelper(context, dbName, null);
+            sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
+            DB_NAME = dbName;
+            sDaoSession = null;
+            getDaoSession();
+            DBUtils.INSTANCE.setDb(getDB());
+            DaoUtilsStore.getInstance().resetDaoUtilsStore();
+        }
     }
 
     /**
