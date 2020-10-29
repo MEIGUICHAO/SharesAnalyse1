@@ -1101,11 +1101,11 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.dealDetailTableName,
                 ""
             )
-            LogUtil.d("date:$date")
             DBUtils.switchDBName(allLastCode.toCodeHDD(date,FormatterEnum.YYYYMMDD))
             val date1 = DBUtils.queryDateInCodeDDByDbName("${Datas.CHDD}$allLastCode")
             val date2 = DBUtils.queryDateInSDDDByDbName(Datas.shdd + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM),allLastCode)
-            val date3 = DBUtils.queryDateInSDDDByDbName(Datas.shddAll + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM),allLastCode)
+            val date3 = DBUtils.queryDateInSDDDByDbName(Datas.shddAllTag + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYYY),allLastCode)
+            LogUtil.d("date:$date,date1:$date1,date2:$date2,date3:$date3")
             if (!date1.isEmpty()&&!date2.isEmpty()&&!date3.isEmpty()) {
                 if (DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
                         date1,

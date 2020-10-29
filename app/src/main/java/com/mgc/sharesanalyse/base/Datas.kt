@@ -24,6 +24,7 @@ object Datas {
     var sdd = "SDD_"
     const val shdd = "SHDD_"
     var shddAll = "SHDD_ALL_" + DateUtils.formatToDay(FormatterEnum.YYYY)
+    var shddAllTag = "SHDD_ALL_"
     var sddALL = "SDD_ALL_"+DateUtils.formatToDay(FormatterEnum.YYYY)
     var limitSize = 160
     var basebase = 30
