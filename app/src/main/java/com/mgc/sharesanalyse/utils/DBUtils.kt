@@ -152,6 +152,7 @@ object DBUtils {
 
     fun switchDBName(name: String) {
         App.getmManager().switchDB(name)
+        db = DaoManager.getDB()
     }
 
 
