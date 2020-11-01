@@ -1019,57 +1019,57 @@ class NewApiViewModel : BaseViewModel() {
         }
         LogUtil.d("sumDateBeginIndex:$sumDateBeginIndex ddlist.size:${ddlist.size} hhqBeginIndex:$hhqBeginIndex")
 
+        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
 //        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
-////        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
-////        for (ddidnex in 0 until 4) {
-//            val date = ddlist[ddidnex].replace(
-//                Datas.dealDetailTableName,
-//                ""
-//            )
-//
-//            LogUtil.d("for date:$date ,hhqBeginIndex:$hhqBeginIndex")
-//            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
-////            for (codeidnex in 0 until 1) {
-//            for (codeidnex in 0 until codelist.size) {
-//                (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex].code}")
-//                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
-//                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
-//                if (curIndexTs >= curYearTS) {
-//                    if (curIndexTs >= curMonthTS) {
-//                        operaSddDB(
-//                            ddlist,
-//                            ddidnex,
-//                            codelist,
-//                            codeidnex,
-//                            sddTableName,
-//                            date,
-//                            hhqlist,
-//                            hhqBeginIndex,
-//                            sumDateIndexTs,
-//                            hhqMonthVeryBeginIndex,
-//                            curMonthTS
-//                        )
-//                    }
-//                    operaSddDB(
-//                        ddlist,
-//                        ddidnex,
-//                        codelist,
-//                        codeidnex,
-//                        sddTableNameALL,
-//                        date,
-//                        hhqlist,
-//                        hhqBeginIndex,
-//                        sumDateIndexTs,
-//                        hhqVeryBeginIndex,
-//                        vbts
-//                    )
-//                }
-//            }
-//            hhqBeginIndex--
-//            if (hhqBeginIndex < 0) {
-//                break
-//            }
-//        }
+//        for (ddidnex in 0 until 4) {
+            val date = ddlist[ddidnex].replace(
+                Datas.dealDetailTableName,
+                ""
+            )
+
+            LogUtil.d("for date:$date ,hhqBeginIndex:$hhqBeginIndex")
+            val curIndexTs = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+//            for (codeidnex in 0 until 1) {
+            for (codeidnex in 0 until codelist.size) {
+                (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex].code}")
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY)+"-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(FormatterEnum.YYYY_MM)+"-01"}")
+                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+                if (curIndexTs >= curYearTS) {
+                    if (curIndexTs >= curMonthTS) {
+                        operaSddDB(
+                            ddlist,
+                            ddidnex,
+                            codelist,
+                            codeidnex,
+                            sddTableName,
+                            date,
+                            hhqlist,
+                            hhqBeginIndex,
+                            sumDateIndexTs,
+                            hhqMonthVeryBeginIndex,
+                            curMonthTS
+                        )
+                    }
+                    operaSddDB(
+                        ddlist,
+                        ddidnex,
+                        codelist,
+                        codeidnex,
+                        sddTableNameALL,
+                        date,
+                        hhqlist,
+                        hhqBeginIndex,
+                        sumDateIndexTs,
+                        hhqVeryBeginIndex,
+                        vbts
+                    )
+                }
+            }
+            hhqBeginIndex--
+            if (hhqBeginIndex < 0) {
+                break
+            }
+        }
 
 
 //        DBUtils.dropTable(Datas.shdd+DateUtils.formatToDay(FormatterEnum.YYMM))
@@ -1145,9 +1145,8 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
-            for (codeidnex in 0 until 3) {
 //            for (codeidnex in 0 until codelist.size step 1) {
-//            for (codeidnex in 0 until codelist.size) {
+            for (codeidnex in 0 until codelist.size) {
                 val ddBean =
                     DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
                 ddBean?.let {
@@ -1187,26 +1186,31 @@ class NewApiViewModel : BaseViewModel() {
                             ))
                         ) {
 
-//                        val curMonthSHHDTBName =
-//                            Datas.shdd + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM)
-//                        operaSHDDMonth(
-//                            curMonthSHHDTBName,
-//                            codelist,
-//                            codeidnex,
-//                            date,
-//                            hhqbean,
-//                            ddBean,false
-//                        )
-//
-//                        (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
-//                        operaSHDDMonth(
-//                            Datas.shddAll,
-//                            codelist,
-//                            codeidnex,
-//                            date,
-//                            hhqbean,
-//                            ddBean,true
-//                        )
+                            val curMonthSHHDTBName =
+                                Datas.shdd + DateUtils.changeFormatter(
+                                    DateUtils.parse(
+                                        date,
+                                        FormatterEnum.YYYYMMDD
+                                    ), FormatterEnum.YYMM
+                                )
+                            operaSHDDMonth(
+                                curMonthSHHDTBName,
+                                codelist,
+                                codeidnex,
+                                date,
+                                hhqbean,
+                                ddBean, false
+                            )
+
+                            (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
+                            operaSHDDMonth(
+                                Datas.shddAll,
+                                codelist,
+                                codeidnex,
+                                date,
+                                hhqbean,
+                                ddBean, true
+                            )
                         }
                     }
 
@@ -1876,7 +1880,7 @@ class NewApiViewModel : BaseViewModel() {
             while (cursor.moveToNext()) {
                 var name = cursor.getString(cursor.getColumnIndex("name"))
                 LogUtil.d("dd_name:$name")
-                if (name.contains("DD_") && !name.contains("SDD_")&&name.startsWith("DD_")) {
+                if (name.contains("DD_") && !name.contains("SDD_") && name.startsWith("DD_")) {
                     val ts = DateUtils.parse(name.replace("DD_", ""), FormatterEnum.YYYYMMDD)
                     if (ts >= curYts && ts <= curYEndts) {
                         ddList.add(name)
