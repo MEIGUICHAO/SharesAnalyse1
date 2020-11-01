@@ -13,7 +13,11 @@ import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
 import kotlinx.android.synthetic.main.activity_new_api.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import java.io.File
 import java.nio.charset.Charset
 
 class NewApiActivity : AppCompatActivity() {
@@ -45,19 +49,10 @@ class NewApiActivity : AppCompatActivity() {
 
 
     private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
-        val path = "/data/data/" + getPackageName() + "/databases/" + zipList.get(index)
-            .replace(".zip", "")
-        LogUtil.d("unzipForeach:$path")
-        FileUtil.UnZipAssetsFolder(this, index, zipList.get(index), path, object :
-            FileUtil.UnZipListener {
-
-            override fun unzipFinish(index: Int) {
-                if (index < zipList.size) {
-                    unzipForeach(zipList, index)
-                }
-            }
-
-        })
+        val path = "/data/data/" + getPackageName() + "/databases"
+        GlobalScope.launch(Dispatchers.IO) {
+            ZipUtils.UnZipFolder(this@NewApiActivity,zipList[index],path)
+        }
     }
 
     private fun copyDB() {
