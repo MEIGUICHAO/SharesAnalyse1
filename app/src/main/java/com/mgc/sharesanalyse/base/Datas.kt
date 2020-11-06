@@ -15,6 +15,7 @@ object Datas {
     const val sohuStockUrl = "https://q.stock.sohu.com/"
     const val xqUrl = "https://xueqiu.com"
     const val NUM_100M = 100000000
+    const val NUM_W2Y = 10000
     const val NUM_WAN = 10000*100
     const val sinaVipStockUrlRefer = "https://vip.stock.finance.sina.com.cn/quotes_service/view/cn_bill.php?symbol="
 

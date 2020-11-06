@@ -591,6 +591,8 @@ object DBUtils {
                 val LP = cursor.getFloat(cursor.getColumnIndex("LP"))
                 val MPD = cursor.getString(cursor.getColumnIndex("MPD"))
                 val LPD = cursor.getString(cursor.getColumnIndex("LPD"))
+                val autr = cursor.getFloat(cursor.getColumnIndex("AUTR"))
+//                val autr = cursor.getFloat(cursor.getColumnIndex("AV"))
                 val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
                 val AVJ = cursor.getString(cursor.getColumnIndex("AVJ"))
                 //        "(C,N,AUP,MP%,LP%,AV,AV100,AV50,AV30,AV10,AV5,AV1,AD,AD100,AD50,AD30,AD10,AD5,AD1,PP100,PP50,PP30,PP10,PP5,PP1,MP,LP,MPD,LPD,DATE)"
@@ -599,6 +601,7 @@ object DBUtils {
                 shddBean.aup = AUP.toFloat()
                 shddBean.mper = MPER
                 shddBean.lper = LPER
+                shddBean.autr = autr
 //                shddBean.av = AV
 //                shddBean.aV100 = AV100
 //                shddBean.aV50 = AV50
