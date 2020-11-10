@@ -50,6 +50,14 @@ class NewApiViewModel : BaseViewModel() {
     val CHECK_HQ_CODE = 5
     var GetCodeIndex = 0
 
+    init {
+        App.getSinglePool().execute {
+            Thread.sleep(1000)
+            getAllCode()
+        }
+
+    }
+
     private val mHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
@@ -97,9 +105,20 @@ class NewApiViewModel : BaseViewModel() {
         }
 
     fun getAllCode() {
-        GetCodeIndex = 1
-        getAllCodeApi()
-
+        val upateBean = DaoUtilsStore.getInstance().updateCodeListBeanDaoUtils.queryAll()
+        if (upateBean.size < 1) {
+            GetCodeIndex = 1
+            getAllCodeApi()
+        } else {
+            val recordDate = upateBean[0].date
+            if (recordDate < DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt()) {
+                GetCodeIndex = 1
+                getAllCodeApi()
+            } else {
+                (mActivity as NewApiActivity).setAllCodeInfo("code_all_update $recordDate")
+                initCodeList()
+            }
+        }
     }
 
     private fun getAllCodeApi() {
@@ -115,25 +134,36 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun addCodeToAll(json: String) {
         var bean = GsonHelper.parseArray(json, SinaCodeListBean::class.java)
-        LogUtil.d("addCodeToAll size:${bean.size}")
-        GetCodeIndex++
-        bean.forEach {
-            LogUtil.d("getAllCode success")
-            val allCodeGDBean = AllCodeGDBean()
-            allCodeGDBean.code = it.code.replace("sh", "").replace("sz", "")
-            LogUtil.d("getAllCode success")
-            allCodeGDBean.id = allCodeGDBean.code.toLong()
-            allCodeGDBean.name = it.name
-            LogUtil.d("getAllCode success")
-            var success = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.updateOrInsertById(
-                allCodeGDBean,
-                allCodeGDBean.code.toLong()
-            )
-            LogUtil.d("getAllCode success:$success")
-        }
-        if (GetCodeIndex < 52) {
-            getAllCodeApi()
+        if (null != bean) {
+            LogUtil.d("addCodeToAll size:${bean.size}")
+            GetCodeIndex++
+            bean.forEach {
+                val allCodeGDBean = AllCodeGDBean()
+                allCodeGDBean.code = it.code.replace("sh", "").replace("sz", "")
+                allCodeGDBean.id = allCodeGDBean.code.toLong()
+                allCodeGDBean.name = it.name
+                var success = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.updateOrInsertById(
+                    allCodeGDBean,
+                    allCodeGDBean.code.toLong()
+                )
+            }
+            (mActivity as NewApiActivity).setAllCodeInfo("code_all_update---${GetCodeIndex}")
+            if (bean.size == 80) {
+                getAllCodeApi()
+            } else {
+                DaoUtilsStore.getInstance().updateCodeListBeanDaoUtils.deleteAll()
+                var updateCodeListBean = UpdateCodeListBean()
+                updateCodeListBean.date = DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt()
+                (mActivity as NewApiActivity).setAllCodeInfo("code_all_update ${updateCodeListBean.date}")
+                DaoUtilsStore.getInstance().updateCodeListBeanDaoUtils.insert(updateCodeListBean)
+                initCodeList()
+            }
         } else {
+            DaoUtilsStore.getInstance().updateCodeListBeanDaoUtils.deleteAll()
+            var updateCodeListBean = UpdateCodeListBean()
+            updateCodeListBean.date = DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt()
+            (mActivity as NewApiActivity).setAllCodeInfo("code_all_update ${updateCodeListBean.date}")
+            DaoUtilsStore.getInstance().updateCodeListBeanDaoUtils.insert(updateCodeListBean)
             initCodeList()
         }
 
@@ -166,7 +196,7 @@ class NewApiViewModel : BaseViewModel() {
                 ), code
             )
         LogUtil.d("requestDealDetail needNetRequest:${needNetRequest},code:$code,date:$date")
-
+        (mActivity as NewApiActivity).setBtnDDInfo("code:$code,date:$date")
         if (needNetRequest) {
             val message = mHandler.obtainMessage()
             message.arg1 = code.toInt()
@@ -392,8 +422,22 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
-
-    fun getHisHq(code: String, start: String = DateUtils.formatToDay(FormatterEnum.YYYY)+"0501", end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)) {
+    //    DateUtils.formatToDay(FormatterEnum.YYYY)+"0501"
+    fun getHisHq(
+        code: String, start: String = kotlin.run {
+            var startValue = ""
+            val judeIndex = (DateUtils.formatToDay(FormatterEnum.YYYY)+"00").toInt()
+            val toDay = (DateUtils.formatToDay(FormatterEnum.YYYYMM)).toInt()
+            val result = toDay - 6
+            val lastYearBegin = (DateUtils.formatToDay(FormatterEnum.YYYY).toInt()-1).toString()+"12"
+            if (result <= judeIndex) {
+                startValue = (lastYearBegin.toInt() - (judeIndex - result)).toString() + "01"
+            } else {
+                startValue =( DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt()-6).toString() + "01"
+            }
+            startValue
+        }, end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+    ) {
         var bean =
             DBUtils.queryHHqBeanByCode(getHHQTableName(), code)
 //            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
@@ -817,7 +861,8 @@ class NewApiViewModel : BaseViewModel() {
     } catch (e: Exception) {
         0.toFloat()
     }
-    fun getSafeHisHqDayTurnRateFloat(hq: List<MutableList<String>>,hhqBeginIndex: Int) = try {
+
+    fun getSafeHisHqDayTurnRateFloat(hq: List<MutableList<String>>, hhqBeginIndex: Int) = try {
         if (hhqBeginIndex < hq.size) {
             hq[hhqBeginIndex][9].replace("%", "").toFloat()
         } else {
@@ -827,9 +872,9 @@ class NewApiViewModel : BaseViewModel() {
         0.toFloat()
     }
 
-    fun getSafeHisHqDayDealAmount(hq: List<MutableList<String>>,hhqBeginIndex: Int) = try {
+    fun getSafeHisHqDayDealAmount(hq: List<MutableList<String>>, hhqBeginIndex: Int) = try {
         if (hhqBeginIndex < hq.size) {
-            hq[hhqBeginIndex][8].toFloat()/10000
+            hq[hhqBeginIndex][8].toFloat() / 10000
         } else {
             0.toFloat()
         }
@@ -837,7 +882,7 @@ class NewApiViewModel : BaseViewModel() {
         0.toFloat()
     }
 
-    fun getSafeHisHqDayDV(hq: List<MutableList<String>>,hhqBeginIndex: Int) = try {
+    fun getSafeHisHqDayDV(hq: List<MutableList<String>>, hhqBeginIndex: Int) = try {
         if (hhqBeginIndex < hq.size) {
             hq[hhqBeginIndex][7].toFloat() * 100
         } else {
@@ -1212,7 +1257,7 @@ class NewApiViewModel : BaseViewModel() {
                                     FormatterEnum.YYYYMMDD
                                 )
                             ) {
-                                insertOrUpdateCodeHDD(hisHqBean[0].hq,hhqBeginIndex, ddBean, date)
+                                insertOrUpdateCodeHDD(hisHqBean[0].hq, hhqBeginIndex, ddBean, date)
                                 (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex].code}")
                             }
                             if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
@@ -1332,7 +1377,7 @@ class NewApiViewModel : BaseViewModel() {
             curSHDDBean.lp = getHisHqDayClosePrice(hhqbean)
 
             curSHDDBean.autr = getHisHqDayTurnRateFloat(hhqbean)
-            curSHDDBean.av =  getAvValue(getHisHqDayDealVolume(hhqbean))
+            curSHDDBean.av = getAvValue(getHisHqDayDealVolume(hhqbean))
 
             curSHDDBean.ad = getHisHqDayWholeDealAmount(hhqbean) / Datas.NUM_100M
 
@@ -1351,28 +1396,28 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 getAvValue(value)
             }
-            curSHDDBean.aV30 =  mSizeBean.m30List.run {
+            curSHDDBean.aV30 = mSizeBean.m30List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount * 10000, it.price)
                 }
                 getAvValue(value)
             }
-            curSHDDBean.aV10 =  mSizeBean.m10List.run {
+            curSHDDBean.aV10 = mSizeBean.m10List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount * 10000, it.price)
                 }
                 getAvValue(value)
             }
-            curSHDDBean.aV5 =  mSizeBean.m5List.run {
+            curSHDDBean.aV5 = mSizeBean.m5List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount * 10000, it.price)
                 }
                 getAvValue(value)
             }
-            curSHDDBean.aV1 =  mSizeBean.m1List.run {
+            curSHDDBean.aV1 = mSizeBean.m1List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + BigDecimalUtils.div(it.amount * 10000, it.price)
@@ -1386,7 +1431,7 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 getAdValue(value)
             }
-            curSHDDBean.aD50 =  mSizeBean.m50List.run {
+            curSHDDBean.aD50 = mSizeBean.m50List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + it.amount
@@ -1400,14 +1445,14 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 getAdValue(value)
             }
-            curSHDDBean.aD10 =  mSizeBean.m10List.run {
+            curSHDDBean.aD10 = mSizeBean.m10List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + it.amount
                 }
                 getAdValue(value)
             }
-            curSHDDBean.aD5 =  mSizeBean.m5List.run {
+            curSHDDBean.aD5 = mSizeBean.m5List.run {
                 var value = 0.toFloat()
                 this?.forEach {
                     value = value + it.amount
@@ -1451,8 +1496,8 @@ class NewApiViewModel : BaseViewModel() {
                 curSHDDBean.lpd = lastSHDDBean.lpd
                 curSHDDBean.mpd = lastSHDDBean.mpd
                 curSHDDBean.mper = lastSHDDBean.mper
-                curSHDDBean.mp =lastSHDDBean.mp
-                curSHDDBean.lp =lastSHDDBean.lp
+                curSHDDBean.mp = lastSHDDBean.mp
+                curSHDDBean.lp = lastSHDDBean.lp
                 if (curSHDDBean.aup > lastSHDDBean.mper) {
                     curSHDDBean.mper = curSHDDBean.aup
                     curSHDDBean.mpd = date
@@ -1467,13 +1512,17 @@ class NewApiViewModel : BaseViewModel() {
                 curSHDDBean.autr = lastSHDDBean.autr + getHisHqDayTurnRateFloat(hhqbean)
 //                curSHDDBean.av = lastSHDDBean.av + getAvValue(getHisHqDayDealVolume(hhqbean))
                 LogUtil.d(
-                    "${tbName}curSHDDBean.autr ${date} :${curSHDDBean.autr},lastSHDDBean.autr:${lastSHDDBean.autr},autr:${getHisHqDayTurnRateFloat(hhqbean)}"
+                    "${tbName}curSHDDBean.autr ${date} :${curSHDDBean.autr},lastSHDDBean.autr:${lastSHDDBean.autr},autr:${getHisHqDayTurnRateFloat(
+                        hhqbean
+                    )}"
                 )
                 curSHDDBean.ad =
                     lastSHDDBean.ad + getHisHqDayWholeDealAmount(hhqbean) / Datas.NUM_100M
 
                 LogUtil.d(
-                    "${tbName}curSHDDBean.ad ${date} :${curSHDDBean.ad},lastSHDDBean.ad:${lastSHDDBean.ad},ad:${getHisHqDayWholeDealAmount(hhqbean) / Datas.NUM_100M}"
+                    "${tbName}curSHDDBean.ad ${date} :${curSHDDBean.ad},lastSHDDBean.ad:${lastSHDDBean.ad},ad:${getHisHqDayWholeDealAmount(
+                        hhqbean
+                    ) / Datas.NUM_100M}"
                 )
                 val avJsonBean = GsonHelper.parse(lastSHDDBean.avj, AvJsonBean::class.java)
 
@@ -1570,10 +1619,14 @@ class NewApiViewModel : BaseViewModel() {
                 }
 
                 curSHDDBean.pp = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.ad, curSHDDBean.av)
-                curSHDDBean.pP100 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD100, curSHDDBean.aV100)
-                curSHDDBean.pP50 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD50, curSHDDBean.aV50)
-                curSHDDBean.pP30 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD30, curSHDDBean.aV30)
-                curSHDDBean.pP10 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD10, curSHDDBean.aV10)
+                curSHDDBean.pP100 =
+                    BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD100, curSHDDBean.aV100)
+                curSHDDBean.pP50 =
+                    BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD50, curSHDDBean.aV50)
+                curSHDDBean.pP30 =
+                    BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD30, curSHDDBean.aV30)
+                curSHDDBean.pP10 =
+                    BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD10, curSHDDBean.aV10)
                 curSHDDBean.pP5 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD5, curSHDDBean.aV5)
                 curSHDDBean.pP1 = BigDecimalUtils.getPPBySafeDiv(curSHDDBean.aD1, curSHDDBean.aV1)
                 curSHDDBean.avj = getAvJson(curSHDDBean)
@@ -1742,53 +1795,113 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.name = ddBean.name
         val mSizeBean = ddBean.sizeBean
         codeHDDBean.p_autr_j = CodeHDDBean.P_AUTR_J()
-        codeHDDBean.p_autr_j.d03 = getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex) +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+1)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+2)
-        LogUtil.d("$date p_3d_TR,0:${getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex)},1:${getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+1)},2:${getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+2)}")
-        codeHDDBean.p_autr_j.d05 = codeHDDBean.p_autr_j.d03 + getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+3)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+4)
-        codeHDDBean.p_autr_j.d10 = codeHDDBean.p_autr_j.d05 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+5)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+6)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+7)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+8)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+9)
-        codeHDDBean.p_autr_j.d15 = codeHDDBean.p_autr_j.d10 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+10)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+11)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+12)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+13)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+14)
-        codeHDDBean.p_autr_j.d20 = codeHDDBean.p_autr_j.d15 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+15)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+16)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+17)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+18)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+19)
-        codeHDDBean.p_autr_j.d25 = codeHDDBean.p_autr_j.d20 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+20)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+21)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+22)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+23)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+24)
-        codeHDDBean.p_autr_j.d30 = codeHDDBean.p_autr_j.d25 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+25)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+26)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+27)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+28)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+29)
+        codeHDDBean.p_autr_j.d03 =
+            getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex) + getSafeHisHqDayTurnRateFloat(
+                hq,
+                hhqBeginIndex + 1
+            ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 2)
+        LogUtil.d(
+            "$date p_3d_TR,0:${getSafeHisHqDayTurnRateFloat(
+                hq,
+                hhqBeginIndex
+            )},1:${getSafeHisHqDayTurnRateFloat(
+                hq,
+                hhqBeginIndex + 1
+            )},2:${getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 2)}"
+        )
+        codeHDDBean.p_autr_j.d05 = codeHDDBean.p_autr_j.d03 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 3
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 4)
+        codeHDDBean.p_autr_j.d10 = codeHDDBean.p_autr_j.d05 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 5
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 6) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 7
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 8) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 9
+        )
+        codeHDDBean.p_autr_j.d15 = codeHDDBean.p_autr_j.d10 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 10
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 11) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 12
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 13) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 14
+        )
+        codeHDDBean.p_autr_j.d20 = codeHDDBean.p_autr_j.d15 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 15
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 16) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 17
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 18) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 19
+        )
+        codeHDDBean.p_autr_j.d25 = codeHDDBean.p_autr_j.d20 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 20
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 21) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 22
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 23) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 24
+        )
+        codeHDDBean.p_autr_j.d30 = codeHDDBean.p_autr_j.d25 + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 25
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 26) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 27
+        ) + getSafeHisHqDayTurnRateFloat(hq, hhqBeginIndex + 28) + getSafeHisHqDayTurnRateFloat(
+            hq,
+            hhqBeginIndex + 29
+        )
         codeHDDBean.p_DA_J = CodeHDDBean.P_DA_J()
 
         codeHDDBean.p_DV_J = CodeHDDBean.P_DV_J()
-        codeHDDBean.p_DV_J.p_3d_DA = getSafeHisHqDayDV(hq,hhqBeginIndex) +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+1)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+2)
+        codeHDDBean.p_DV_J.p_3d_DA = getSafeHisHqDayDV(hq, hhqBeginIndex) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 1) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 2)
         codeHDDBean.p_DV_J.p_5d_DA = codeHDDBean.p_DV_J.p_3d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+3)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+4)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 3) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 4)
         codeHDDBean.p_DV_J.p_10d_DA = codeHDDBean.p_DV_J.p_5d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+5)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+6)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+7)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+8)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+9)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 5) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 6) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 7) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 8) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 9)
         codeHDDBean.p_DV_J.p_15d_DA = codeHDDBean.p_DV_J.p_10d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+10)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+11)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+12)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+13)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+14)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 10) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 11) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 12) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 13) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 14)
         codeHDDBean.p_DV_J.p_20d_DA = codeHDDBean.p_DV_J.p_15d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+15)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+16)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+17)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+18)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+19)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 15) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 16) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 17) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 18) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 19)
         codeHDDBean.p_DV_J.p_25d_DA = codeHDDBean.p_DV_J.p_20d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+20)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+21)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+22)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+23)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+24)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 20) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 21) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 22) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 23) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 24)
         codeHDDBean.p_DV_J.p_30d_DA = codeHDDBean.p_DV_J.p_25d_DA +
-                getSafeHisHqDayDV(hq,hhqBeginIndex+25)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+26)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+27)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+28)+
-                getSafeHisHqDayDV(hq,hhqBeginIndex+29)
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 25) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 26) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 27) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 28) +
+                getSafeHisHqDayDV(hq, hhqBeginIndex + 29)
 
         if (hq.size >= hhqBeginIndex + 59) {
             codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
@@ -1811,62 +1924,62 @@ class NewApiViewModel : BaseViewModel() {
         }
 
         if (hq.size >= hhqBeginIndex + 2) {
-            codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq,hhqBeginIndex) +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+1)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+2)
+            codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq, hhqBeginIndex) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 1) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 2)
         }
         if (hq.size >= hhqBeginIndex + 4) {
             codeHDDBean.p_DA_J.d05 = codeHDDBean.p_DA_J.d03 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+3)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+4)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 3) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 4)
         }
 
         if (hq.size >= hhqBeginIndex + 9) {
             codeHDDBean.p_DA_J.d10 = codeHDDBean.p_DA_J.d05 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+5)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+6)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+7)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+8)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+9)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 5) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 6) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 7) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 8) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 9)
         }
         if (hq.size >= hhqBeginIndex + 14) {
             codeHDDBean.p_DA_J.d15 = codeHDDBean.p_DA_J.d10 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+10)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+11)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+12)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+13)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+14)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 10) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 11) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 12) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 13) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 14)
         }
         if (hq.size >= hhqBeginIndex + 19) {
             codeHDDBean.p_DA_J.d20 = codeHDDBean.p_DA_J.d15 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+15)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+16)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+17)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+18)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+19)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 15) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 16) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 17) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 18) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 19)
         }
         if (hq.size >= hhqBeginIndex + 24) {
             codeHDDBean.p_DA_J.d25 = codeHDDBean.p_DA_J.d20 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+20)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+21)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+22)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+23)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+24)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 20) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 21) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 22) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 23) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 24)
         }
         if (hq.size >= hhqBeginIndex + 29) {
             codeHDDBean.p_DA_J.d30 = codeHDDBean.p_DA_J.d25 +
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+25)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+26)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+27)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+28)+
-                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+29)
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 25) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 26) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 27) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 28) +
+                    getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 29)
         }
 
         if (hq.size >= hhqBeginIndex + 59) {
             codeHDDBean.p_DA_J.d60 = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 30 until 60) {
-                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex+i)
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
                 }
                 codeHDDBean.p_DA_J.d30 + daNum
             }
@@ -1876,7 +1989,7 @@ class NewApiViewModel : BaseViewModel() {
             codeHDDBean.p_DA_J.d72 = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 60 until 72) {
-                    daNum = daNum + getSafeHisHqDayDealAmount(hq,hhqBeginIndex+ i)
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
                 }
                 codeHDDBean.p_DA_J.d60 + daNum
             }
@@ -1885,7 +1998,7 @@ class NewApiViewModel : BaseViewModel() {
 
         codeHDDBean.p_PP_J = CodeHDDBean.P_PP_J()
         codeHDDBean.p_PP_J.d03 = BigDecimalUtils.getPPBySafeDiv(
-            codeHDDBean.p_DA_J.d03 ,
+            codeHDDBean.p_DA_J.d03,
             codeHDDBean.p_DV_J.p_3d_DA / Datas.NUM_WAN
         )
         codeHDDBean.p_PP_J.d05 = BigDecimalUtils.getPPBySafeDiv(
@@ -1901,7 +2014,7 @@ class NewApiViewModel : BaseViewModel() {
             codeHDDBean.p_DV_J.p_15d_DA / Datas.NUM_WAN
         )
         codeHDDBean.p_PP_J.d20 = BigDecimalUtils.getPPBySafeDiv(
-            codeHDDBean.p_DA_J.d20 ,
+            codeHDDBean.p_DA_J.d20,
             codeHDDBean.p_DV_J.p_20d_DA / Datas.NUM_WAN
         )
         codeHDDBean.p_PP_J.d25 = BigDecimalUtils.getPPBySafeDiv(
@@ -1909,7 +2022,7 @@ class NewApiViewModel : BaseViewModel() {
             codeHDDBean.p_DV_J.p_25d_DA / Datas.NUM_WAN
         )
         codeHDDBean.p_PP_J.d30 = BigDecimalUtils.getPPBySafeDiv(
-            codeHDDBean.p_DA_J.d30 ,
+            codeHDDBean.p_DA_J.d30,
             codeHDDBean.p_DV_J.p_30d_DA / Datas.NUM_WAN
         )
 
@@ -2103,7 +2216,10 @@ class NewApiViewModel : BaseViewModel() {
                         return@let
                     }
                     val curTs =
-                        DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]), FormatterEnum.YYYY_MM_DD)
+                        DateUtils.parse(
+                            getHisHqDay(hhqbean[hhqBeginIndex]),
+                            FormatterEnum.YYYY_MM_DD
+                        )
 
                     if (verybeginTS < vbts) {
                         while (verybeginTS < vbts) {

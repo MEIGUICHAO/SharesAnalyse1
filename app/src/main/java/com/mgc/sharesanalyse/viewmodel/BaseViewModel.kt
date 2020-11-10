@@ -46,9 +46,9 @@ open class BaseViewModel:ViewModel() {
     var bcw2Begin = false
     var bcw3Begin = false
 
-    init {
-        initCodeList()
-    }
+//    init {
+//        initCodeList()
+//    }
 
     fun bwc() {
         var json = RetrofitManager.reqApi.getBwcDpList()
@@ -132,6 +132,7 @@ open class BaseViewModel:ViewModel() {
 
 
     fun initCodeList() {
+        codeNameList.clear()
         var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
             if (Datas.DEBUG) {

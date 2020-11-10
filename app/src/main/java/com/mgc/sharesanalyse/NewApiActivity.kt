@@ -84,7 +84,7 @@ class NewApiActivity : AppCompatActivity() {
 //            DBUtils.dropTable(sddTableName)
 //            DBUtils.dropTable(sddTableNameAll)
 //            DBUtils.dropTable("HHQ_20201021")
-            DBUtils.dropTable("DD_20201013")
+//            DBUtils.dropTable("DD_20201013")
 //            DBUtils.foreachDBTable()
 //            viewModel.getAllCode()
         }
@@ -120,6 +120,18 @@ class NewApiActivity : AppCompatActivity() {
 
     }
 
+
+    fun setAllCodeInfo(info: String) {
+        btnGetALlCode.post {
+            btnGetALlCode.setText(info)
+        }
+    }
+
+    fun setBtnDDInfo(info: String) {
+        btnRequestDealDetail.post {
+            btnRequestDealDetail.setText(info)
+        }
+    }
     fun setBtnHHQInfo(info: String) {
         btnRequestHisHq.post {
             btnRequestHisHq.setText(info)
@@ -133,6 +145,7 @@ class NewApiActivity : AppCompatActivity() {
     }
 
     fun clickHHQ() {
+        DBUtils.switchDBName(Datas.dataNamesDefault)
         btnRequestHisHq.setText("HHQ_WORKING")
         needLogAfterDD = true
         judeWeekDayIndex = 0
@@ -142,6 +155,7 @@ class NewApiActivity : AppCompatActivity() {
     }
 
     fun requestDealDetailBtn() {
+        DBUtils.switchDBName(Datas.dataNamesDefault)
         var pair = DateUtils.isWeekDay(dealDetailBeginDateTimeStamp)
         LogUtil.d("requestDealDetailBtn:${pair.first},${pair.second}")
         if (pair.first) {

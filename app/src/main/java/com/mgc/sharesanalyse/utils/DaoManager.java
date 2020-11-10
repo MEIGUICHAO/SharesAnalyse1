@@ -11,6 +11,7 @@ import com.mgc.sharesanalyse.entity.DaoMaster;
 import com.mgc.sharesanalyse.entity.DaoSession;
 import com.mgc.sharesanalyse.entity.PriceHisRecordGDBeanDao;
 import com.mgc.sharesanalyse.entity.PricesHisGDBeanDao;
+import com.mgc.sharesanalyse.entity.UpdateCodeListBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -83,7 +84,7 @@ public class DaoManager {
      */
     public static DaoMaster getDaoMaster() {
         if (sDaoMaster == null) {
-            sHelper = new CommonOpenHelper(context, getDbName(), null, PricesHisGDBeanDao.class, PriceHisRecordGDBeanDao.class, AllCodeGDBeanDao.class);
+            sHelper = new CommonOpenHelper(context, getDbName(), null, PricesHisGDBeanDao.class, PriceHisRecordGDBeanDao.class, AllCodeGDBeanDao.class, UpdateCodeListBeanDao.class);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());
         }
         return sDaoMaster;
