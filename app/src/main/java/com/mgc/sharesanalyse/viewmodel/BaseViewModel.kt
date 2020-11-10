@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.BWCDPJsonBean
 import com.mgc.sharesanalyse.entity.BWCQPResultBean
 import com.mgc.sharesanalyse.net.LoadState
@@ -133,7 +134,13 @@ open class BaseViewModel:ViewModel() {
     fun initCodeList() {
         var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
-            codeNameList.add("${it.code}$splitTag${it.name}")
+            if (Datas.DEBUG) {
+                if (it.code.contains(Datas.DEBUG_Code)) {
+                    codeNameList.add("${it.code}$splitTag${it.name}")
+                }
+            } else {
+                codeNameList.add("${it.code}$splitTag${it.name}")
+            }
         }
     }
 

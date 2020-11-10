@@ -55,15 +55,20 @@ public class GsonHelper {
      * @return
      */
     public static <T> ArrayList<T> parseArray(String json, Class<T> cls) {
-        if (json == null || "".equals(json)) {
+        try {
+            if (json == null || "".equals(json)) {
+                return null;
+            }
+            ArrayList<T> mList = new ArrayList<>();
+            JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+            for (final JsonElement elem : array) {
+                mList.add(getInstance().fromJson(elem, cls));
+            }
+            return mList;
+        } catch (Exception e) {
+            LogUtil.e("parseArray",e.toString());
             return null;
         }
-        ArrayList<T> mList = new ArrayList<>();
-        JsonArray array = new JsonParser().parse(json).getAsJsonArray();
-        for (final JsonElement elem : array) {
-            mList.add(getInstance().fromJson(elem, cls));
-        }
-        return mList;
     }
 
 

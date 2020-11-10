@@ -393,7 +393,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-    fun getHisHq(code: String, start: String = "", end: String = "") {
+    fun getHisHq(code: String, start: String = DateUtils.formatToDay(FormatterEnum.YYYY)+"0501", end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)) {
         var bean =
             DBUtils.queryHHqBeanByCode(getHHQTableName(), code)
 //            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
@@ -956,11 +956,18 @@ class NewApiViewModel : BaseViewModel() {
         val pair = getDDList()
         val ddlist = pair.first
         val hhqlist = pair.second
-        var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        var codelist: List<AllCodeGDBean>
+        if (Datas.DEBUG) {
+            codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryByQueryBuilder(
+                AllCodeGDBeanDao.Properties.Code.eq(Datas.DEBUG_Code)
+            )
+        } else {
+            codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        }
 //        DBUtils.dropTable("SHDD_2009")
 //        DBUtils.dropTable("SHDD_2010")
 //        DBUtils.dropTable("SHDD_ALL_2020")
-//        var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryByQueryBuilder(AllCodeGDBeanDao.Properties.Code.eq("300062"))
+//        var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryByQueryBuilder(AllCodeGDBeanDao.Properties.Code.eq(Datas.DEBUG_Code))
 
 
         val initHHQbean =
@@ -1191,66 +1198,68 @@ class NewApiViewModel : BaseViewModel() {
                     val bean =
                         DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], ddBean.code)
                     val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
-
-                    if (hhqBeginIndex >= hisHqBean[0].hq.size) {
-                        return@let
-                    }
-                    val hhqbean = hisHqBean[0].hq[hhqBeginIndex]
-
-                    //TODO test
-                    if (curIndexTs >= curYearTS) {
-                        if (date1.isEmpty() ||
-                            DateUtils.parse(date, FormatterEnum.YYYYMMDD) >= DateUtils.parse(
-                                date1,
-                                FormatterEnum.YYYYMMDD
-                            )
-                        ) {
-                            insertOrUpdateCodeHDD(hisHqBean[0].hq,hhqBeginIndex, ddBean, date)
-                            (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex].code}")
+                    hisHqBean?.let {
+                        if (hhqBeginIndex >= hisHqBean[0].hq.size) {
+                            return@let
                         }
-                        if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
-                                date,
-                                FormatterEnum.YYYYMMDD
-                            ) >= DateUtils.parse(
-                                date3,
-                                FormatterEnum.YYYYMMDD
-                            ) &&
-                                    DateUtils.parse(
-                                        date,
-                                        FormatterEnum.YYYYMMDD
-                                    ) >= DateUtils.parse(
-                                date2,
-                                FormatterEnum.YYYYMMDD
-                            ))
-                        ) {
+                        val hhqbean = hisHqBean[0].hq[hhqBeginIndex]
 
-                            val curMonthSHHDTBName =
-                                Datas.shdd + DateUtils.changeFormatter(
-                                    DateUtils.parse(
-                                        date,
-                                        FormatterEnum.YYYYMMDD
-                                    ), FormatterEnum.YYMM
+                        //TODO test
+                        if (curIndexTs >= curYearTS) {
+                            if (date1.isEmpty() ||
+                                DateUtils.parse(date, FormatterEnum.YYYYMMDD) >= DateUtils.parse(
+                                    date1,
+                                    FormatterEnum.YYYYMMDD
                                 )
-                            operaSHDDMonth(
-                                curMonthSHHDTBName,
-                                codelist,
-                                codeidnex,
-                                date,
-                                hhqbean,
-                                ddBean, false
-                            )
+                            ) {
+                                insertOrUpdateCodeHDD(hisHqBean[0].hq,hhqBeginIndex, ddBean, date)
+                                (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex].code}")
+                            }
+                            if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
+                                    date,
+                                    FormatterEnum.YYYYMMDD
+                                ) >= DateUtils.parse(
+                                    date3,
+                                    FormatterEnum.YYYYMMDD
+                                ) &&
+                                        DateUtils.parse(
+                                            date,
+                                            FormatterEnum.YYYYMMDD
+                                        ) >= DateUtils.parse(
+                                    date2,
+                                    FormatterEnum.YYYYMMDD
+                                ))
+                            ) {
 
-                            (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
-                            operaSHDDMonth(
-                                Datas.shddAll,
-                                codelist,
-                                codeidnex,
-                                date,
-                                hhqbean,
-                                ddBean, true
-                            )
+                                val curMonthSHHDTBName =
+                                    Datas.shdd + DateUtils.changeFormatter(
+                                        DateUtils.parse(
+                                            date,
+                                            FormatterEnum.YYYYMMDD
+                                        ), FormatterEnum.YYMM
+                                    )
+                                operaSHDDMonth(
+                                    curMonthSHHDTBName,
+                                    codelist,
+                                    codeidnex,
+                                    date,
+                                    hhqbean,
+                                    ddBean, false
+                                )
+
+                                (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
+                                operaSHDDMonth(
+                                    Datas.shddAll,
+                                    codelist,
+                                    codeidnex,
+                                    date,
+                                    hhqbean,
+                                    ddBean, true
+                                )
+                            }
                         }
                     }
+
 
                 }
 //                "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
@@ -1731,7 +1740,6 @@ class NewApiViewModel : BaseViewModel() {
         LogUtil.d("tbName:$tbName")
         val codeHDDBean = CodeHDDBean()
         codeHDDBean.name = ddBean.name
-        codeHDDBean.`as` = ddBean.allsize.toFloat()
         val mSizeBean = ddBean.sizeBean
         codeHDDBean.p_autr_j = CodeHDDBean.P_AUTR_J()
         codeHDDBean.p_autr_j.d03 = getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex) +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+1)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+2)
@@ -1743,42 +1751,6 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.p_autr_j.d25 = codeHDDBean.p_autr_j.d20 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+20)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+21)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+22)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+23)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+24)
         codeHDDBean.p_autr_j.d30 = codeHDDBean.p_autr_j.d25 +getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+25)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+26)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+27)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+28)+getSafeHisHqDayTurnRateFloat(hq,hhqBeginIndex+29)
         codeHDDBean.p_DA_J = CodeHDDBean.P_DA_J()
-        codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq,hhqBeginIndex) +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+1)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+2)
-        codeHDDBean.p_DA_J.d05 = codeHDDBean.p_DA_J.d03 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+3)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+4)
-        codeHDDBean.p_DA_J.d10 = codeHDDBean.p_DA_J.d05 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+5)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+6)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+7)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+8)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+9)
-        codeHDDBean.p_DA_J.d15 = codeHDDBean.p_DA_J.d10 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+10)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+11)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+12)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+13)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+14)
-        codeHDDBean.p_DA_J.d20 = codeHDDBean.p_DA_J.d15 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+15)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+16)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+17)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+18)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+19)
-        codeHDDBean.p_DA_J.d25 = codeHDDBean.p_DA_J.d20 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+20)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+21)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+22)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+23)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+24)
-        codeHDDBean.p_DA_J.d30 = codeHDDBean.p_DA_J.d25 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+25)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+26)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+27)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+28)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+29)
 
         codeHDDBean.p_DV_J = CodeHDDBean.P_DV_J()
         codeHDDBean.p_DV_J.p_3d_DA = getSafeHisHqDayDV(hq,hhqBeginIndex) +
@@ -1818,42 +1790,97 @@ class NewApiViewModel : BaseViewModel() {
                 getSafeHisHqDayDV(hq,hhqBeginIndex+28)+
                 getSafeHisHqDayDV(hq,hhqBeginIndex+29)
 
-        codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq,hhqBeginIndex) +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+1)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+2)
-        codeHDDBean.p_DA_J.d05 = codeHDDBean.p_DA_J.d03 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+3)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+4)
-        codeHDDBean.p_DA_J.d10 = codeHDDBean.p_DA_J.d05 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+5)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+6)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+7)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+8)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+9)
-        codeHDDBean.p_DA_J.d15 = codeHDDBean.p_DA_J.d10 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+10)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+11)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+12)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+13)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+14)
-        codeHDDBean.p_DA_J.d20 = codeHDDBean.p_DA_J.d15 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+15)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+16)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+17)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+18)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+19)
-        codeHDDBean.p_DA_J.d25 = codeHDDBean.p_DA_J.d20 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+20)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+21)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+22)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+23)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+24)
-        codeHDDBean.p_DA_J.d30 = codeHDDBean.p_DA_J.d25 +
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+25)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+26)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+27)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+28)+
-                getSafeHisHqDayDealAmount(hq,hhqBeginIndex+29)
+        if (hq.size >= hhqBeginIndex + 59) {
+            codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
+                var daNum = 0.toFloat()
+                for (i in 30 until 60) {
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
+                }
+                codeHDDBean.p_DV_J.p_30d_DA + daNum
+            }
+        }
+
+        if (hq.size >= hhqBeginIndex + 71) {
+            codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
+                var daNum = 0.toFloat()
+                for (i in 60 until 72) {
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
+                }
+                codeHDDBean.p_DV_J.p_60d_DA + daNum
+            }
+        }
+
+        if (hq.size >= hhqBeginIndex + 2) {
+            codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq,hhqBeginIndex) +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+1)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+2)
+        }
+        if (hq.size >= hhqBeginIndex + 4) {
+            codeHDDBean.p_DA_J.d05 = codeHDDBean.p_DA_J.d03 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+3)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+4)
+        }
+
+        if (hq.size >= hhqBeginIndex + 9) {
+            codeHDDBean.p_DA_J.d10 = codeHDDBean.p_DA_J.d05 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+5)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+6)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+7)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+8)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+9)
+        }
+        if (hq.size >= hhqBeginIndex + 14) {
+            codeHDDBean.p_DA_J.d15 = codeHDDBean.p_DA_J.d10 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+10)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+11)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+12)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+13)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+14)
+        }
+        if (hq.size >= hhqBeginIndex + 19) {
+            codeHDDBean.p_DA_J.d20 = codeHDDBean.p_DA_J.d15 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+15)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+16)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+17)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+18)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+19)
+        }
+        if (hq.size >= hhqBeginIndex + 24) {
+            codeHDDBean.p_DA_J.d25 = codeHDDBean.p_DA_J.d20 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+20)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+21)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+22)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+23)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+24)
+        }
+        if (hq.size >= hhqBeginIndex + 29) {
+            codeHDDBean.p_DA_J.d30 = codeHDDBean.p_DA_J.d25 +
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+25)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+26)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+27)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+28)+
+                    getSafeHisHqDayDealAmount(hq,hhqBeginIndex+29)
+        }
+
+        if (hq.size >= hhqBeginIndex + 59) {
+            codeHDDBean.p_DA_J.d60 = kotlin.run {
+                var daNum = 0.toFloat()
+                for (i in 30 until 60) {
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex+i)
+                }
+                codeHDDBean.p_DA_J.d30 + daNum
+            }
+        }
+
+        if (hq.size >= hhqBeginIndex + 71) {
+            codeHDDBean.p_DA_J.d72 = kotlin.run {
+                var daNum = 0.toFloat()
+                for (i in 60 until 72) {
+                    daNum = daNum + getSafeHisHqDayDealAmount(hq,hhqBeginIndex+ i)
+                }
+                codeHDDBean.p_DA_J.d60 + daNum
+            }
+        }
 
 
         codeHDDBean.p_PP_J = CodeHDDBean.P_PP_J()
@@ -1888,12 +1915,12 @@ class NewApiViewModel : BaseViewModel() {
 
 
         codeHDDBean.dA_J = CodeHDDBean.DA_J()
+        codeHDDBean.dA_J.da = (getHisHqDayWholeDealAmount(hhqbean) / Datas.NUM_100M)
         codeHDDBean.dA_J.dA5000 = mSizeBean.getGt5000() / Datas.NUM_W2Y
         codeHDDBean.dA_J.dA1000 = mSizeBean.getGt1000() / Datas.NUM_W2Y
         codeHDDBean.dA_J.dA500 = mSizeBean.getGt500() / Datas.NUM_W2Y
         codeHDDBean.dA_J.dA100 = mSizeBean.getGt100() / Datas.NUM_W2Y
         codeHDDBean.date = date
-        codeHDDBean.da = getHisHqDayWholeDealAmount(hhqbean) / Datas.NUM_100M
         codeHDDBean.op = getHisHqDayOpenPrice(hhqbean)
         codeHDDBean.cp = getHisHqDayClosePrice(hhqbean)
         LogUtil.d("~~~code:${ddBean.code},date:${date},op:${codeHDDBean.op},cp:${codeHDDBean.cp},")
@@ -1903,8 +1930,8 @@ class NewApiViewModel : BaseViewModel() {
         )
         codeHDDBean.p = getcurPercentFloat(hhqbean)
         codeHDDBean.tr = getHisHqDayTurnRate(hhqbean)
-        codeHDDBean.dv = getAvValue(getHisHqDayDealVolume(hhqbean))
         codeHDDBean.mS_J = CodeHDDBean.MS_J()
+        codeHDDBean.mS_J.`as` = ddBean.allsize
         codeHDDBean.mS_J.m100S = mSizeBean.m100Size
         codeHDDBean.mS_J.m50S = mSizeBean.m50Size
         codeHDDBean.mS_J.m30S = mSizeBean.m30Size
@@ -2047,79 +2074,76 @@ class NewApiViewModel : BaseViewModel() {
             val bean =
                 DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex].code)
             val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
-            val hhqbean = hisHqBean[0].hq
-
-
-            if (null == sumDDBean) {
-                if (hhqBeginIndex < hhqbean.size) {
-                    DBUtils.setSDDPercent(
-                        sddTableNameALL,
-                        getcurPercentFloat(hhqbean[hhqBeginIndex]),
-                        codelist[codeidnex].code
-                    )
-                }
-
-            } else {
-
-                val mSumDateIndexTs =
-                    DateUtils.parse(date, FormatterEnum.YYYYMMDD)
-                if (sumDateIndexTs == mSumDateIndexTs) {
-                    LogUtil.d("相同跳过 ${date}")
-                    return@let
-                }
-                var changeVeryBeginIndex = hhqVeryBeginIndex
-                while (changeVeryBeginIndex >= hhqbean.size) {
-                    changeVeryBeginIndex--
-                }
-                var verybeginTS = DateUtils.parse(
-                    getHisHqDay(hhqbean[changeVeryBeginIndex]),
-                    FormatterEnum.YYYY_MM_DD
-                )
-                if (hhqBeginIndex >= hhqbean.size) {
-                    return@let
-                }
-                val curTs =
-                    DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]), FormatterEnum.YYYY_MM_DD)
-
-                if (verybeginTS < vbts) {
-                    while (verybeginTS < vbts) {
-                        changeVeryBeginIndex--
-                        if (changeVeryBeginIndex < 0) {
-                            return@let
-                        }
-                        verybeginTS = DateUtils.parse(
-                            getHisHqDay(hhqbean[changeVeryBeginIndex]),
-                            FormatterEnum.YYYY_MM_DD
+            hisHqBean?.let {
+                val hhqbean = hisHqBean[0].hq
+                if (null == sumDDBean) {
+                    if (hhqBeginIndex < hhqbean.size) {
+                        DBUtils.setSDDPercent(
+                            sddTableNameALL,
+                            getcurPercentFloat(hhqbean[hhqBeginIndex]),
+                            codelist[codeidnex].code
                         )
                     }
-                    setSDDPercent(
-                        hhqBeginIndex,
-                        hhqbean,
-                        changeVeryBeginIndex,
-                        curTs,
-                        vbts,
-                        sddTableNameALL,
-                        codelist,
-                        codeidnex,
-                        sumDDBean,
-                        date
-                    )
-                    LogUtil.d("set_SDDPercent")
-
                 } else {
-                    LogUtil.d("set_SDDPercent")
-                    setSDDPercent(
-                        hhqBeginIndex,
-                        hhqbean,
-                        hhqVeryBeginIndex,
-                        curTs,
-                        verybeginTS,
-                        sddTableNameALL,
-                        codelist,
-                        codeidnex,
-                        sumDDBean,
-                        date
+                    val mSumDateIndexTs =
+                        DateUtils.parse(date, FormatterEnum.YYYYMMDD)
+                    if (sumDateIndexTs == mSumDateIndexTs) {
+                        LogUtil.d("相同跳过 ${date}")
+                        return@let
+                    }
+                    var changeVeryBeginIndex = hhqVeryBeginIndex
+                    while (changeVeryBeginIndex >= hhqbean.size) {
+                        changeVeryBeginIndex--
+                    }
+                    var verybeginTS = DateUtils.parse(
+                        getHisHqDay(hhqbean[changeVeryBeginIndex]),
+                        FormatterEnum.YYYY_MM_DD
                     )
+                    if (hhqBeginIndex >= hhqbean.size) {
+                        return@let
+                    }
+                    val curTs =
+                        DateUtils.parse(getHisHqDay(hhqbean[hhqBeginIndex]), FormatterEnum.YYYY_MM_DD)
+
+                    if (verybeginTS < vbts) {
+                        while (verybeginTS < vbts) {
+                            changeVeryBeginIndex--
+                            if (changeVeryBeginIndex < 0) {
+                                return@let
+                            }
+                            verybeginTS = DateUtils.parse(
+                                getHisHqDay(hhqbean[changeVeryBeginIndex]),
+                                FormatterEnum.YYYY_MM_DD
+                            )
+                        }
+                        setSDDPercent(
+                            hhqBeginIndex,
+                            hhqbean,
+                            changeVeryBeginIndex,
+                            curTs,
+                            vbts,
+                            sddTableNameALL,
+                            codelist,
+                            codeidnex,
+                            sumDDBean,
+                            date
+                        )
+                        LogUtil.d("set_SDDPercent")
+
+                    } else {
+                        LogUtil.d("set_SDDPercent")
+                        setSDDPercent(
+                            hhqBeginIndex,
+                            hhqbean,
+                            hhqVeryBeginIndex,
+                            curTs,
+                            verybeginTS,
+                            sddTableNameALL,
+                            codelist,
+                            codeidnex,
+                            sumDDBean,
+                            date
+                        )
 
 
 //                    LogUtil.d(
@@ -2127,8 +2151,9 @@ class NewApiViewModel : BaseViewModel() {
 //                            hhqbean[hhqBeginIndex]
 //                        )}"
 //                    )
-                }
+                    }
 
+                }
             }
 
             LogUtil.d("${codelist[codeidnex].code} operaSddDB tableName:$sddTableNameALL")

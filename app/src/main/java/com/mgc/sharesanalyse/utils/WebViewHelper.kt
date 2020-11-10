@@ -50,7 +50,7 @@ object WebViewHelper {
                 super.onPageStarted(view, url, favicon)
             }
 
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 // 拦截 url 跳转,在里边添加点击链接跳转或者操作
                 view?.loadUrl(url)
                 return true

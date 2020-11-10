@@ -378,8 +378,8 @@ object DBUtils {
     fun createCodeHDD(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER, DV INTEGER, DA INTEGER, AllS INTEGER" +
-                        ", P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,SpePP_J TEXT,DA_J,MS_J TEXT);"
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER" +
+                        ", P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,P_MA_J TEXT,SpePP_J TEXT,DA_J,MS_J TEXT);"
             db.execSQL(sqlStr)
         }
     }

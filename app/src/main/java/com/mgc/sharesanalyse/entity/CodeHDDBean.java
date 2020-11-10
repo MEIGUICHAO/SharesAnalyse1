@@ -47,9 +47,6 @@ public class CodeHDDBean {
     }
 
     private float AUP;
-    private float DV;
-    private float DA;
-    private float AS;
 
     public String getName() {
         return name;
@@ -83,36 +80,13 @@ public class CodeHDDBean {
         this.AUP = AUP;
     }
 
-    public float getDV() {
-        return DV;
-    }
-
-    public void setDV(float DV) {
-        this.DV = DV;
-    }
-
-    public float getDA() {
-        return DA;
-    }
-
-    public void setDA(float DA) {
-        this.DA = DA;
-    }
-
-    public float getAS() {
-        return AS;
-    }
-
-    public void setAS(float AS) {
-        this.AS = AS;
-    }
 
 
 
 
     public String toInsertDBValues(String dbName) {
-        return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AllS " +
-                ", P_AUTR_J,P_DA_J,P_PP_J,SpePP_J,DA_J,MS_J ) " +
+        return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR" +
+                ", P_AUTR_J,P_DA_J,P_PP_J,P_MA_J,SpePP_J,DA_J,MS_J ) " +
                 "VALUES('" + name + "'" +
                 ",'" + DATE + "'" +
                 ", " + OP +
@@ -121,12 +95,10 @@ public class CodeHDDBean {
                 ", " + P +
                 ", " + AUP +
                 ",'" + TR +
-                "', " + DV +
-                ", " + DA +
-                ", " + AS +
                 ", '" + GsonHelper.toJson(p_autr_j) +
                 "', '" +  GsonHelper.toJson(P_DA_J) +
                 "', '"  +  GsonHelper.toJson(P_PP_J) +
+                "', '"  +  GsonHelper.toJson(P_MA_J) +
                 "', '" +  SpePP_J.toJSon() +
                 "', '" +  DA_J.toJSon() +
                 "', '"  + MS_J.toJSon() +"')";
@@ -136,6 +108,16 @@ public class CodeHDDBean {
     public P_AUTR_J p_autr_j;
     private P_DA_J P_DA_J;
     private P_PP_J P_PP_J;
+    private P_MA_J P_MA_J;
+
+    public CodeHDDBean.P_MA_J getP_MA_J() {
+        return P_MA_J;
+    }
+
+    public void setP_MA_J(CodeHDDBean.P_MA_J p_MA_J) {
+        P_MA_J = p_MA_J;
+    }
+
     private SpePP_J SpePP_J;
     private DA_J DA_J;
     private MS_J MS_J;
@@ -275,6 +257,24 @@ public class CodeHDDBean {
         float P_20d_DA;
         float P_25d_DA;
         float P_30d_DA;
+        float P_60d_DA;
+        float P_72d_DA;
+
+        public float getP_60d_DA() {
+            return P_60d_DA;
+        }
+
+        public void setP_60d_DA(float p_60d_DA) {
+            P_60d_DA = p_60d_DA;
+        }
+
+        public float getP_72d_DA() {
+            return P_72d_DA;
+        }
+
+        public void setP_72d_DA(float p_72d_DA) {
+            P_72d_DA = p_72d_DA;
+        }
 
         public float getP_30d_DA() {
             return P_30d_DA;
@@ -339,6 +339,25 @@ public class CodeHDDBean {
         float D15;
         float D20;
         float D25;
+        float D30;
+        float D60;
+        float D72;
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
 
         public float getD03() {
             return D03;
@@ -396,10 +415,14 @@ public class CodeHDDBean {
             D30 = d30;
         }
 
-        float D30;
     }
 
     static public class P_PP_J {
+        float AAOP;
+        float AACP;
+        float AMP;
+
+        float ALP;
         float D03;
         float D05;
         float D10;
@@ -407,6 +430,177 @@ public class CodeHDDBean {
         float D20;
         float D25;
         float D30;
+        float D60;
+        float D72;
+
+        public float getAAOP() {
+            return AAOP;
+        }
+
+        public void setAAOP(float AAOP) {
+            this.AAOP = AAOP;
+        }
+
+        public float getAACP() {
+            return AACP;
+        }
+
+        public void setAACP(float AACP) {
+            this.AACP = AACP;
+        }
+
+        public float getAMP() {
+            return AMP;
+        }
+
+        public void setAMP(float AMP) {
+            this.AMP = AMP;
+        }
+
+        public float getALP() {
+            return ALP;
+        }
+
+        public void setALP(float ALP) {
+            this.ALP = ALP;
+        }
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
+
+        public float getD03() {
+            return D03;
+        }
+
+        public void setD03(float d03) {
+            D03 = d03;
+        }
+
+        public float getD05() {
+            return D05;
+        }
+
+        public void setD05(float d05) {
+            D05 = d05;
+        }
+
+        public float getD10() {
+            return D10;
+        }
+
+        public void setD10(float d10) {
+            D10 = d10;
+        }
+
+        public float getD15() {
+            return D15;
+        }
+
+        public void setD15(float d15) {
+            D15 = d15;
+        }
+
+        public float getD20() {
+            return D20;
+        }
+
+        public void setD20(float d20) {
+            D20 = d20;
+        }
+
+        public float getD25() {
+            return D25;
+        }
+
+        public void setD25(float d25) {
+            D25 = d25;
+        }
+
+        public float getD30() {
+            return D30;
+        }
+
+        public void setD30(float d30) {
+            D30 = d30;
+        }
+    }
+
+    static public class P_MA_J {
+        float AAOP;
+        float AACP;
+        float AMP;
+
+        float ALP;
+        float D03;
+        float D05;
+        float D10;
+        float D15;
+        float D20;
+        float D25;
+        float D30;
+        float D60;
+        float D72;
+
+        public float getAAOP() {
+            return AAOP;
+        }
+
+        public void setAAOP(float AAOP) {
+            this.AAOP = AAOP;
+        }
+
+        public float getAACP() {
+            return AACP;
+        }
+
+        public void setAACP(float AACP) {
+            this.AACP = AACP;
+        }
+
+        public float getAMP() {
+            return AMP;
+        }
+
+        public void setAMP(float AMP) {
+            this.AMP = AMP;
+        }
+
+        public float getALP() {
+            return ALP;
+        }
+
+        public void setALP(float ALP) {
+            this.ALP = ALP;
+        }
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
 
         public float getD03() {
             return D03;
@@ -540,12 +734,21 @@ public class CodeHDDBean {
     }
 
     static public class DA_J {
+        private float DA;
 
         private float DA5000;
         private float DA1000;
         private float DA500;
         private float DA100;
 
+
+        public float getDA() {
+            return DA;
+        }
+
+        public void setDA(float DA) {
+            this.DA = DA;
+        }
 
         public float getDA5000() {
             return DA5000;
@@ -580,14 +783,14 @@ public class CodeHDDBean {
         }
 
         public String toJSon() {
-            return ("{" + (DA5000 > 0 ?"DA5000:"+ DA5000 : "") + (DA1000 > 0 ? ",DA1000:" + DA1000 : "") + (DA500 > 0 ? ",DA500:" +  DA500 : "") + (DA100 > 0 ? ",DA100:" +  DA100 : "") + "}")
+            return ("{" + (DA > 0 ?"DA:"+ DA : "")  + (DA5000 > 0 ?",DA5000:"+ DA5000 : "") + (DA1000 > 0 ? ",DA1000:" + DA1000 : "") + (DA500 > 0 ? ",DA500:" +  DA500 : "") + (DA100 > 0 ? ",DA100:" +  DA100 : "") + "}")
                     .replace("{,","{").replace("{","{\"").replace(":","\":").replace(",",",\"").replace("{\"}","{}");
 
         }
     }
 
     static public class MS_J {
-
+        private int AS;
         private int M100S;
         private int M50S;
         private int M30S;
@@ -597,6 +800,14 @@ public class CodeHDDBean {
         private int M05S;
         private int M01S;
         private int L01S;
+
+        public int getAS() {
+            return AS;
+        }
+
+        public void setAS(int AS) {
+            this.AS = AS;
+        }
 
         public int getM01S() {
             return M01S;
@@ -672,7 +883,7 @@ public class CodeHDDBean {
         }
 
         public String toJSon() {
-            return ("{" + (M100S > 0 ? "M100S:"+M100S : "") + (M50S > 0 ? ",M50S:" + M50S : "") + (M30S > 0 ? ",M30S:" +  M30S : "") + (M10S > 0 ? ",M10S:" +  M10S : "") + (M5S > 0 ? ",M5S:" +  M5S : "") + (M1S > 0 ? ",M1S:" +  M1S : "") + (M05S > 0 ? ",M05S:" +  M05S : "")
+            return ("{" + (AS > 0 ? "AS:"+AS : "")  + (M100S > 0 ? ",M100S:"+M100S : "") + (M50S > 0 ? ",M50S:" + M50S : "") + (M30S > 0 ? ",M30S:" +  M30S : "") + (M10S > 0 ? ",M10S:" +  M10S : "") + (M5S > 0 ? ",M5S:" +  M5S : "") + (M1S > 0 ? ",M1S:" +  M1S : "") + (M05S > 0 ? ",M05S:" +  M05S : "")
                     +  (M01S > 0 ? ",M01S:" +  M01S : "") +  (L01S > 0 ? ",L01S:" +  L01S : "") + "}")
                     .replace("{,","{").replace("{","{\"").replace(":","\":").replace(",",",\"").replace("{\"}","{}");
         }
