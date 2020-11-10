@@ -11,3 +11,4 @@ select * from SHDD_2009 where AUTR <200 and AUTR >150 and AD>15 and AD<35 （注
 网上理论（待验证）：
 突破60均线买入，下跌30均线卖出，回调不破60均线再买入
 
+

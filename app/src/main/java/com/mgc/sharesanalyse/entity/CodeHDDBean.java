@@ -86,7 +86,7 @@ public class CodeHDDBean {
 
     public String toInsertDBValues(String dbName) {
         return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR" +
-                ", P_AUTR_J,P_DA_J,P_PP_J,P_MA_J,SpePP_J,DA_J,MS_J ) " +
+                ", P_AUTR_J, P_DA_J, P_PP_J, P_MA_J, SpePP_J, DA_J, MS_J ) " +
                 "VALUES('" + name + "'" +
                 ",'" + DATE + "'" +
                 ", " + OP +
@@ -95,13 +95,14 @@ public class CodeHDDBean {
                 ", " + P +
                 ", " + AUP +
                 ",'" + TR +
-                ", '" + GsonHelper.toJson(p_autr_j) +
+                "', '" + GsonHelper.toJson(p_autr_j) +
                 "', '" +  GsonHelper.toJson(P_DA_J) +
                 "', '"  +  GsonHelper.toJson(P_PP_J) +
                 "', '"  +  GsonHelper.toJson(P_MA_J) +
                 "', '" +  SpePP_J.toJSon() +
                 "', '" +  DA_J.toJSon() +
-                "', '"  + MS_J.toJSon() +"')";
+                "', '"  + MS_J.toJSon() +
+                "')";
     }
 
 
