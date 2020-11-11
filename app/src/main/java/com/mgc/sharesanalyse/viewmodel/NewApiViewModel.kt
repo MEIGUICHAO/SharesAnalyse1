@@ -1872,17 +1872,17 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.p_DA_J = CodeHDDBean.P_DA_J()
         codeHDDBean.p_DV_J = CodeHDDBean.P_DV_J()
 
-        if (hq.size >= hhqBeginIndex + 2) {
+        if (hq.size > hhqBeginIndex + 2) {
             codeHDDBean.p_DV_J.p_3d_DA = getSafeHisHqDayDV(hq, hhqBeginIndex) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 1) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 2)
         }
-        if (hq.size >= hhqBeginIndex + 4) {
+        if (hq.size > hhqBeginIndex + 4) {
             codeHDDBean.p_DV_J.p_5d_DA = codeHDDBean.p_DV_J.p_3d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 3) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 4)
         }
-        if (hq.size >= hhqBeginIndex + 9) {
+        if (hq.size > hhqBeginIndex + 9) {
             codeHDDBean.p_DV_J.p_10d_DA = codeHDDBean.p_DV_J.p_5d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 5) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 6) +
@@ -1890,7 +1890,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 8) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 9)
         }
-        if (hq.size >= hhqBeginIndex + 14) {
+        if (hq.size > hhqBeginIndex + 14) {
             codeHDDBean.p_DV_J.p_15d_DA = codeHDDBean.p_DV_J.p_10d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 10) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 11) +
@@ -1898,7 +1898,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 13) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 14)
         }
-        if (hq.size >= hhqBeginIndex + 19) {
+        if (hq.size > hhqBeginIndex + 19) {
             codeHDDBean.p_DV_J.p_20d_DA = codeHDDBean.p_DV_J.p_15d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 15) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 16) +
@@ -1906,7 +1906,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 18) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 19)
         }
-        if (hq.size >= hhqBeginIndex + 24) {
+        if (hq.size > hhqBeginIndex + 24) {
             codeHDDBean.p_DV_J.p_25d_DA = codeHDDBean.p_DV_J.p_20d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 20) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 21) +
@@ -1914,7 +1914,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 23) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 24)
         }
-        if (hq.size >= hhqBeginIndex + 29) {
+        if (hq.size > hhqBeginIndex + 29) {
             codeHDDBean.p_DV_J.p_30d_DA = codeHDDBean.p_DV_J.p_25d_DA +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 25) +
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 26) +
@@ -1923,7 +1923,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDV(hq, hhqBeginIndex + 29)
         }
 
-        if (hq.size >= hhqBeginIndex + 59) {
+        if (hq.size > hhqBeginIndex + 59) {
             codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 30 until 60) {
@@ -1933,7 +1933,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
-        if (hq.size >= hhqBeginIndex + 71) {
+        if (hq.size > hhqBeginIndex + 71) {
             codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 60 until 72) {
@@ -1943,18 +1943,18 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
-        if (hq.size >= hhqBeginIndex + 2) {
+        if (hq.size > hhqBeginIndex + 2) {
             codeHDDBean.p_DA_J.d03 = getSafeHisHqDayDealAmount(hq, hhqBeginIndex) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 1) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 2)
         }
-        if (hq.size >= hhqBeginIndex + 4) {
+        if (hq.size > hhqBeginIndex + 4) {
             codeHDDBean.p_DA_J.d05 = codeHDDBean.p_DA_J.d03 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 3) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 4)
         }
 
-        if (hq.size >= hhqBeginIndex + 9) {
+        if (hq.size > hhqBeginIndex + 9) {
             codeHDDBean.p_DA_J.d10 = codeHDDBean.p_DA_J.d05 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 5) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 6) +
@@ -1962,7 +1962,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 8) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 9)
         }
-        if (hq.size >= hhqBeginIndex + 14) {
+        if (hq.size > hhqBeginIndex + 14) {
             codeHDDBean.p_DA_J.d15 = codeHDDBean.p_DA_J.d10 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 10) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 11) +
@@ -1970,7 +1970,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 13) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 14)
         }
-        if (hq.size >= hhqBeginIndex + 19) {
+        if (hq.size > hhqBeginIndex + 19) {
             codeHDDBean.p_DA_J.d20 = codeHDDBean.p_DA_J.d15 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 15) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 16) +
@@ -1978,7 +1978,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 18) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 19)
         }
-        if (hq.size >= hhqBeginIndex + 24) {
+        if (hq.size > hhqBeginIndex + 24) {
             codeHDDBean.p_DA_J.d25 = codeHDDBean.p_DA_J.d20 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 20) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 21) +
@@ -1986,7 +1986,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 23) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 24)
         }
-        if (hq.size >= hhqBeginIndex + 29) {
+        if (hq.size > hhqBeginIndex + 29) {
             codeHDDBean.p_DA_J.d30 = codeHDDBean.p_DA_J.d25 +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 25) +
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 26) +
@@ -1995,7 +1995,7 @@ class NewApiViewModel : BaseViewModel() {
                     getSafeHisHqDayDealAmount(hq, hhqBeginIndex + 29)
         }
 
-        if (hq.size >= hhqBeginIndex + 59) {
+        if (hq.size > hhqBeginIndex + 59) {
             codeHDDBean.p_DA_J.d60 = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 30 until 60) {
@@ -2005,7 +2005,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
-        if (hq.size >= hhqBeginIndex + 71) {
+        if (hq.size > hhqBeginIndex + 71) {
             codeHDDBean.p_DA_J.d72 = kotlin.run {
                 var daNum = 0.toFloat()
                 for (i in 60 until 72) {
@@ -2064,7 +2064,7 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.p_MA_J.alp = getHisHqDayLowestPrice(hhqbean)
         codeHDDBean.p_MA_J.amp = getHisHqDayHighestPrice(hhqbean)
         var beginPrice = 0.toFloat()
-        if (hq.size >= hhqBeginIndex + 2) {
+        if (hq.size > hhqBeginIndex + 2) {
             codeHDDBean.p_MA_J.d03 =kotlin.run {
                 for (i in 0 until 3) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2072,7 +2072,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 3
             }
         }
-        if (hq.size >= hhqBeginIndex + 4) {
+        if (hq.size > hhqBeginIndex + 4) {
             codeHDDBean.p_MA_J.d05 =kotlin.run {
                 for (i in 3 until 5) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2080,7 +2080,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 5
             }
         }
-        if (hq.size >= hhqBeginIndex + 9) {
+        if (hq.size > hhqBeginIndex + 9) {
             codeHDDBean.p_MA_J.d10 =kotlin.run {
                 for (i in 5 until 10) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2088,7 +2088,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 10
             }
         }
-        if (hq.size >= hhqBeginIndex + 14) {
+        if (hq.size > hhqBeginIndex + 14) {
             codeHDDBean.p_MA_J.d15 =kotlin.run {
                 for (i in 10 until 15) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2096,7 +2096,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 15
             }
         }
-        if (hq.size >= hhqBeginIndex + 19) {
+        if (hq.size > hhqBeginIndex + 19) {
             codeHDDBean.p_MA_J.d20 =kotlin.run {
                 for (i in 15 until 20) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2104,7 +2104,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 20
             }
         }
-        if (hq.size >= hhqBeginIndex + 24) {
+        if (hq.size > hhqBeginIndex + 24) {
             codeHDDBean.p_MA_J.d25 =kotlin.run {
                 for (i in 20 until 25) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2112,7 +2112,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 25
             }
         }
-        if (hq.size >= hhqBeginIndex + 29) {
+        if (hq.size > hhqBeginIndex + 29) {
             codeHDDBean.p_MA_J.d30 =kotlin.run {
                 for (i in 25 until 30) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2120,7 +2120,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 30
             }
         }
-        if (hq.size >= hhqBeginIndex + 59) {
+        if (hq.size > hhqBeginIndex + 59) {
             codeHDDBean.p_MA_J.d60 =kotlin.run {
                 for (i in 30 until 60) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
@@ -2128,7 +2128,7 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 60
             }
         }
-        if (hq.size >= hhqBeginIndex + 71) {
+        if (hq.size > hhqBeginIndex + 71) {
             codeHDDBean.p_MA_J.d72 =kotlin.run {
                 for (i in 60 until 72) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
