@@ -658,6 +658,18 @@ object DBUtils {
         return isexsit
     }
 
+    fun queryDataIsExsitByCode(dbName: String, code: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
+    }
+
     fun queryFirstOPByCodeHDD(tbName: String): Float {
         var op = 0.toFloat()
         if (tabbleIsExist(tbName)) {
@@ -675,5 +687,176 @@ object DBUtils {
         }
         return op
     }
+
+    fun insertOrUpdateCheckFilterTable(
+        dbName: String,
+        date: String,
+        checkFilterBean: CheckFilterBean
+    ) {
+        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
+        createCheckFilterTable(dbName)
+        if (!queryDataIsExsitByCode(dbName, checkFilterBean.code)) {
+            val insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,CHECKSIZE,DATE)" +
+                    " VALUES${checkFilterBean.toInsert()}"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        } else {
+            val sql = "UPDATE $dbName SET ${checkFilterBean.toUpdateSqlSumValues()}  WHERE CODE=${checkFilterBean.code}"
+            LogUtil.d("updateSqlStr:$sql")
+            db.execSQL(sql)
+        }
+    }
+
+    private fun createCheckFilterTable(dbName: String) {
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, CHECKSIZE INTEGER, DATE INTEGER;"
+            db.execSQL(sqlStr)
+        }
+    }
+
+
+    fun queryCheckFilterByCode(dbName: String, code: String, date: String): CheckFilterBean? {
+        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
+        var checkFilterBean: CheckFilterBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            LogUtil.d("cursor:${cursor.count}")
+            if (null != cursor && cursor.moveToFirst()) {
+                checkFilterBean = CheckFilterBean()
+                val code = cursor.getString(cursor.getColumnIndex("CODE"))
+                val checkSize = cursor.getInt(cursor.getColumnIndex("CHECKSIZE"))
+                val date = cursor.getInt(cursor.getColumnIndex("DATE"))
+                checkFilterBean.code = code
+                checkFilterBean.checkSize = checkSize
+                checkFilterBean.date = date
+
+            }
+            cursor.close()
+        }
+        return checkFilterBean
+    }
+
+//    private String code;
+//    private int FilterTypeCount;
+//    private String FilterJs;
+
+    fun insertOrUpdateFilterTable(
+        dbName: String,
+        date: String,
+        filterBean:  FilterBean
+    ) {
+        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
+        createFilterTable(dbName)
+        if (!queryDataIsExsitByCode(dbName, filterBean.code)) {
+            val insertSqlStr = "INSERT INTO $dbName" +
+                    "(CODE,FILTERTYPECOUNT,FILTERJS)" +
+                    " VALUES${filterBean.toInsert()}"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        } else {
+            val sql = "UPDATE $dbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
+            LogUtil.d("updateSqlStr:$sql")
+            db.execSQL(sql)
+        }
+    }
+
+    private fun createFilterTable(dbName: String) {
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, FilterTypeCount INTEGER, FilterJs TEXT;"
+            db.execSQL(sqlStr)
+        }
+    }
+
+
+    fun queryFilterBeanByCode(dbName: String, code: String, date: String): FilterBean? {
+        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
+        var checkFilterBean: FilterBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            LogUtil.d("cursor:${cursor.count}")
+            if (null != cursor && cursor.moveToFirst()) {
+                checkFilterBean = FilterBean()
+                val code = cursor.getString(cursor.getColumnIndex("CODE"))
+                val FILTERTYPECOUNT = cursor.getInt(cursor.getColumnIndex("FILTERTYPECOUNT"))
+                val FILTERJS = cursor.getString(cursor.getColumnIndex("FILTERJS"))
+                checkFilterBean.code = code
+                checkFilterBean.filterTypeCount = FILTERTYPECOUNT
+                checkFilterBean.filterJs = FILTERJS
+
+            }
+            cursor.close()
+        }
+        return checkFilterBean
+    }
+
+
+    fun queryCHDDByTableName(dbName: String, code: String, date: String): CodeHDDBean? {
+        switchDBName(code.toCodeHDD(date, FormatterEnum.YYYYMMDD))
+        var codeHDDBean: CodeHDDBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            LogUtil.d("cursor:${cursor.count}")
+            if (null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast) {
+                    codeHDDBean = CodeHDDBean()
+                    val NAME = cursor.getString(cursor.getColumnIndex("NAME"))
+                    val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+                    val OP = cursor.getFloat(cursor.getColumnIndex("OP"))
+                    val CP = cursor.getFloat(cursor.getColumnIndex("CP"))
+                    val PP = cursor.getFloat(cursor.getColumnIndex("PP"))
+                    val P = cursor.getFloat(cursor.getColumnIndex("P"))
+                    val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
+                    val TR = cursor.getString(cursor.getColumnIndex("TR"))
+                    val p_autr_j = cursor.getString(cursor.getColumnIndex("P_AUTR_J"))
+                    val P_DA_J = cursor.getString(cursor.getColumnIndex("P_DA_J"))
+                    val P_PP_J = cursor.getString(cursor.getColumnIndex("P_PP_J"))
+                    val P_MA_J = cursor.getString(cursor.getColumnIndex("P_MA_J"))
+                    val SpePP_J = cursor.getString(cursor.getColumnIndex("SpePP_J"))
+                    val DA_J = cursor.getString(cursor.getColumnIndex("DA_J"))
+                    val MS_J = cursor.getString(cursor.getColumnIndex("MS_J"))
+                    codeHDDBean.name = NAME
+                    codeHDDBean.date = DATE
+                    codeHDDBean.op = OP
+                    codeHDDBean.cp = CP
+                    codeHDDBean.pp = PP
+                    codeHDDBean.p = P
+                    codeHDDBean.aup = AUP
+                    codeHDDBean.tr = TR
+                    if (!p_autr_j.isNullOrEmpty()) {
+                        codeHDDBean.p_autr_j = GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
+                    }
+                    if (!P_DA_J.isNullOrEmpty()) {
+                        codeHDDBean.p_DA_J = GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
+                    }
+                    if (!P_PP_J.isNullOrEmpty()) {
+                        codeHDDBean.p_PP_J = GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
+                    }
+                    if (!P_MA_J.isNullOrEmpty()) {
+                        codeHDDBean.p_MA_J = GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
+                    }
+                    if (!SpePP_J.isNullOrEmpty()) {
+                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
+                    }
+                    if (!DA_J.isNullOrEmpty()) {
+                        codeHDDBean.dA_J = GsonHelper.parse(DA_J, CodeHDDBean.DA_J::class.java)
+                    }
+                    if (!MS_J.isNullOrEmpty()) {
+                        codeHDDBean.mS_J = GsonHelper.parse(MS_J, CodeHDDBean.MS_J::class.java)
+                    }
+                    cursor.moveToNext()
+                }
+
+            }
+            cursor.close()
+        }
+        return codeHDDBean
+    }
+
 
 }

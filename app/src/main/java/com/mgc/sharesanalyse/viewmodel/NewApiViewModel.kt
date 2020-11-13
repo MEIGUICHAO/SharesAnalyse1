@@ -2509,5 +2509,10 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
+    fun filter() {
+
+
+    }
+
 
 }

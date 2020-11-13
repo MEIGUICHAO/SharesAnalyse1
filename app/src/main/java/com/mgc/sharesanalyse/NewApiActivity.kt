@@ -117,6 +117,11 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.getSumDD()
             }
         }
+        btnFilter.setOnClickListener {
+            App.getSinglePool().execute {
+                viewModel.filter()
+            }
+        }
 
     }
 
