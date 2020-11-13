@@ -795,16 +795,16 @@ object DBUtils {
     }
 
 
-    fun queryCHDDByTableName(dbName: String, code: String, date: String): CodeHDDBean? {
+    fun queryCHDDByTableName(dbName: String, code: String, date: String): ArrayList<CodeHDDBean>? {
         switchDBName(code.toCodeHDD(date, FormatterEnum.YYYYMMDD))
-        var codeHDDBean: CodeHDDBean? = null
+        val list = ArrayList<CodeHDDBean>()
         if (tabbleIsExist(dbName)) {
             var cursor =
                 db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
             LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast) {
-                    codeHDDBean = CodeHDDBean()
+                    val codeHDDBean = CodeHDDBean()
                     val NAME = cursor.getString(cursor.getColumnIndex("NAME"))
                     val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
                     val OP = cursor.getFloat(cursor.getColumnIndex("OP"))
@@ -849,13 +849,14 @@ object DBUtils {
                     if (!MS_J.isNullOrEmpty()) {
                         codeHDDBean.mS_J = GsonHelper.parse(MS_J, CodeHDDBean.MS_J::class.java)
                     }
+                    list.add(codeHDDBean)
                     cursor.moveToNext()
                 }
 
             }
             cursor.close()
         }
-        return codeHDDBean
+        return list
     }
 
 
