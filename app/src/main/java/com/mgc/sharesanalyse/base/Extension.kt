@@ -81,3 +81,8 @@ fun ArrayList<String>.sortStringDateAsc(formatterEnum: FormatterEnum) {
         }
     })
 }
+
+
+fun String.CHDD2YYMM():String {
+    return this.replace("CY_CHDD_", "").replace("SH_CHDD_", "").replace("SZ_CHDD_", "")
+}

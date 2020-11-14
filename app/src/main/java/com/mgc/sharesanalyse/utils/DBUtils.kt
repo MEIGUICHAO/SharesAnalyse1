@@ -711,14 +711,14 @@ object DBUtils {
     private fun createCheckFilterTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, CHECKSIZE INTEGER, DATE INTEGER;"
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, CHECKSIZE INTEGER, DATE INTEGER);"
             db.execSQL(sqlStr)
         }
     }
 
 
     fun queryCheckFilterByCode(dbName: String, code: String, date: String): CheckFilterBean? {
-        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
+        switchDBName(Datas.DBFilter + date)
         var checkFilterBean: CheckFilterBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =
@@ -744,20 +744,20 @@ object DBUtils {
 //    private String FilterJs;
 
     fun insertOrUpdateFilterTable(
-        dbName: String,
+        tbName: String,
         date: String,
         filterBean:  FilterBean
     ) {
         switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
-        createFilterTable(dbName)
-        if (!queryDataIsExsitByCode(dbName, filterBean.code)) {
-            val insertSqlStr = "INSERT INTO $dbName" +
+        createFilterTable(tbName)
+        if (!queryDataIsExsitByCode(tbName, filterBean.code)) {
+            val insertSqlStr = "INSERT INTO $tbName" +
                     "(CODE,FILTERTYPECOUNT,FILTERJS)" +
                     " VALUES${filterBean.toInsert()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            val sql = "UPDATE $dbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
+            val sql = "UPDATE $tbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
             LogUtil.d("updateSqlStr:$sql")
             db.execSQL(sql)
         }
@@ -766,7 +766,7 @@ object DBUtils {
     private fun createFilterTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, FilterTypeCount INTEGER, FilterJs TEXT;"
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, FILTERTYPECOUNT INTEGER, FILTERJS TEXT);"
             db.execSQL(sqlStr)
         }
     }
@@ -795,14 +795,15 @@ object DBUtils {
     }
 
 
-    fun queryCHDDByTableName(dbName: String, code: String, date: String): ArrayList<CodeHDDBean>? {
-        switchDBName(code.toCodeHDD(date, FormatterEnum.YYYYMMDD))
-        val list = ArrayList<CodeHDDBean>()
-        if (tabbleIsExist(dbName)) {
+    fun queryCHDDByTableName(tableName: String, dbName: String): ArrayList<CodeHDDBean>? {
+        switchDBName(dbName)
+        var list:ArrayList<CodeHDDBean>? = null
+        if (tabbleIsExist(tableName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+                db.rawQuery("SELECT * FROM $tableName", null)
             LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
+                list = ArrayList<CodeHDDBean>()
                 while (!cursor.isAfterLast) {
                     val codeHDDBean = CodeHDDBean()
                     val NAME = cursor.getString(cursor.getColumnIndex("NAME"))

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import com.galanz.rxretrofit.network.RetrofitManager
+import com.google.gson.Gson
 import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
@@ -426,14 +427,16 @@ class NewApiViewModel : BaseViewModel() {
     fun getHisHq(
         code: String, start: String = kotlin.run {
             var startValue = ""
-            val judeIndex = (DateUtils.formatToDay(FormatterEnum.YYYY)+"00").toInt()
+            val judeIndex = (DateUtils.formatToDay(FormatterEnum.YYYY) + "00").toInt()
             val toDay = (DateUtils.formatToDay(FormatterEnum.YYYYMM)).toInt()
             val result = toDay - 6
-            val lastYearBegin = (DateUtils.formatToDay(FormatterEnum.YYYY).toInt()-1).toString()+"12"
+            val lastYearBegin =
+                (DateUtils.formatToDay(FormatterEnum.YYYY).toInt() - 1).toString() + "12"
             if (result <= judeIndex) {
                 startValue = (lastYearBegin.toInt() - (judeIndex - result)).toString() + "01"
             } else {
-                startValue =( DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt()-6).toString() + "01"
+                startValue =
+                    (DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt() - 6).toString() + "01"
             }
             startValue
         }, end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
@@ -1017,7 +1020,10 @@ class NewApiViewModel : BaseViewModel() {
 //        var codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryByQueryBuilder(AllCodeGDBeanDao.Properties.Code.eq(Datas.DEBUG_Code))
         var hhbeansList: ArrayList<(MutableList<(MutableList<String>?)>?)>
         val initHHQbean =
-            DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], if (Datas.DEBUG) Datas.DEBUG_Code else 1.toString())
+            DBUtils.queryHHqBeanByCode(
+                hhqlist[hhqlist.size - 1],
+                if (Datas.DEBUG) Datas.DEBUG_Code else 1.toString()
+            )
         val hisHqBeans = GsonHelper.parseArray(initHHQbean?.json, HisHqBean::class.java)[0].hq
         if (Datas.DEBUG) {
             hhbeansList = arrayListOf(hisHqBeans)
@@ -2065,7 +2071,7 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.p_MA_J.amp = getHisHqDayHighestPrice(hhqbean)
         var beginPrice = 0.toFloat()
         if (hq.size > hhqBeginIndex + 2) {
-            codeHDDBean.p_MA_J.d03 =kotlin.run {
+            codeHDDBean.p_MA_J.d03 = kotlin.run {
                 for (i in 0 until 3) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2073,7 +2079,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 4) {
-            codeHDDBean.p_MA_J.d05 =kotlin.run {
+            codeHDDBean.p_MA_J.d05 = kotlin.run {
                 for (i in 3 until 5) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2081,7 +2087,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 9) {
-            codeHDDBean.p_MA_J.d10 =kotlin.run {
+            codeHDDBean.p_MA_J.d10 = kotlin.run {
                 for (i in 5 until 10) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2089,7 +2095,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 14) {
-            codeHDDBean.p_MA_J.d15 =kotlin.run {
+            codeHDDBean.p_MA_J.d15 = kotlin.run {
                 for (i in 10 until 15) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2097,7 +2103,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 19) {
-            codeHDDBean.p_MA_J.d20 =kotlin.run {
+            codeHDDBean.p_MA_J.d20 = kotlin.run {
                 for (i in 15 until 20) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2105,7 +2111,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 24) {
-            codeHDDBean.p_MA_J.d25 =kotlin.run {
+            codeHDDBean.p_MA_J.d25 = kotlin.run {
                 for (i in 20 until 25) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2113,7 +2119,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 29) {
-            codeHDDBean.p_MA_J.d30 =kotlin.run {
+            codeHDDBean.p_MA_J.d30 = kotlin.run {
                 for (i in 25 until 30) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2121,7 +2127,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 59) {
-            codeHDDBean.p_MA_J.d60 =kotlin.run {
+            codeHDDBean.p_MA_J.d60 = kotlin.run {
                 for (i in 30 until 60) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2129,7 +2135,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (hq.size > hhqBeginIndex + 71) {
-            codeHDDBean.p_MA_J.d72 =kotlin.run {
+            codeHDDBean.p_MA_J.d72 = kotlin.run {
                 for (i in 60 until 72) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
@@ -2510,9 +2516,137 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun filter() {
+        val pathList = FileUtil.getFileNameList(Datas.DBPath)
+        val mCHDDList = ArrayList<String>()
+        pathList.forEach {
+            if (it.contains("_CHDD_") && !it.contains("journal")) {
+                mCHDDList.add(it)
+            }
+        }
+        Collections.sort(mCHDDList, object : Comparator<String> {
+            override fun compare(p0: String, p1: String): Int {
+                return p0.CHDD2YYMM().toInt()
+                    .compareTo(
+                        p1.CHDD2YYMM().toInt()
+                    )
+            }
+        })
+        mCHDDList.forEach {
+            DBUtils.switchDBName(it)
+            for (i in 0 until codeNameList.size) {
+                val code = codeNameList[i].split(splitTag)[0].toInt()
+                if ((it.contains("SH") && code > 600000) || (it.contains("SZ") && code < 300000) || (it.contains(
+                        "CY"
+                    ) && code > 300000)
+                ) {
+                    var checkFilterBean = DBUtils.queryCheckFilterByCode(
+                        Datas.CheckFilter,
+                        code.toString(),
+                        it.CHDD2YYMM()
+                    )
+                    val chddDDBeanList = DBUtils.queryCHDDByTableName("DD_$code", it)
+                    chddDDBeanList?.let {
+                        if (null != checkFilterBean) {
+                            for (j in 1..Datas.FILTER_TYPE_COUNT) {
+                                if (checkFilterBean!!.checkSize >= j && checkFilterBean!!.date >= it[it.size - 1].date.toInt()) {
+                                    continue
+                                } else {
+                                    //新增过滤方法
+                                    if (checkFilterBean!!.checkSize < j) {
+                                        checkFilterBean!!.checkSize = j
+                                        checkFilterBean = filterByType(code.toString(),it, j, checkFilterBean!!)
+                                    }
+                                    DBUtils.insertOrUpdateCheckFilterTable(
+                                        Datas.CheckFilter,
+                                        it[0].date,
+                                        checkFilterBean!!
+                                    )
+                                }
+                            }
+                        } else {
+                            checkFilterBean = CheckFilterBean()
+                            checkFilterBean!!.code = code.toString()
+                            for (j in 1..Datas.FILTER_TYPE_COUNT) {
+                                checkFilterBean!!.checkSize = j
+                                checkFilterBean = filterByType(code.toString(),it, j, checkFilterBean!!)
+                            }
+                            DBUtils.insertOrUpdateCheckFilterTable(
+                                Datas.CheckFilter,
+                                it[0].date,
+                                checkFilterBean!!
+                            )
+
+                        }
+                    }
+
+
+                }
+            }
+
+
+        }
+
+    }
+
+    private fun filterByType(
+        code: String,
+        beanList: java.util.ArrayList<CodeHDDBean>,
+        type: Int,
+        checkFilterBean: CheckFilterBean
+    ): CheckFilterBean {
+        when (type) {
+            1 -> {
+                val countList = arrayListOf(false, false, false, false)
+                val filterBean = FilterBean()
+                filterBean.code = code
+                val filterJsBean = FilterJsBean()
+                filterJsBean.type = type.toString()
+                beanList.forEach {
+                    checkFilterBean.date = it.date.toInt()
+                    if (it.p_autr_j.d05 >= 75 && it.p_autr_j.d30 >= 300 && it.p_autr_j.d30 < 400 && it.p_autr_j.d10 > 100) {
+                        countList[0] = true
+                        filterJsBean.autr = GsonHelper.toJson(it.p_autr_j)
+
+                    }
+                    if (it.p_DA_J.d05 >= 10 && it.p_DA_J.d60 >= 55) {
+                        countList[1] = true
+                        filterJsBean.dA1 = GsonHelper.toJson(it.p_DA_J)
+                    }
+                    if (it.p_PP_J.d60 >= it.p_PP_J.d05 && it.p_PP_J.d60 >= it.p_PP_J.d10 &&(BigDecimalUtils.div(it.p_PP_J.d05,it.p_PP_J.d60)>0.8||BigDecimalUtils.div(it.p_PP_J.d10,it.p_PP_J.d60)>0.8)) {
+                        countList[2] = true
+                        filterJsBean.pP1 = GsonHelper.toJson(it.p_DA_J)
+                    }
+                }
+                var filterCount = 0
+                countList.forEach {
+                    if (it) {
+                        filterCount++
+                    }
+                }
+                if (filterCount > 2) {
+                    val filterJsBeanList = ArrayList<FilterJsBean>()
+                    filterJsBeanList.add(filterJsBean)
+                    filterBean.filterJs = GsonHelper.toJson(filterJsBeanList)
+                    filterBean.filterTypeCount++
+                    DBUtils.insertOrUpdateFilterTable(Datas.TBFilter+code,beanList[0].date,filterBean)
+                }
+
+            }
+        }
+        return checkFilterBean
 
 
     }
+
+//    private fun filterByType(type: Int, bean: CodeHDDBean) {
+//        when (type) {
+//            1 -> {
+//                if (bean.p_autr_j.d05>=75&&) {
+//                }
+//            }
+//
+//        }
+//    }
 
 
 }

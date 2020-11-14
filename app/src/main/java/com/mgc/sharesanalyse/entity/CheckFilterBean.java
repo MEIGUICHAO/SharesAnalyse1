@@ -32,8 +32,8 @@ public class CheckFilterBean {
     }
     public String toInsert() {
         return "('" + code +
-                "', " + date +
-                ", '" + checkSize+"')";
+                "', " + checkSize +
+                ", '" + date+"')";
     }
 
     @NotNull

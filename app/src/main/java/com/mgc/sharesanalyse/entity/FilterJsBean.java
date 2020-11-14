@@ -5,6 +5,7 @@ import android.text.TextUtils;
 public class FilterJsBean {
     private String type;
     private String AUTR;
+
     private String DA1;
     private String DA2;
     private String DA3;
