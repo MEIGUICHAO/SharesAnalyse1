@@ -2636,23 +2636,47 @@ class NewApiViewModel : BaseViewModel() {
                 val pp1List = ArrayList<FilterDateBean>()
                 beanList.forEach {
                     checkFilterBean.date = it.date.toInt()
-                    if (it.p_autr_j.d05 >= 75 && it.p_autr_j.d30 >= 300 && it.p_autr_j.d30 < 350 &&it.p_DA_J.d15>18 && it.p_DA_J.d15<23) {
+                    if (it.p_autr_j.d03 >= 20 && it.p_autr_j.d03 <= 50
+                        && it.p_autr_j.d05 >= 34 && it.p_autr_j.d05 <= 80
+                        && it.p_autr_j.d10 >= 75 && it.p_autr_j.d10 <= 125
+                        && it.p_autr_j.d15 >= 115 && it.p_autr_j.d15 <= 170
+                        && it.p_autr_j.d20 >= 160 && it.p_autr_j.d20 <= 250
+                        && it.p_autr_j.d25 >= 230 && it.p_autr_j.d25 <= 300
+                        && it.p_autr_j.d30 >= 250 && it.p_autr_j.d30 <= 350
+                        &&it.p_DA_J.d03 >= 2.4 && it.p_DA_J.d03 <= 6.8
+                        &&it.p_DA_J.d05 >= 3.8 && it.p_DA_J.d05 <= 12
+                        &&it.p_DA_J.d10 >= 7.8 && it.p_DA_J.d10 <= 17
+                        &&it.p_DA_J.d15 >= 13 && it.p_DA_J.d15 <= 22
+                        &&it.p_DA_J.d20 >= 18 && it.p_DA_J.d20 <= 35
+                        &&it.p_DA_J.d25 >= 26 && it.p_DA_J.d25 <= 42
+                        &&it.p_DA_J.d30 >= 28 && it.p_DA_J.d30 <= 45
+                        ) {
+                        LogUtil.d("p_autr_j---date:${it.date}---$code")
                         countList[0] = true
                         val filterDateBean = FilterDateBean()
                         filterDateBean.date = it.date
                         filterDateBean.json = GsonHelper.toJson(it.p_autr_j)
                         autrList.add(filterDateBean)
                         filterJsBean.autr = GsonHelper.toJson(autrList)
-                    }
-                    if (it.p_DA_J.d05 >= 10 && it.p_DA_J.d60 >= 55) {
+
+
+                        LogUtil.d("p_DA_J---date:${it.date}---$code")
                         countList[1] = true
-                        val filterDateBean = FilterDateBean()
-                        filterDateBean.date = it.date
-                        filterDateBean.json = GsonHelper.toJson(it.p_DA_J)
-                        da1List.add(filterDateBean)
+                        val filterDateBean2 = FilterDateBean()
+                        filterDateBean2.date = it.date
+                        filterDateBean2.json = GsonHelper.toJson(it.p_DA_J)
+                        da1List.add(filterDateBean2)
                         filterJsBean.dA1 = GsonHelper.toJson(da1List)
                     }
-                    if (it.p_PP_J.d60 >= it.p_PP_J.d05 && it.p_PP_J.d60 >= it.p_PP_J.d10 &&(BigDecimalUtils.safeDiv(it.p_PP_J.d05,it.p_PP_J.d60)>0.8||BigDecimalUtils.safeDiv(it.p_PP_J.d10,it.p_PP_J.d60)>0.8)) {
+//                    if (
+//                        ) {
+//                    }
+                    if (it.p_PP_J.d03 >= it.p_PP_J.d30 && it.p_PP_J.d05 >= it.p_PP_J.d30 && BigDecimalUtils.safeDiv(
+                            BigDecimalUtils.sub(it.p_PP_J.d05, it.p_PP_J.d10),
+                            it.p_PP_J.d10
+                        ) >= 0.35
+                    ) {
+                        LogUtil.d("p_PP_J---date:${it.date}---$code")
                         countList[2] = true
                         val filterDateBean = FilterDateBean()
                         filterDateBean.date = it.date
@@ -2668,7 +2692,7 @@ class NewApiViewModel : BaseViewModel() {
                         filterCount++
                     }
                 }
-                if (filterCount > 2) {
+                if (filterCount > 0) {
                     val filterJsBeanList = ArrayList<FilterJsBean>()
                     filterJsBeanList.add(filterJsBean)
                     filterBean.filterJs = GsonHelper.toJson(filterJsBeanList)
