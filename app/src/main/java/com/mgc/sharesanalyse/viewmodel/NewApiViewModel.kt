@@ -2674,7 +2674,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (it.p_PP_J.d03 >= it.p_PP_J.d30 && it.p_PP_J.d05 >= it.p_PP_J.d30 && BigDecimalUtils.safeDiv(
                             BigDecimalUtils.sub(it.p_PP_J.d05, it.p_PP_J.d10),
                             it.p_PP_J.d10
-                        ) >= 0.35
+                        ) >= 0.035
                     ) {
                         LogUtil.d("p_PP_J---date:${it.date}---$code")
                         countList[2] = true

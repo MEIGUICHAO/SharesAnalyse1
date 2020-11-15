@@ -16,7 +16,7 @@ object BigDecimalUtils {
     fun add(d1:Float,d2:Float):Float = d1+d2
 
     // 减法运算
-    fun sub(d1:Float,d2: Float):Float = BigDecimal(d1).subtract(BigDecimal(d2)).setScale(2,BigDecimal.ROUND_HALF_UP).toFloat()
+    fun sub(d1:Float,d2: Float):Float = BigDecimal(d1).subtract(BigDecimal(d2)).setScale(DECIMAL_POINT_NUMBER,BigDecimal.ROUND_HALF_UP).toFloat()
 
     private fun BigDecimal(d1: Float): BigDecimal {
       return BigDecimal(d1.toString())
