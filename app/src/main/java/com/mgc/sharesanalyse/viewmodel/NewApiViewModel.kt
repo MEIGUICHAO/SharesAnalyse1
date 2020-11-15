@@ -2643,6 +2643,9 @@ class NewApiViewModel : BaseViewModel() {
                         && it.p_autr_j.d20 >= 160 && it.p_autr_j.d20 <= 250
                         && it.p_autr_j.d25 >= 230 && it.p_autr_j.d25 <= 300
                         && it.p_autr_j.d30 >= 250 && it.p_autr_j.d30 <= 350
+                        && it.p_autr_j.d60 >= 400 && it.p_autr_j.d60 <= 540
+                        && it.p_autr_j.d72 >= 450 && it.p_autr_j.d72 <= 600
+                        //60:400~540  72:450~600
                         &&it.p_DA_J.d03 >= 2.4 && it.p_DA_J.d03 <= 6.8
                         &&it.p_DA_J.d05 >= 3.8 && it.p_DA_J.d05 <= 12
                         &&it.p_DA_J.d10 >= 7.8 && it.p_DA_J.d10 <= 17
@@ -2650,6 +2653,9 @@ class NewApiViewModel : BaseViewModel() {
                         &&it.p_DA_J.d20 >= 18 && it.p_DA_J.d20 <= 35
                         &&it.p_DA_J.d25 >= 26 && it.p_DA_J.d25 <= 42
                         &&it.p_DA_J.d30 >= 28 && it.p_DA_J.d30 <= 45
+                        &&it.p_DA_J.d60 >= 50 && it.p_DA_J.d60 <= 60
+                        &&it.p_DA_J.d72 >= 55 && it.p_DA_J.d72 <= 65
+                        //60:50~60  72:55~65
                         ) {
                         LogUtil.d("p_autr_j---date:${it.date}---$code")
                         countList[0] = true
@@ -2676,8 +2682,8 @@ class NewApiViewModel : BaseViewModel() {
                             it.p_PP_J.d10
                         ) >= 0.035
                     ) {
-                        LogUtil.d("p_PP_J---date:${it.date}---$code")
-                        countList[2] = true
+//                        LogUtil.d("p_PP_J---date:${it.date}---$code")
+//                        countList[2] = true
                         val filterDateBean = FilterDateBean()
                         filterDateBean.date = it.date
                         filterDateBean.json = GsonHelper.toJson(it.p_DA_J)
