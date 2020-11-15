@@ -1960,7 +1960,7 @@ class NewApiViewModel : BaseViewModel() {
                 codeHDDBean.p_DV_J.p_60d_DA = kotlin.run {
                     var daNum = 0.toFloat()
                     for (i in 30 until 60) {
-                        daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
+                        daNum = daNum + getSafeHisHqDayDV(hq, hhqBeginIndex + i)
                     }
                     codeHDDBean.p_DV_J.p_30d_DA + daNum
                 }
@@ -1970,7 +1970,7 @@ class NewApiViewModel : BaseViewModel() {
                 codeHDDBean.p_DV_J.p_72d_DA = kotlin.run {
                     var daNum = 0.toFloat()
                     for (i in 60 until 72) {
-                        daNum = daNum + getSafeHisHqDayDealAmount(hq, hhqBeginIndex + i)
+                        daNum = daNum + getSafeHisHqDayDV(hq, hhqBeginIndex + i)
                     }
                     codeHDDBean.p_DV_J.p_60d_DA + daNum
                 }
