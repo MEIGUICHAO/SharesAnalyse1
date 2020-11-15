@@ -126,6 +126,12 @@ class NewApiActivity : AppCompatActivity() {
     }
 
 
+    fun setFilterInfo(info: String) {
+        btnFilter.post {
+            btnFilter.setText(info)
+        }
+    }
+
     fun setAllCodeInfo(info: String) {
         btnGetALlCode.post {
             btnGetALlCode.setText(info)

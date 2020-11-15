@@ -237,6 +237,25 @@ public class CodeHDDBean {
         }
 
         float D30;
+        float D60;
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
+
+        float D72;
 
     }
 
