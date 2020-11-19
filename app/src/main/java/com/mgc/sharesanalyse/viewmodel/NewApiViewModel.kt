@@ -946,18 +946,22 @@ class NewApiViewModel : BaseViewModel() {
         for (i in 0 until hhqList.size - 1) {
             DBUtils.dropTable(hhqList[i])
         }
-
-        sortpriceHisRecordGDBean(list)
-        list.forEach {
-            if (it.id > 600000) {
-                txtname = "sh_"
-            } else if (it.id > 300000) {
-                txtname = "cy_"
-            } else {
-                txtname = "sz_"
-            }
-            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
+        (mActivity as NewApiActivity).setBtnHHQInfo("hhq_complete")
+        App.getSinglePool().execute {
+            getSumDD()
         }
+
+//        sortpriceHisRecordGDBean(list)
+//        list.forEach {
+//            if (it.id > 600000) {
+//                txtname = "sh_"
+//            } else if (it.id > 300000) {
+//                txtname = "cy_"
+//            } else {
+//                txtname = "sz_"
+//            }
+//            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
+//        }
         LogUtil.d("logDealDetailHqSum---completed----------------------------")
 
     }
@@ -1185,6 +1189,9 @@ class NewApiViewModel : BaseViewModel() {
             curYearTS,
             curMonthTS
         )
+        App.getSinglePool().execute {
+            filter()
+        }
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
     }
@@ -2612,9 +2619,9 @@ class NewApiViewModel : BaseViewModel() {
 
                 }
             }
-
-
         }
+
+        (mActivity as NewApiActivity).setFilterInfo("Filter_complete")
 
     }
 
