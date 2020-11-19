@@ -151,6 +151,7 @@ object DBUtils {
     }
 
     fun switchDBName(name: String) {
+        db.close()
         App.getmManager().switchDB(name)
         db = DaoManager.getDB()
     }
@@ -257,6 +258,7 @@ object DBUtils {
                 var CODE = cursor.getString(cursor.getColumnIndex("CODE"))
                 LogUtil.d("CODE:$CODE")
             }
+            cursor.close()
         }
         return DATE
     }
@@ -415,6 +417,7 @@ object DBUtils {
             if (null != cursor && cursor.moveToLast()) {
                 DATE = cursor.getString(cursor.getColumnIndex("DATE"))
             }
+            cursor.close()
         }
         return DATE
     }
@@ -427,6 +430,7 @@ object DBUtils {
             if (null != cursor && cursor.moveToLast()) {
                 DATE = cursor.getString(cursor.getColumnIndex("DATE"))
             }
+            cursor.close()
         }
         return DATE
     }
@@ -684,6 +688,7 @@ object DBUtils {
                 }
                 LogUtil.d("queryFirstOPByCodeHDD Date:$Date")
             }
+            cursor.close()
         }
         return op
     }
