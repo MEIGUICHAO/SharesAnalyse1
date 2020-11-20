@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.util.SparseArray
+import androidx.core.util.set
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.google.gson.Gson
 import com.mgc.sharesanalyse.NewApiActivity
@@ -2620,6 +2621,7 @@ class NewApiViewModel : BaseViewModel() {
         type: Int,
         checkFilterBean: CheckFilterBean
     ): CheckFilterBean {
+
         when (type) {
             1 -> {
                 val countList = arrayListOf(false, false, false, false)
@@ -2653,7 +2655,6 @@ class NewApiViewModel : BaseViewModel() {
 //                        &&it.p_DA_J.d72 >= 55 && it.p_DA_J.d72 <= 65
                         //60:50~60  72:55~65
                         ) {
-                        LogUtil.d("p_autr_j---date:${it.date}---$code")
                         countList[0] = true
                         val filterDateBean = FilterDateBean()
                         filterDateBean.date = it.date
@@ -2662,7 +2663,6 @@ class NewApiViewModel : BaseViewModel() {
                         filterJsBean.autr = GsonHelper.toJson(autrList)
 
 
-                        LogUtil.d("p_DA_J---date:${it.date}---$code")
                         countList[1] = true
                         val filterDateBean2 = FilterDateBean()
                         filterDateBean2.date = it.date
@@ -2704,11 +2704,89 @@ class NewApiViewModel : BaseViewModel() {
 
             }
             2->{
-                beanList.forEach {
-                    maArray[code.toInt()]
-                    if (it.p_MA_J.d05 >= it.p_MA_J.d10 && it.p_MA_J.d10 >= it.p_MA_J.d20 && it.p_MA_J.d20 >= it.p_MA_J.d30 && (it.p_MA_J.d05 + it.p_MA_J.d05 * 0.1) <= it.p_MA_J.alp) {
 
+                val ma1List = ArrayList<FilterDateBean>()
+                val ma2List = ArrayList<FilterDateBean>()
+                val pp1List = ArrayList<FilterDateBean>()
+                val pp2List = ArrayList<FilterDateBean>()
+                beanList.forEach {
+                    val tbName = Datas.MAPPFilter + DateUtils.changeFormatter(
+                        DateUtils.parse(
+                            it.date,
+                            FormatterEnum.YYYYMMDD
+                        ), FormatterEnum.YYMM
+                    )
+                    val judeTag = it.p_MA_J.d05 >= it.p_MA_J.d10 && it.p_MA_J.d10 >= it.p_MA_J.d20 && it.p_MA_J.d20 >= it.p_MA_J.d30
+                    val ppJudeTag = it.p_PP_J.d05 >= it.p_PP_J.d10 && it.p_PP_J.d10 >= it.p_PP_J.d20 && it.p_PP_J.d20 >= it.p_PP_J.d30
+                    var lastbean = DBUtils.queryMAPPFilterBeanByCode(tbName, code)
+                    if (null == lastbean) {
+                        lastbean = MAPPFilterBean()
+                        lastbean.code = code.toInt()
                     }
+
+                    DBUtils.switchDBName(code.toCodeHDD(it.date, FormatterEnum.YYYYMMDD))
+                    val beginOP = DBUtils.queryFirstOPByCodeHDD( Datas.CHDD + code)
+                    LogUtil.d("beginOP:$beginOP")
+                    if (beginOP > 0) {
+                        val diff = BigDecimalUtils.sub(it.p_PP_J.aacp, beginOP)
+                        LogUtil.d("closeP:${it.p_PP_J.aacp},diff:$diff")
+                        lastbean.aup = BigDecimalUtils.div(diff, beginOP) * 100
+                    }
+                    if (lastbean.aup > lastbean.maup||lastbean.maup ==0.toFloat()) {
+                        lastbean.maup = lastbean.aup
+                    }
+                    if (lastbean.aup < lastbean.laup||lastbean.laup ==0.toFloat()) {
+                        lastbean.laup = lastbean.aup
+                    }
+                    if (judeTag) {
+                        //首次大于dlp
+                        if (null == maArray[code.toInt()] || (!maArray[code.toInt()] && it.p_MA_J.d05 < it.p_MA_J.alp)) {
+                            lastbean.date = it.date.toInt()
+                            val filterDateBean = FilterDateBean()
+                            filterDateBean.json = GsonHelper.toJson(it.p_MA_J)
+                            filterDateBean.date = it.date
+                            ma1List.add(filterDateBean)
+                            lastbean.maT1 = GsonHelper.toJson(ma1List)
+                            lastbean.maC1 = lastbean.maC1 + 1
+                            lastbean.count = lastbean.count + 1
+                        }
+                        if ((it.p_MA_J.d05 + it.p_MA_J.d05 * 0.1) <= it.p_MA_J.alp) {
+                            lastbean.date = it.date.toInt()
+                            val filterDateBean = FilterDateBean()
+                            filterDateBean.json = GsonHelper.toJson(it.p_MA_J)
+                            filterDateBean.date = it.date
+                            ma2List.add(filterDateBean)
+                            lastbean.maT2 = GsonHelper.toJson(ma2List)
+                            lastbean.maC2 = lastbean.maC2 + 1
+                            lastbean.count = lastbean.count + 1
+                        }
+                    }
+                    maArray.put(code.toInt(),it.p_MA_J.d05 < it.p_MA_J.alp)
+                    if (ppJudeTag) {
+                        //首次大于dlp
+                        if (null == ppArray[code.toInt()] || (!ppArray[code.toInt()] && it.p_PP_J.d05 < it.p_PP_J.alp)) {
+                            lastbean.date = it.date.toInt()
+                            val filterDateBean = FilterDateBean()
+                            filterDateBean.json = GsonHelper.toJson(it.p_PP_J)
+                            filterDateBean.date = it.date
+                            pp1List.add(filterDateBean)
+                            lastbean.ppT1 = GsonHelper.toJson(pp1List)
+                            lastbean.ppC1 = lastbean.ppC1 + 1
+                            lastbean.count = lastbean.count + 1
+                        }
+                        if ((it.p_PP_J.d05 + it.p_PP_J.d05 * 0.1) <= it.p_PP_J.alp) {
+                            lastbean.date = it.date.toInt()
+                            val filterDateBean = FilterDateBean()
+                            filterDateBean.json = GsonHelper.toJson(it.p_PP_J)
+                            filterDateBean.date = it.date
+                            pp2List.add(filterDateBean)
+                            lastbean.ppT2 = GsonHelper.toJson(pp2List)
+                            lastbean.ppC2 = lastbean.ppC2 + 1
+                            lastbean.count = lastbean.count + 1
+                        }
+                    }
+                    ppArray.put (code.toInt(),it.p_PP_J.d05 < it.p_PP_J.alp)
+                    DBUtils.insertOrUpdateMAPPFilterTable(tbName,lastbean)
                 }
             }
         }
@@ -2718,6 +2796,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     val maArray = SparseArray<Boolean>()
+    val ppArray = SparseArray<Boolean>()
 
 //    private fun filterByType(type: Int, bean: CodeHDDBean) {
 //        when (type) {

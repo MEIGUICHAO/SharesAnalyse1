@@ -151,6 +151,7 @@ object DBUtils {
     }
 
     fun switchDBName(name: String) {
+        LogUtil.d("switchDBName:$name")
         if (name != DaoManager.DB_NAME) {
             db.close()
         }
@@ -867,5 +868,86 @@ object DBUtils {
         return list
     }
 
+
+    fun insertOrUpdateMAPPFilterTable(
+        tbName: String,
+        filterBean:  MAPPFilterBean
+    ) {
+        switchDBName(Datas.MAPPFilterDB)
+        createMAPPFilterTable(tbName)
+        if (!queryDataIsExsitByCode(tbName, filterBean.code.toString())) {
+            val insertSqlStr = "INSERT INTO $tbName" +
+                    "(CODE,AUP,MAUP,LAUP,DATE,COUNT,MAT1,MAC1,PPT1,PPC1,MAT2,MAC2,PPT2,PPC2,MAT3,MAC3,PPT3,PPC3)" +
+                    " VALUES${filterBean.toInsert()}"
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        } else {
+            val sql = "UPDATE $tbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
+            LogUtil.d("updateSqlStr:$sql")
+            db.execSQL(sql)
+        }
+    }
+
+
+    private fun createMAPPFilterTable(dbName: String) {
+        if (!tabbleIsExist(dbName)) {
+            val sqlStr =
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER, AUP INTEGER,MAUP INTEGER,LAUP INTEGER, DATE INTEGER, COUNT INTEGER," +
+                        " MAT1 TEXT, MAC1 INTEGER, PPT1 TEXT, PPC1 INTEGER,  MAT2 TEXT, MAC2 INTEGER, PPT2 TEXT, PPC2 INTEGER,  MAT3 TEXT, MAC3 INTEGER, PPT3 TEXT, PPC3 INTEGER);"
+            db.execSQL(sqlStr)
+        }
+    }
+
+    fun queryMAPPFilterBeanByCode(dbName: String, code: String): MAPPFilterBean? {
+        switchDBName(Datas.MAPPFilterDB)
+        LogUtil.d("queryMAPPFilterBeanByCode:${DaoManager.DB_NAME}")
+        var mappFilterBean: MAPPFilterBean? = null
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+            LogUtil.d("cursor:${cursor.count}")
+            if (null != cursor && cursor.moveToFirst()) {
+                mappFilterBean = MAPPFilterBean()
+                val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
+                val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
+                val MAUP = cursor.getFloat(cursor.getColumnIndex("MAUP"))
+                val LAUP = cursor.getFloat(cursor.getColumnIndex("LAUP"))
+                val COUNT = cursor.getInt(cursor.getColumnIndex("COUNT"))
+                val MAC1 = cursor.getInt(cursor.getColumnIndex("MAC1"))
+                val MAC2 = cursor.getInt(cursor.getColumnIndex("MAC2"))
+                val MAC3 = cursor.getInt(cursor.getColumnIndex("MAC3"))
+                val PPC1 = cursor.getInt(cursor.getColumnIndex("PPC1"))
+                val PPC2 = cursor.getInt(cursor.getColumnIndex("PPC2"))
+                val PPC3 = cursor.getInt(cursor.getColumnIndex("PPC3"))
+
+                val MAT1 = cursor.getString(cursor.getColumnIndex("MAT1"))
+                val MAT2 = cursor.getString(cursor.getColumnIndex("MAT2"))
+                val MAT3 = cursor.getString(cursor.getColumnIndex("MAT3"))
+                val PPT1 = cursor.getString(cursor.getColumnIndex("PPT1"))
+                val PPT2 = cursor.getString(cursor.getColumnIndex("PPT2"))
+                val PPT3 = cursor.getString(cursor.getColumnIndex("PPT3"))
+
+                mappFilterBean.code = CODE
+                mappFilterBean.aup = AUP
+                mappFilterBean.maup = MAUP
+                mappFilterBean.laup = LAUP
+                mappFilterBean.count = COUNT
+                mappFilterBean.maC1 = MAC1
+                mappFilterBean.maC2 = MAC2
+                mappFilterBean.maC3 = MAC3
+                mappFilterBean.ppC1 = PPC1
+                mappFilterBean.ppC2 = PPC2
+                mappFilterBean.ppC3 = PPC3
+                mappFilterBean.maT1 = MAT1
+                mappFilterBean.maT2 = MAT2
+                mappFilterBean.maT3 = MAT3
+                mappFilterBean.ppT1 = PPT1
+                mappFilterBean.ppT2 = PPT2
+                mappFilterBean.ppT3 = PPT3
+            }
+            cursor.close()
+        }
+        return mappFilterBean
+    }
 
 }
