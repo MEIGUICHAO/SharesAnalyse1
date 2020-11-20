@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.util.SparseArray
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.google.gson.Gson
 import com.mgc.sharesanalyse.NewApiActivity
@@ -911,16 +912,6 @@ class NewApiViewModel : BaseViewModel() {
                 FormatterEnum.YYYYMMDD
             )
         SPUtils.put(Datas.SPGetHQCodeDate, date)
-        //300185！！！
-        detailCodeList.clear()
-        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-        LogUtil.d("getPriceHisFileLog list size:${list.size}")
-        sortpriceHisRecordGDBean(list)
-
-//        var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
-        list.forEach {
-            detailCodeList.add(it.code)
-        }
         logDealDetailHqSum()
 //        if (mActivity is NewApiActivity) {
 //            (mActivity as NewApiActivity).requestDealDetailBtn()
@@ -940,14 +931,13 @@ class NewApiViewModel : BaseViewModel() {
     fun logDealDetailHqSum() {
         needGoOn = false
         LogUtil.d("complete==========================")
-        var list = DaoUtilsStore.getInstance().priceHisRecordGDBeanCommonDaoUtils.queryAll()
-        var txtname: String
         val hhqList = getDDList().second
         for (i in 0 until hhqList.size - 1) {
             DBUtils.dropTable(hhqList[i])
         }
         (mActivity as NewApiActivity).setBtnHHQInfo("hhq_complete")
         App.getSinglePool().execute {
+            DBUtils.switchDBName(Datas.dataNamesDefault)
             getSumDD()
         }
 
@@ -962,7 +952,6 @@ class NewApiViewModel : BaseViewModel() {
 //            }
 //            FileLogUtil.d("${parentBasePath}${txtname}hishq$pathDate", "\n" + it.result)
 //        }
-        LogUtil.d("logDealDetailHqSum---completed----------------------------")
 
     }
 
@@ -2714,11 +2703,21 @@ class NewApiViewModel : BaseViewModel() {
                 }
 
             }
+            2->{
+                beanList.forEach {
+                    maArray[code.toInt()]
+                    if (it.p_MA_J.d05 >= it.p_MA_J.d10 && it.p_MA_J.d10 >= it.p_MA_J.d20 && it.p_MA_J.d20 >= it.p_MA_J.d30 && (it.p_MA_J.d05 + it.p_MA_J.d05 * 0.1) <= it.p_MA_J.alp) {
+
+                    }
+                }
+            }
         }
         return checkFilterBean
 
 
     }
+
+    val maArray = SparseArray<Boolean>()
 
 //    private fun filterByType(type: Int, bean: CodeHDDBean) {
 //        when (type) {

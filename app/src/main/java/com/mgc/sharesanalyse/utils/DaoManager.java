@@ -101,6 +101,7 @@ public class DaoManager {
     }
 
     public  void switchDB(String dbName) {
+        LogUtil.d("DB_NAME:" + DB_NAME + "->" + dbName);
         if (!dbName.equals(DB_NAME)) {
             sHelper = new CommonOpenHelper(context, dbName, null);
             sDaoMaster = new DaoMaster(sHelper.getWritableDatabase());

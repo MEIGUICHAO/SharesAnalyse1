@@ -99,8 +99,16 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.detailCodeList.clear()
             var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
             list.forEach {
-                viewModel.detailCodeList.add(it.code)
+                if (Datas.DEBUG) {
+                    if (it.code.contains(Datas.DEBUG_Code)) {
+                        viewModel.detailCodeList.add(it.code)
+                    }
+                } else {
+                    viewModel.detailCodeList.add(it.code)
+                }
+
             }
+
             requestDealDetailBtn()
         }
         btnRequestPricehis.setOnClickListener {
@@ -292,6 +300,7 @@ class NewApiActivity : AppCompatActivity() {
 
     private fun hHqGoNext() {
         progressIndex++
+        LogUtil.d("progressIndex:$progressIndex / ${viewModel.codeNameList.size}")
         if (progressIndex < viewModel.codeNameList.size) {
             getHisHq()
         } else {

@@ -151,7 +151,9 @@ object DBUtils {
     }
 
     fun switchDBName(name: String) {
-        db.close()
+        if (name != DaoManager.DB_NAME) {
+            db.close()
+        }
         App.getmManager().switchDB(name)
         db = DaoManager.getDB()
     }
