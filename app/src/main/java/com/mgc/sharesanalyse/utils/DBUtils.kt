@@ -747,6 +747,7 @@ object DBUtils {
         return checkFilterBean
     }
 
+
 //    private String code;
 //    private int FilterTypeCount;
 //    private String FilterJs;
