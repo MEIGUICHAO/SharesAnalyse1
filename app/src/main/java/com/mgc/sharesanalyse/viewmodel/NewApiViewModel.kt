@@ -2094,73 +2094,73 @@ class NewApiViewModel : BaseViewModel() {
         codeHDDBean.p_MA_J.alp = getHisHqDayLowestPrice(hhqbean)
         codeHDDBean.p_MA_J.amp = getHisHqDayHighestPrice(hhqbean)
         var beginPrice = 0.toFloat()
-        if (hq.size > hhqBeginIndex + 2) {
+        if (hq.size > hhqBeginIndex + 3) {
             codeHDDBean.p_MA_J.d03 = kotlin.run {
-                for (i in 0 until 3) {
+                for (i in 1 until 4) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 3
             }
         }
-        if (hq.size > hhqBeginIndex + 4) {
+        if (hq.size > hhqBeginIndex + 5) {
             codeHDDBean.p_MA_J.d05 = kotlin.run {
-                for (i in 3 until 5) {
+                for (i in 4 until 6) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 5
             }
         }
-        if (hq.size > hhqBeginIndex + 9) {
+        if (hq.size > hhqBeginIndex + 10) {
             codeHDDBean.p_MA_J.d10 = kotlin.run {
-                for (i in 5 until 10) {
+                for (i in 6 until 11) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 10
             }
         }
-        if (hq.size > hhqBeginIndex + 14) {
+        if (hq.size > hhqBeginIndex + 15) {
             codeHDDBean.p_MA_J.d15 = kotlin.run {
-                for (i in 10 until 15) {
+                for (i in 11 until 16) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 15
             }
         }
-        if (hq.size > hhqBeginIndex + 19) {
+        if (hq.size > hhqBeginIndex + 20) {
             codeHDDBean.p_MA_J.d20 = kotlin.run {
-                for (i in 15 until 20) {
+                for (i in 16 until 21) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 20
             }
         }
-        if (hq.size > hhqBeginIndex + 24) {
+        if (hq.size > hhqBeginIndex + 25) {
             codeHDDBean.p_MA_J.d25 = kotlin.run {
-                for (i in 20 until 25) {
+                for (i in 21 until 26) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 25
             }
         }
-        if (hq.size > hhqBeginIndex + 29) {
+        if (hq.size > hhqBeginIndex + 30) {
             codeHDDBean.p_MA_J.d30 = kotlin.run {
-                for (i in 25 until 30) {
+                for (i in 26 until 31) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 30
             }
         }
-        if (hq.size > hhqBeginIndex + 59) {
+        if (hq.size > hhqBeginIndex + 60) {
             codeHDDBean.p_MA_J.d60 = kotlin.run {
-                for (i in 30 until 60) {
+                for (i in 31 until 61) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 60
             }
         }
-        if (hq.size > hhqBeginIndex + 71) {
+        if (hq.size > hhqBeginIndex + 72) {
             codeHDDBean.p_MA_J.d72 = kotlin.run {
-                for (i in 60 until 72) {
+                for (i in 61 until 73) {
                     beginPrice = beginPrice + getHisHqDayClosePrice(hq[hhqBeginIndex + i])
                 }
                 beginPrice / 72
