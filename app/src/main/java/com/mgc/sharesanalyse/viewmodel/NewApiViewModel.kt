@@ -431,14 +431,14 @@ class NewApiViewModel : BaseViewModel() {
             var startValue = ""
             val judeIndex = (DateUtils.formatToDay(FormatterEnum.YYYY) + "00").toInt()
             val toDay = (DateUtils.formatToDay(FormatterEnum.YYYYMM)).toInt()
-            val result = toDay - 6
+            val result = toDay - Datas.HHQDayCount
             val lastYearBegin =
                 (DateUtils.formatToDay(FormatterEnum.YYYY).toInt() - 1).toString() + "12"
             if (result <= judeIndex) {
                 startValue = (lastYearBegin.toInt() - (judeIndex - result)).toString() + "01"
             } else {
                 startValue =
-                    (DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt() - 6).toString() + "01"
+                    (DateUtils.formatToDay(FormatterEnum.YYYYMM).toInt() - Datas.HHQDayCount).toString() + "01"
             }
             startValue
         }, end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
@@ -2745,6 +2745,8 @@ class NewApiViewModel : BaseViewModel() {
                     if (lastbean.aup < lastbean.laup || lastbean.laup == 0.toFloat()) {
                         lastbean.laup = lastbean.aup
                     }
+//                    LogUtil.d("ppJudeTag ${ppJudeTag} --->date:${it.date.toInt()},code:${code}")
+
                     if (ppJudeTag) {
                         //首次大于dlp
                         val jude1Tag =
