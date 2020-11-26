@@ -125,20 +125,10 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.getSumDD()
             }
         }
-        btnFilter.setOnClickListener {
-            App.getSinglePool().execute {
-                viewModel.filter()
-            }
-        }
 
     }
 
 
-    fun setFilterInfo(info: String) {
-        btnFilter.post {
-            btnFilter.setText(info)
-        }
-    }
 
     fun setAllCodeInfo(info: String) {
         btnGetALlCode.post {

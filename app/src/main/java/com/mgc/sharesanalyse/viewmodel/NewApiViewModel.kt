@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
-import android.util.SparseArray
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
@@ -1183,9 +1182,9 @@ class NewApiViewModel : BaseViewModel() {
             curYearTS,
             curMonthTS
         )
-        App.getSinglePool().execute {
-            filter()
-        }
+//        App.getSinglePool().execute {
+//            filter()
+//        }
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
     }
@@ -2303,7 +2302,7 @@ class NewApiViewModel : BaseViewModel() {
             val diff = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean), beginOP)
             codeHDDBean.aup = BigDecimalUtils.div(diff, beginOP) * 100
         }
-        DBUtils.insertCodeHDD(tbName, codeHDDBean)
+        DBUtils.insertCodeHDD(tbName, codeHDDBean,ddBean.code,date)
     }
 
     private fun operaNewCodeHDD(
@@ -2376,24 +2375,42 @@ class NewApiViewModel : BaseViewModel() {
             if (code.toInt() > 300000 && code.toInt() < 600000) {
                 limitPercent = 19.toDouble()
             }
+            var filterCodeHDDBean: FilterCodeHDDBean? = null
             if (curPercent > 0 && yestPercent < 0) {
                 if (oldMp < cp && oldOp < cp&& oldCp > op && oldLp > op) {
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 11
                     codeHDDBean.k_J.ctc.ctC_U.typeA = baseType
                 } else if (oldLp > lp && oldCp < op && oldOp > cp && mp == cp) {
 //                    LogUtil.d("BaseType_old---> \n${GsonHelper.getInstance().toJson(chddDDBeanList[chddDDBeanList.size - 1])}")
 //                    LogUtil.d("BaseType_--> \n${GsonHelper.getInstance().toJson(baseType)}")
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 12
                     codeHDDBean.k_J.ctc.ctC_U.typeB = baseType
                 } else if (yestPercent < -limitPercent && curPercent > limitPercent) {
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 13
                     codeHDDBean.k_J.ctc.ctC_U.typeC = baseType
                 }
             } else if (curPercent < 0 && yestPercent > 0) {
                 if (oldMp < op && oldCp < op && oldOp > cp && oldLp > cp) {
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 21
                     codeHDDBean.k_J.ctc.ctC_D.typeA = baseType
                 } else if (oldMp < mp && oldOp < cp && oldCp > op) {
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 22
                     codeHDDBean.k_J.ctc.ctC_D.typeB = baseType
                 } else if (curPercent < -limitPercent && yestPercent > limitPercent) {
+                    filterCodeHDDBean = FilterCodeHDDBean()
+                    filterCodeHDDBean.kJ_CTC_TYPE = 23
                     codeHDDBean.k_J.ctc.ctC_D.typeC = baseType
                 }
+            }
+            filterCodeHDDBean?.let {
+                it.code = code.toInt()
+                it.kJ_CTC_J = GsonHelper.toJson(baseType)
+                DBUtils.insertOrUpdateFilterCodeHddTable(Datas.FILTER_CODE_TB + date, it)
             }
         }
 
@@ -2859,302 +2876,8 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
-    fun filter() {
-        val pathList = FileUtil.getFileNameList(Datas.DBPath)
-        val mCHDDList = ArrayList<String>()
-        pathList.forEach {
-            if (it.contains("_CHDD_") && !it.contains("journal")) {
-                mCHDDList.add(it)
-            }
-        }
-        Collections.sort(mCHDDList, object : Comparator<String> {
-            override fun compare(p0: String, p1: String): Int {
-                return p0.CHDD2YYMM().toInt()
-                    .compareTo(
-                        p1.CHDD2YYMM().toInt()
-                    )
-            }
-        })
-        mCHDDList.forEach {
-            val tbname = it
-            DBUtils.switchDBName(it)
-            for (i in 0 until codeNameList.size) {
-                val code = codeNameList[i].split(splitTag)[0].toInt()
-                if ((it.contains("SH") && code > 600000) || (it.contains("SZ") && code < 300000) || (it.contains(
-                        "CY"
-                    ) && code > 300000)
-                ) {
-                    var checkFilterBean = DBUtils.queryCheckFilterByCode(
-                        Datas.CheckFilter,
-                        code.toString(),
-                        it.CHDD2YYMM()
-                    )
-                    val chddDDBeanList = DBUtils.queryCHDDByTableName("DD_$code", it)
-                    chddDDBeanList?.let {
-                        if (null != checkFilterBean) {
-                            for (j in Datas.FILTER_TYPE_BEGIN..Datas.FILTER_TYPE_COUNT) {
-                                if (checkFilterBean!!.checkSize >= j && checkFilterBean!!.date >= it[it.size - 1].date.toInt()) {
-                                    continue
-                                } else {
-                                    //新增过滤方法
-                                    if (checkFilterBean!!.checkSize < j) {
-                                        checkFilterBean!!.checkSize = j
-                                        (mActivity as NewApiActivity).setFilterInfo("$tbname _Filter_${code}_Type:${j}")
-                                        checkFilterBean =
-                                            filterByType(code.toString(), it, j, checkFilterBean!!)
-                                    }
-                                    DBUtils.insertOrUpdateCheckFilterTable(
-                                        Datas.CheckFilter,
-                                        it[0].date,
-                                        checkFilterBean!!
-                                    )
-                                }
-                            }
-                        } else {
-                            checkFilterBean = CheckFilterBean()
-                            checkFilterBean!!.code = code.toString()
-                            for (j in Datas.FILTER_TYPE_BEGIN..Datas.FILTER_TYPE_COUNT) {
-                                (mActivity as NewApiActivity).setFilterInfo("$tbname Filter_${code}_Type:${j}")
-                                checkFilterBean!!.checkSize = j
-                                checkFilterBean =
-                                    filterByType(code.toString(), it, j, checkFilterBean!!)
-                            }
-                            DBUtils.insertOrUpdateCheckFilterTable(
-                                Datas.CheckFilter,
-                                it[0].date,
-                                checkFilterBean!!
-                            )
-
-                        }
-                    }
 
 
-                }
-            }
-        }
-
-        (mActivity as NewApiActivity).setFilterInfo("Filter_complete")
-
-    }
-
-    private fun filterByType(
-        code: String,
-        beanList: java.util.ArrayList<CodeHDDBean>,
-        type: Int,
-        checkFilterBean: CheckFilterBean
-    ): CheckFilterBean {
-
-        when (type) {
-            1 -> {
-                val countList = arrayListOf(false, false, false, false)
-                val filterBean = FilterBean()
-                filterBean.code = code
-                val filterJsBean = FilterJsBean()
-                filterJsBean.type = type.toString()
-                val autrList = ArrayList<FilterDateBean>()
-                val da1List = ArrayList<FilterDateBean>()
-                val pp1List = ArrayList<FilterDateBean>()
-                beanList.forEach {
-                    checkFilterBean.date = it.date.toInt()
-                    if (it.p_autr_j.d03 >= 20 && it.p_autr_j.d03 <= 50
-                        && it.p_autr_j.d05 >= 34 && it.p_autr_j.d05 <= 80
-                        && it.p_autr_j.d10 >= 75 && it.p_autr_j.d10 <= 125
-                        && it.p_autr_j.d15 >= 115 && it.p_autr_j.d15 <= 170
-                        && it.p_autr_j.d20 >= 160 && it.p_autr_j.d20 <= 250
-                        && it.p_autr_j.d25 >= 230 && it.p_autr_j.d25 <= 300
-                        && it.p_autr_j.d30 >= 250 && it.p_autr_j.d30 <= 350
-//                        && it.p_autr_j.d60 >= 400 && it.p_autr_j.d60 <= 540
-//                        && it.p_autr_j.d72 >= 450 && it.p_autr_j.d72 <= 600
-                        //60:400~540  72:450~600
-                        && it.p_DA_J.d03 >= 2.4 && it.p_DA_J.d03 <= 6.8
-                        && it.p_DA_J.d05 >= 3.8 && it.p_DA_J.d05 <= 12
-                        && it.p_DA_J.d10 >= 7.8 && it.p_DA_J.d10 <= 17
-                        && it.p_DA_J.d15 >= 13 && it.p_DA_J.d15 <= 22
-                        && it.p_DA_J.d20 >= 18 && it.p_DA_J.d20 <= 35
-                        && it.p_DA_J.d25 >= 26 && it.p_DA_J.d25 <= 42
-                        && it.p_DA_J.d30 >= 28 && it.p_DA_J.d30 <= 45
-//                        &&it.p_DA_J.d60 >= 50 && it.p_DA_J.d60 <= 60
-//                        &&it.p_DA_J.d72 >= 55 && it.p_DA_J.d72 <= 65
-                    //60:50~60  72:55~65
-                    ) {
-                        countList[0] = true
-                        val filterDateBean = FilterDateBean()
-                        filterDateBean.date = it.date
-                        filterDateBean.json = GsonHelper.toJson(it.p_autr_j)
-                        autrList.add(filterDateBean)
-                        filterJsBean.autr = GsonHelper.toJson(autrList)
-
-
-                        countList[1] = true
-                        val filterDateBean2 = FilterDateBean()
-                        filterDateBean2.date = it.date
-                        filterDateBean2.json = GsonHelper.toJson(it.p_DA_J)
-                        da1List.add(filterDateBean2)
-                        filterJsBean.dA1 = GsonHelper.toJson(da1List)
-                    }
-//                    if (
-//                        ) {
-//                    }
-                    if (it.p_PP_J.d03 >= it.p_PP_J.d30 && it.p_PP_J.d05 >= it.p_PP_J.d30 && BigDecimalUtils.safeDiv(
-                            BigDecimalUtils.sub(it.p_PP_J.d05, it.p_PP_J.d10),
-                            it.p_PP_J.d10
-                        ) >= 0.035
-                    ) {
-//                        LogUtil.d("p_PP_J---date:${it.date}---$code")
-//                        countList[2] = true
-                        val filterDateBean = FilterDateBean()
-                        filterDateBean.date = it.date
-                        filterDateBean.json = GsonHelper.toJson(it.p_DA_J)
-                        pp1List.add(filterDateBean)
-                        filterJsBean.pP1 = GsonHelper.toJson(pp1List)
-                    }
-                }
-                var filterCount = 0
-                countList.forEach {
-
-                    if (it) {
-                        filterCount++
-                    }
-                }
-                if (filterCount > 0) {
-                    val filterJsBeanList = ArrayList<FilterJsBean>()
-                    filterJsBeanList.add(filterJsBean)
-                    filterBean.filterJs = GsonHelper.toJson(filterJsBeanList)
-                    filterBean.filterTypeCount++
-                    DBUtils.insertOrUpdateFilterTable(
-                        Datas.TBFilter + code,
-                        beanList[0].date,
-                        filterBean
-                    )
-                }
-
-            }
-            2 -> {
-
-                val ma1List = ArrayList<FilterDateBean>()
-                val ma2List = ArrayList<FilterDateBean>()
-                val pp1List = ArrayList<FilterDateBean>()
-                val pp2List = ArrayList<FilterDateBean>()
-                beanList.forEach {
-                    val tbName = Datas.MAPPFilter + DateUtils.changeFormatter(
-                        DateUtils.parse(
-                            it.date,
-                            FormatterEnum.YYYYMMDD
-                        ), FormatterEnum.YYMM
-                    )
-//                    var judeTag =
-//                        (it.p_MA_J.d05 >= it.p_MA_J.d10 && it.p_MA_J.d10 >= it.p_MA_J.d20 && it.p_MA_J.d20 >= it.p_MA_J.d30) && it.tr.percent2Float() > 15.toFloat() && it.p_MA_J.d30 > 0
-                    var ppJudeTag =
-                        (it.p_PP_J.d05 >= it.p_PP_J.d10 && it.p_PP_J.d10 >= it.p_PP_J.d20 && it.p_PP_J.d20 >= it.p_PP_J.d30) && it.p_PP_J.d30 > 0
-                    var lastbean = DBUtils.queryMAPPFilterBeanByCode(tbName, code)
-                    if (null == lastbean) {
-                        lastbean = MAPPFilterBean()
-                        lastbean.code = code.toInt()
-                    }
-                    DBUtils.switchDBName(code.toCodeHDD(it.date, FormatterEnum.YYYYMMDD))
-                    val beginOP = DBUtils.queryFirstOPByCodeHDD(Datas.CHDD + code)
-                    LogUtil.d("beginOP:$beginOP")
-                    if (beginOP > 0) {
-                        val diff = BigDecimalUtils.sub(it.p_PP_J.aacp, beginOP)
-                        LogUtil.d("closeP:${it.p_PP_J.aacp},diff:$diff")
-                        lastbean.aup = BigDecimalUtils.div(diff, beginOP) * 100
-                    }
-                    if (lastbean.aup > lastbean.maup || lastbean.maup == 0.toFloat()) {
-                        lastbean.maup = lastbean.aup
-                    }
-                    if (lastbean.aup < lastbean.laup || lastbean.laup == 0.toFloat()) {
-                        lastbean.laup = lastbean.aup
-                    }
-//                    LogUtil.d("ppJudeTag ${ppJudeTag} --->date:${it.date.toInt()},code:${code}")
-
-                    if (ppJudeTag) {
-                        //首次大于dlp
-                        val jude1Tag =
-                            (it.p_MA_J.d05 < it.p_MA_J.d10 && it.p_MA_J.aacp > it.p_MA_J.d10)
-                                    && (it.p_MA_J.d10 > it.p_MA_J.d15 && it.p_MA_J.d15 > it.p_MA_J.d20 && it.p_MA_J.d20 > it.p_MA_J.d25 && it.p_MA_J.d25 > it.p_MA_J.d30)
-                                    && ((it.p_MA_J.aacp - it.p_MA_J.aaop) / it.p_MA_J.aaop > Datas.BIG_RED_RANGE) && it.tr.percent2Float() >= 10.toFloat()
-                        if (jude1Tag) {
-                            LogUtil.d("ppJudeTag jude1Tag--->date:${it.date.toInt()},code:${code}")
-                            lastbean.date = it.date.toInt()
-                            val filterDateBean = FilterDateBean()
-                            filterDateBean.json = GsonHelper.toJson(it.p_MA_J)
-                            filterDateBean.date = it.date
-                            ma1List.add(filterDateBean)
-                            lastbean.maT1 = GsonHelper.toJson(ma1List)
-                            lastbean.maC1 = lastbean.maC1 + 1
-                            lastbean.count = lastbean.count + 1
-                            DBUtils.insertOrUpdateMAPPFilterTable(tbName, lastbean)
-                        }
-
-                        val jude2Tag =
-                            (it.p_MA_J.aacp > it.p_MA_J.d05 && it.p_MA_J.d05 > it.p_MA_J.d10 && it.p_MA_J.d10 > it.p_MA_J.d15 && it.p_MA_J.d15 > it.p_MA_J.d20 && it.p_MA_J.d20 > it.p_MA_J.d25 && it.p_MA_J.d25 > it.p_MA_J.d30)
-                                    && (it.p_MA_J.aaop > it.p_MA_J.d30 && it.p_MA_J.aaop < it.p_MA_J.d10)
-                                    && ((it.p_MA_J.aacp - it.p_MA_J.aaop) / it.p_MA_J.aaop > Datas.BIG_RED_RANGE) && it.tr.percent2Float() >= 10.toFloat()
-                        if (jude2Tag) {
-                            LogUtil.d("ppJudeTag jude2Tag--->date:${it.date.toInt()},code:${code}")
-                            lastbean.date = it.date.toInt()
-                            val filterDateBean = FilterDateBean()
-                            filterDateBean.json = GsonHelper.toJson(it.p_MA_J)
-                            filterDateBean.date = it.date
-                            ma2List.add(filterDateBean)
-                            lastbean.maT2 = GsonHelper.toJson(ma2List)
-                            lastbean.maC2 = lastbean.maC2 + 1
-                            lastbean.count = lastbean.count + 1
-                            DBUtils.insertOrUpdateMAPPFilterTable(tbName, lastbean)
-                        }
-                    }
-//                    maArray.put(code.toInt(),it.p_MA_J.d05 < it.p_MA_J.alp)
-//                    if (ppJudeTag) {
-//                        //首次大于dlp
-//
-//                        ppJudeTag =
-//                            it.p_PP_J.aacp == it.p_PP_J.amp && ((it.p_PP_J.aacp - it.p_PP_J.aaop) / it.p_PP_J.aaop > Datas.BIG_RED_RANGE)
-//                        if ((null == ppArray[code.toInt()] || !ppArray[code.toInt()]) && it.p_PP_J.d05 < it.p_PP_J.alp && ppJudeTag) {
-//                            lastbean.date = it.date.toInt()
-//                            val filterDateBean = FilterDateBean()
-//                            filterDateBean.json = GsonHelper.toJson(it.p_PP_J)
-//                            filterDateBean.date = it.date
-//                            pp1List.add(filterDateBean)
-//                            lastbean.ppT1 = GsonHelper.toJson(pp1List)
-//                            lastbean.ppC1 = lastbean.ppC1 + 1
-//                            lastbean.count = lastbean.count + 1
-//                            DBUtils.insertOrUpdateMAPPFilterTable(tbName,lastbean)
-//
-//                        }
-//                        if ((it.p_PP_J.d05 + it.p_PP_J.d05 * 0.1) <= it.p_PP_J.alp && ppJudeTag) {
-//                            lastbean.date = it.date.toInt()
-//                            val filterDateBean = FilterDateBean()
-//                            filterDateBean.json = GsonHelper.toJson(it.p_PP_J)
-//                            filterDateBean.date = it.date
-//                            pp2List.add(filterDateBean)
-//                            lastbean.ppT2 = GsonHelper.toJson(pp2List)
-//                            lastbean.ppC2 = lastbean.ppC2 + 1
-//                            lastbean.count = lastbean.count + 1
-//                            DBUtils.insertOrUpdateMAPPFilterTable(tbName,lastbean)
-//
-//                        }
-//                    }
-//                    ppArray.put (code.toInt(),it.p_PP_J.d05 < it.p_PP_J.alp)
-                }
-            }
-        }
-        return checkFilterBean
-
-
-    }
-
-    val maArray = SparseArray<Boolean>()
-    val ppArray = SparseArray<Boolean>()
-
-//    private fun filterByType(type: Int, bean: CodeHDDBean) {
-//        when (type) {
-//            1 -> {
-//                if (bean.p_autr_j.d05>=75&&) {
-//                }
-//            }
-//
-//        }
-//    }
 
 
 }

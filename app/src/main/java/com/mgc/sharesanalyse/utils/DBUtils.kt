@@ -389,7 +389,13 @@ object DBUtils {
         }
     }
 
-    fun insertCodeHDD(dbName: String, codeHDDBean: CodeHDDBean) {
+    fun insertCodeHDD(
+        dbName: String,
+        codeHDDBean: CodeHDDBean,
+        code: String,
+        date: String
+    ) {
+        switchDBName(code.toCodeHDD(date, FormatterEnum.YYYYMMDD))
         createCodeHDD(dbName)
         if (!queryCodeHDDIsExsitByDate(dbName, codeHDDBean.date)) {
             val insertSqlStr = codeHDDBean.toInsertDBValues(dbName)
@@ -748,29 +754,6 @@ object DBUtils {
     }
 
 
-//    private String code;
-//    private int FilterTypeCount;
-//    private String FilterJs;
-
-    fun insertOrUpdateFilterTable(
-        tbName: String,
-        date: String,
-        filterBean:  FilterBean
-    ) {
-        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
-        createFilterTable(tbName)
-        if (!queryDataIsExsitByCode(tbName, filterBean.code)) {
-            val insertSqlStr = "INSERT INTO $tbName" +
-                    "(CODE,FILTERTYPECOUNT,FILTERJS)" +
-                    " VALUES${filterBean.toInsert()}"
-            LogUtil.d("insertSqlStr:$insertSqlStr")
-            db.execSQL(insertSqlStr)
-        } else {
-            val sql = "UPDATE $tbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
-            LogUtil.d("updateSqlStr:$sql")
-            db.execSQL(sql)
-        }
-    }
 
     private fun createFilterTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
@@ -781,27 +764,6 @@ object DBUtils {
     }
 
 
-    fun queryFilterBeanByCode(dbName: String, code: String, date: String): FilterBean? {
-        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
-        var checkFilterBean: FilterBean? = null
-        if (tabbleIsExist(dbName)) {
-            var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
-            LogUtil.d("cursor:${cursor.count}")
-            if (null != cursor && cursor.moveToFirst()) {
-                checkFilterBean = FilterBean()
-                val code = cursor.getString(cursor.getColumnIndex("CODE"))
-                val FILTERTYPECOUNT = cursor.getInt(cursor.getColumnIndex("FILTERTYPECOUNT"))
-                val FILTERJS = cursor.getString(cursor.getColumnIndex("FILTERJS"))
-                checkFilterBean.code = code
-                checkFilterBean.filterTypeCount = FILTERTYPECOUNT
-                checkFilterBean.filterJs = FILTERJS
-
-            }
-            cursor.close()
-        }
-        return checkFilterBean
-    }
 
 
     fun queryCHDDByTableName(tableName: String, dbName: String): ArrayList<CodeHDDBean>? {
@@ -889,85 +851,56 @@ object DBUtils {
     }
 
 
-    fun insertOrUpdateMAPPFilterTable(
+    fun insertOrUpdateFilterCodeHddTable(
         tbName: String,
-        filterBean:  MAPPFilterBean
+        filterCodeHDDBean: FilterCodeHDDBean
     ) {
         switchDBName(Datas.MAPPFilterDB)
-        createMAPPFilterTable(tbName)
-        if (!queryDataIsExsitByCode(tbName, filterBean.code.toString())) {
+        createFilterCodeHddTable(tbName)
+        if (!queryDataIsExsitByCode(tbName, filterCodeHDDBean.code.toString())) {
             val insertSqlStr = "INSERT INTO $tbName" +
-                    "(CODE,AUP,MAUP,LAUP,DATE,COUNT,MAT1,MAC1,PPT1,PPC1,MAT2,MAC2,PPT2,PPC2,MAT3,MAC3,PPT3,PPC3)" +
-                    " VALUES${filterBean.toInsert()}"
+                    "(CODE, KJ_CTC_TYPE, KJ_CTC_J)" +
+                    " VALUES${filterCodeHDDBean.toInsert()}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            val sql = "UPDATE $tbName SET ${filterBean.toUpdateSqlSumValues()}  WHERE CODE=${filterBean.code}"
+            val sql = "UPDATE $tbName SET ${filterCodeHDDBean.toUpdateSqlSumValues()}  WHERE CODE=${filterCodeHDDBean.code}"
             LogUtil.d("updateSqlStr:$sql")
             db.execSQL(sql)
         }
     }
 
 
-    private fun createMAPPFilterTable(dbName: String) {
+    private fun createFilterCodeHddTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER, AUP INTEGER,MAUP INTEGER,LAUP INTEGER, DATE INTEGER, COUNT INTEGER," +
-                        " MAT1 TEXT, MAC1 INTEGER, PPT1 TEXT, PPC1 INTEGER,  MAT2 TEXT, MAC2 INTEGER, PPT2 TEXT, PPC2 INTEGER,  MAT3 TEXT, MAC3 INTEGER, PPT3 TEXT, PPC3 INTEGER);"
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER, KJ_CTC_TYPE INTEGER,KJ_CTC_J TEXT);"
             db.execSQL(sqlStr)
         }
     }
 
-    fun queryMAPPFilterBeanByCode(dbName: String, code: String): MAPPFilterBean? {
+    fun queryFilterCodeHddBeanByCode(dbName: String, code: String): FilterCodeHDDBean? {
         switchDBName(Datas.MAPPFilterDB)
         LogUtil.d("queryMAPPFilterBeanByCode:${DaoManager.DB_NAME}")
-        var mappFilterBean: MAPPFilterBean? = null
+        var filterCodeHDDBean: FilterCodeHDDBean? = null
         if (tabbleIsExist(dbName)) {
             var cursor =
                 db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
             LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
-                mappFilterBean = MAPPFilterBean()
+                filterCodeHDDBean =
+                    FilterCodeHDDBean()
                 val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
-                val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
-                val MAUP = cursor.getFloat(cursor.getColumnIndex("MAUP"))
-                val LAUP = cursor.getFloat(cursor.getColumnIndex("LAUP"))
-                val COUNT = cursor.getInt(cursor.getColumnIndex("COUNT"))
-                val MAC1 = cursor.getInt(cursor.getColumnIndex("MAC1"))
-                val MAC2 = cursor.getInt(cursor.getColumnIndex("MAC2"))
-                val MAC3 = cursor.getInt(cursor.getColumnIndex("MAC3"))
-                val PPC1 = cursor.getInt(cursor.getColumnIndex("PPC1"))
-                val PPC2 = cursor.getInt(cursor.getColumnIndex("PPC2"))
-                val PPC3 = cursor.getInt(cursor.getColumnIndex("PPC3"))
+                val KJ_CTC_TYPE = cursor.getInt(cursor.getColumnIndex("KJ_CTC_TYPE"))
+                val KJ_CTC_J = cursor.getString(cursor.getColumnIndex("KJ_CTC_J"))
 
-                val MAT1 = cursor.getString(cursor.getColumnIndex("MAT1"))
-                val MAT2 = cursor.getString(cursor.getColumnIndex("MAT2"))
-                val MAT3 = cursor.getString(cursor.getColumnIndex("MAT3"))
-                val PPT1 = cursor.getString(cursor.getColumnIndex("PPT1"))
-                val PPT2 = cursor.getString(cursor.getColumnIndex("PPT2"))
-                val PPT3 = cursor.getString(cursor.getColumnIndex("PPT3"))
-
-                mappFilterBean.code = CODE
-                mappFilterBean.aup = AUP
-                mappFilterBean.maup = MAUP
-                mappFilterBean.laup = LAUP
-                mappFilterBean.count = COUNT
-                mappFilterBean.maC1 = MAC1
-                mappFilterBean.maC2 = MAC2
-                mappFilterBean.maC3 = MAC3
-                mappFilterBean.ppC1 = PPC1
-                mappFilterBean.ppC2 = PPC2
-                mappFilterBean.ppC3 = PPC3
-                mappFilterBean.maT1 = MAT1
-                mappFilterBean.maT2 = MAT2
-                mappFilterBean.maT3 = MAT3
-                mappFilterBean.ppT1 = PPT1
-                mappFilterBean.ppT2 = PPT2
-                mappFilterBean.ppT3 = PPT3
+                filterCodeHDDBean.code = CODE
+                filterCodeHDDBean.kJ_CTC_TYPE = KJ_CTC_TYPE
+                filterCodeHDDBean.kJ_CTC_J = KJ_CTC_J
             }
             cursor.close()
         }
-        return mappFilterBean
+        return filterCodeHDDBean
     }
 
 }
