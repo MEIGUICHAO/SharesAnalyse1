@@ -47,12 +47,12 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
-    const val MAPPFilterDB = "FilterDB"
+    const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
-    const val DEBUG_Code = "300062"
+    val DEBUG_Code = listOf("000677","300278","000544")
     const val FILTER_TYPE_COUNT = 2
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()

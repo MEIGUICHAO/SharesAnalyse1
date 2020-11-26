@@ -100,9 +100,12 @@ class NewApiActivity : AppCompatActivity() {
             var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
             list.forEach {
                 if (Datas.DEBUG) {
-                    if (it.code.contains(Datas.DEBUG_Code)) {
-                        viewModel.detailCodeList.add(it.code)
+                    Datas.DEBUG_Code.forEach { code->
+                        if (it.code.contains(code)) {
+                            viewModel.detailCodeList.add(it.code)
+                        }
                     }
+
                 } else {
                     viewModel.detailCodeList.add(it.code)
                 }

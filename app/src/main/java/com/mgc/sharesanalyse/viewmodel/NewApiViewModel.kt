@@ -1003,14 +1003,14 @@ class NewApiViewModel : BaseViewModel() {
         val pair = getDDList()
         val ddlist = pair.first
         val hhqlist = pair.second
-        var codelist: List<AllCodeGDBean>
-        if (Datas.DEBUG) {
-            codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryByQueryBuilder(
-                AllCodeGDBeanDao.Properties.Code.eq(Datas.DEBUG_Code)
-            )
-        } else {
-            codelist = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
+        var codelist = kotlin.run {
+            val list = ArrayList<String>()
+            codeNameList.forEach {
+                list.add(it.split(splitTag)[0])
+            }
+            list
         }
+
 //        DBUtils.dropTable("SHDD_2009")
 //        DBUtils.dropTable("SHDD_2010")
 //        DBUtils.dropTable("SHDD_ALL_2020")
@@ -1019,7 +1019,7 @@ class NewApiViewModel : BaseViewModel() {
         val initHHQbean =
             DBUtils.queryHHqBeanByCode(
                 hhqlist[hhqlist.size - 1],
-                if (Datas.DEBUG) Datas.DEBUG_Code else 1.toString()
+                if (Datas.DEBUG) Datas.DEBUG_Code[0] else 1.toString()
             )
         val hisHqBeans = GsonHelper.parseArray(initHHQbean?.json, HisHqBean::class.java)[0].hq
         if (Datas.DEBUG) {
@@ -1048,7 +1048,7 @@ class NewApiViewModel : BaseViewModel() {
         )
 
         val sumDDBeginBean =
-            DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[0].code)
+            DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[0])
         var sumDateIndexTs = 0.toLong()
         var sumDateBeginIndex = 0
         if (null != sumDDBeginBean) {
@@ -1123,15 +1123,15 @@ class NewApiViewModel : BaseViewModel() {
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
 //            for (codeidnex in 0 until 1) {
             for (codeidnex in 0 until codelist.size) {
-                (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex].code}")
+                (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex]}")
                 LogUtil.d(
-                    "${codelist[codeidnex].code}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(
+                    "${codelist[codeidnex]}curIndexTs:$curIndexTs,curIndexTs_date:$date,curYearTS:$curYearTS,curYearTS_date:${DateUtils.formatToDay(
                         FormatterEnum.YYYY
                     ) + "-01-01"},curMonthTS:$curMonthTS,curMonthTS_date:${DateUtils.formatToDay(
                         FormatterEnum.YYYY_MM
                     ) + "-01"}"
                 )
-                LogUtil.d("${codelist[codeidnex].code}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
+                LogUtil.d("${codelist[codeidnex]}curIndexTs >= curYearTS:${curIndexTs >= curYearTS},curIndexTs >= curMonthTS:${curIndexTs >= curMonthTS}")
                 if (curIndexTs >= curYearTS) {
                     if (curIndexTs >= curMonthTS) {
                         operaSddDB(
@@ -1194,7 +1194,7 @@ class NewApiViewModel : BaseViewModel() {
         hhqVeryBeginIndex: Int,
         sumDateBeginIndex: Int,
         ddlist: ArrayList<String>,
-        codelist: MutableList<AllCodeGDBean>,
+        codelist: ArrayList<String>,
         curYearTS: Long,
         curMonthTS: Long
     ) {
@@ -1249,7 +1249,7 @@ class NewApiViewModel : BaseViewModel() {
 //            for (codeidnex in 0 until codelist.size step 1) {
             for (codeidnex in 0 until codelist.size) {
                 val ddBean =
-                    DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
+                    DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex])
                 ddBean?.let {
 
                     val bean =
@@ -1270,7 +1270,7 @@ class NewApiViewModel : BaseViewModel() {
                                 )
                             ) {
                                 insertOrUpdateCodeHDD(hisHqBean[0].hq, hhqBeginIndex, ddBean, date)
-                                (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex].code}")
+                                (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex]}")
                             }
                             if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
                                     date,
@@ -1304,7 +1304,7 @@ class NewApiViewModel : BaseViewModel() {
                                     ddBean, false
                                 )
 
-                                (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex].code}")
+                                (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex]}")
                                 operaSHDDMonth(
                                     Datas.shddAll,
                                     codelist,
@@ -1334,7 +1334,7 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun operaSHDDMonth(
         curMonthSHHDTBName: String,
-        codelist: MutableList<AllCodeGDBean>,
+        codelist: ArrayList<String>,
         codeidnex: Int,
         date: String,
         hhqbean: MutableList<String>,
@@ -1342,7 +1342,7 @@ class NewApiViewModel : BaseViewModel() {
         isAll: Boolean
     ) {
         val shddBean =
-            DBUtils.querySHDDByCode(curMonthSHHDTBName, codelist[codeidnex].code)
+            DBUtils.querySHDDByCode(curMonthSHHDTBName, codelist[codeidnex])
 
         if (null == shddBean) {
             insertSHDDBean(curMonthSHHDTBName, hhqbean, ddBean, date)
@@ -2377,13 +2377,11 @@ class NewApiViewModel : BaseViewModel() {
             }
             var filterCodeHDDBean: FilterCodeHDDBean? = null
             if (curPercent > 0 && yestPercent < 0) {
-                if (oldMp < cp && oldOp < cp&& oldCp > op && oldLp > op) {
+                if (oldMp < cp && oldOp < cp && oldCp > op && oldLp > op && mp == cp) {
                     filterCodeHDDBean = FilterCodeHDDBean()
                     filterCodeHDDBean.kJ_CTC_TYPE = 11
                     codeHDDBean.k_J.ctc.ctC_U.typeA = baseType
                 } else if (oldLp > lp && oldCp < op && oldOp > cp && mp == cp) {
-//                    LogUtil.d("BaseType_old---> \n${GsonHelper.getInstance().toJson(chddDDBeanList[chddDDBeanList.size - 1])}")
-//                    LogUtil.d("BaseType_--> \n${GsonHelper.getInstance().toJson(baseType)}")
                     filterCodeHDDBean = FilterCodeHDDBean()
                     filterCodeHDDBean.kJ_CTC_TYPE = 12
                     codeHDDBean.k_J.ctc.ctC_U.typeB = baseType
@@ -2408,9 +2406,11 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
             filterCodeHDDBean?.let {
+                LogUtil.d("BaseType_old_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}---> \n${GsonHelper.getInstance().toJson(chddDDBeanList[chddDDBeanList.size - 1])}")
+                LogUtil.d("BaseType_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}--> \n${GsonHelper.getInstance().toJson(baseType)}")
                 it.code = code.toInt()
                 it.kJ_CTC_J = GsonHelper.toJson(baseType)
-                DBUtils.insertOrUpdateFilterCodeHddTable(Datas.FILTER_CODE_TB + date, it)
+                DBUtils.insertOrUpdateFilterCodeHddTable(Datas.FILTER_CODE_TB + date, it,date)
             }
         }
 
@@ -2641,7 +2641,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun operaSddDB(
         ddlist: ArrayList<String>,
         ddidnex: Int,
-        codelist: MutableList<AllCodeGDBean>,
+        codelist: ArrayList<String>,
         codeidnex: Int,
         sddTableNameALL: String,
         date: String,
@@ -2653,18 +2653,18 @@ class NewApiViewModel : BaseViewModel() {
     ) {
 
         val ddBean =
-            DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex].code)
+            DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex])
 
         ddBean?.let {
             LogUtil.d("ddBean m10Size:${ddBean.sizeBean?.m10Size}")
             val sumDDBean =
-                DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[codeidnex].code)
+                DBUtils.querySumDDBeanByCode(sddTableNameALL, codelist[codeidnex])
             DBUtils.insertOrUpdateSumDD2DateTable(
                 date, sddTableNameALL, sumDDBean, ddBean
             )
 
             val bean =
-                DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex].code)
+                DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex])
             val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
             hisHqBean?.let {
                 val hhqbean = hisHqBean[0].hq
@@ -2673,7 +2673,7 @@ class NewApiViewModel : BaseViewModel() {
                         DBUtils.setSDDPercent(
                             sddTableNameALL,
                             getcurPercentFloat(hhqbean[hhqBeginIndex]),
-                            codelist[codeidnex].code
+                            codelist[codeidnex]
                         )
                     }
                 } else {
@@ -2751,7 +2751,7 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
 
-            LogUtil.d("${codelist[codeidnex].code} operaSddDB tableName:$sddTableNameALL")
+            LogUtil.d("${codelist[codeidnex]} operaSddDB tableName:$sddTableNameALL")
 
         }
     }
@@ -2764,7 +2764,7 @@ class NewApiViewModel : BaseViewModel() {
         curTs: Long,
         verybeginTS: Long,
         sddTableName: String,
-        codelist: MutableList<AllCodeGDBean>,
+        codelist: ArrayList<String>,
         codeidnex: Int,
         sumDDBean: SumDDBean,
         date: String
@@ -2781,19 +2781,19 @@ class NewApiViewModel : BaseViewModel() {
                 diffPrices,
                 beginClosePrice
             ) * 100
-            LogUtil.d("$sddTableName set_SDDPercent,code:${codelist[codeidnex].code},date:$date,beginClosePrice:$beginClosePrice,diffPrices:$diffPrices,percent:${percent}")
+            LogUtil.d("$sddTableName set_SDDPercent,code:${codelist[codeidnex]},date:$date,beginClosePrice:$beginClosePrice,diffPrices:$diffPrices,percent:${percent}")
             LogUtil.d("$sddTableName set_SDDPercent,hhqBeginIndex:$hhqBeginIndex,cur:${hhqbean[hhqBeginIndex]}\n ,begin:${hhqbean[hhqVeryBeginIndex]}")
             DBUtils.setSDDPercent(
                 sddTableName,
                 percent,
-                codelist[codeidnex].code
+                codelist[codeidnex]
             )
             if (percent > sumDDBean.maxPer) {
                 DBUtils.setSDDMaxPercent(
                     sddTableName,
                     percent,
                     date,
-                    codelist[codeidnex].code
+                    codelist[codeidnex]
                 )
             }
             if (percent < sumDDBean.lowPer) {
@@ -2801,7 +2801,7 @@ class NewApiViewModel : BaseViewModel() {
                     sddTableName,
                     percent,
                     date,
-                    codelist[codeidnex].code
+                    codelist[codeidnex]
                 )
             }
         }

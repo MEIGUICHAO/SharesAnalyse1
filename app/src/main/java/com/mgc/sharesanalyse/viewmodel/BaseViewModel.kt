@@ -136,13 +136,17 @@ open class BaseViewModel:ViewModel() {
         var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         list.forEach {
             if (Datas.DEBUG) {
-                if (it.code.contains(Datas.DEBUG_Code)) {
-                    codeNameList.add("${it.code}$splitTag${it.name}")
+                Datas.DEBUG_Code.forEach {code ->
+                    if (it.code.contains(code)) {
+                        codeNameList.add("${it.code}$splitTag${it.name}")
+                    }
                 }
+
             } else {
                 codeNameList.add("${it.code}$splitTag${it.name}")
             }
         }
+        LogUtil.d("initCodeList codeNameList size:${codeNameList.size}")
     }
 
     fun setActivity(activity: AppCompatActivity) {

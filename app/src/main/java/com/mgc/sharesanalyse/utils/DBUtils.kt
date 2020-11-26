@@ -853,9 +853,17 @@ object DBUtils {
 
     fun insertOrUpdateFilterCodeHddTable(
         tbName: String,
-        filterCodeHDDBean: FilterCodeHDDBean
+        filterCodeHDDBean: FilterCodeHDDBean,
+        date: String
     ) {
-        switchDBName(Datas.MAPPFilterDB)
+        switchDBName(
+            Datas.MAPPFilterDB + DateUtils.changeFormatter(
+                DateUtils.parse(
+                    date,
+                    FormatterEnum.YYYYMMDD
+                ), FormatterEnum.YYMM
+            )
+        )
         createFilterCodeHddTable(tbName)
         if (!queryDataIsExsitByCode(tbName, filterCodeHDDBean.code.toString())) {
             val insertSqlStr = "INSERT INTO $tbName" +
@@ -879,8 +887,15 @@ object DBUtils {
         }
     }
 
-    fun queryFilterCodeHddBeanByCode(dbName: String, code: String): FilterCodeHDDBean? {
-        switchDBName(Datas.MAPPFilterDB)
+    fun queryFilterCodeHddBeanByCode(dbName: String, code: String,date: String): FilterCodeHDDBean? {
+        switchDBName(
+            Datas.MAPPFilterDB + DateUtils.changeFormatter(
+                DateUtils.parse(
+                    date,
+                    FormatterEnum.YYYYMMDD
+                ), FormatterEnum.YYMM
+            )
+        )
         LogUtil.d("queryMAPPFilterBeanByCode:${DaoManager.DB_NAME}")
         var filterCodeHDDBean: FilterCodeHDDBean? = null
         if (tabbleIsExist(dbName)) {
