@@ -86,7 +86,7 @@ public class CodeHDDBean {
 
     public String toInsertDBValues(String dbName) {
         return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR" +
-                ", P_AUTR_J, P_DA_J, P_PP_J, P_MA_J, SpePP_J, DA_J, MS_J ) " +
+                ", P_AUTR_J, P_DA_J, P_PP_J, P_MA_J, SpePP_J, DA_J ,K_J ,Shape_J ,K_TR_J ,GAP_J , MS_J ) " +
                 "VALUES('" + name + "'" +
                 ",'" + DATE + "'" +
                 ", " + OP +
@@ -101,6 +101,13 @@ public class CodeHDDBean {
                 "', '"  +  GsonHelper.toJson(P_MA_J) +
                 "', '" +  SpePP_J.toJSon() +
                 "', '" +  DA_J.toJSon() +
+                "', '"  +  GsonHelper.toJson(K_J).
+        replace("\"CTC_D\":{},","").replace("\"CTC_U\":{}","").replace("\"CTC\":{},","").
+        replace("\"D03\":3,","").replace("\"D05\":5,","").replace("\"D10\":10,","").replace("\"D15\":15,","").replace("\"D20\":20,","").replace("\"D25\":25,","").replace("\"D30\":30,","").replace("\"D60\":60,","").replace("\"D72\":72,","").
+                replace("\"USLC\":{},","").replace("\"DSLC\":{}","").replace("\"SLL\":{},","")        +
+                "', '"  +  GsonHelper.toJson(Shape_J) +
+                "', '"  +  GsonHelper.toJson(K_TR_J) +
+                "', '"  +  GsonHelper.toJson(GAP_J) +
                 "', '"  + MS_J.toJSon() +
                 "')";
     }
@@ -118,9 +125,46 @@ public class CodeHDDBean {
     public void setP_MA_J(CodeHDDBean.P_MA_J p_MA_J) {
         P_MA_J = p_MA_J;
     }
-
+//     TEXT, TEXT, TEXT, TEXT
     private SpePP_J SpePP_J;
     private DA_J DA_J;
+    private KJsonBean K_J;
+    private ShapeJsonBean Shape_J;
+    private K_TR_Json K_TR_J;
+    private GapJsonBean GAP_J;
+
+    public KJsonBean getK_J() {
+        return K_J;
+    }
+
+    public void setK_J(KJsonBean k_J) {
+        K_J = k_J;
+    }
+
+    public ShapeJsonBean getShape_J() {
+        return Shape_J;
+    }
+
+    public void setShape_J(ShapeJsonBean shape_J) {
+        Shape_J = shape_J;
+    }
+
+    public K_TR_Json getK_TR_J() {
+        return K_TR_J;
+    }
+
+    public void setK_TR_J(K_TR_Json k_TR_J) {
+        K_TR_J = k_TR_J;
+    }
+
+    public GapJsonBean getGAP_J() {
+        return GAP_J;
+    }
+
+    public void setGAP_J(GapJsonBean GAP_J) {
+        this.GAP_J = GAP_J;
+    }
+
     private MS_J MS_J;
 
     public P_AUTR_J getP_autr_j() {

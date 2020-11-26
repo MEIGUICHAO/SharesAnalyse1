@@ -384,7 +384,7 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER" +
-                        ", P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,P_MA_J TEXT,SpePP_J TEXT,DA_J TEXT,MS_J TEXT);"
+                        ",K_J TEXT,Shape_J TEXT,K_TR_J TEXT,GAP_J TEXT, P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,P_MA_J TEXT,SpePP_J TEXT,DA_J TEXT,MS_J TEXT);"
             db.execSQL(sqlStr)
         }
     }
@@ -829,7 +829,12 @@ object DBUtils {
                     val P_MA_J = cursor.getString(cursor.getColumnIndex("P_MA_J"))
                     val SpePP_J = cursor.getString(cursor.getColumnIndex("SpePP_J"))
                     val DA_J = cursor.getString(cursor.getColumnIndex("DA_J"))
+                    val K_J = cursor.getString(cursor.getColumnIndex("K_J"))
+                    val Shape_J = cursor.getString(cursor.getColumnIndex("Shape_J"))
+                    val K_TR_J = cursor.getString(cursor.getColumnIndex("K_TR_J"))
+                    val GAP_J = cursor.getString(cursor.getColumnIndex("GAP_J"))
                     val MS_J = cursor.getString(cursor.getColumnIndex("MS_J"))
+
                     codeHDDBean.name = NAME
                     codeHDDBean.date = DATE
                     codeHDDBean.op = OP
@@ -838,6 +843,20 @@ object DBUtils {
                     codeHDDBean.p = P
                     codeHDDBean.aup = AUP
                     codeHDDBean.tr = TR
+
+                    if (!GAP_J.isNullOrEmpty()) {
+                        codeHDDBean.gaP_J = GsonHelper.parse(GAP_J,GapJsonBean::class.java)
+                    }
+                    if (!K_TR_J.isNullOrEmpty()) {
+                        codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J,K_TR_Json::class.java)
+                    }
+                    if (!Shape_J.isNullOrEmpty()) {
+                        codeHDDBean.shape_J = GsonHelper.parse(Shape_J,ShapeJsonBean::class.java)
+                    }
+                    if (!K_J.isNullOrEmpty()) {
+                        codeHDDBean.k_J = GsonHelper.parse(K_J,KJsonBean::class.java)
+                    }
+
                     if (!p_autr_j.isNullOrEmpty()) {
                         codeHDDBean.p_autr_j = GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
                     }

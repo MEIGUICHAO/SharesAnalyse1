@@ -1,100 +1,567 @@
 package com.mgc.sharesanalyse.entity;
 
 public class KJsonBean {
-    private SLC SLC;
+    public SLC SLC;
 
-    static class SLC {
-        private USLC USLC;
-        private DSLC DSLC;
+    public static class SLC {
+        public USLC USLC;
+        public DSLC DSLC;
+
+        public KJsonBean.USLC getUSLC() {
+            return USLC;
+        }
+
+        public void setUSLC(KJsonBean.USLC USLC) {
+            this.USLC = USLC;
+        }
+
+        public KJsonBean.DSLC getDSLC() {
+            return DSLC;
+        }
+
+        public void setDSLC(KJsonBean.DSLC DSLC) {
+            this.DSLC = DSLC;
+        }
     }
 
-    private static class USLC {
-        private int D03;
-        private int D05;
-        private int D10;
-        private int D15;
-        private int D20;
-        private int D25;
-        private int D30;
-        private int D60;
-        private int D72;
+    public KJsonBean.SLC getSLC() {
+        return SLC;
     }
 
-    private static class DSLC {
-        private int D03;
-        private int D05;
-        private int D10;
-        private int D15;
-        private int D20;
-        private int D25;
-        private int D30;
-        private int D60;
-        private int D72;
+    public void setSLC(KJsonBean.SLC SLC) {
+        this.SLC = SLC;
+    }
+
+    public KJsonBean.SLL getSLL() {
+        return SLL;
+    }
+
+    public void setSLL(KJsonBean.SLL SLL) {
+        this.SLL = SLL;
+    }
+
+    public KJsonBean.CTC getCTC() {
+        return CTC;
+    }
+
+    public void setCTC(KJsonBean.CTC CTC) {
+        this.CTC = CTC;
+    }
+
+    public static class USLC {
+        public int D03;
+        public int D05;
+        public int D10;
+        public int D15;
+        public int D20;
+        public int D25;
+        public int D30;
+
+        public int getD03() {
+            return D03;
+        }
+
+        public void setD03(int d03) {
+            D03 = d03;
+        }
+
+        public int getD05() {
+            return D05;
+        }
+
+        public void setD05(int d05) {
+            D05 = d05;
+        }
+
+        public int getD10() {
+            return D10;
+        }
+
+        public void setD10(int d10) {
+            D10 = d10;
+        }
+
+        public int getD15() {
+            return D15;
+        }
+
+        public void setD15(int d15) {
+            D15 = d15;
+        }
+
+        public int getD20() {
+            return D20;
+        }
+
+        public void setD20(int d20) {
+            D20 = d20;
+        }
+
+        public int getD25() {
+            return D25;
+        }
+
+        public void setD25(int d25) {
+            D25 = d25;
+        }
+
+        public int getD30() {
+            return D30;
+        }
+
+        public void setD30(int d30) {
+            D30 = d30;
+        }
+
+        public int getD60() {
+            return D60;
+        }
+
+        public void setD60(int d60) {
+            D60 = d60;
+        }
+
+        public int getD72() {
+            return D72;
+        }
+
+        public void setD72(int d72) {
+            D72 = d72;
+        }
+
+        public int D60;
+        public int D72;
+    }
+
+    public static class DSLC {
+        public int D03;
+        public int D05;
+        public int D10;
+        public int D15;
+        public int D20;
+        public int D25;
+
+        public int getD03() {
+            return D03;
+        }
+
+        public void setD03(int d03) {
+            D03 = d03;
+        }
+
+        public int getD05() {
+            return D05;
+        }
+
+        public void setD05(int d05) {
+            D05 = d05;
+        }
+
+        public int getD10() {
+            return D10;
+        }
+
+        public void setD10(int d10) {
+            D10 = d10;
+        }
+
+        public int getD15() {
+            return D15;
+        }
+
+        public void setD15(int d15) {
+            D15 = d15;
+        }
+
+        public int getD20() {
+            return D20;
+        }
+
+        public void setD20(int d20) {
+            D20 = d20;
+        }
+
+        public int getD25() {
+            return D25;
+        }
+
+        public void setD25(int d25) {
+            D25 = d25;
+        }
+
+        public int getD30() {
+            return D30;
+        }
+
+        public void setD30(int d30) {
+            D30 = d30;
+        }
+
+        public int getD60() {
+            return D60;
+        }
+
+        public void setD60(int d60) {
+            D60 = d60;
+        }
+
+        public int getD72() {
+            return D72;
+        }
+
+        public void setD72(int d72) {
+            D72 = d72;
+        }
+
+        public int D30;
+        public int D60;
+        public int D72;
     }
 
 
-    private SLL SLL;
+    public SLL SLL;
 
-    static class SLL {
-        private USLL USLL;
-        private DSLL DSLL;
+    public static class SLL {
+        public KJsonBean.USLL getUSLL() {
+            return USLL;
+        }
+
+        public void setUSLL(KJsonBean.USLL USLL) {
+            this.USLL = USLL;
+        }
+
+        public KJsonBean.DSLL getDSLL() {
+            return DSLL;
+        }
+
+        public void setDSLL(KJsonBean.DSLL DSLL) {
+            this.DSLL = DSLL;
+        }
+
+        public USLL USLL;
+        public DSLL DSLL;
     }
 
-    private static class USLL {
-        private float D03;
-        private float D05;
-        private float D10;
-        private float D15;
-        private float D20;
-        private float D25;
-        private float D30;
-        private float D60;
-        private float D72;
+    public static class USLL {
+        public float D03;
+        public float D05;
+        public float D10;
+        public float D15;
+        public float D20;
+        public float D25;
+        public float D30;
+
+        public float getD03() {
+            return D03;
+        }
+
+        public void setD03(float d03) {
+            D03 = d03;
+        }
+
+        public float getD05() {
+            return D05;
+        }
+
+        public void setD05(float d05) {
+            D05 = d05;
+        }
+
+        public float getD10() {
+            return D10;
+        }
+
+        public void setD10(float d10) {
+            D10 = d10;
+        }
+
+        public float getD15() {
+            return D15;
+        }
+
+        public void setD15(float d15) {
+            D15 = d15;
+        }
+
+        public float getD20() {
+            return D20;
+        }
+
+        public void setD20(float d20) {
+            D20 = d20;
+        }
+
+        public float getD25() {
+            return D25;
+        }
+
+        public void setD25(float d25) {
+            D25 = d25;
+        }
+
+        public float getD30() {
+            return D30;
+        }
+
+        public void setD30(float d30) {
+            D30 = d30;
+        }
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
+
+        public float D60;
+        public float D72;
     }
 
-    private static class DSLL {
-        private float D03;
-        private float D05;
-        private float D10;
-        private float D15;
-        private float D20;
-        private float D25;
-        private float D30;
-        private float D60;
-        private float D72;
+    public static class DSLL {
+        public float D03;
+        public float D05;
+        public float D10;
+        public float D15;
+        public float D20;
+        public float D25;
+        public float D30;
+        public float D60;
+
+        public float getD03() {
+            return D03;
+        }
+
+        public void setD03(float d03) {
+            D03 = d03;
+        }
+
+        public float getD05() {
+            return D05;
+        }
+
+        public void setD05(float d05) {
+            D05 = d05;
+        }
+
+        public float getD10() {
+            return D10;
+        }
+
+        public void setD10(float d10) {
+            D10 = d10;
+        }
+
+        public float getD15() {
+            return D15;
+        }
+
+        public void setD15(float d15) {
+            D15 = d15;
+        }
+
+        public float getD20() {
+            return D20;
+        }
+
+        public void setD20(float d20) {
+            D20 = d20;
+        }
+
+        public float getD25() {
+            return D25;
+        }
+
+        public void setD25(float d25) {
+            D25 = d25;
+        }
+
+        public float getD30() {
+            return D30;
+        }
+
+        public void setD30(float d30) {
+            D30 = d30;
+        }
+
+        public float getD60() {
+            return D60;
+        }
+
+        public void setD60(float d60) {
+            D60 = d60;
+        }
+
+        public float getD72() {
+            return D72;
+        }
+
+        public void setD72(float d72) {
+            D72 = d72;
+        }
+
+        public float D72;
     }
 
-    private CTC CTC;
+    public CTC CTC;
 
-    static class CTC {
-        private CTC_U CTC_U;
-        private CTC_D CTC_D;
+    public static class CTC {
+        public CTC_U CTC_U;
+        public CTC_D CTC_D;
+
+        public KJsonBean.CTC_U getCTC_U() {
+            return CTC_U;
+        }
+
+        public void setCTC_U(KJsonBean.CTC_U CTC_U) {
+            this.CTC_U = CTC_U;
+        }
+
+        public KJsonBean.CTC_D getCTC_D() {
+            return CTC_D;
+        }
+
+        public void setCTC_D(KJsonBean.CTC_D CTC_D) {
+            this.CTC_D = CTC_D;
+        }
     }
 
-    private static class CTC_U {
-        private BaseType typeA;
-        private BaseType typeB;
-        private BaseType typeC;
+    public static class CTC_U {
+        public BaseType typeA;
+        public BaseType typeB;
+        public BaseType typeC;
+
+        public BaseType getTypeA() {
+            return typeA;
+        }
+
+        public void setTypeA(BaseType typeA) {
+            this.typeA = typeA;
+        }
+
+        public BaseType getTypeB() {
+            return typeB;
+        }
+
+        public void setTypeB(BaseType typeB) {
+            this.typeB = typeB;
+        }
+
+        public BaseType getTypeC() {
+            return typeC;
+        }
+
+        public void setTypeC(BaseType typeC) {
+            this.typeC = typeC;
+        }
     }
 
-    private static class CTC_D {
-        private BaseType typeA;
-        private BaseType typeB;
-        private BaseType typeC;
+    public static class CTC_D {
+        public BaseType typeA;
+        public BaseType typeB;
+        public BaseType typeC;
+
+        public BaseType getTypeA() {
+            return typeA;
+        }
+
+        public void setTypeA(BaseType typeA) {
+            this.typeA = typeA;
+        }
+
+        public BaseType getTypeB() {
+            return typeB;
+        }
+
+        public void setTypeB(BaseType typeB) {
+            this.typeB = typeB;
+        }
+
+        public BaseType getTypeC() {
+            return typeC;
+        }
+
+        public void setTypeC(BaseType typeC) {
+            this.typeC = typeC;
+        }
     }
 
 
+    public static class BaseType {
+        public int date;
+        public float tr;
+        public float op;
+        public float cp;
 
-    private static class BaseType {
-        private int date;
-        private int tr;
-        private int op;
-        private int cp;
-        private int mp;
-        private int lp;
-        private int range;
+        public int getDate() {
+            return date;
+        }
+
+        public void setDate(int date) {
+            this.date = date;
+        }
+
+        public float getTr() {
+            return tr;
+        }
+
+        public void setTr(float tr) {
+            this.tr = tr;
+        }
+
+        public float getOp() {
+            return op;
+        }
+
+        public void setOp(float op) {
+            this.op = op;
+        }
+
+        public float getCp() {
+            return cp;
+        }
+
+        public void setCp(float cp) {
+            this.cp = cp;
+        }
+
+        public float getMp() {
+            return mp;
+        }
+
+        public void setMp(float mp) {
+            this.mp = mp;
+        }
+
+        public float getLp() {
+            return lp;
+        }
+
+        public void setLp(float lp) {
+            this.lp = lp;
+        }
+
+        public float getRange() {
+            return range;
+        }
+
+        public void setRange(float range) {
+            this.range = range;
+        }
+
+        public float mp;
+        public float lp;
+        public float range;
     }
-
 
 
 }
