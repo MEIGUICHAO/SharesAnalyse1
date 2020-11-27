@@ -2171,7 +2171,6 @@ class NewApiViewModel : BaseViewModel() {
                 beginPrice / 72
             }
         }
-        operaNewCodeHDD(codeHDDBean, hq, hhqBeginIndex, ddBean.code, date)
 
 
 
@@ -2302,6 +2301,7 @@ class NewApiViewModel : BaseViewModel() {
             val diff = BigDecimalUtils.sub(getHisHqDayClosePrice(hhqbean), beginOP)
             codeHDDBean.aup = BigDecimalUtils.div(diff, beginOP) * 100
         }
+        operaNewCodeHDD(codeHDDBean, hq, hhqBeginIndex, ddBean.code, date)
         DBUtils.insertCodeHDD(tbName, codeHDDBean,ddBean.code,date)
     }
 
@@ -2364,33 +2364,35 @@ class NewApiViewModel : BaseViewModel() {
             val tr = getHisHqDayTurnRateFloat(hq[hhqBeginIndex])
             val curRange = getHisHqCurRange(hq[hhqBeginIndex])
             val baseType = KJsonBean.BaseType()
-            baseType.date = date.toInt()
+            baseType.date = getHisHqDay(hq[hhqBeginIndex]).toInt()
             baseType.tr = tr
             baseType.op = op
             baseType.cp = cp
             baseType.mp = mp
             baseType.lp = lp
             baseType.range = curRange
-            var limitPercent = 9.5
+            var limitPercent = 7.5
             if (code.toInt() > 300000 && code.toInt() < 600000) {
-                limitPercent = 19.toDouble()
+                limitPercent = (limitPercent * 2)
             }
             var filterCodeHDDBean: FilterCodeHDDBean? = null
-            if (curPercent > 0 && yestPercent < 0) {
-                if (oldMp < cp && oldOp < cp && oldCp > op && oldLp > op && mp == cp) {
+            if (cp > op && curPercent > 0 && yestPercent < 0 && !(codeHDDBean.p_MA_J.d10 > codeHDDBean.p_MA_J.d20 && codeHDDBean.p_MA_J.d20 > codeHDDBean.p_MA_J.d30) && !(codeHDDBean.p_MA_J.d10 < codeHDDBean.p_MA_J.d20 && codeHDDBean.p_MA_J.d20 < codeHDDBean.p_MA_J.d30)) {
+                if (oldMp < cp && oldOp < cp && oldCp > op && oldLp > op && mp <= 1.02 * cp) {
                     filterCodeHDDBean = FilterCodeHDDBean()
                     filterCodeHDDBean.kJ_CTC_TYPE = 11
                     codeHDDBean.k_J.ctc.ctC_U.typeA = baseType
-                } else if (oldLp > lp && oldCp < op && oldOp > cp && mp == cp) {
+                } else if (oldLp > lp && oldCp < op && oldOp > cp && mp <= 1.02 * cp) {
                     filterCodeHDDBean = FilterCodeHDDBean()
                     filterCodeHDDBean.kJ_CTC_TYPE = 12
                     codeHDDBean.k_J.ctc.ctC_U.typeB = baseType
                 } else if (yestPercent < -limitPercent && curPercent > limitPercent) {
-                    filterCodeHDDBean = FilterCodeHDDBean()
-                    filterCodeHDDBean.kJ_CTC_TYPE = 13
-                    codeHDDBean.k_J.ctc.ctC_U.typeC = baseType
+                    if ((cp - op) / op >= limitPercent && (oldOp - oldCp) / oldCp >= limitPercent) {
+                        filterCodeHDDBean = FilterCodeHDDBean()
+                        filterCodeHDDBean.kJ_CTC_TYPE = 13
+                        codeHDDBean.k_J.ctc.ctC_U.typeC = baseType
+                    }
                 }
-            } else if (curPercent < 0 && yestPercent > 0) {
+            } else if (cp < op && curPercent < 0 && yestPercent > 0) {
                 if (oldMp < op && oldCp < op && oldOp > cp && oldLp > cp) {
                     filterCodeHDDBean = FilterCodeHDDBean()
                     filterCodeHDDBean.kJ_CTC_TYPE = 21
@@ -2400,9 +2402,11 @@ class NewApiViewModel : BaseViewModel() {
                     filterCodeHDDBean.kJ_CTC_TYPE = 22
                     codeHDDBean.k_J.ctc.ctC_D.typeB = baseType
                 } else if (curPercent < -limitPercent && yestPercent > limitPercent) {
-                    filterCodeHDDBean = FilterCodeHDDBean()
-                    filterCodeHDDBean.kJ_CTC_TYPE = 23
-                    codeHDDBean.k_J.ctc.ctC_D.typeC = baseType
+                    if ((oldCp - oldOp) / oldOp >= limitPercent && (op - cp) / cp >= limitPercent) {
+                        filterCodeHDDBean = FilterCodeHDDBean()
+                        filterCodeHDDBean.kJ_CTC_TYPE = 23
+                        codeHDDBean.k_J.ctc.ctC_D.typeC = baseType
+                    }
                 }
             }
             filterCodeHDDBean?.let {
