@@ -96,19 +96,19 @@ public class CodeHDDBean {
                 ", " + AUP +
                 ",'" + TR +
                 "', '" + GsonHelper.toJson(p_autr_j) +
-                "', '" +  GsonHelper.toJson(P_DA_J) +
-                "', '"  +  GsonHelper.toJson(P_PP_J) +
-                "', '"  +  GsonHelper.toJson(P_MA_J) +
-                "', '" +  SpePP_J.toJSon() +
-                "', '" +  DA_J.toJSon() +
-                "', '"  +  GsonHelper.toJson(K_J).
-        replace("\"CTC_D\":{},","").replace("\"CTC_U\":{}","").replace("\"CTC\":{},","").
-        replace("\"D03\":3,","").replace("\"D05\":5,","").replace("\"D10\":10,","").replace("\"D15\":15,","").replace("\"D20\":20,","").replace("\"D25\":25,","").replace("\"D30\":30,","").replace("\"D60\":60,","").replace("\"D72\":72,","").
-                replace("\"USLC\":{},","").replace("\"DSLC\":{}","").replace("\"SLL\":{},","")        +
-                "', '"  +  GsonHelper.toJson(Shape_J) +
-                "', '"  +  GsonHelper.toJson(K_TR_J) +
-                "', '"  +  GsonHelper.toJson(GAP_J) +
-                "', '"  + MS_J.toJSon() +
+                "', '" + GsonHelper.toJson(P_DA_J) +
+                "', '" + GsonHelper.toJson(P_PP_J) +
+                "', '" + GsonHelper.toJson(P_MA_J) +
+                "', '" + (null == SpePP_J ? "" : SpePP_J.toJSon()) +
+                "', '" + (null == DA_J ? "" : DA_J.toJSon()) +
+                "', '" + GsonHelper.toJson(K_J).
+                replace("\"CTC_D\":{},", "").replace("\"CTC_U\":{}", "").replace("\"CTC\":{},", "").
+                replace("\"D03\":3,", "").replace("\"D05\":5,", "").replace("\"D10\":10,", "").replace("\"D15\":15,", "").replace("\"D20\":20,", "").replace("\"D25\":25,", "").replace("\"D30\":30,", "").replace("\"D60\":60,", "").replace("\"D72\":72,", "").
+                replace("\"USLC\":{},", "").replace("\"DSLC\":{}", "").replace("\"SLL\":{},", "") +
+                "', '" + (null == Shape_J ? "" :GsonHelper.toJson(Shape_J)) +
+                "', '" + GsonHelper.toJson(K_TR_J) +
+                "', '" + GsonHelper.toJson(GAP_J) +
+                "', '" + (null == MS_J ? "" :MS_J.toJSon()) +
                 "')";
     }
 
