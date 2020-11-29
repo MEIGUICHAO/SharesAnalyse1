@@ -17,6 +17,7 @@ enum class FormatterEnum(val format: String) {
     YYYYMMDD("yyyyMMdd"),
     YYYY("yyyy"),
     YYMM("yyMM"),
+    YY("yy"),
     YYYYMM("yyyyMM"),
     YYYY_MM_DD__HH_MM("yyyy-MM-dd HH:mm"),
     YYYY_MM_DD__HH_MM_SS("yyyy-MM-dd HH:mm:ss"),

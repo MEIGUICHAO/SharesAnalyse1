@@ -25,6 +25,7 @@ open class BaseViewModel:ViewModel() {
     val REQUEST_PRICESHIS = 3
     val REQUEST_HIS_HQ = 4
     var mActivity:AppCompatActivity? = null
+    val yearlimit = (DateUtils.formatToDay(FormatterEnum.YY) + "00").toInt()
 
     var tag = "sh"
     var path = "sh"

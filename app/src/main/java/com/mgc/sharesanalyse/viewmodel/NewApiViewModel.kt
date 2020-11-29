@@ -1987,15 +1987,20 @@ class NewApiViewModel : BaseViewModel() {
         var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
         var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toInt()}", dbName)
         if (null == chddDDBeanList || chddDDBeanList.size < 1) {
-            val month = DateUtils.changeFormatter(
+            var month = DateUtils.changeFormatter(
                 DateUtils.parse(date, FormatterEnum.YYYYMMDD),
-                FormatterEnum.YYYYMM
+                FormatterEnum.YYMM
             ).toInt() - 1
-            if (month <= Datas.CODEHDD_BEGIN_MONTH) {
-                dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYYYMM)
-                chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toInt()}", dbName)
+
+            if (month == yearlimit) {
+                month = yearlimit - 100 + 12
+                dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
+            } else {
+                dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
             }
+            chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toInt()}", dbName)
         }
+        LogUtil.d("dbName:$dbName")
         if (null != chddDDBeanList && chddDDBeanList.size > 0) {
             val curPercent = getcurPercentFloat(hq[hhqBeginIndex])
             val yestPercent = chddDDBeanList[chddDDBeanList.size - 1].p
