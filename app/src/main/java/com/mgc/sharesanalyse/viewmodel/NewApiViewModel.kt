@@ -1137,7 +1137,6 @@ class NewApiViewModel : BaseViewModel() {
         operaSHDDAndCHDD(
             hhqlist,
             hhqVeryBeginIndex,
-            ddlist,
             codelist,
             codeNameList,
             curYearTS
@@ -1224,71 +1223,81 @@ class NewApiViewModel : BaseViewModel() {
     private fun operaSHDDAndCHDD(
         hhqlist: ArrayList<String>,
         hhqVeryBeginIndex: Int,
-        ddlist: ArrayList<String>,
         codelist: ArrayList<String>,
         namelist: ArrayList<String>,
         curYearTS: Long
     ) {
         //TODO
-        var hhqBeginIndex = hhqVeryBeginIndex
+//        var hhqBeginIndex = hhqVeryBeginIndex
         val allList = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
         val allLastCode = allList[allList.size - 1].code
-        for (ddidnex in 0 until ddlist.size) {
-            //        for (ddidnex in 0 until 4) {
-            val date = ddlist[ddidnex].replace(
-                Datas.dealDetailTableName,
-                ""
-            )
-            DBUtils.switchDBName(allLastCode.toCodeHDD(date, FormatterEnum.YYYYMMDD))
-            val date1 = DBUtils.queryDateInCodeDDByDbName("${Datas.CHDD}$allLastCode")
-            val date2 = DBUtils.queryDateInSDDDByDbName(
-                Datas.shdd + DateUtils.changeFormatter(
-                    DateUtils.parse(
-                        date,
-                        FormatterEnum.YYYYMMDD
-                    ), FormatterEnum.YYMM
-                ), allLastCode
-            )
-            val date3 = DBUtils.queryDateInSDDDByDbName(
-                Datas.shddAllTag + DateUtils.changeFormatter(
-                    DateUtils.parse(
-                        date,
-                        FormatterEnum.YYYYMMDD
-                    ),
-                    FormatterEnum.YYYY
-                ), allLastCode
-            )
-            LogUtil.d("date:$date,date1:$date1,date2:$date2,date3:$date3")
-            if (!date1.isEmpty() && !date2.isEmpty() && !date3.isEmpty()) {
-                if (DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
-                        date1,
-                        FormatterEnum.YYYYMMDD
-                    ) &&
-                    DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
-                        date2,
-                        FormatterEnum.YYYYMMDD
-                    ) &&
-                    DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
-                        date3,
-                        FormatterEnum.YYYYMMDD
-                    )
-                ) {
-                    continue
-                }
-            }
-            val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
-//            for (codeidnex in 0 until codelist.size step 1) {
-            for (codeidnex in 0 until codelist.size) {
-//                val ddBean =
-//                    DBUtils.queryDealDetailByCode(ddlist[ddidnex], codelist[codeidnex])
-                val bean =
-                    DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], codelist[codeidnex])
-                val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
-                hisHqBean?.let {
-                    if (hhqBeginIndex >= hisHqBean[0].hq.size) {
-                        return@let
+
+        for (codeidnex in 0 until codelist.size) {
+            val code = codelist[codeidnex]
+            val bean =
+                DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], code)
+            val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
+            var sumProgessRecordBean = DBUtils.querySumProgressRecordByCode(code)
+            var cHDDProgressBean : SumProgessRecordBean.BaseRecordBean? = null
+            hisHqBean?.let {
+                for (ddidnex in hisHqBean[0].hq.size-1 downTo 0 ) {
+                    //        for (ddidnex in 0 until 4) {
+                    val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
+                    if (null != sumProgessRecordBean) {
+                        if (sumProgessRecordBean!!.getcHDDProgressBean().date >= date.toInt()) {
+                            continue
+                        }
+                        cHDDProgressBean = sumProgessRecordBean!!.getcHDDProgressBean()
+                    } else {
+                        sumProgessRecordBean = SumProgessRecordBean()
+                        sumProgessRecordBean!!.code = code.toInt()
                     }
-                    val hhqbean = hisHqBean[0].hq[hhqBeginIndex]
+                    if (null == cHDDProgressBean) {
+                        cHDDProgressBean = SumProgessRecordBean.BaseRecordBean()
+                        sumProgessRecordBean!!.setcHDDProgressBean(cHDDProgressBean)
+                    }
+                    cHDDProgressBean!!.date = date.toInt()
+
+                    DBUtils.switchDBName(allLastCode.toCodeHDD(date, FormatterEnum.YYYYMMDD))
+                    val date1 = DBUtils.queryDateInCodeDDByDbName("${Datas.CHDD}$allLastCode")
+                    val date2 = DBUtils.queryDateInSDDDByDbName(
+                        Datas.shdd + DateUtils.changeFormatter(
+                            DateUtils.parse(
+                                date,
+                                FormatterEnum.YYYYMMDD
+                            ), FormatterEnum.YYMM
+                        ), allLastCode
+                    )
+                    val date3 = DBUtils.queryDateInSDDDByDbName(
+                        Datas.shddAllTag + DateUtils.changeFormatter(
+                            DateUtils.parse(
+                                date,
+                                FormatterEnum.YYYYMMDD
+                            ),
+                            FormatterEnum.YYYY
+                        ), allLastCode
+                    )
+                    LogUtil.d("date:$date,date1:$date1,date2:$date2,date3:$date3")
+                    if (!date1.isEmpty() && !date2.isEmpty() && !date3.isEmpty()) {
+                        if (DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                                date1,
+                                FormatterEnum.YYYYMMDD
+                            ) &&
+                            DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                                date2,
+                                FormatterEnum.YYYYMMDD
+                            ) &&
+                            DateUtils.parse(date, FormatterEnum.YYYYMMDD) <= DateUtils.parse(
+                                date3,
+                                FormatterEnum.YYYYMMDD
+                            )
+                        ) {
+                            continue
+                        }
+                    }
+                    val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
+
+                    val hhqbean = hisHqBean[0].hq[ddidnex]
 
                     //TODO test
                     if (curIndexTs >= curYearTS) {
@@ -1298,8 +1307,8 @@ class NewApiViewModel : BaseViewModel() {
                                 FormatterEnum.YYYYMMDD
                             )
                         ) {
-                            insertOrUpdateCodeHDD(hisHqBean[0].hq, hhqBeginIndex,codelist[codeidnex],namelist[codeidnex], date)
-                            (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${codelist[codeidnex]}")
+                            insertOrUpdateCodeHDD(hisHqBean[0].hq, ddidnex,code,namelist[codeidnex], date)
+                            (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
                         }
                         if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
                                 date,
@@ -1330,32 +1339,25 @@ class NewApiViewModel : BaseViewModel() {
                                 codeidnex,
                                 date,
                                 hhqbean,
-                                 false,codelist[codeidnex],namelist[codeidnex]
+                                false,code,namelist[codeidnex]
                             )
 
-                            (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${codelist[codeidnex]}")
+                            (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${code}")
                             operaSHDDMonth(
                                 Datas.shddAll,
                                 codelist,
                                 codeidnex,
                                 date,
                                 hhqbean,
-                                 true,codelist[codeidnex],namelist[codeidnex]
+                                true,code,namelist[codeidnex]
                             )
                         }
                     }
+                    DBUtils.insertOrUpdateSumProgressRecordTable(sumProgessRecordBean!!)
                 }
-//                "( NAME , DATE , OP , CP , PP , P , AUP ,TR, DV , DA , AS " +
-//                        ", M100S , M50S , M30S , M10S , M5S , M1S , M05S , M01S , L01S , PP100M , PP50M , PP30M , PP10M , PP5M , PP1M , PPL1M " +
-//                        ", DAA , DA5000 , DA1000 , DA500 , DA100 ) "
-                //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
-
-            }
-            hhqBeginIndex--
-            if (hhqBeginIndex < 0) {
-                break
             }
         }
+
     }
 
     private fun operaSHDDMonth(
@@ -2009,7 +2011,7 @@ class NewApiViewModel : BaseViewModel() {
             val tr = getHisHqDayTurnRateFloat(hq[hhqBeginIndex])
             val curRange = getHisHqCurRange(hq[hhqBeginIndex])
             val baseType = KJsonBean.BaseType()
-            baseType.date = getHisHqDay(hq[hhqBeginIndex]).toInt()
+            baseType.date = getHisHqDay(hq[hhqBeginIndex]).replace("-","")
             baseType.tr = tr
             baseType.op = op
             baseType.cp = cp

@@ -497,16 +497,16 @@ public class KJsonBean {
 
 
     public static class BaseType {
-        public int date;
+        public String date;
         public float tr;
         public float op;
         public float cp;
 
-        public int getDate() {
+        public String getDate() {
             return date;
         }
 
-        public void setDate(int date) {
+        public void setDate(String date) {
             this.date = date;
         }
 

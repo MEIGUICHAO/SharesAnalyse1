@@ -37,6 +37,7 @@ object Datas {
     var limitPerAmount = 500 * baseNum
     var intervalTime = basebase * 1000 * baseNum
     const val dataNamesDefault = "newapiDatabases"
+    const val SumProressTB = "SP_TB"
     const val DBFilter = "DB_FILTER_"
     const val TBFilter = "FILTER_"
     const val XQCookies: String =

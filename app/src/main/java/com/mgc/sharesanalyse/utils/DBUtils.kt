@@ -384,7 +384,7 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT, OP INTEGER, CP INTEGER,  PP INTEGER, P INTEGER, AUP INTEGER, TR INTEGER" +
-                        ",K_J TEXT,Shape_J TEXT,K_TR_J TEXT,GAP_J TEXT, P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,P_MA_J TEXT,SpePP_J TEXT,DA_J TEXT,MS_J TEXT);"
+                        ",K_J TEXT,Shape_J TEXT,K_TR_J TEXT,GAP_J TEXT, P_AUTR_J TEXT,P_DA_J TEXT,P_PP_J TEXT,P_MA_J TEXT);"
             db.execSQL(sqlStr)
         }
     }
@@ -702,55 +702,50 @@ object DBUtils {
         return op
     }
 
-    fun insertOrUpdateCheckFilterTable(
-        dbName: String,
-        date: String,
-        checkFilterBean: CheckFilterBean
+    fun insertOrUpdateSumProgressRecordTable(
+        sumProgessRecordBean: SumProgessRecordBean
     ) {
-        switchDBName(Datas.DBFilter + DateUtils.changeFormatter(DateUtils.parse(date,FormatterEnum.YYYYMMDD),FormatterEnum.YYMM))
-        createCheckFilterTable(dbName)
-        if (!queryDataIsExsitByCode(dbName, checkFilterBean.code)) {
-            val insertSqlStr = "INSERT INTO $dbName" +
-                    "(CODE,CHECKSIZE,DATE)" +
-                    " VALUES${checkFilterBean.toInsert()}"
+        switchDBName(Datas.dataNamesDefault)
+        createSumProgressTable(Datas.SumProressTB)
+        if (!queryDataIsExsitByCode(Datas.SumProressTB, sumProgessRecordBean.code.toString())) {
+            val insertSqlStr = "INSERT INTO ${Datas.SumProressTB}" +
+                    "(CODE,JSON)" +
+                    " VALUES(${sumProgessRecordBean.code},'${GsonHelper.toJson(sumProgessRecordBean)}');"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            val sql = "UPDATE $dbName SET ${checkFilterBean.toUpdateSqlSumValues()}  WHERE CODE=${checkFilterBean.code}"
+            val sql = "UPDATE ${Datas.SumProressTB} SET JSON = '${GsonHelper.toJson(sumProgessRecordBean)}'  WHERE CODE=${sumProgessRecordBean.code}"
             LogUtil.d("updateSqlStr:$sql")
             db.execSQL(sql)
         }
     }
 
-    private fun createCheckFilterTable(dbName: String) {
+    private fun createSumProgressTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
-                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, CHECKSIZE INTEGER, DATE INTEGER);"
+                "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER, JSON TEXT);"
             db.execSQL(sqlStr)
         }
     }
 
 
-    fun queryCheckFilterByCode(dbName: String, code: String, date: String): CheckFilterBean? {
-        switchDBName(Datas.DBFilter + date)
-        var checkFilterBean: CheckFilterBean? = null
-        if (tabbleIsExist(dbName)) {
+    fun querySumProgressRecordByCode( code: String): SumProgessRecordBean? {
+        switchDBName(Datas.dataNamesDefault)
+        var sumProgessRecordBean: SumProgessRecordBean? = null
+        if (tabbleIsExist(Datas.SumProressTB)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =?", arrayOf(code.toInt().toString()))
+                db.rawQuery("SELECT * FROM ${Datas.SumProressTB} WHERE CODE =?", arrayOf(code.toInt().toString()))
             LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
-                checkFilterBean = CheckFilterBean()
-                val code = cursor.getString(cursor.getColumnIndex("CODE"))
-                val checkSize = cursor.getInt(cursor.getColumnIndex("CHECKSIZE"))
-                val date = cursor.getInt(cursor.getColumnIndex("DATE"))
-                checkFilterBean.code = code
-                checkFilterBean.checkSize = checkSize
-                checkFilterBean.date = date
+                sumProgessRecordBean = SumProgessRecordBean()
+                val JSON = cursor.getString(cursor.getColumnIndex("JSON"))
+                sumProgessRecordBean =
+                    GsonHelper.getInstance().fromJson(JSON, SumProgessRecordBean::class.java)
 
             }
             cursor.close()
         }
-        return checkFilterBean
+        return sumProgessRecordBean
     }
 
 
@@ -789,13 +784,13 @@ object DBUtils {
                     val P_DA_J = cursor.getString(cursor.getColumnIndex("P_DA_J"))
                     val P_PP_J = cursor.getString(cursor.getColumnIndex("P_PP_J"))
                     val P_MA_J = cursor.getString(cursor.getColumnIndex("P_MA_J"))
-                    val SpePP_J = cursor.getString(cursor.getColumnIndex("SpePP_J"))
-                    val DA_J = cursor.getString(cursor.getColumnIndex("DA_J"))
+//                    val SpePP_J = cursor.getString(cursor.getColumnIndex("SpePP_J"))
+//                    val DA_J = cursor.getString(cursor.getColumnIndex("DA_J"))
                     val K_J = cursor.getString(cursor.getColumnIndex("K_J"))
                     val Shape_J = cursor.getString(cursor.getColumnIndex("Shape_J"))
                     val K_TR_J = cursor.getString(cursor.getColumnIndex("K_TR_J"))
                     val GAP_J = cursor.getString(cursor.getColumnIndex("GAP_J"))
-                    val MS_J = cursor.getString(cursor.getColumnIndex("MS_J"))
+//                    val MS_J = cursor.getString(cursor.getColumnIndex("MS_J"))
 
                     codeHDDBean.name = NAME
                     codeHDDBean.date = DATE
@@ -831,15 +826,15 @@ object DBUtils {
                     if (!P_MA_J.isNullOrEmpty()) {
                         codeHDDBean.p_MA_J = GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
                     }
-                    if (!SpePP_J.isNullOrEmpty()) {
-                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
-                    }
-                    if (!DA_J.isNullOrEmpty()) {
-                        codeHDDBean.dA_J = GsonHelper.parse(DA_J, CodeHDDBean.DA_J::class.java)
-                    }
-                    if (!MS_J.isNullOrEmpty()) {
-                        codeHDDBean.mS_J = GsonHelper.parse(MS_J, CodeHDDBean.MS_J::class.java)
-                    }
+//                    if (!SpePP_J.isNullOrEmpty()) {
+//                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
+//                    }
+//                    if (!DA_J.isNullOrEmpty()) {
+//                        codeHDDBean.dA_J = GsonHelper.parse(DA_J, CodeHDDBean.DA_J::class.java)
+//                    }
+//                    if (!MS_J.isNullOrEmpty()) {
+//                        codeHDDBean.mS_J = GsonHelper.parse(MS_J, CodeHDDBean.MS_J::class.java)
+//                    }
                     list.add(codeHDDBean)
                     cursor.moveToNext()
                 }

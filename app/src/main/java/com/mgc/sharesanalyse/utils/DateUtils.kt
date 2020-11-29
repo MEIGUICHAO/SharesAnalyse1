@@ -27,7 +27,7 @@ enum class FormatterEnum(val format: String) {
 
 object DateUtils {
     val calendar = Calendar.getInstance()
-    val holiday = arrayListOf("2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06"
+    val holiday = arrayListOf("2020-05-01","2020-05-02","2020-05-03","2020-05-04","2020-05-05","2020-06-25","2020-06-26","2020-06-27","2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06"
         ,"2020-10-07","2020-10-08")
 
     @SuppressLint("SimpleDateFormat")

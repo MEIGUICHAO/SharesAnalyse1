@@ -86,7 +86,7 @@ public class CodeHDDBean {
 
     public String toInsertDBValues(String dbName) {
         return "INSERT INTO " + dbName + "( NAME , DATE , OP , CP , PP , P , AUP ,TR" +
-                ", P_AUTR_J, P_DA_J, P_PP_J, P_MA_J, SpePP_J, DA_J ,K_J ,Shape_J ,K_TR_J ,GAP_J , MS_J ) " +
+                ", P_AUTR_J, P_DA_J, P_PP_J, P_MA_J, K_J ,Shape_J ,K_TR_J ,GAP_J ) " +
                 "VALUES('" + name + "'" +
                 ",'" + DATE + "'" +
                 ", " + OP +
@@ -99,16 +99,13 @@ public class CodeHDDBean {
                 "', '" + GsonHelper.toJson(P_DA_J) +
                 "', '" + GsonHelper.toJson(P_PP_J) +
                 "', '" + GsonHelper.toJson(P_MA_J) +
-                "', '" + (null == SpePP_J ? "" : SpePP_J.toJSon()) +
-                "', '" + (null == DA_J ? "" : DA_J.toJSon()) +
                 "', '" + GsonHelper.toJson(K_J).
                 replace("\"CTC_D\":{},", "").replace("\"CTC_U\":{}", "").replace("\"CTC\":{},", "").
                 replace("\"D03\":3,", "").replace("\"D05\":5,", "").replace("\"D10\":10,", "").replace("\"D15\":15,", "").replace("\"D20\":20,", "").replace("\"D25\":25,", "").replace("\"D30\":30,", "").replace("\"D60\":60,", "").replace("\"D72\":72,", "").
                 replace("\"USLC\":{},", "").replace("\"DSLC\":{}", "").replace("\"SLL\":{},", "") +
                 "', '" + (null == Shape_J ? "" :GsonHelper.toJson(Shape_J)) +
-                "', '" + GsonHelper.toJson(K_TR_J) +
-                "', '" + GsonHelper.toJson(GAP_J) +
-                "', '" + (null == MS_J ? "" :MS_J.toJSon()) +
+                "', '" + (null == K_TR_J ? "" :GsonHelper.toJson(K_TR_J)) +
+                "', '" + (null == GAP_J ? "" :GsonHelper.toJson(GAP_J)) +
                 "')";
     }
 
