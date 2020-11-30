@@ -58,7 +58,10 @@ object Datas {
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()
     const val HHQDayCount = 8
-    const val CODEHDD_BEGIN_MONTH = 2009
+    const val REVERSE_TB_11 = "A_RTB_1_"
+    const val REVERSE_TB_33 = "A_RTB_3_"
+    const val REVERSE_TB_55 = "A_RTB_5_"
+    const val A_SLL_TB_ = "A_SLL_"
 //    const val HHQDayCount = 6
 
 }

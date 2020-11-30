@@ -1240,12 +1240,12 @@ class NewApiViewModel : BaseViewModel() {
             var sumProgessRecordBean = DBUtils.querySumProgressRecordByCode(code)
             var cHDDProgressBean : SumProgessRecordBean.BaseRecordBean? = null
             hisHqBean?.let {
-                for (ddidnex in hisHqBean[0].hq.size-1 downTo 0 ) {
+                for (ddidnex in 0 until hisHqBean[0].hq.size) {
                     //        for (ddidnex in 0 until 4) {
                     val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
                     if (null != sumProgessRecordBean) {
                         if (sumProgessRecordBean!!.getcHDDProgressBean().date >= date.toInt()) {
-                            continue
+                            break
                         }
                         cHDDProgressBean = sumProgessRecordBean!!.getcHDDProgressBean()
                     } else {
@@ -1307,7 +1307,13 @@ class NewApiViewModel : BaseViewModel() {
                                 FormatterEnum.YYYYMMDD
                             )
                         ) {
-                            insertOrUpdateCodeHDD(hisHqBean[0].hq, ddidnex,code,namelist[codeidnex], date)
+                            insertOrUpdateCodeHDD(
+                                hisHqBean[0].hq,
+                                ddidnex,
+                                code,
+                                namelist[codeidnex],
+                                date
+                            )
                             (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
                         }
                         if ((date2.isEmpty() || date3.isEmpty()) || (DateUtils.parse(
@@ -1339,7 +1345,7 @@ class NewApiViewModel : BaseViewModel() {
                                 codeidnex,
                                 date,
                                 hhqbean,
-                                false,code,namelist[codeidnex]
+                                false, code, namelist[codeidnex]
                             )
 
                             (mActivity as NewApiActivity).setBtnSumDDInfo("SHDD_${date}_${code}")
@@ -1349,7 +1355,7 @@ class NewApiViewModel : BaseViewModel() {
                                 codeidnex,
                                 date,
                                 hhqbean,
-                                true,code,namelist[codeidnex]
+                                true, code, namelist[codeidnex]
                             )
                         }
                     }
