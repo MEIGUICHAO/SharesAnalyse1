@@ -13,6 +13,16 @@ fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
 }
 
+fun String.toCompleteCode(): String {
+    return if (this.toInt() < 300000) kotlin.run {
+        var code = this
+        while (code.length < 6) {
+            code = "0" + code
+        }
+        code
+    } else this
+}
+
 
 
 fun Float.getPercent(begin: Float):Float {

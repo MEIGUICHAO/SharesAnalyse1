@@ -2020,7 +2020,7 @@ class NewApiViewModel : BaseViewModel() {
         var beginUSLLength = 0.toFloat()
         var beginDSLLength = 0.toFloat()
 
-        var chddDDBeanList = getChddBeanList(code, date)
+        var chddDDBeanList = getChddBeanList(code.toCompleteCode(), date)
         if (null != chddDDBeanList && chddDDBeanList.size > 0) {
             val curPercent = getcurPercentFloat(hq[hhqBeginIndex])
             val yestPercent = chddDDBeanList[chddDDBeanList.size - 1].p
