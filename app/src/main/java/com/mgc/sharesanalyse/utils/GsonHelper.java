@@ -43,7 +43,24 @@ public class GsonHelper {
         }
         return getInstance().fromJson(json, type);
         } catch (Exception e) {
-            LogUtil.e(getInstance().getClass().getSimpleName(), "Exception" + e.toString());
+            if (json.contains("},}")) {
+                try {
+                    json = json.replace("},}", "");
+                    return getInstance().fromJson(json, type);
+                } catch (Exception e1) {
+                    if (json.contains("CTC_D")) {
+                        try {
+                            json = json+ "}}";
+                            return getInstance().fromJson(json, type);
+                        } catch (Exception e2) {
+                            LogUtil.e(getInstance().getClass().getSimpleName(), "Exception" + e2.toString() + "\njson---:\n" + json);
+                        }
+                    }
+                    LogUtil.e(getInstance().getClass().getSimpleName(), "Exception" + e1.toString() + "\njson---:\n" + json);
+                }
+            }
+
+            LogUtil.e(getInstance().getClass().getSimpleName(), "Exception" + e.toString() + "\njson---:\n" + json);
             return null;
         }
     }

@@ -128,9 +128,21 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.getSumDD()
             }
         }
+        btnReverse.setOnClickListener {
+            App.getSinglePool().execute{
+                viewModel.reverseResult()
+            }
+        }
 
     }
 
+
+
+    fun setBtnReverseInfo(info: String) {
+        btnGetALlCode.post {
+            btnReverse.setText(info)
+        }
+    }
 
 
     fun setAllCodeInfo(info: String) {

@@ -102,10 +102,10 @@ public class CodeHDDBean {
                 "', '" + GsonHelper.toJson(K_J).
                 replace("\"CTC_D\":{},", "").replace("\"CTC_U\":{}", "").replace("\"CTC\":{},", "").
                 replace("\"D03\":3,", "").replace("\"D05\":5,", "").replace("\"D10\":10,", "").replace("\"D15\":15,", "").replace("\"D20\":20,", "").replace("\"D25\":25,", "").replace("\"D30\":30,", "").replace("\"D60\":60,", "").replace("\"D72\":72,", "").
-                replace("\"USLC\":{},", "").replace("\"DSLC\":{}", "").replace("\"SLL\":{},", "") +
-                "', '" + (null == Shape_J ? "" :GsonHelper.toJson(Shape_J)) +
-                "', '" + (null == K_TR_J ? "" :GsonHelper.toJson(K_TR_J)) +
-                "', '" + (null == GAP_J ? "" :GsonHelper.toJson(GAP_J)) +
+                replace("\"USLC\":{},", "").replace("\"DSLC\":{}", "").replace("\"SLL\":{},", "").replace("},}", "}}") +
+                "', '" + (null == Shape_J ? "" : GsonHelper.toJson(Shape_J)) +
+                "', '" + (null == K_TR_J ? "" : GsonHelper.toJson(K_TR_J)) +
+                "', '" + (null == GAP_J ? "" : GsonHelper.toJson(GAP_J)) +
                 "')";
     }
 

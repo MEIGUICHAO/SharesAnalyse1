@@ -48,20 +48,22 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
-    val DEBUG_Code = listOf("000677","300278","000544")
+    val DEBUG_Code = listOf("688133","300278","000544")
     const val FILTER_TYPE_COUNT = 2
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()
     const val HHQDayCount = 8
-    const val REVERSE_TB_11 = "A_RTB_1_"
+    const val REVERSE_TB_P30_11 = "A_RTB_30_1_"
+    const val REVERSE_TB_P50_11 = "A_RTB_50_1_"
     const val REVERSE_TB_33 = "A_RTB_3_"
     const val REVERSE_TB_55 = "A_RTB_5_"
     const val A_SLL_TB_ = "A_SLL_"
+    const val REVERSE_DB = "REVERSE_DB_"
 //    const val HHQDayCount = 6
 
 }

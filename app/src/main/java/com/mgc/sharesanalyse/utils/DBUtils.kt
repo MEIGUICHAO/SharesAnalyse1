@@ -34,11 +34,11 @@ object DBUtils {
     ) {
         LogUtil.d("@@ddBean m10Size:${ddbean.sizeBean.m10Size}")
         createSDD(dbName)
-        ddbean.sizeBean.date = date.replace(Datas.sdd,"")
+        ddbean.sizeBean.date = date.replace(Datas.sdd, "")
         if (!queryItemIsExsitByCode(dbName, ddbean.code)) {
             val insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME,ALLSIZE,DATE,M100S,M50S,M30S,M10S,M5S,M1S,M05S,M01S,L01S,G5000M,G1000M,G500M,G100M,ALLSIZESDJ,M100SDJ,M50SDJ,M30SDJ,M10SDJ,M5SDJ,M1SDJ,M05SDJ,M01SDJ)" +
-                    " VALUES${ddbean.toInsertSqlSumValues(ddbean,ddbean.allsize)}"
+                    " VALUES${ddbean.toInsertSqlSumValues(ddbean, ddbean.allsize)}"
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
@@ -46,26 +46,30 @@ object DBUtils {
             val ts2 = DateUtils.parse(sumDDBean!!.sizeBean!!.date, FormatterEnum.YYYYMMDD)
             LogUtil.d("ts:$date,ts2:${sumDDBean.sizeBean!!.date}")
             if (ts > ts2) {
-                val sql = "UPDATE $dbName SET ${sumDDBean.toUpdateSqlSumValues(ddbean)},DATE =${date.replace(Datas.sdd,"")}  WHERE CODE=${ddbean.code}"
+                val sql =
+                    "UPDATE $dbName SET ${sumDDBean.toUpdateSqlSumValues(ddbean)},DATE =${date.replace(
+                        Datas.sdd,
+                        ""
+                    )}  WHERE CODE=${ddbean.code}"
                 LogUtil.d("updateSqlStr:$sql")
                 db.execSQL(sql)
             }
         }
     }
 
-    fun setSDDPercent(dbName: String,percent:Float,code: String) {
+    fun setSDDPercent(dbName: String, percent: Float, code: String) {
         val sql = "UPDATE $dbName SET PERCENT = ${percent}  WHERE CODE=${code}"
         LogUtil.d("setSDDPercent:$sql")
         db.execSQL(sql)
     }
 
-    fun setSDDMaxPercent(dbName: String,percent:Float,maxdate: String,code: String) {
+    fun setSDDMaxPercent(dbName: String, percent: Float, maxdate: String, code: String) {
         val sql = "UPDATE $dbName SET MAXPER = ${percent},MPD = ${maxdate}  WHERE CODE=${code}"
         LogUtil.d("setSDDMaxPercent:$sql")
         db.execSQL(sql)
     }
 
-    fun setSDDLowPercent(dbName: String, percent:Float, lowdate: String, code: String) {
+    fun setSDDLowPercent(dbName: String, percent: Float, lowdate: String, code: String) {
         val sql = "UPDATE $dbName SET LOWPER = ${percent},LPD = ${lowdate}  WHERE CODE=${code}"
         LogUtil.d("setSDDMaxPercent:$sql")
         db.execSQL(sql)
@@ -160,24 +164,26 @@ object DBUtils {
     }
 
 
-    fun queryOPByCHDD(code: String, isAll: Boolean,chddDateYM:String):Float {
+    fun queryOPByCHDD(code: String, isAll: Boolean, chddDateYM: String): Float {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
         var op = 0.toFloat()
         if (isAll) {
             val mList = ArrayList<String>()
             pathList.forEach {
-                if (it.contains("CHDD")&&!it.contains("journal")) {
-                    mList.add(it.replace("SZ_CHDD_","").replace("SH_CHDD_","").replace("CY_CHDD_",""))
+                if (it.contains("CHDD") && !it.contains("journal")) {
+                    mList.add(
+                        it.replace("SZ_CHDD_", "").replace("SH_CHDD_", "").replace("CY_CHDD_", "")
+                    )
                 }
             }
             mList.sortStringDateAsc(FormatterEnum.YYMM)
             if (mList.size > 0) {
-                switchDBName(code.toCodeHDD(mList[0],FormatterEnum.YYMM))
+                switchDBName(code.toCodeHDD(mList[0], FormatterEnum.YYMM))
                 val tbName = Datas.CHDD + code
                 op = queryFirstOPByCodeHDD(tbName)
             }
         } else {
-            val dbName = code.toCodeHDD(chddDateYM,FormatterEnum.YYMM)
+            val dbName = code.toCodeHDD(chddDateYM, FormatterEnum.YYMM)
             if (pathList.contains(dbName)) {
                 switchDBName(dbName)
                 val tbName = Datas.CHDD + code
@@ -255,7 +261,7 @@ object DBUtils {
     fun querySumDDBeanLastDate(dbName: String): String {
         var DATE = ""
         if (tabbleIsExist(dbName)) {
-            var cursor = db.rawQuery("SELECT * FROM $dbName order by _ID desc",null)
+            var cursor = db.rawQuery("SELECT * FROM $dbName order by _ID desc", null)
             if (null != cursor && cursor.moveToFirst()) {
                 DATE = cursor.getString(cursor.getColumnIndex("DATE"))
                 var CODE = cursor.getString(cursor.getColumnIndex("CODE"))
@@ -319,19 +325,19 @@ object DBUtils {
                 dealDetailAmountSizeBean.l01Size = L01S
 
                 dealDetailAmountSizeBean.gt5000Mamount = G5000M!!
-                dealDetailAmountSizeBean.gt1000Mamount =G1000M!!
+                dealDetailAmountSizeBean.gt1000Mamount = G1000M!!
                 dealDetailAmountSizeBean.gt500Mamount = G500M!!
-                dealDetailAmountSizeBean.gt100Mamount =G100M!!
+                dealDetailAmountSizeBean.gt100Mamount = G100M!!
 
-                dealDetailAmountSizeBean.allsizeSDJ =ALLSIZESDJ
-                dealDetailAmountSizeBean.m100SDJ =M100SDJ
-                dealDetailAmountSizeBean.m50SDJ =M50SDJ
-                dealDetailAmountSizeBean.m30SDJ =M30SDJ
-                dealDetailAmountSizeBean.m10SDJ =M10SDJ
-                dealDetailAmountSizeBean.m5SDJ =M5SDJ
-                dealDetailAmountSizeBean.m1SDJ =M1SDJ
-                dealDetailAmountSizeBean.m05SDJ =M05SDJ
-                dealDetailAmountSizeBean.m01SDJ =M01SDJ
+                dealDetailAmountSizeBean.allsizeSDJ = ALLSIZESDJ
+                dealDetailAmountSizeBean.m100SDJ = M100SDJ
+                dealDetailAmountSizeBean.m50SDJ = M50SDJ
+                dealDetailAmountSizeBean.m30SDJ = M30SDJ
+                dealDetailAmountSizeBean.m10SDJ = M10SDJ
+                dealDetailAmountSizeBean.m5SDJ = M5SDJ
+                dealDetailAmountSizeBean.m1SDJ = M1SDJ
+                dealDetailAmountSizeBean.m05SDJ = M05SDJ
+                dealDetailAmountSizeBean.m01SDJ = M01SDJ
                 dealDetailAmountSizeBean.date = DATE
 
                 sumDDBean.code = code
@@ -422,7 +428,7 @@ object DBUtils {
     fun queryDateInCodeDDByDbName(dbName: String): String {
         var DATE = ""
         if (tabbleIsExist(dbName)) {
-            var cursor = db.rawQuery("SELECT * FROM $dbName",null)
+            var cursor = db.rawQuery("SELECT * FROM $dbName", null)
             if (null != cursor && cursor.moveToLast()) {
                 DATE = cursor.getString(cursor.getColumnIndex("DATE"))
             }
@@ -431,7 +437,7 @@ object DBUtils {
         return DATE
     }
 
-    fun queryDateInSDDDByDbName(dbName: String,code: String): String {
+    fun queryDateInSDDDByDbName(dbName: String, code: String): String {
         switchDBName(Datas.dataNamesDefault)
         var DATE = ""
         if (tabbleIsExist(dbName)) {
@@ -443,7 +449,6 @@ object DBUtils {
         }
         return DATE
     }
-
 
 
     /**
@@ -492,12 +497,12 @@ object DBUtils {
                     "select * from $name"
                 val mCursor = db.rawQuery(sqlstr, null)
                 LogUtil.d("foreachDBTable mCursor:${mCursor.count}")
-                if (name.contains("DD_")&&mCursor.count==0) {
+                if (name.contains("DD_") && mCursor.count == 0) {
                     dropTable(name)
                 }
                 if (name.contains("DD_")) {
-                    val date = name.replace("DD_","")
-                    val ts = DateUtils.parse(date,FormatterEnum.YYYYMMDD)
+                    val date = name.replace("DD_", "")
+                    val ts = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
                     if (ts > System.currentTimeMillis()) {
                         dropTable(name)
                     }
@@ -521,8 +526,6 @@ object DBUtils {
             db.execSQL(sql)
         }
     }
-
-
 
 
     fun createSHDD(dbName: String) {
@@ -555,13 +558,13 @@ object DBUtils {
             val ts2 = DateUtils.parse(shddBean.date, FormatterEnum.YYYYMMDD)
             if (ts > ts2) {
                 shddBean.date = curdate
-                val sql = "UPDATE $dbName SET ${shddBean.toUpdateSqlSumValues()}  WHERE C=${shddBean.c}"
+                val sql =
+                    "UPDATE $dbName SET ${shddBean.toUpdateSqlSumValues()}  WHERE C=${shddBean.c}"
                 LogUtil.d("updateSqlStr:$sql")
                 db.execSQL(sql)
             }
         }
     }
-
 
 
     fun querySHDDByCode(dbName: String, code: String): SHDDBean? {
@@ -686,11 +689,11 @@ object DBUtils {
     fun queryFirstOPByCodeHDD(tbName: String): Float {
         var op = 0.toFloat()
         if (tabbleIsExist(tbName)) {
-            val cursor = db.rawQuery("SELECT * FROM $tbName order by _ID asc",null)
+            val cursor = db.rawQuery("SELECT * FROM $tbName order by _ID asc", null)
             if (null != cursor && cursor.moveToFirst()) {
                 op = cursor.getFloat(cursor.getColumnIndex("OP"))
                 var Date = cursor.getFloat(cursor.getColumnIndex("DATE"))
-                while (op==0.toFloat()) {
+                while (op == 0.toFloat()) {
                     cursor.moveToNext()
                     op = cursor.getFloat(cursor.getColumnIndex("OP"))
                     Date = cursor.getFloat(cursor.getColumnIndex("DATE"))
@@ -714,7 +717,8 @@ object DBUtils {
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            val sql = "UPDATE ${Datas.SumProressTB} SET JSON = '${GsonHelper.toJson(sumProgessRecordBean)}'  WHERE CODE=${sumProgessRecordBean.code}"
+            val sql =
+                "UPDATE ${Datas.SumProressTB} SET JSON = '${GsonHelper.toJson(sumProgessRecordBean)}'  WHERE CODE=${sumProgessRecordBean.code}"
             LogUtil.d("updateSqlStr:$sql")
             db.execSQL(sql)
         }
@@ -729,12 +733,15 @@ object DBUtils {
     }
 
 
-    fun querySumProgressRecordByCode( code: String): SumProgessRecordBean? {
+    fun querySumProgressRecordByCode(code: String): SumProgessRecordBean? {
         switchDBName(Datas.dataNamesDefault)
         var sumProgessRecordBean: SumProgessRecordBean? = null
         if (tabbleIsExist(Datas.SumProressTB)) {
             var cursor =
-                db.rawQuery("SELECT * FROM ${Datas.SumProressTB} WHERE CODE =?", arrayOf(code.toInt().toString()))
+                db.rawQuery(
+                    "SELECT * FROM ${Datas.SumProressTB} WHERE CODE =?",
+                    arrayOf(code.toInt().toString())
+                )
             LogUtil.d("cursor:${cursor.count}")
             if (null != cursor && cursor.moveToFirst()) {
                 sumProgessRecordBean = SumProgessRecordBean()
@@ -749,7 +756,6 @@ object DBUtils {
     }
 
 
-
     private fun createFilterTable(dbName: String) {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
@@ -759,11 +765,9 @@ object DBUtils {
     }
 
 
-
-
     fun queryCHDDByTableName(tableName: String, dbName: String): ArrayList<CodeHDDBean>? {
         switchDBName(dbName)
-        var list:ArrayList<CodeHDDBean>? = null
+        var list: ArrayList<CodeHDDBean>? = null
         if (tabbleIsExist(tableName)) {
             var cursor =
                 db.rawQuery("SELECT * FROM $tableName", null)
@@ -802,29 +806,33 @@ object DBUtils {
                     codeHDDBean.tr = TR
 
                     if (!GAP_J.isNullOrEmpty()) {
-                        codeHDDBean.gaP_J = GsonHelper.parse(GAP_J,GapJsonBean::class.java)
+                        codeHDDBean.gaP_J = GsonHelper.parse(GAP_J, GapJsonBean::class.java)
                     }
                     if (!K_TR_J.isNullOrEmpty()) {
-                        codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J,K_TR_Json::class.java)
+                        codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J, K_TR_Json::class.java)
                     }
                     if (!Shape_J.isNullOrEmpty()) {
-                        codeHDDBean.shape_J = GsonHelper.parse(Shape_J,ShapeJsonBean::class.java)
+                        codeHDDBean.shape_J = GsonHelper.parse(Shape_J, ShapeJsonBean::class.java)
                     }
                     if (!K_J.isNullOrEmpty()) {
-                        codeHDDBean.k_J = GsonHelper.parse(K_J,KJsonBean::class.java)
+                        codeHDDBean.k_J = GsonHelper.parse(K_J, KJsonBean::class.java)
                     }
 
                     if (!p_autr_j.isNullOrEmpty()) {
-                        codeHDDBean.p_autr_j = GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
+                        codeHDDBean.p_autr_j =
+                            GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
                     }
                     if (!P_DA_J.isNullOrEmpty()) {
-                        codeHDDBean.p_DA_J = GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
+                        codeHDDBean.p_DA_J =
+                            GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
                     }
                     if (!P_PP_J.isNullOrEmpty()) {
-                        codeHDDBean.p_PP_J = GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
+                        codeHDDBean.p_PP_J =
+                            GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
                     }
                     if (!P_MA_J.isNullOrEmpty()) {
-                        codeHDDBean.p_MA_J = GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
+                        codeHDDBean.p_MA_J =
+                            GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
                     }
 //                    if (!SpePP_J.isNullOrEmpty()) {
 //                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
@@ -867,7 +875,8 @@ object DBUtils {
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         } else {
-            val sql = "UPDATE $tbName SET ${filterCodeHDDBean.toUpdateSqlSumValues()}  WHERE CODE=${filterCodeHDDBean.code}"
+            val sql =
+                "UPDATE $tbName SET ${filterCodeHDDBean.toUpdateSqlSumValues()}  WHERE CODE=${filterCodeHDDBean.code}"
             LogUtil.d("updateSqlStr:$sql")
             db.execSQL(sql)
         }
@@ -882,7 +891,11 @@ object DBUtils {
         }
     }
 
-    fun queryFilterCodeHddBeanByCode(dbName: String, code: String,date: String): FilterCodeHDDBean? {
+    fun queryFilterCodeHddBeanByCode(
+        dbName: String,
+        code: String,
+        date: String
+    ): FilterCodeHDDBean? {
         switchDBName(
             Datas.MAPPFilterDB + DateUtils.changeFormatter(
                 DateUtils.parse(
@@ -913,4 +926,42 @@ object DBUtils {
         return filterCodeHDDBean
     }
 
+    fun insertReverseKJTable(
+        tbName: String,
+        reverseBean: BaseReverseImp,
+        date: String
+    ) {
+        switchDBName(
+            Datas.REVERSE_DB + DateUtils.changeFormatter(
+                DateUtils.parse(
+                    date,
+                    FormatterEnum.YYYYMMDD
+                ), FormatterEnum.YYMM
+            )
+        )
+        LogUtil.d("insertReverseKJTable!!")
+        createReverseKJTable(tbName, reverseBean)
+        if (!queryDataIsExsitByCode(tbName, reverseBean.code.toString())) {
+            var insertSqlStr = ""
+            if (reverseBean is ReverseKJsonBean) {
+                insertSqlStr = reverseBean.insertTB(tbName)
+            }
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        }
+    }
+
+
+    private fun createReverseKJTable(
+        dbName: String,
+        reverseBean: BaseReverseImp
+    ) {
+        if (!tabbleIsExist(dbName)) {
+            var sqlStr = ""
+            if (reverseBean is ReverseKJsonBean) {
+                sqlStr = reverseBean.createTB(dbName)
+            }
+            db.execSQL(sqlStr)
+        }
+    }
 }
