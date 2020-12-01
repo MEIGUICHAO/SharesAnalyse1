@@ -2391,7 +2391,16 @@ class NewApiViewModel : BaseViewModel() {
 
                         val reverseKJSLLBean = ReverseKJSLLBean()
                         reverseKJSLLBean.code = code.toInt()
-                        reverseKJSLLBean.date = targetBean.date
+                        try {
+                            reverseKJSLLBean.date = DateUtils.changeFormatter(
+                                DateUtils.parse(
+                                    targetBean.date,
+                                    FormatterEnum.YYYYMMDD
+                                ), FormatterEnum.MMDD
+                            )
+                        } catch (e: java.lang.Exception) {
+                            reverseKJSLLBean.date = targetBean.date
+                        }
                         reverseKJSLLBean.u_D03 = targetBean.k_J.SLL.usll.D03.toKeep4()
                         reverseKJSLLBean.u_D05 = targetBean.k_J.SLL.usll.D05.toKeep4()
                         reverseKJSLLBean.u_D10 = targetBean.k_J.SLL.usll.D10.toKeep4()
