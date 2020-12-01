@@ -3,10 +3,26 @@ package com.mgc.sharesanalyse.entity;
 public class ReverseKJsonBean implements BaseReverseImp {
     private int code;
     private String date;
-    private float MP;
-    private float LP;
+    private String AO;
     private float CurP;
-    private float AfterOp;
+    private int TYPE;
+
+    public String getAO() {
+        return AO;
+    }
+
+    public void setAO(String AO) {
+        this.AO = AO;
+    }
+
+    public int getTYPE() {
+        return TYPE;
+    }
+
+    public void setTYPE(int TYPE) {
+        this.TYPE = TYPE;
+    }
+
     private float OM_M;
     private float OM_C;
     private float OM_P;
@@ -50,21 +66,6 @@ public class ReverseKJsonBean implements BaseReverseImp {
         this.date = date;
     }
 
-    public float getMP() {
-        return MP;
-    }
-
-    public void setMP(float MP) {
-        this.MP = MP;
-    }
-
-    public float getLP() {
-        return LP;
-    }
-
-    public void setLP(float LP) {
-        this.LP = LP;
-    }
 
     public float getCurP() {
         return CurP;
@@ -74,13 +75,7 @@ public class ReverseKJsonBean implements BaseReverseImp {
         CurP = curP;
     }
 
-    public float getAfterOp() {
-        return AfterOp;
-    }
 
-    public void setAfterOp(float afterOp) {
-        AfterOp = afterOp;
-    }
 
     public float getOM_M() {
         return OM_M;
@@ -312,10 +307,9 @@ public class ReverseKJsonBean implements BaseReverseImp {
     public String toString() {
         return code +
                 ", '" + date + '\'' +
-                "," + MP +
-                ", " + LP +
+                ", '" + AO + '\'' +
                 ", " + CurP +
-                ", " + AfterOp +
+                ", " + TYPE +
                 ", " + OM_M +
                 ", " + OM_C +
                 ", " + OM_P +
@@ -331,7 +325,15 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 "," + OL_M +
                 "," + OL_C +
                 ", " + OL_P +
-                ", " + OL_L +
+                ", " + OL_L + ")";
+    }
+
+    public String toDerbyString() {
+        return code +
+                ", '" + date + '\'' +
+                ", '" + AO + '\'' +
+                ", " + CurP +
+                ", " + TYPE +
                 ", " + OM_OC +
                 ", " + OM_OP +
                 "," + OM_OL +
@@ -349,16 +351,24 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
 
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,MP INTEGER,LP INTEGER,CurP INTEGER,AfterOp INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
-                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER);";
+    }
+
+    public String createDerbyTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
                 ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
-    
+
 
     public String insertTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,DATE ,MP ,LP ,CurP ,AfterOp ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
-                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
-                ",OC_OL ,OP_OL ,M_C ,M_P ,M_L ,C_P ,C_L ,P_L ) VALUES (" + toString();
+        return "INSERT INTO " + tbName + "(CODE ,DATE,AO,CurP ,TYPE ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
+                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ) VALUES (" + toString();
+    }
+
+    public String insertDerbyTB(String tbName) {
+        return "INSERT INTO " + tbName + "(CODE ,DATE,AO,CurP ,TYPE ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
+                ",OC_OL ,OP_OL ,M_C ,M_P ,M_L ,C_P ,C_L ,P_L ) VALUES (" + toDerbyString();
     }
 
     @Override

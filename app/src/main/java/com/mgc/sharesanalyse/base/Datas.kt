@@ -48,7 +48,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -60,10 +60,13 @@ object Datas {
     const val HHQDayCount = 8
     const val REVERSE_TB_P30_11 = "A_RTB_30_1_"
     const val REVERSE_TB_P50_11 = "A_RTB_50_1_"
-    const val REVERSE_TB_33 = "A_RTB_3_"
-    const val REVERSE_TB_55 = "A_RTB_5_"
+    const val REVERSE_TB_P30_33 = "A_RTB_30_3_"
+    const val REVERSE_TB_P50_33 = "A_RTB_50_3_"
+    const val REVERSE_TB_P30_55 = "A_RTB_30_5_"
+    const val REVERSE_TB_P50_55 = "A_RTB_50_5_"
     const val A_SLL_TB_ = "A_SLL_"
-    const val REVERSE_DB = "REVERSE_DB_"
+    const val REVERSE_KJ_DB = "REVERSE_KJ_DB_"
+    const val Derby = "Derby_"
 //    const val HHQDayCount = 6
 
 }

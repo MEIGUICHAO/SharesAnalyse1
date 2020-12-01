@@ -421,7 +421,8 @@ class NewApiViewModel : BaseViewModel() {
         })
 
     }
-    fun getStartDateByDaysCount(count:Int):String {
+
+    fun getStartDateByDaysCount(count: Int): String {
         var startValue = ""
         val judeIndex = (DateUtils.formatToDay(FormatterEnum.YYYY) + "00").toInt()
         val toDay = (DateUtils.formatToDay(FormatterEnum.YYYYMM)).toInt()
@@ -437,9 +438,12 @@ class NewApiViewModel : BaseViewModel() {
         }
         return startValue
     }
+
     //    DateUtils.formatToDay(FormatterEnum.YYYY)+"0501"
     fun getHisHq(
-        code: String, start: String = getStartDateByDaysCount(Datas.HHQDayCount), end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        code: String,
+        start: String = getStartDateByDaysCount(Datas.HHQDayCount),
+        end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
     ) {
         var bean =
             DBUtils.queryHHqBeanByCode(getHHQTableName(), code)
@@ -848,7 +852,7 @@ class NewApiViewModel : BaseViewModel() {
     fun getHisHqDay(dayDatas: List<String>) = dayDatas[0]
     fun getcurPercent(dayDatas: List<String>) = dayDatas[4]
     fun getHisHqCurRange(dayDatas: List<String>) = BigDecimalUtils.safeDiv(
-        (getHisHqDayHighestPrice(dayDatas)- getHisHqDayLowestPrice(dayDatas)),
+        (getHisHqDayHighestPrice(dayDatas) - getHisHqDayLowestPrice(dayDatas)),
         getHisHqDayLowestPrice(dayDatas)
     )
 
@@ -1149,8 +1153,8 @@ class NewApiViewModel : BaseViewModel() {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
         val mList = ArrayList<String>()
         pathList.forEach {
-            if (it.contains("SZ_CHDD_")&&!it.contains("journal")) {
-                mList.add(it.replace("SZ_CHDD_",""))
+            if (it.contains("SZ_CHDD_") && !it.contains("journal")) {
+                mList.add(it.replace("SZ_CHDD_", ""))
             }
         }
         mList.sortStringDateAsc(FormatterEnum.YYMM)
@@ -1162,7 +1166,7 @@ class NewApiViewModel : BaseViewModel() {
             }
             list
         }
-        codelist.forEach {code->
+        codelist.forEach { code ->
             mList.forEach {
                 val date = "20${it}01"
                 getReverseChddBeans(code, date)
@@ -1187,8 +1191,8 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         var hhqBeginIndex1 = hhqBeginIndex
         for (ddidnex in sumDateBeginIndex until ddlist.size) {
-    //        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
-    //        for (ddidnex in 0 until 4) {
+            //        for (ddidnex in sumDateBeginIndex until ddlist.size)  {
+            //        for (ddidnex in 0 until 4) {
             val date = ddlist[ddidnex].replace(
                 Datas.dealDetailTableName,
                 ""
@@ -1196,7 +1200,7 @@ class NewApiViewModel : BaseViewModel() {
 
             LogUtil.d("for date:$date ,hhqBeginIndex:$hhqBeginIndex1")
             val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
-    //            for (codeidnex in 0 until 1) {
+            //            for (codeidnex in 0 until 1) {
             for (codeidnex in 0 until codelist.size) {
                 (mActivity as NewApiActivity).setBtnSumDDInfo("SDD_${date}_${codelist[codeidnex]}")
                 LogUtil.d(
@@ -1263,7 +1267,7 @@ class NewApiViewModel : BaseViewModel() {
                 DBUtils.queryHHqBeanByCode(hhqlist[hhqlist.size - 1], code)
             val hisHqBean = GsonHelper.parseArray(bean?.json, HisHqBean::class.java)
             var sumProgessRecordBean = DBUtils.querySumProgressRecordByCode(code)
-            var cHDDProgressBean : SumProgessRecordBean.BaseRecordBean? = null
+            var cHDDProgressBean: SumProgessRecordBean.BaseRecordBean? = null
             hisHqBean?.let {
                 try {
                     LogUtil.d("${hisHqBean[0].hq.size}")
@@ -1402,13 +1406,13 @@ class NewApiViewModel : BaseViewModel() {
         codeidnex: Int,
         date: String,
         hhqbean: MutableList<String>,
-        isAll: Boolean,code: String,name: String
+        isAll: Boolean, code: String, name: String
     ) {
         val shddBean =
             DBUtils.querySHDDByCode(curMonthSHHDTBName, codelist[codeidnex])
 
         if (null == shddBean) {
-            insertSHDDBean(curMonthSHHDTBName, hhqbean,  date,code,name)
+            insertSHDDBean(curMonthSHHDTBName, hhqbean, date, code, name)
         } else {
             updateSHDDBean(
                 curMonthSHHDTBName,
@@ -1418,7 +1422,7 @@ class NewApiViewModel : BaseViewModel() {
                 DateUtils.changeFormatter(
                     DateUtils.parse(date, FormatterEnum.YYYYMMDD),
                     FormatterEnum.YYMM
-                ),code,name
+                ), code, name
             )
         }
     }
@@ -1428,7 +1432,7 @@ class NewApiViewModel : BaseViewModel() {
         hhqbean: List<String>,
         date: String,
         isAll: Boolean,
-        shddDateYM: String,code: String,name: String
+        shddDateYM: String, code: String, name: String
     ) {
         val lastSHDDBean = DBUtils.querySHDDByCode(tbName, code)
 
@@ -1540,7 +1544,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun insertSHDDBean(
         tbName: String,
         hhqbean: List<String>,
-        date: String,code: String,name: String
+        date: String, code: String, name: String
     ) {
         val shddBean = SHDDBean()
         shddBean.c = code
@@ -1985,7 +1989,7 @@ class NewApiViewModel : BaseViewModel() {
             codeHDDBean.aup = BigDecimalUtils.div(diff, beginOP) * 100
         }
         operaNewCodeHDD(codeHDDBean, hq, hhqBeginIndex, code, date)
-        DBUtils.insertCodeHDD(tbName, codeHDDBean,code,date)
+        DBUtils.insertCodeHDD(tbName, codeHDDBean, code, date)
     }
 
     private fun operaNewCodeHDD(
@@ -2036,7 +2040,7 @@ class NewApiViewModel : BaseViewModel() {
             val tr = getHisHqDayTurnRateFloat(hq[hhqBeginIndex])
             val curRange = getHisHqCurRange(hq[hhqBeginIndex])
             val baseType = KJsonBean.BaseType()
-            baseType.date = getHisHqDay(hq[hhqBeginIndex]).replace("-","")
+            baseType.date = getHisHqDay(hq[hhqBeginIndex]).replace("-", "")
             baseType.tr = tr
             baseType.op = op
             baseType.cp = cp
@@ -2082,11 +2086,17 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
             filterCodeHDDBean?.let {
-                LogUtil.d("BaseType_old_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}---> \n${GsonHelper.getInstance().toJson(chddDDBeanList[chddDDBeanList.size - 1])}")
-                LogUtil.d("BaseType_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}--> \n${GsonHelper.getInstance().toJson(baseType)}")
+                LogUtil.d(
+                    "BaseType_old_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}---> \n${GsonHelper.getInstance()
+                        .toJson(chddDDBeanList[chddDDBeanList.size - 1])}"
+                )
+                LogUtil.d(
+                    "BaseType_${code}_${date}_${filterCodeHDDBean.kJ_CTC_TYPE}--> \n${GsonHelper.getInstance()
+                        .toJson(baseType)}"
+                )
                 it.code = code.toInt()
                 it.kJ_CTC_J = GsonHelper.toJson(baseType)
-                DBUtils.insertOrUpdateFilterCodeHddTable(Datas.FILTER_CODE_TB + date, it,date)
+                DBUtils.insertOrUpdateFilterCodeHddTable(Datas.FILTER_CODE_TB + date, it, date)
             }
         }
 
@@ -2277,7 +2287,7 @@ class NewApiViewModel : BaseViewModel() {
         date: String
     ): ArrayList<CodeHDDBean>? {
         var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
-        var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toInt()}", dbName)
+        var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
         if (null == chddDDBeanList || chddDDBeanList.size < 1) {
             chddDDBeanList = getLastMonthChddList(date, code)
         }
@@ -2288,7 +2298,7 @@ class NewApiViewModel : BaseViewModel() {
         date: String,
         code: String
     ): ArrayList<CodeHDDBean>? {
-        var dbName:String?
+        var dbName: String?
         var month = DateUtils.changeFormatter(
             DateUtils.parse(date, FormatterEnum.YYYYMMDD),
             FormatterEnum.YYMM
@@ -2300,7 +2310,8 @@ class NewApiViewModel : BaseViewModel() {
         } else {
             dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
         }
-        return DBUtils.queryCHDDByTableName("DD_${code.toInt()}", dbName)
+        LogUtil.d("getLastMonthChddList_dbName:$dbName")
+        return DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
     }
 
     private fun getReverseChddBeans(
@@ -2308,101 +2319,287 @@ class NewApiViewModel : BaseViewModel() {
         date: String
     ): ArrayList<CodeHDDBean>? {
         var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
-        var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code}", dbName)
+        var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+        var mCHDDList = ArrayList<CodeHDDBean>()
         LogUtil.d("dbName:$dbName tb:${"DD_${code.toInt()}"}----size:${chddDDBeanList?.size}")
         chddDDBeanList?.let {
             for (i in 0 until it.size) {
+                mCHDDList.add(0, it[i])
+                if (i == 0) {
+                    val lastMonthList = getLastMonthChddList((it[i].date.toInt()).toString(), code)
+                    lastMonthList?.let {
+                        for (i in (it.size - 1) downTo 0) {
+                            mCHDDList.add(it[i])
+                        }
+                    }
+                    val lastLastMonthList =
+                        getLastMonthChddList((it[i].date.toInt() - 100).toString(), code)
+                    lastLastMonthList?.let {
+                        for (i in (it.size - 1) downTo 0) {
+                            mCHDDList.add(it[i])
+                        }
+                    }
+                }
+
                 val requestBean = it[i]
-                var targetBean:CodeHDDBean?
-                var oldBean:CodeHDDBean? = null
-                var lastMonthList: ArrayList<CodeHDDBean>? = null
+                var oldBean: CodeHDDBean?
+                var targetBean: CodeHDDBean?
                 (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${it[i].date}")
-                if (i - 5 < 0) {
-                    lastMonthList = getLastMonthChddList(date, code)
-                    if (null == lastMonthList || lastMonthList.size - (5 - i) < 0) {
-                        continue
+                if (mCHDDList.size > 6) {
+                    targetBean = mCHDDList[5]
+                    oldBean = mCHDDList[6]
+                    LogUtil.d("code:$code---------------requestBean date:${requestBean.date},targetBean date:${targetBean.date},oldBean date:${oldBean.date}")
+                    if (requestBean.date.equals("20200506")) {
+                        mCHDDList.forEach {
+                            LogUtil.d("---------------requestBean:${it.date}")
+                        }
                     }
-                    targetBean = lastMonthList.get(lastMonthList.size - (5 - i))
-                } else {
-                    targetBean = it[i - 5]
-                }
-                if (i - 6 < 0 && i - 5 >= 0) {
-                    lastMonthList = getLastMonthChddList(date, code)
-                    if (null == lastMonthList || lastMonthList.size - 1 < 0) {
-                        continue
-                    }
-                    oldBean = lastMonthList.get(lastMonthList.size - 1)
-                } else if (i - 6 < 0 && null != lastMonthList) {
-                    if (lastMonthList.size - (5 - i) < 0) {
-                        continue
-                    }
-                    targetBean = lastMonthList.get(lastMonthList.size - (5 - i))
-                } else {
-                    if (i - 6 < 0) {
-                        continue
-                    }
-                    oldBean = it[i - 6]
-                }
-                if (null == oldBean) {
-                    continue
-                }
-                val ROP = requestBean.p_MA_J.aacp
-                val TOP = targetBean.p_MA_J.aaop
-                if (ROP > TOP && ROP >= 1.3 * TOP) {
-                    //TODO
-                    val reverseKJsonBean = ReverseKJsonBean()
-                    val OM = oldBean.p_MA_J.amp
-                    val OP = oldBean.p_MA_J.aaop
-                    val OC = oldBean.p_MA_J.aacp
-                    val OL = oldBean.p_MA_J.alp
-                    
-                    val M = targetBean.p_MA_J.amp
-                    val O = targetBean.p_MA_J.aaop
-                    val C = targetBean.p_MA_J.aacp
-                    val L = targetBean.p_MA_J.alp
-                    reverseKJsonBean.code = code.toInt()
-                    reverseKJsonBean.date = targetBean.date
-                    reverseKJsonBean.curP = (requestBean.op - targetBean.cp) / targetBean.cp
-                    reverseKJsonBean.oM_M = (OM - M) / OC * 100
-                    reverseKJsonBean.oM_C = (OM - C) / OC * 100
-                    reverseKJsonBean.oM_P = (OM - O) / OC * 100
-                    reverseKJsonBean.oM_L = (OM - L) / OC * 100
-                    reverseKJsonBean.oC_M = (OC - M) / OC * 100
-                    reverseKJsonBean.oC_C = (OC - C) / OC * 100
-                    reverseKJsonBean.oC_P = (OC - O) / OC * 100
-                    reverseKJsonBean.oC_L = (OC - L) / OC * 100
-                    reverseKJsonBean.oO_M = (OP - M) / OC * 100
-                    reverseKJsonBean.oO_C = (OP - C) / OC * 100
-                    reverseKJsonBean.oO_P = (OP - O) / OC * 100
-                    reverseKJsonBean.oO_L = (OP - L) / OC * 100
-                    reverseKJsonBean.oL_M = (OL - M) / OC * 100
-                    reverseKJsonBean.oL_C = (OL - C) / OC * 100
-                    reverseKJsonBean.oL_P = (OL - O) / OC * 100
-                    reverseKJsonBean.oL_L = (OL - L) / OC * 100
-                    reverseKJsonBean.oM_OC = (OM - OC) / OC * 100
-                    reverseKJsonBean.oM_OP = (OM - OP) / OC * 100
-                    reverseKJsonBean.oM_OL = (OM - OL) / OC * 100
-                    reverseKJsonBean.oC_OP = (OC - OP) / OC * 100
-                    reverseKJsonBean.oC_OL = (OC - OL) / OC * 100
-                    reverseKJsonBean.oP_OL = (OP - OL) / OC * 100
-                    reverseKJsonBean.m_C = (M - C) / OC * 100
-                    reverseKJsonBean.m_P = (M - O) / OC * 100
-                    reverseKJsonBean.m_L = (M - L) / OC * 100
-                    reverseKJsonBean.c_P = (C - O) / OC * 100
-                    reverseKJsonBean.c_L = (C - L) / OC * 100
-                    reverseKJsonBean.p_L = (O - L) / OC * 100
-                    DBUtils.insertReverseKJTable(
-                        ( if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11) + requestBean.date,
-                        reverseKJsonBean,
-                        date
-                    )
+                    val ROP = requestBean.p_MA_J.aacp
+                    val TOP = targetBean.p_MA_J.aaop
+                    if (ROP > TOP && ROP >= 1.3 * TOP) {
+                        var afterBean = mCHDDList[4]
 
+                        val reverseKJsonBean = newReverseKJsonBean(afterBean, targetBean)
+                        val OM = oldBean.p_MA_J.amp
+                        val OP = oldBean.p_MA_J.aaop
+                        val OC = oldBean.p_MA_J.aacp
+                        val OL = oldBean.p_MA_J.alp
 
+                        val M = targetBean.p_MA_J.amp
+                        val O = targetBean.p_MA_J.aaop
+                        val C = targetBean.p_MA_J.aacp
+                        val L = targetBean.p_MA_J.alp
+                        setReverseBeanData(
+                            reverseKJsonBean,
+                            code,
+                            targetBean,
+                            requestBean,
+                            OM,
+                            M,
+                            OC,
+                            C,
+                            O,
+                            L,
+                            OP,
+                            OL
+                        )
+                        DBUtils.insertReverseKJTable(
+                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11) + requestBean.date,
+                            reverseKJsonBean,
+                            date
+                        )
+
+                        val reverseKJSLLBean = ReverseKJSLLBean()
+                        reverseKJSLLBean.code = code.toInt()
+                        reverseKJSLLBean.date = targetBean.date
+                        reverseKJSLLBean.u_D03 = targetBean.k_J.SLL.usll.D03.toKeep4()
+                        reverseKJSLLBean.u_D05 = targetBean.k_J.SLL.usll.D05.toKeep4()
+                        reverseKJSLLBean.u_D10 = targetBean.k_J.SLL.usll.D10.toKeep4()
+                        reverseKJSLLBean.u_D15 = targetBean.k_J.SLL.usll.D15.toKeep4()
+                        reverseKJSLLBean.u_D20 = targetBean.k_J.SLL.usll.D20.toKeep4()
+                        reverseKJSLLBean.u_D25 = targetBean.k_J.SLL.usll.D25.toKeep4()
+                        reverseKJSLLBean.u_D30 = targetBean.k_J.SLL.usll.D30.toKeep4()
+                        reverseKJSLLBean.u_D60 = targetBean.k_J.SLL.usll.D60.toKeep4()
+                        reverseKJSLLBean.u_D72 = targetBean.k_J.SLL.usll.D72.toKeep4()
+
+                        reverseKJSLLBean.d_D03 = targetBean.k_J.SLL.dsll.D03.toKeep4()
+                        reverseKJSLLBean.d_D05 = targetBean.k_J.SLL.dsll.D05.toKeep4()
+                        reverseKJSLLBean.d_D10 = targetBean.k_J.SLL.dsll.D10.toKeep4()
+                        reverseKJSLLBean.d_D15 = targetBean.k_J.SLL.dsll.D15.toKeep4()
+                        reverseKJSLLBean.d_D20 = targetBean.k_J.SLL.dsll.D20.toKeep4()
+                        reverseKJSLLBean.d_D25 = targetBean.k_J.SLL.dsll.D25.toKeep4()
+                        reverseKJSLLBean.d_D30 = targetBean.k_J.SLL.dsll.D30.toKeep4()
+                        reverseKJSLLBean.d_D60 = targetBean.k_J.SLL.dsll.D60.toKeep4()
+                        reverseKJSLLBean.d_D72 = targetBean.k_J.SLL.dsll.D72.toKeep4()
+                        DBUtils.insertReverseKJTable(
+                            Datas.A_SLL_TB_ + requestBean.date,
+                            reverseKJSLLBean,
+                            date
+                        )
+                        if (mCHDDList.size > 11) {
+                            var targetBean2  = mCHDDList[6]
+                            var targetBean3 =  mCHDDList[7]
+                            var oldBean331 = mCHDDList[8]
+                            var oldBean332 = mCHDDList[9]
+                            var oldBean333 = mCHDDList[10]
+
+                            val reverseKJsonBean33 = newReverseKJsonBean(afterBean, targetBean)
+                            val OM33 = Math.max(Math.max(oldBean331.p_MA_J.amp,oldBean332.p_MA_J.amp),oldBean333.p_MA_J.amp)
+                            val OL33 = Math.min(Math.min(oldBean331.p_MA_J.alp,oldBean332.p_MA_J.alp),oldBean333.p_MA_J.alp)
+                            val OC33 = oldBean331.p_MA_J.aacp
+                            val OO33 = oldBean333.p_MA_J.aaop
+
+                            val M33 = Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),targetBean3.p_MA_J.amp)
+                            val L33 = Math.min(Math.min(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),targetBean3.p_MA_J.alp)
+                            val C33 = targetBean.p_MA_J.aacp
+                            val O33 = targetBean3.p_MA_J.aaop
+
+                            setReverseBeanData(
+                                reverseKJsonBean33,
+                                code,
+                                targetBean,
+                                requestBean,
+                                OM33,
+                                M33,
+                                OC33,
+                                C33,
+                                O33,
+                                L33,
+                                OO33,
+                                OL33
+                            )
+                            DBUtils.insertReverseKJTable(
+                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33) + requestBean.date,
+                                reverseKJsonBean33,
+                                date
+                            )
+                            if (mCHDDList.size > 15) {
+                                var targetBean4 = mCHDDList[8]
+                                var targetBean5 = mCHDDList[9]
+                                var oldBean551 = mCHDDList[10]
+                                var oldBean552 = mCHDDList[11]
+                                var oldBean553 = mCHDDList[12]
+                                var oldBean554 = mCHDDList[13]
+                                var oldBean555 = mCHDDList[14]
+
+                                val reverseKJsonBean55 = newReverseKJsonBean(afterBean, targetBean)
+                                val OM55 = Math.max(Math.max(Math.max(oldBean551.p_MA_J.amp,oldBean552.p_MA_J.amp),Math.max(oldBean553.p_MA_J.amp,oldBean554.p_MA_J.amp)),oldBean555.p_MA_J.amp)
+                                val OL55 = Math.min(Math.max(Math.min(oldBean551.p_MA_J.alp,oldBean552.p_MA_J.alp),Math.min(oldBean553.p_MA_J.alp,oldBean554.p_MA_J.alp)),oldBean555.p_MA_J.alp)
+                                val OC55 = oldBean551.p_MA_J.aacp
+                                val OO55 = oldBean555.p_MA_J.aaop
+
+                                val M55 = Math.max(Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),Math.max(targetBean3.p_MA_J.amp,targetBean4.p_MA_J.amp)),targetBean5.p_MA_J.amp)
+                                val L55 = Math.max(Math.max(Math.max(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),Math.max(targetBean3.p_MA_J.alp,targetBean4.p_MA_J.alp)),targetBean5.p_MA_J.alp)
+                                val C55 = targetBean.p_MA_J.aacp
+                                val O55 = targetBean5.p_MA_J.aaop
+
+                                setReverseBeanData(
+                                    reverseKJsonBean55,
+                                    code,
+                                    targetBean,
+                                    requestBean,
+                                    OM55,
+                                    M55,
+                                    OC55,
+                                    C55,
+                                    O55,
+                                    L55,
+                                    OO55,
+                                    OL55
+                                )
+                                DBUtils.insertReverseKJTable(
+                                    (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_55 else Datas.REVERSE_TB_P30_55) + requestBean.date,
+                                    reverseKJsonBean55,
+                                    date
+                                )
+                            }
+                        }
+                    }
                 }
+
 
             }
         }
+
+
         return chddDDBeanList
+    }
+
+    private fun newReverseKJsonBean(
+        afterBean: CodeHDDBean,
+        targetBean: CodeHDDBean
+    ): ReverseKJsonBean {
+        val reverseKJsonBean = ReverseKJsonBean()
+        var AO = ""
+        if (afterBean.op >= targetBean.p_MA_J.amp) {
+            AO = AO + "1"
+        } else {
+            AO = AO + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.aacp) {
+            AO = AO + "1"
+        } else {
+            AO = AO + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.aaop) {
+            AO = AO + "1"
+        } else {
+            AO = AO + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.alp) {
+            AO = AO + "1"
+        } else {
+            AO = AO + "0"
+        }
+        reverseKJsonBean.ao = AO
+        return reverseKJsonBean
+    }
+
+    private fun setReverseBeanData(
+        reverseKJsonBean: ReverseKJsonBean,
+        code: String,
+        targetBean: CodeHDDBean,
+        requestBean: CodeHDDBean,
+        OM: Float,
+        M: Float,
+        OC: Float,
+        C: Float,
+        O: Float,
+        L: Float,
+        OP: Float,
+        OL: Float
+    ) {
+        reverseKJsonBean.code = code.toInt()
+        reverseKJsonBean.date = targetBean.date
+        reverseKJsonBean.curP = ((requestBean.op - targetBean.cp) / targetBean.cp * 100).toKeep2()
+        reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_P = ((OM - O) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_L = ((OM - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_M = ((OC - M) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_C = ((OC - C) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_P = ((OC - O) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_L = ((OC - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oO_M = ((OP - M) / OC * 100).toKeep2()
+        reverseKJsonBean.oO_C = ((OP - C) / OC * 100).toKeep2()
+        reverseKJsonBean.oO_P = ((OP - O) / OC * 100).toKeep2()
+        reverseKJsonBean.oO_L = ((OP - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oL_M = ((OL - M) / OC * 100).toKeep2()
+        reverseKJsonBean.oL_C = ((OL - C) / OC * 100).toKeep2()
+        reverseKJsonBean.oL_P = ((OL - O) / OC * 100).toKeep2()
+        reverseKJsonBean.oL_L = ((OL - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_OC = ((OM - OC) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_OP = ((OM - OP) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_OL = ((OM - OL) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_OP = ((OC - OP) / OC * 100).toKeep2()
+        reverseKJsonBean.oC_OL = ((OC - OL) / OC * 100).toKeep2()
+        reverseKJsonBean.oP_OL = ((OP - OL) / OC * 100).toKeep2()
+        reverseKJsonBean.m_C = ((M - C) / OC * 100).toKeep2()
+        reverseKJsonBean.m_P = ((M - O) / OC * 100).toKeep2()
+        reverseKJsonBean.m_L = ((M - L) / OC * 100).toKeep2()
+        reverseKJsonBean.c_P = ((C - O) / OC * 100).toKeep2()
+        reverseKJsonBean.c_L = ((C - L) / OC * 100).toKeep2()
+        reverseKJsonBean.p_L = ((O - L) / OC * 100).toKeep2()
+        var type = 0
+        targetBean.k_J.ctc?.ctC_U?.let {
+            if (null != it.typeA) {
+                type = 11
+            } else if (null != it.typeB) {
+                type = 12
+            } else if (null != it.typeC) {
+                type = 13
+            }
+        }
+        targetBean.k_J.ctc?.ctC_D?.let {
+            if (null != it.typeA) {
+                type = 21
+            } else if (null != it.typeB) {
+                type = 22
+            } else if (null != it.typeC) {
+                type = 23
+            }
+        }
+        reverseKJsonBean.type = type
     }
 
     private fun kJForeach(
@@ -2622,8 +2819,8 @@ class NewApiViewModel : BaseViewModel() {
         var hhqList = ArrayList<String>()
         val beginDate = getStartDateByDaysCount(Datas.HHQDayCount - 3) + " 12:00:00"
         val endDate = DateUtils.formatToDay(FormatterEnum.YYYYMMDD) + " 12:00:00"
-        val beginTS = DateUtils.parse(beginDate,FormatterEnum.YYYYMMDD__HH_MM_SS)
-        val endTS = DateUtils.parse(endDate,FormatterEnum.YYYYMMDD__HH_MM_SS)
+        val beginTS = DateUtils.parse(beginDate, FormatterEnum.YYYYMMDD__HH_MM_SS)
+        val endTS = DateUtils.parse(endDate, FormatterEnum.YYYYMMDD__HH_MM_SS)
         val dayTS = 24 * 60 * 60 * 1000
         var coutTS = beginTS
         while (coutTS <= endTS) {
@@ -2688,10 +2885,6 @@ class NewApiViewModel : BaseViewModel() {
         return Pair(ddList, hhqList)
 
     }
-
-
-
-
 
 
 }

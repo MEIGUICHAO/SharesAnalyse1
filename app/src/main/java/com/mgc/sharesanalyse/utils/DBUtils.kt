@@ -932,7 +932,7 @@ object DBUtils {
         date: String
     ) {
         switchDBName(
-            Datas.REVERSE_DB + DateUtils.changeFormatter(
+            Datas.REVERSE_KJ_DB + DateUtils.changeFormatter(
                 DateUtils.parse(
                     date,
                     FormatterEnum.YYYYMMDD
@@ -944,6 +944,11 @@ object DBUtils {
         if (!queryDataIsExsitByCode(tbName, reverseBean.code.toString())) {
             var insertSqlStr = ""
             if (reverseBean is ReverseKJsonBean) {
+                insertSqlStr = reverseBean.insertTB(tbName)
+                var insertDerbySqlStr = reverseBean.insertDerbyTB(Datas.Derby + tbName)
+                db.execSQL(insertDerbySqlStr)
+            }
+            if (reverseBean is ReverseKJSLLBean) {
                 insertSqlStr = reverseBean.insertTB(tbName)
             }
             LogUtil.d("insertSqlStr:$insertSqlStr")
@@ -959,6 +964,11 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             var sqlStr = ""
             if (reverseBean is ReverseKJsonBean) {
+                sqlStr = reverseBean.createTB(dbName)
+                var sqlStr2 = reverseBean.createDerbyTB(Datas.Derby + dbName)
+                db.execSQL(sqlStr2)
+            }
+            if (reverseBean is ReverseKJSLLBean) {
                 sqlStr = reverseBean.createTB(dbName)
             }
             db.execSQL(sqlStr)

@@ -60,8 +60,16 @@ fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
 
 
 @SuppressLint("DefaultLocale")
-fun Double.toKeep6(): Double {
+fun Double.toKeep4(): Double {
     return java.lang.String.format("%.6f", this).toDouble()
+}
+
+fun Float.toKeep2(): Float {
+    return java.lang.String.format("%.2f", this).toFloat()
+}
+
+fun Float.toKeep4(): Float {
+    return java.lang.String.format("%.4f", this).toFloat()
 }
 
 fun String.toCodeHDD(date:String,formatterEnum: FormatterEnum): String {
