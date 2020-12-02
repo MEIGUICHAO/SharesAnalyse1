@@ -2401,25 +2401,27 @@ class NewApiViewModel : BaseViewModel() {
                         } catch (e: java.lang.Exception) {
                             reverseKJSLLBean.date = targetBean.date
                         }
-                        reverseKJSLLBean.u_D03 = targetBean.k_J.SLL.usll.D03.toKeep4()
-                        reverseKJSLLBean.u_D05 = targetBean.k_J.SLL.usll.D05.toKeep4()
-                        reverseKJSLLBean.u_D10 = targetBean.k_J.SLL.usll.D10.toKeep4()
-                        reverseKJSLLBean.u_D15 = targetBean.k_J.SLL.usll.D15.toKeep4()
-                        reverseKJSLLBean.u_D20 = targetBean.k_J.SLL.usll.D20.toKeep4()
-                        reverseKJSLLBean.u_D25 = targetBean.k_J.SLL.usll.D25.toKeep4()
-                        reverseKJSLLBean.u_D30 = targetBean.k_J.SLL.usll.D30.toKeep4()
-                        reverseKJSLLBean.u_D60 = targetBean.k_J.SLL.usll.D60.toKeep4()
-                        reverseKJSLLBean.u_D72 = targetBean.k_J.SLL.usll.D72.toKeep4()
+                        if (null != targetBean.k_J.SLL) {
+                            reverseKJSLLBean.u_D03 = targetBean.k_J.SLL.usll.D03.toKeep4()
+                            reverseKJSLLBean.u_D05 = targetBean.k_J.SLL.usll.D05.toKeep4()
+                            reverseKJSLLBean.u_D10 = targetBean.k_J.SLL.usll.D10.toKeep4()
+                            reverseKJSLLBean.u_D15 = targetBean.k_J.SLL.usll.D15.toKeep4()
+                            reverseKJSLLBean.u_D20 = targetBean.k_J.SLL.usll.D20.toKeep4()
+                            reverseKJSLLBean.u_D25 = targetBean.k_J.SLL.usll.D25.toKeep4()
+                            reverseKJSLLBean.u_D30 = targetBean.k_J.SLL.usll.D30.toKeep4()
+                            reverseKJSLLBean.u_D60 = targetBean.k_J.SLL.usll.D60.toKeep4()
+                            reverseKJSLLBean.u_D72 = targetBean.k_J.SLL.usll.D72.toKeep4()
 
-                        reverseKJSLLBean.d_D03 = targetBean.k_J.SLL.dsll.D03.toKeep4()
-                        reverseKJSLLBean.d_D05 = targetBean.k_J.SLL.dsll.D05.toKeep4()
-                        reverseKJSLLBean.d_D10 = targetBean.k_J.SLL.dsll.D10.toKeep4()
-                        reverseKJSLLBean.d_D15 = targetBean.k_J.SLL.dsll.D15.toKeep4()
-                        reverseKJSLLBean.d_D20 = targetBean.k_J.SLL.dsll.D20.toKeep4()
-                        reverseKJSLLBean.d_D25 = targetBean.k_J.SLL.dsll.D25.toKeep4()
-                        reverseKJSLLBean.d_D30 = targetBean.k_J.SLL.dsll.D30.toKeep4()
-                        reverseKJSLLBean.d_D60 = targetBean.k_J.SLL.dsll.D60.toKeep4()
-                        reverseKJSLLBean.d_D72 = targetBean.k_J.SLL.dsll.D72.toKeep4()
+                            reverseKJSLLBean.d_D03 = targetBean.k_J.SLL.dsll.D03.toKeep4()
+                            reverseKJSLLBean.d_D05 = targetBean.k_J.SLL.dsll.D05.toKeep4()
+                            reverseKJSLLBean.d_D10 = targetBean.k_J.SLL.dsll.D10.toKeep4()
+                            reverseKJSLLBean.d_D15 = targetBean.k_J.SLL.dsll.D15.toKeep4()
+                            reverseKJSLLBean.d_D20 = targetBean.k_J.SLL.dsll.D20.toKeep4()
+                            reverseKJSLLBean.d_D25 = targetBean.k_J.SLL.dsll.D25.toKeep4()
+                            reverseKJSLLBean.d_D30 = targetBean.k_J.SLL.dsll.D30.toKeep4()
+                            reverseKJSLLBean.d_D60 = targetBean.k_J.SLL.dsll.D60.toKeep4()
+                            reverseKJSLLBean.d_D72 = targetBean.k_J.SLL.dsll.D72.toKeep4()
+                        }
                         DBUtils.insertReverseKJTable(
                             Datas.A_SLL_TB_ + requestBean.date,
                             reverseKJSLLBean,
