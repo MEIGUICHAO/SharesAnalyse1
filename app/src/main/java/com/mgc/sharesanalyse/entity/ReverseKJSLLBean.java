@@ -3,6 +3,8 @@ package com.mgc.sharesanalyse.entity;
 public class ReverseKJSLLBean  implements BaseReverseImp  {
 
     private int code;
+    private String N;
+    private String D_D;
     private String date;
     private float U_D03;
     private float U_D05;
@@ -178,10 +180,28 @@ public class ReverseKJSLLBean  implements BaseReverseImp  {
     private float D_D25;
     private float D_D30;
 
+    public String getN() {
+        return N;
+    }
+
+    public void setN(String n) {
+        N = n;
+    }
+
+    public String getD_D() {
+        return D_D;
+    }
+
+    public void setD_D(String d_D) {
+        D_D = d_D;
+    }
+
     @Override
     public String toString() {
         return
                 "" + code +
+                        ", '" + N + '\'' +
+                        ", '" + D_D + '\'' +
                         ", '" + date + '\'' +
                         ", " + U_D03 * 1000 / 3 +
                         ", " + U_D05 * 1000 / 5 +
@@ -208,14 +228,14 @@ public class ReverseKJSLLBean  implements BaseReverseImp  {
     private float D_D72;
 
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,N TEXT,D_D TEXT" +
                 ",U_D03 INTEGER,U_D05 INTEGER,U_D10 INTEGER,U_D15 INTEGER,U_D20 INTEGER,U_D25 INTEGER,U_D30 INTEGER,U_D60 INTEGER,U_D72 INTEGER" +
                 ",D_D03 INTEGER,D_D05 INTEGER,D_D10 INTEGER,D_D15 INTEGER,D_D20 INTEGER,D_D25 INTEGER,D_D30 INTEGER,D_D60 INTEGER,D_D72 INTEGER);";
     }
 
 
     public String insertTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,DATE" +
+        return "INSERT INTO " + tbName + "(CODE ,N,D_D,DATE" +
                 ",U_D03,U_D05 ,U_D10 ,U_D15 ,U_D20 ,U_D25 ,U_D30 ,U_D60 ,U_D72 " +
                 ",D_D03,D_D05 ,D_D10 ,D_D15 ,D_D20 ,D_D25 ,D_D30 ,D_D60 ,D_D72 " +
                 ") VALUES (" + toString();

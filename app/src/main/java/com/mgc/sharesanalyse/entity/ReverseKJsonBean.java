@@ -3,6 +3,17 @@ package com.mgc.sharesanalyse.entity;
 public class ReverseKJsonBean implements BaseReverseImp {
     private int code;
     private String date;
+    private String N;
+    private String D_D;
+
+    public String getD_D() {
+        return D_D;
+    }
+
+    public void setD_D(String d_D) {
+        D_D = d_D;
+    }
+
     private String AO;
     private float CurP;
     private int TYPE;
@@ -303,9 +314,19 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
     private float P_L;
 
+    public String getN() {
+        return N;
+    }
+
+    public void setN(String n) {
+        N = n;
+    }
+
     @Override
     public String toString() {
         return code +
+                ", '" + N + '\'' +
+                ", '" + D_D + '\'' +
                 ", '" + date + '\'' +
                 ", '" + AO + '\'' +
                 ", " + CurP +
@@ -330,6 +351,8 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
     public String toDerbyString() {
         return code +
+                ", '" + N + '\'' +
+                ", '" + D_D + '\'' +
                 ", '" + date + '\'' +
                 ", '" + AO + '\'' +
                 ", " + CurP +
@@ -351,23 +374,23 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
 
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
                 ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER);";
     }
 
     public String createDerbyTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
                 ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
 
 
     public String insertTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,DATE,AO,CurP ,TYPE ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
+        return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE,AO,CurP ,TYPE ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
                 ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ) VALUES (" + toString();
     }
 
     public String insertDerbyTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,DATE,AO,CurP ,TYPE ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
+        return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE,AO,CurP ,TYPE ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
                 ",OC_OL ,OP_OL ,M_C ,M_P ,M_L ,C_P ,C_L ,P_L ) VALUES (" + toDerbyString();
     }
 

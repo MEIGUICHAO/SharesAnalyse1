@@ -936,7 +936,7 @@ object DBUtils {
                 DateUtils.parse(
                     date,
                     FormatterEnum.YYYYMMDD
-                ), FormatterEnum.YYMM
+                ), FormatterEnum.YYYY
             )
         )
         LogUtil.d("insertReverseKJTable!!")

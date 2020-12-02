@@ -2359,7 +2359,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (ROP > TOP && ROP >= 1.3 * TOP) {
                         var afterBean = mCHDDList[4]
 
-                        val reverseKJsonBean = newReverseKJsonBean(afterBean, targetBean)
+                        val reverseKJsonBean = newReverseKJsonBean(afterBean, targetBean,requestBean)
                         val OM = oldBean.p_MA_J.amp
                         val OP = oldBean.p_MA_J.aaop
                         val OC = oldBean.p_MA_J.aacp
@@ -2384,7 +2384,7 @@ class NewApiViewModel : BaseViewModel() {
                             OL
                         )
                         DBUtils.insertReverseKJTable(
-                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11) + requestBean.date,
+                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
                             reverseKJsonBean,
                             date
                         )
@@ -2423,7 +2423,7 @@ class NewApiViewModel : BaseViewModel() {
                             reverseKJSLLBean.d_D72 = targetBean.k_J.SLL.dsll.D72.toKeep4()
                         }
                         DBUtils.insertReverseKJTable(
-                            Datas.A_SLL_TB_ + requestBean.date,
+                            Datas.A_SLL_TB_ ,
                             reverseKJSLLBean,
                             date
                         )
@@ -2434,7 +2434,11 @@ class NewApiViewModel : BaseViewModel() {
                             var oldBean332 = mCHDDList[9]
                             var oldBean333 = mCHDDList[10]
 
-                            val reverseKJsonBean33 = newReverseKJsonBean(afterBean, targetBean)
+                            val reverseKJsonBean33 = newReverseKJsonBean(
+                                afterBean,
+                                targetBean,
+                                requestBean
+                            )
                             val OM33 = Math.max(Math.max(oldBean331.p_MA_J.amp,oldBean332.p_MA_J.amp),oldBean333.p_MA_J.amp)
                             val OL33 = Math.min(Math.min(oldBean331.p_MA_J.alp,oldBean332.p_MA_J.alp),oldBean333.p_MA_J.alp)
                             val OC33 = oldBean331.p_MA_J.aacp
@@ -2460,7 +2464,7 @@ class NewApiViewModel : BaseViewModel() {
                                 OL33
                             )
                             DBUtils.insertReverseKJTable(
-                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33) + requestBean.date,
+                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33) ,
                                 reverseKJsonBean33,
                                 date
                             )
@@ -2473,7 +2477,11 @@ class NewApiViewModel : BaseViewModel() {
                                 var oldBean554 = mCHDDList[13]
                                 var oldBean555 = mCHDDList[14]
 
-                                val reverseKJsonBean55 = newReverseKJsonBean(afterBean, targetBean)
+                                val reverseKJsonBean55 = newReverseKJsonBean(
+                                    afterBean,
+                                    targetBean,
+                                    requestBean
+                                )
                                 val OM55 = Math.max(Math.max(Math.max(oldBean551.p_MA_J.amp,oldBean552.p_MA_J.amp),Math.max(oldBean553.p_MA_J.amp,oldBean554.p_MA_J.amp)),oldBean555.p_MA_J.amp)
                                 val OL55 = Math.min(Math.max(Math.min(oldBean551.p_MA_J.alp,oldBean552.p_MA_J.alp),Math.min(oldBean553.p_MA_J.alp,oldBean554.p_MA_J.alp)),oldBean555.p_MA_J.alp)
                                 val OC55 = oldBean551.p_MA_J.aacp
@@ -2499,7 +2507,7 @@ class NewApiViewModel : BaseViewModel() {
                                     OL55
                                 )
                                 DBUtils.insertReverseKJTable(
-                                    (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_55 else Datas.REVERSE_TB_P30_55) + requestBean.date,
+                                    (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_55 else Datas.REVERSE_TB_P30_55),
                                     reverseKJsonBean55,
                                     date
                                 )
@@ -2518,7 +2526,8 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun newReverseKJsonBean(
         afterBean: CodeHDDBean,
-        targetBean: CodeHDDBean
+        targetBean: CodeHDDBean,
+        requestBean: CodeHDDBean
     ): ReverseKJsonBean {
         val reverseKJsonBean = ReverseKJsonBean()
         var AO = ""
@@ -2543,6 +2552,8 @@ class NewApiViewModel : BaseViewModel() {
             AO = AO + "0"
         }
         reverseKJsonBean.ao = AO
+        reverseKJsonBean.n = targetBean.name
+        reverseKJsonBean.d_D = requestBean.date
         return reverseKJsonBean
     }
 
@@ -2561,7 +2572,7 @@ class NewApiViewModel : BaseViewModel() {
         OL: Float
     ) {
         reverseKJsonBean.code = code.toInt()
-        reverseKJsonBean.date = targetBean.date
+        reverseKJsonBean.date = targetBean.date.replace("2020","")
         reverseKJsonBean.curP = ((requestBean.op - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()

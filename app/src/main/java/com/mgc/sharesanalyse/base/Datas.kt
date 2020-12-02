@@ -65,7 +65,7 @@ object Datas {
     const val REVERSE_TB_P30_55 = "A_RTB_30_5_"
     const val REVERSE_TB_P50_55 = "A_RTB_50_5_"
     const val A_SLL_TB_ = "A_SLL_"
-    const val REVERSE_KJ_DB = "REV_KJ_DB_"
+    const val REVERSE_KJ_DB = "REV_KJ_DB"
     const val Derby = "Derby_"
 //    const val HHQDayCount = 6
 
