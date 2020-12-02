@@ -2355,7 +2355,7 @@ class NewApiViewModel : BaseViewModel() {
                         }
                     }
                     val ROP = requestBean.p_MA_J.aacp
-                    val TOP = targetBean.p_MA_J.aaop
+                    val TOP = targetBean.p_MA_J.aacp
                     if (ROP > TOP && ROP >= 1.3 * TOP) {
                         var afterBean = mCHDDList[4]
 
@@ -2575,7 +2575,7 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         reverseKJsonBean.code = code.toInt()
         reverseKJsonBean.date = targetBean.date.replace(DateUtils.changeFromDefaultFormatter(targetBean.date,FormatterEnum.YYYY),"")
-        reverseKJsonBean.curP = ((requestBean.op - targetBean.cp) / targetBean.cp * 100).toKeep2()
+        reverseKJsonBean.curP = ((requestBean.cp - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()
         reverseKJsonBean.oM_P = ((OM - O) / OC * 100).toKeep2()
