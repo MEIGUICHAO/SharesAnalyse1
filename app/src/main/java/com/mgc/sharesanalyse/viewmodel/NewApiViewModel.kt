@@ -2391,6 +2391,8 @@ class NewApiViewModel : BaseViewModel() {
 
                         val reverseKJSLLBean = ReverseKJSLLBean()
                         reverseKJSLLBean.code = code.toInt()
+                        reverseKJSLLBean.n = targetBean.name
+                        reverseKJSLLBean.d_D = requestBean.date.replace(DateUtils.changeFromDefaultFormatter(requestBean.date,FormatterEnum.YYYY),"")
                         try {
                             reverseKJSLLBean.date = DateUtils.changeFormatter(
                                 DateUtils.parse(
@@ -2553,7 +2555,7 @@ class NewApiViewModel : BaseViewModel() {
         }
         reverseKJsonBean.ao = AO
         reverseKJsonBean.n = targetBean.name
-        reverseKJsonBean.d_D = requestBean.date
+        reverseKJsonBean.d_D = requestBean.date.replace(DateUtils.changeFromDefaultFormatter(requestBean.date,FormatterEnum.YYYY),"")
         return reverseKJsonBean
     }
 
@@ -2572,7 +2574,7 @@ class NewApiViewModel : BaseViewModel() {
         OL: Float
     ) {
         reverseKJsonBean.code = code.toInt()
-        reverseKJsonBean.date = targetBean.date.replace("2020","")
+        reverseKJsonBean.date = targetBean.date.replace(DateUtils.changeFromDefaultFormatter(targetBean.date,FormatterEnum.YYYY),"")
         reverseKJsonBean.curP = ((requestBean.op - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()

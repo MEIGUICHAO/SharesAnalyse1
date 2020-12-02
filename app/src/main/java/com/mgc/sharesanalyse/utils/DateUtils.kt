@@ -61,6 +61,13 @@ object DateUtils {
         return simpleDateFormat.format(date)
     }
 
+    fun changeFromDefaultFormatter(date: String,formatter: FormatterEnum): String {
+        val timestamp = parse(date,FormatterEnum.YYYYMMDD)
+        val simpleDateFormat = SimpleDateFormat(formatter.format)
+        val date = Date(timestamp)
+        return simpleDateFormat.format(date)
+    }
+
 
     @SuppressLint("SimpleDateFormat")
     fun formatYesterDay(formatter: FormatterEnum): String {
