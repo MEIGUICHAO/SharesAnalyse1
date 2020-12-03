@@ -686,6 +686,18 @@ object DBUtils {
         return isexsit
     }
 
+    fun queryDataIsExsitByCodeAndDate(dbName: String, code: String, date: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND DATE =?", arrayOf(code,date))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
+    }
+
     fun queryFirstOPByCodeHDD(tbName: String): Float {
         var op = 0.toFloat()
         if (tabbleIsExist(tbName)) {
@@ -941,7 +953,7 @@ object DBUtils {
         )
         LogUtil.d("insertReverseKJTable!!")
         createReverseKJTable(tbName, reverseBean)
-        if (!queryDataIsExsitByCode(tbName, reverseBean.code.toString())) {
+        if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(),date.replace(DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYYY),""))) {
             var insertSqlStr = ""
             if (reverseBean is ReverseKJsonBean) {
                 insertSqlStr = reverseBean.insertTB(tbName)

@@ -2386,7 +2386,7 @@ class NewApiViewModel : BaseViewModel() {
                         DBUtils.insertReverseKJTable(
                             (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
                             reverseKJsonBean,
-                            date
+                            targetBean.date
                         )
 
                         val reverseKJSLLBean = ReverseKJSLLBean()
@@ -2427,7 +2427,7 @@ class NewApiViewModel : BaseViewModel() {
                         DBUtils.insertReverseKJTable(
                             Datas.A_SLL_TB_ ,
                             reverseKJSLLBean,
-                            date
+                            targetBean.date
                         )
                         if (mCHDDList.size > 11) {
                             var targetBean2  = mCHDDList[6]
@@ -2468,7 +2468,7 @@ class NewApiViewModel : BaseViewModel() {
                             DBUtils.insertReverseKJTable(
                                 (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33) ,
                                 reverseKJsonBean33,
-                                date
+                                targetBean.date
                             )
                             if (mCHDDList.size > 15) {
                                 var targetBean4 = mCHDDList[8]
@@ -2511,8 +2511,70 @@ class NewApiViewModel : BaseViewModel() {
                                 DBUtils.insertReverseKJTable(
                                     (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_55 else Datas.REVERSE_TB_P30_55),
                                     reverseKJsonBean55,
-                                    date
+                                    targetBean.date
                                 )
+                                if (mCHDDList.size > 25) {
+                                    var targetBean6 = mCHDDList[10]
+                                    var targetBean7 = mCHDDList[11]
+                                    var targetBean8 = mCHDDList[12]
+                                    var targetBean9 = mCHDDList[13]
+                                    var targetBean10 = mCHDDList[14]
+                                    var oldBean101 = mCHDDList[15]
+                                    var oldBean102 = mCHDDList[16]
+                                    var oldBean103 = mCHDDList[17]
+                                    var oldBean104 = mCHDDList[18]
+                                    var oldBean105 = mCHDDList[19]
+                                    var oldBean106 = mCHDDList[20]
+                                    var oldBean107 = mCHDDList[21]
+                                    var oldBean108 = mCHDDList[22]
+                                    var oldBean109 = mCHDDList[23]
+                                    var oldBean1010 = mCHDDList[24]
+
+                                    val reverseKJsonBean10 = newReverseKJsonBean(
+                                        afterBean,
+                                        targetBean,
+                                        requestBean
+                                    )
+                                    val OM10_1 = Math.max(Math.max(Math.max(oldBean101.p_MA_J.amp,oldBean102.p_MA_J.amp),Math.max(oldBean103.p_MA_J.amp,oldBean104.p_MA_J.amp)),oldBean105.p_MA_J.amp)
+                                    val OM10_2 = Math.max(Math.max(Math.max(oldBean106.p_MA_J.amp,oldBean107.p_MA_J.amp),Math.max(oldBean108.p_MA_J.amp,oldBean109.p_MA_J.amp)),oldBean1010.p_MA_J.amp)
+                                    val OM10 = Math.max(OM10_1, OM10_2)
+                                    val OL10_1 = Math.min(Math.max(Math.min(oldBean101.p_MA_J.alp,oldBean102.p_MA_J.alp),Math.min(oldBean103.p_MA_J.alp,oldBean104.p_MA_J.alp)),oldBean105.p_MA_J.alp)
+                                    val OL10_2 = Math.min(Math.max(Math.min(oldBean106.p_MA_J.alp,oldBean107.p_MA_J.alp),Math.min(oldBean108.p_MA_J.alp,oldBean109.p_MA_J.alp)),oldBean1010.p_MA_J.alp)
+                                    val OL10 = Math.min(OL10_1, OL10_2)
+                                    val OC10 = oldBean101.p_MA_J.aacp
+                                    val OO10 = oldBean1010.p_MA_J.aaop
+
+
+                                    val M10_1 = Math.max(Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),Math.max(targetBean3.p_MA_J.amp,targetBean4.p_MA_J.amp)),targetBean5.p_MA_J.amp)
+                                    val M10_2 = Math.max(Math.max(Math.max(targetBean6.p_MA_J.amp,targetBean7.p_MA_J.amp),Math.max(targetBean8.p_MA_J.amp,targetBean9.p_MA_J.amp)),targetBean10.p_MA_J.amp)
+                                    val M10 = Math.max(M10_1, M10_2)
+
+                                    val L10_1 = Math.min(Math.max(Math.min(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),Math.min(targetBean3.p_MA_J.alp,targetBean4.p_MA_J.alp)),targetBean5.p_MA_J.alp)
+                                    val L10_2 = Math.min(Math.max(Math.min(targetBean6.p_MA_J.alp,targetBean7.p_MA_J.alp),Math.min(targetBean8.p_MA_J.alp,targetBean9.p_MA_J.alp)),targetBean10.p_MA_J.alp)
+                                    val L10 = Math.min(L10_1, L10_2)
+                                    val C10 = targetBean.p_MA_J.aacp
+                                    val O10 = targetBean10.p_MA_J.aaop
+
+                                    setReverseBeanData(
+                                        reverseKJsonBean10,
+                                        code,
+                                        targetBean,
+                                        requestBean,
+                                        OM10,
+                                        M10,
+                                        OC10,
+                                        C10,
+                                        O10,
+                                        L10,
+                                        OO10,
+                                        OL10
+                                    )
+                                    DBUtils.insertReverseKJTable(
+                                        (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_10 else Datas.REVERSE_TB_P30_10),
+                                        reverseKJsonBean10,
+                                        targetBean.date
+                                    )
+                                }
                             }
                         }
                     }
