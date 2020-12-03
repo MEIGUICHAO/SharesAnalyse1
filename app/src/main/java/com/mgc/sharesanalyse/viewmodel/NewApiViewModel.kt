@@ -2361,7 +2361,7 @@ class NewApiViewModel : BaseViewModel() {
                     targetBean = mCHDDList[5]
                     oldBean = mCHDDList[6]
                     LogUtil.d("code:$code---------------requestBean date:${requestBean.date},targetBean date:${targetBean.date},oldBean date:${oldBean.date}")
-                    if (requestBean.date.equals("20200507")) {
+                    if (requestBean.date.equals("20200507")||requestBean.date.equals("20200508")||requestBean.date.equals("20200509")) {
                         mCHDDList.forEach {
                             LogUtil.d("$i---------------requestBean:${it.date}")
                         }
