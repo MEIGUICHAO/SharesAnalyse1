@@ -1150,6 +1150,35 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     public fun reverseResult() {
+        val (mList, codelist) = getCHDDDateListAndCodeList()
+        codelist.forEach { code ->
+            mList.forEach {
+                val date = "20${it}01"
+                getReverseChddBeans(code, date)
+            }
+        }
+    }
+
+    public fun foreachGapResult() {
+        val (mList, codelist) = getCHDDDateListAndCodeList()
+        codelist.forEach { code ->
+            mList.forEach {
+                val date = "20${it}01"
+                var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
+                var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+                var mCHDDList = ArrayList<CodeHDDBean>()
+                chddDDBeanList?.let {
+                    for (i in 0 until it.size) {
+                        mCHDDList.add(0, it[i])
+                        getLastMonthList(it,i,code,mCHDDList)
+                    }
+                    mCHDDList[0]
+                }
+            }
+        }
+    }
+
+    private fun getCHDDDateListAndCodeList(): Pair<ArrayList<String>, ArrayList<String>> {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
         val mList = ArrayList<String>()
         pathList.forEach {
@@ -1166,12 +1195,7 @@ class NewApiViewModel : BaseViewModel() {
             }
             list
         }
-        codelist.forEach { code ->
-            mList.forEach {
-                val date = "20${it}01"
-                getReverseChddBeans(code, date)
-            }
-        }
+        return Pair(mList, codelist)
     }
 
     private fun abondonMethod(
@@ -2326,19 +2350,7 @@ class NewApiViewModel : BaseViewModel() {
             for (i in 0 until it.size) {
                 mCHDDList.add(0, it[i])
                 if (i == 0) {
-                    val lastMonthList = getLastMonthChddList((it[i].date.toInt()).toString(), code)
-                    lastMonthList?.let {
-                        for (i in (it.size - 1) downTo 0) {
-                            mCHDDList.add(it[i])
-                        }
-                    }
-                    val lastLastMonthList =
-                        getLastMonthChddList((it[i].date.toInt() - 100).toString(), code)
-                    lastLastMonthList?.let {
-                        for (i in (it.size - 1) downTo 0) {
-                            mCHDDList.add(it[i])
-                        }
-                    }
+                    getLastTwoMonthList(it, i, code, mCHDDList)
                 }
 
                 val requestBean = it[i]
@@ -2349,9 +2361,9 @@ class NewApiViewModel : BaseViewModel() {
                     targetBean = mCHDDList[5]
                     oldBean = mCHDDList[6]
                     LogUtil.d("code:$code---------------requestBean date:${requestBean.date},targetBean date:${targetBean.date},oldBean date:${oldBean.date}")
-                    if (requestBean.date.equals("20200506")) {
+                    if (requestBean.date.equals("20200507")) {
                         mCHDDList.forEach {
-                            LogUtil.d("---------------requestBean:${it.date}")
+                            LogUtil.d("$i---------------requestBean:${it.date}")
                         }
                     }
                     val ROP = requestBean.p_MA_J.aacp
@@ -2586,6 +2598,36 @@ class NewApiViewModel : BaseViewModel() {
 
 
         return chddDDBeanList
+    }
+
+    private fun getLastTwoMonthList(
+        it: ArrayList<CodeHDDBean>,
+        i: Int,
+        code: String,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ) {
+        getLastMonthList(it, i, code, mCHDDList)
+        val lastLastMonthList =
+            getLastMonthChddList((it[i].date.toInt() - 100).toString(), code)
+        lastLastMonthList?.let {
+            for (i in (it.size - 1) downTo 0) {
+                mCHDDList.add(it[i])
+            }
+        }
+    }
+
+    private fun getLastMonthList(
+        it: ArrayList<CodeHDDBean>,
+        i: Int,
+        code: String,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ) {
+        val lastMonthList = getLastMonthChddList((it[i].date.toInt()).toString(), code)
+        lastMonthList?.let {
+            for (i in (it.size - 1) downTo 0) {
+                mCHDDList.add(it[i])
+            }
+        }
     }
 
     private fun newReverseKJsonBean(
