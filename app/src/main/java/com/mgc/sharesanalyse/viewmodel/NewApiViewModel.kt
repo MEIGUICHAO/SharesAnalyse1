@@ -1184,9 +1184,9 @@ class NewApiViewModel : BaseViewModel() {
                             val lastDMAJ = lastDBean.p_MA_J
                             var gglist: ArrayList<GapJsonBean.GG>? = null
                             var bglist: ArrayList<GapJsonBean.GG>? = null
-                            LogUtil.d("curDate:${curDBean.date}")
                             if (null != lastDBean.gaP_J) {
                                 if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0){
+                                    LogUtil.d("curDate:${curDBean.date}")
                                     gglist = lastDBean.gaP_J.ggList
                                     if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].bottomPrice) {
                                         lastDBean.gaP_J.ggList.removeAt(0)
