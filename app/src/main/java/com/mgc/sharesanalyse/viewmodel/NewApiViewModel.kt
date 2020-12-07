@@ -1184,11 +1184,13 @@ class NewApiViewModel : BaseViewModel() {
                             val lastDMAJ = lastDBean.p_MA_J
                             var gglist: ArrayList<GapJsonBean.GG>? = null
                             var bglist: ArrayList<GapJsonBean.GG>? = null
+                            LogUtil.d("curDate:${curDBean.date}")
                             if (null != lastDBean.gaP_J) {
                                 if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0){
                                     gglist = lastDBean.gaP_J.ggList
                                     if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].bottomPrice) {
                                         lastDBean.gaP_J.ggList.removeAt(0)
+                                        LogUtil.d("removeAt")
                                     } else if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].topPrice) {
                                         gglist[0].topPrice = curDMAJ.alp
                                         gglist[0].gap_OldCpRate = ((gglist[0].topPrice - gglist[0].bottomPrice) / gglist[0].bottomPrice* 100).toKeep2()
@@ -1198,6 +1200,7 @@ class NewApiViewModel : BaseViewModel() {
                                     bglist = lastDBean.gaP_J.bgList
                                     if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].topPrice) {
                                         lastDBean.gaP_J.bgList.removeAt(0)
+                                        LogUtil.d("removeAt")
                                     } else if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].bottomPrice) {
                                         bglist[0].bottomPrice = curDMAJ.amp
                                         bglist[0].gap_OldCpRate = ((bglist[0].topPrice - bglist[0].bottomPrice) / bglist[0].bottomPrice* 100).toKeep2()
