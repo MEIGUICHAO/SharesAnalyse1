@@ -410,6 +410,19 @@ object DBUtils {
         }
     }
 
+    fun updateCHDDGapJson(
+        dbName: String,
+        code: String,
+        codeHDDBean: CodeHDDBean
+    ) {
+        switchDBName(code.toCodeHDD(codeHDDBean.date, FormatterEnum.YYYYMMDD))
+        createCodeHDD(dbName)
+        val sql =
+            "UPDATE $dbName SET GAP_J = '${if(null==codeHDDBean.gaP_J) "" else GsonHelper.getInstance().toJson(codeHDDBean.gaP_J)}' WHERE  DATE = ${codeHDDBean.date}"
+        LogUtil.d("$code updateCHDDGapJson----\n$sql")
+        db.execSQL(sql)
+    }
+
 
     fun queryCodeHDDIsExsitByDate(dbName: String, DATE: String): Boolean {
         var isexsit = false

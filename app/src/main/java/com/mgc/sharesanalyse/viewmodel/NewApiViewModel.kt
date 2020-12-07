@@ -1154,6 +1154,7 @@ class NewApiViewModel : BaseViewModel() {
         codelist.forEach { code ->
             mList.forEach {
                 val date = "20${it}01"
+                (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
                 getReverseChddBeans(code, date)
             }
         }
@@ -1164,18 +1165,105 @@ class NewApiViewModel : BaseViewModel() {
         codelist.forEach { code ->
             mList.forEach {
                 val date = "20${it}01"
+                (mActivity as NewApiActivity).setBtnGapResultInfo("gap_$code _ $date")
                 var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
-                var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+                var chddDDBeanList =
+                    DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
                 var mCHDDList = ArrayList<CodeHDDBean>()
                 chddDDBeanList?.let {
                     for (i in 0 until it.size) {
                         mCHDDList.add(0, it[i])
-                        getLastMonthList(it,i,code,mCHDDList)
+                        if (i == 0) {
+                            getLastMonthList(it, i, code, mCHDDList)
+                        }
+                        if (mCHDDList.size > 15) {
+                            val gapJsonBean = GapJsonBean()
+                            val curDBean = it[i]
+                            val lastDBean = mCHDDList[1]
+                            val curDMAJ = curDBean.p_MA_J
+                            val lastDMAJ = lastDBean.p_MA_J
+                            var gglist: ArrayList<GapJsonBean.GG>? = null
+                            var bglist: ArrayList<GapJsonBean.GG>? = null
+                            if (null != lastDBean.gaP_J) {
+                                if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0){
+                                    gglist = lastDBean.gaP_J.ggList
+                                    if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].bottomPrice) {
+                                        lastDBean.gaP_J.ggList.removeAt(0)
+                                    } else if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].topPrice) {
+                                        gglist[0].topPrice = curDMAJ.alp
+                                        gglist[0].gap_OldCpRate = ((gglist[0].topPrice - gglist[0].bottomPrice) / gglist[0].bottomPrice* 100).toKeep2()
+                                    }
+                                }
+                                if (null != lastDBean.gaP_J.bgList && lastDBean.gaP_J.bgList.size > 0){
+                                    bglist = lastDBean.gaP_J.bgList
+                                    if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].topPrice) {
+                                        lastDBean.gaP_J.bgList.removeAt(0)
+                                    } else if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].bottomPrice) {
+                                        bglist[0].bottomPrice = curDMAJ.amp
+                                        bglist[0].gap_OldCpRate = ((bglist[0].topPrice - bglist[0].bottomPrice) / bglist[0].bottomPrice* 100).toKeep2()
+                                    }
+                                }
+                            }
+                            if (curDMAJ.alp > lastDMAJ.amp) {
+                                LogUtil.d("gap!!GG $code ----- ${curDBean.date} curDMAJ.alp:${curDMAJ.alp} lastDMAJ.amp:${lastDMAJ.amp}")
+                                if (null == gglist) {
+                                    gglist = ArrayList<GapJsonBean.GG>()
+                                }
+                                val gg = GapJsonBean.GG()
+                                gg.bottomPrice =  lastDMAJ.amp
+                                gg.topPrice =  curDMAJ.alp
+                                setComonGG(gg, date, curDMAJ, curDBean, lastDMAJ)
+                                gg.gap_OldCpRate = ((curDMAJ.alp - lastDMAJ.amp) / lastDMAJ.amp * 100).toKeep2()
+                                gglist.add(0,gg)
+                                gapJsonBean.ggList = gglist
+                                gapJsonBean.aggs = gglist.size
+                                curDBean.gaP_J = gapJsonBean
+                            } else if (curDMAJ.amp < lastDMAJ.alp) {
+                                LogUtil.d("gap!!BG $code ----- ${curDBean.date} curDMAJ.amp:${curDMAJ.amp} lastDMAJ.alp:${lastDMAJ.alp}")
+                                if (null == bglist) {
+                                    bglist = ArrayList<GapJsonBean.GG>()
+                                }
+                                val bg = GapJsonBean.GG()
+                                bg.topPrice =  curDMAJ.amp
+                                bg.bottomPrice =  lastDMAJ.alp
+                                setComonGG(bg, date, curDMAJ, curDBean, lastDMAJ)
+                                bg.bottomPrice =  lastDMAJ.aacp
+                                bg.gap_OldCpRate = ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
+                                bglist.add(0,bg)
+                                gapJsonBean.bgList = bglist
+                                gapJsonBean.abgs = bglist.size
+                                curDBean.gaP_J = gapJsonBean
+                            }
+                            if (null != curDBean.gaP_J) {
+                                DBUtils.updateCHDDGapJson(
+                                    "DD_${code.toCompleteCode()}",
+                                    code.toCompleteCode(),
+                                    curDBean
+                                )
+                            }
+                        }
                     }
-                    mCHDDList[0]
                 }
             }
         }
+    }
+
+    private fun setComonGG(
+        gg: GapJsonBean.GG,
+        date: String,
+        curDMAJ: CodeHDDBean.P_MA_J,
+        curDBean: CodeHDDBean,
+        lastDMAJ: CodeHDDBean.P_MA_J
+    ) {
+        gg.date = curDBean.date.toInt()
+        gg.gapOp = curDMAJ.aaop
+        gg.lp = curDMAJ.alp
+        gg.mp = curDMAJ.amp
+        gg.cp = curDBean.cp
+        gg.op = curDMAJ.aaop
+        gg.percent = ((curDMAJ.aacp - lastDMAJ.aacp) / lastDMAJ.aacp * 100).toKeep2()
+        gg.tr = curDBean.tr.percent2Float()
+        gg.gapOp = curDBean.op
     }
 
     private fun getCHDDDateListAndCodeList(): Pair<ArrayList<String>, ArrayList<String>> {
@@ -2356,12 +2444,14 @@ class NewApiViewModel : BaseViewModel() {
                 val requestBean = it[i]
                 var oldBean: CodeHDDBean?
                 var targetBean: CodeHDDBean?
-                (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${it[i].date}")
                 if (mCHDDList.size > 6) {
                     targetBean = mCHDDList[5]
                     oldBean = mCHDDList[6]
                     LogUtil.d("code:$code---------------requestBean date:${requestBean.date},targetBean date:${targetBean.date},oldBean date:${oldBean.date}")
-                    if (requestBean.date.equals("20200507")||requestBean.date.equals("20200508")||requestBean.date.equals("20200509")) {
+                    if (requestBean.date.equals("20200507") || requestBean.date.equals("20200508") || requestBean.date.equals(
+                            "20200509"
+                        )
+                    ) {
                         mCHDDList.forEach {
                             LogUtil.d("$i---------------requestBean:${it.date}")
                         }
@@ -2371,7 +2461,8 @@ class NewApiViewModel : BaseViewModel() {
                     if (ROP > TOP && ROP >= 1.3 * TOP) {
                         var afterBean = mCHDDList[4]
 
-                        val reverseKJsonBean = newReverseKJsonBean(afterBean, targetBean,requestBean)
+                        val reverseKJsonBean =
+                            newReverseKJsonBean(afterBean, targetBean, requestBean)
                         val OM = oldBean.p_MA_J.amp
                         val OP = oldBean.p_MA_J.aaop
                         val OC = oldBean.p_MA_J.aacp
@@ -2404,7 +2495,12 @@ class NewApiViewModel : BaseViewModel() {
                         val reverseKJSLLBean = ReverseKJSLLBean()
                         reverseKJSLLBean.code = code.toInt()
                         reverseKJSLLBean.n = targetBean.name
-                        reverseKJSLLBean.d_D = requestBean.date.replace(DateUtils.changeFromDefaultFormatter(requestBean.date,FormatterEnum.YYYY),"")
+                        reverseKJSLLBean.d_D = requestBean.date.replace(
+                            DateUtils.changeFromDefaultFormatter(
+                                requestBean.date,
+                                FormatterEnum.YYYY
+                            ), ""
+                        )
                         try {
                             reverseKJSLLBean.date = DateUtils.changeFormatter(
                                 DateUtils.parse(
@@ -2437,13 +2533,13 @@ class NewApiViewModel : BaseViewModel() {
                             reverseKJSLLBean.d_D72 = targetBean.k_J.SLL.dsll.D72.toKeep4()
                         }
                         DBUtils.insertReverseKJTable(
-                            Datas.A_SLL_TB_ ,
+                            Datas.A_SLL_TB_,
                             reverseKJSLLBean,
                             targetBean.date
                         )
                         if (mCHDDList.size > 11) {
-                            var targetBean2  = mCHDDList[6]
-                            var targetBean3 =  mCHDDList[7]
+                            var targetBean2 = mCHDDList[6]
+                            var targetBean3 = mCHDDList[7]
                             var oldBean331 = mCHDDList[8]
                             var oldBean332 = mCHDDList[9]
                             var oldBean333 = mCHDDList[10]
@@ -2453,13 +2549,25 @@ class NewApiViewModel : BaseViewModel() {
                                 targetBean,
                                 requestBean
                             )
-                            val OM33 = Math.max(Math.max(oldBean331.p_MA_J.amp,oldBean332.p_MA_J.amp),oldBean333.p_MA_J.amp)
-                            val OL33 = Math.min(Math.min(oldBean331.p_MA_J.alp,oldBean332.p_MA_J.alp),oldBean333.p_MA_J.alp)
+                            val OM33 = Math.max(
+                                Math.max(oldBean331.p_MA_J.amp, oldBean332.p_MA_J.amp),
+                                oldBean333.p_MA_J.amp
+                            )
+                            val OL33 = Math.min(
+                                Math.min(oldBean331.p_MA_J.alp, oldBean332.p_MA_J.alp),
+                                oldBean333.p_MA_J.alp
+                            )
                             val OC33 = oldBean331.p_MA_J.aacp
                             val OO33 = oldBean333.p_MA_J.aaop
 
-                            val M33 = Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),targetBean3.p_MA_J.amp)
-                            val L33 = Math.min(Math.min(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),targetBean3.p_MA_J.alp)
+                            val M33 = Math.max(
+                                Math.max(targetBean.p_MA_J.amp, targetBean2.p_MA_J.amp),
+                                targetBean3.p_MA_J.amp
+                            )
+                            val L33 = Math.min(
+                                Math.min(targetBean.p_MA_J.alp, targetBean2.p_MA_J.alp),
+                                targetBean3.p_MA_J.alp
+                            )
                             val C33 = targetBean.p_MA_J.aacp
                             val O33 = targetBean3.p_MA_J.aaop
 
@@ -2478,7 +2586,7 @@ class NewApiViewModel : BaseViewModel() {
                                 OL33
                             )
                             DBUtils.insertReverseKJTable(
-                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33) ,
+                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_33 else Datas.REVERSE_TB_P30_33),
                                 reverseKJsonBean33,
                                 targetBean.date
                             )
@@ -2496,13 +2604,41 @@ class NewApiViewModel : BaseViewModel() {
                                     targetBean,
                                     requestBean
                                 )
-                                val OM55 = Math.max(Math.max(Math.max(oldBean551.p_MA_J.amp,oldBean552.p_MA_J.amp),Math.max(oldBean553.p_MA_J.amp,oldBean554.p_MA_J.amp)),oldBean555.p_MA_J.amp)
-                                val OL55 = Math.min(Math.max(Math.min(oldBean551.p_MA_J.alp,oldBean552.p_MA_J.alp),Math.min(oldBean553.p_MA_J.alp,oldBean554.p_MA_J.alp)),oldBean555.p_MA_J.alp)
+                                val OM55 = Math.max(
+                                    Math.max(
+                                        Math.max(
+                                            oldBean551.p_MA_J.amp,
+                                            oldBean552.p_MA_J.amp
+                                        ), Math.max(oldBean553.p_MA_J.amp, oldBean554.p_MA_J.amp)
+                                    ), oldBean555.p_MA_J.amp
+                                )
+                                val OL55 = Math.min(
+                                    Math.max(
+                                        Math.min(
+                                            oldBean551.p_MA_J.alp,
+                                            oldBean552.p_MA_J.alp
+                                        ), Math.min(oldBean553.p_MA_J.alp, oldBean554.p_MA_J.alp)
+                                    ), oldBean555.p_MA_J.alp
+                                )
                                 val OC55 = oldBean551.p_MA_J.aacp
                                 val OO55 = oldBean555.p_MA_J.aaop
 
-                                val M55 = Math.max(Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),Math.max(targetBean3.p_MA_J.amp,targetBean4.p_MA_J.amp)),targetBean5.p_MA_J.amp)
-                                val L55 = Math.max(Math.max(Math.max(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),Math.max(targetBean3.p_MA_J.alp,targetBean4.p_MA_J.alp)),targetBean5.p_MA_J.alp)
+                                val M55 = Math.max(
+                                    Math.max(
+                                        Math.max(
+                                            targetBean.p_MA_J.amp,
+                                            targetBean2.p_MA_J.amp
+                                        ), Math.max(targetBean3.p_MA_J.amp, targetBean4.p_MA_J.amp)
+                                    ), targetBean5.p_MA_J.amp
+                                )
+                                val L55 = Math.max(
+                                    Math.max(
+                                        Math.max(
+                                            targetBean.p_MA_J.alp,
+                                            targetBean2.p_MA_J.alp
+                                        ), Math.max(targetBean3.p_MA_J.alp, targetBean4.p_MA_J.alp)
+                                    ), targetBean5.p_MA_J.alp
+                                )
                                 val C55 = targetBean.p_MA_J.aacp
                                 val O55 = targetBean5.p_MA_J.aaop
 
@@ -2547,22 +2683,86 @@ class NewApiViewModel : BaseViewModel() {
                                         targetBean,
                                         requestBean
                                     )
-                                    val OM10_1 = Math.max(Math.max(Math.max(oldBean101.p_MA_J.amp,oldBean102.p_MA_J.amp),Math.max(oldBean103.p_MA_J.amp,oldBean104.p_MA_J.amp)),oldBean105.p_MA_J.amp)
-                                    val OM10_2 = Math.max(Math.max(Math.max(oldBean106.p_MA_J.amp,oldBean107.p_MA_J.amp),Math.max(oldBean108.p_MA_J.amp,oldBean109.p_MA_J.amp)),oldBean1010.p_MA_J.amp)
+                                    val OM10_1 = Math.max(
+                                        Math.max(
+                                            Math.max(
+                                                oldBean101.p_MA_J.amp,
+                                                oldBean102.p_MA_J.amp
+                                            ),
+                                            Math.max(oldBean103.p_MA_J.amp, oldBean104.p_MA_J.amp)
+                                        ), oldBean105.p_MA_J.amp
+                                    )
+                                    val OM10_2 = Math.max(
+                                        Math.max(
+                                            Math.max(
+                                                oldBean106.p_MA_J.amp,
+                                                oldBean107.p_MA_J.amp
+                                            ),
+                                            Math.max(oldBean108.p_MA_J.amp, oldBean109.p_MA_J.amp)
+                                        ), oldBean1010.p_MA_J.amp
+                                    )
                                     val OM10 = Math.max(OM10_1, OM10_2)
-                                    val OL10_1 = Math.min(Math.max(Math.min(oldBean101.p_MA_J.alp,oldBean102.p_MA_J.alp),Math.min(oldBean103.p_MA_J.alp,oldBean104.p_MA_J.alp)),oldBean105.p_MA_J.alp)
-                                    val OL10_2 = Math.min(Math.max(Math.min(oldBean106.p_MA_J.alp,oldBean107.p_MA_J.alp),Math.min(oldBean108.p_MA_J.alp,oldBean109.p_MA_J.alp)),oldBean1010.p_MA_J.alp)
+                                    val OL10_1 = Math.min(
+                                        Math.max(
+                                            Math.min(
+                                                oldBean101.p_MA_J.alp,
+                                                oldBean102.p_MA_J.alp
+                                            ),
+                                            Math.min(oldBean103.p_MA_J.alp, oldBean104.p_MA_J.alp)
+                                        ), oldBean105.p_MA_J.alp
+                                    )
+                                    val OL10_2 = Math.min(
+                                        Math.max(
+                                            Math.min(
+                                                oldBean106.p_MA_J.alp,
+                                                oldBean107.p_MA_J.alp
+                                            ),
+                                            Math.min(oldBean108.p_MA_J.alp, oldBean109.p_MA_J.alp)
+                                        ), oldBean1010.p_MA_J.alp
+                                    )
                                     val OL10 = Math.min(OL10_1, OL10_2)
                                     val OC10 = oldBean101.p_MA_J.aacp
                                     val OO10 = oldBean1010.p_MA_J.aaop
 
 
-                                    val M10_1 = Math.max(Math.max(Math.max(targetBean.p_MA_J.amp,targetBean2.p_MA_J.amp),Math.max(targetBean3.p_MA_J.amp,targetBean4.p_MA_J.amp)),targetBean5.p_MA_J.amp)
-                                    val M10_2 = Math.max(Math.max(Math.max(targetBean6.p_MA_J.amp,targetBean7.p_MA_J.amp),Math.max(targetBean8.p_MA_J.amp,targetBean9.p_MA_J.amp)),targetBean10.p_MA_J.amp)
+                                    val M10_1 = Math.max(
+                                        Math.max(
+                                            Math.max(
+                                                targetBean.p_MA_J.amp,
+                                                targetBean2.p_MA_J.amp
+                                            ),
+                                            Math.max(targetBean3.p_MA_J.amp, targetBean4.p_MA_J.amp)
+                                        ), targetBean5.p_MA_J.amp
+                                    )
+                                    val M10_2 = Math.max(
+                                        Math.max(
+                                            Math.max(
+                                                targetBean6.p_MA_J.amp,
+                                                targetBean7.p_MA_J.amp
+                                            ),
+                                            Math.max(targetBean8.p_MA_J.amp, targetBean9.p_MA_J.amp)
+                                        ), targetBean10.p_MA_J.amp
+                                    )
                                     val M10 = Math.max(M10_1, M10_2)
 
-                                    val L10_1 = Math.min(Math.max(Math.min(targetBean.p_MA_J.alp,targetBean2.p_MA_J.alp),Math.min(targetBean3.p_MA_J.alp,targetBean4.p_MA_J.alp)),targetBean5.p_MA_J.alp)
-                                    val L10_2 = Math.min(Math.max(Math.min(targetBean6.p_MA_J.alp,targetBean7.p_MA_J.alp),Math.min(targetBean8.p_MA_J.alp,targetBean9.p_MA_J.alp)),targetBean10.p_MA_J.alp)
+                                    val L10_1 = Math.min(
+                                        Math.max(
+                                            Math.min(
+                                                targetBean.p_MA_J.alp,
+                                                targetBean2.p_MA_J.alp
+                                            ),
+                                            Math.min(targetBean3.p_MA_J.alp, targetBean4.p_MA_J.alp)
+                                        ), targetBean5.p_MA_J.alp
+                                    )
+                                    val L10_2 = Math.min(
+                                        Math.max(
+                                            Math.min(
+                                                targetBean6.p_MA_J.alp,
+                                                targetBean7.p_MA_J.alp
+                                            ),
+                                            Math.min(targetBean8.p_MA_J.alp, targetBean9.p_MA_J.alp)
+                                        ), targetBean10.p_MA_J.alp
+                                    )
                                     val L10 = Math.min(L10_1, L10_2)
                                     val C10 = targetBean.p_MA_J.aacp
                                     val O10 = targetBean10.p_MA_J.aaop
@@ -2659,7 +2859,12 @@ class NewApiViewModel : BaseViewModel() {
         }
         reverseKJsonBean.ao = AO
         reverseKJsonBean.n = targetBean.name
-        reverseKJsonBean.d_D = requestBean.date.replace(DateUtils.changeFromDefaultFormatter(requestBean.date,FormatterEnum.YYYY),"")
+        reverseKJsonBean.d_D = requestBean.date.replace(
+            DateUtils.changeFromDefaultFormatter(
+                requestBean.date,
+                FormatterEnum.YYYY
+            ), ""
+        )
         return reverseKJsonBean
     }
 
@@ -2678,7 +2883,12 @@ class NewApiViewModel : BaseViewModel() {
         OL: Float
     ) {
         reverseKJsonBean.code = code.toInt()
-        reverseKJsonBean.date = targetBean.date.replace(DateUtils.changeFromDefaultFormatter(targetBean.date,FormatterEnum.YYYY),"")
+        reverseKJsonBean.date = targetBean.date.replace(
+            DateUtils.changeFromDefaultFormatter(
+                targetBean.date,
+                FormatterEnum.YYYY
+            ), ""
+        )
         reverseKJsonBean.curP = ((requestBean.cp - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()

@@ -133,10 +133,21 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.reverseResult()
             }
         }
+        btnGapResult.setOnClickListener {
+            App.getSinglePool().execute{
+                viewModel.foreachGapResult()
+            }
+        }
 
     }
 
 
+
+    fun setBtnGapResultInfo(info: String) {
+        btnGapResult.post {
+            btnGapResult.setText(info)
+        }
+    }
 
     fun setBtnReverseInfo(info: String) {
         btnGetALlCode.post {
