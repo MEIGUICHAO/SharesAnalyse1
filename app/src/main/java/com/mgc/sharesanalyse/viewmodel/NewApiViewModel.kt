@@ -1184,13 +1184,14 @@ class NewApiViewModel : BaseViewModel() {
                             val lastDMAJ = lastDBean.p_MA_J
                             var gglist: ArrayList<GapJsonBean.GG>? = null
                             var bglist: ArrayList<GapJsonBean.GG>? = null
+                            LogUtil.d("lastDBean:${GsonHelper.toJson(lastDBean)}")
                             if (null != lastDBean.gaP_J) {
                                 if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0){
-                                    LogUtil.d("curDate:${curDBean.date}")
+                                    LogUtil.d("curDate:${curDBean.date},lp:${curDMAJ.alp},bottomP:${lastDBean.gaP_J.ggList[0].bottomPrice}")
                                     gglist = lastDBean.gaP_J.ggList
                                     if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].bottomPrice) {
                                         lastDBean.gaP_J.ggList.removeAt(0)
-                                        LogUtil.d("removeAt")
+                                        LogUtil.d("removeAt:${curDBean.date}")
                                     } else if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].topPrice) {
                                         gglist[0].topPrice = curDMAJ.alp
                                         gglist[0].gap_OldCpRate = ((gglist[0].topPrice - gglist[0].bottomPrice) / gglist[0].bottomPrice* 100).toKeep2()
@@ -1200,7 +1201,7 @@ class NewApiViewModel : BaseViewModel() {
                                     bglist = lastDBean.gaP_J.bgList
                                     if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].topPrice) {
                                         lastDBean.gaP_J.bgList.removeAt(0)
-                                        LogUtil.d("removeAt")
+                                        LogUtil.d("removeAt:${curDBean.date}")
                                     } else if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].bottomPrice) {
                                         bglist[0].bottomPrice = curDMAJ.amp
                                         bglist[0].gap_OldCpRate = ((bglist[0].topPrice - bglist[0].bottomPrice) / bglist[0].bottomPrice* 100).toKeep2()
@@ -1236,13 +1237,40 @@ class NewApiViewModel : BaseViewModel() {
                                 gapJsonBean.bgList = bglist
                                 gapJsonBean.abgs = bglist.size
                                 curDBean.gaP_J = gapJsonBean
+                            } else if (null != lastDBean.gaP_J) {
+                                if (null != gglist && gglist.size > 0) {
+                                    gapJsonBean.ggList = gglist
+                                    gapJsonBean.aggs = gglist.size
+                                }
+                                if (null != bglist && bglist.size > 0) {
+                                    gapJsonBean.bgList = bglist
+                                    gapJsonBean.abgs = bglist.size
+                                }
+
+                                if ((null != gglist &&gglist.size > 0) || (null != bglist &&bglist.size > 0)) {
+                                    curDBean.gaP_J = gapJsonBean
+                                } else {
+                                    curDBean.gaP_J = null
+                                }
                             }
-                            if (null != curDBean.gaP_J) {
+                            if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
+                                if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
+                                    curDBean.gaP_J.ggList[0].date = curDBean.date.toInt()
+                                }
+                                if (null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0) {
+                                    curDBean.gaP_J.bgList[0].date = curDBean.date.toInt()
+                                }
                                 DBUtils.updateCHDDGapJson(
                                     "DD_${code.toCompleteCode()}",
                                     code.toCompleteCode(),
                                     curDBean
                                 )
+//                                var ts = DateUtils.parse(curDBean.date,FormatterEnum.YYYYMMDD)
+//                                while (!DateUtils.isWeekDay(ts).first) {
+//                                    ts = ts + dayMillis
+//                                }
+
+                                mCHDDList.add(0, curDBean)
                             }
                         }
                     }
@@ -2461,7 +2489,7 @@ class NewApiViewModel : BaseViewModel() {
                     }
                     val ROP = requestBean.p_MA_J.aacp
                     val TOP = targetBean.p_MA_J.aacp
-                    if (ROP > TOP && ROP >= 1.3 * TOP) {
+                    if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
                         var afterBean = mCHDDList[4]
 
                         val reverseKJsonBean =

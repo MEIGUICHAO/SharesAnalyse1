@@ -1,6 +1,10 @@
 package com.mgc.sharesanalyse.entity;
 
-public class ReverseKJSLLBean  implements BaseReverseImp  {
+import android.annotation.SuppressLint;
+
+import org.jetbrains.annotations.NotNull;
+
+public class ReverseKJSLLBean implements BaseReverseImp {
 
     private int code;
     private String N;
@@ -196,6 +200,8 @@ public class ReverseKJSLLBean  implements BaseReverseImp  {
         D_D = d_D;
     }
 
+    @NotNull
+    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
         return
@@ -203,24 +209,24 @@ public class ReverseKJSLLBean  implements BaseReverseImp  {
                         ", '" + N + '\'' +
                         ", '" + D_D + '\'' +
                         ", '" + date + '\'' +
-                        ", " + U_D03 * 1000 / 3 +
-                        ", " + U_D05 * 1000 / 5 +
-                        ", " + U_D10 * 1000 / 10 +
-                        ", " + U_D15 * 1000 / 15 +
-                        ", " + U_D20 * 1000 / 20 +
-                        ", " + U_D25 * 1000 / 25 +
-                        ", " + U_D30 * 1000 / 30 +
-                        ", " + U_D60 * 1000 / 60 +
-                        ", " + U_D72 * 1000 / 72 +
-                        ", " + D_D03 * 1000 / 3 +
-                        ", " + D_D05 * 1000 / 5 +
-                        ", " + D_D10 * 1000 / 10 +
-                        ", " + D_D15 * 1000 / 15 +
-                        ", " + D_D20 * 1000 / 20 +
-                        ", " + D_D25 * 1000 / 25 +
-                        ", " + D_D30 * 1000 / 30 +
-                        ", " + D_D60 * 1000 / 60 +
-                        ", " + D_D72 * 1000 / 72 +
+                        ", " + String.format("%.2f", U_D03 * 1000 / 3) +
+                        ", " + String.format("%.2f", U_D05 * 1000 / 5) +
+                        ", " + String.format("%.2f", U_D10 * 1000 / 10) +
+                        ", " + String.format("%.2f", U_D15 * 1000 / 15) +
+                        ", " + String.format("%.2f", U_D20 * 1000 / 20) +
+                        ", " + String.format("%.2f", U_D25 * 1000 / 25) +
+                        ", " + String.format("%.2f", U_D30 * 1000 / 30) +
+                        ", " + String.format("%.2f", U_D60 * 1000 / 60) +
+                        ", " + String.format("%.2f", U_D72 * 1000 / 72) +
+                        ", " + String.format("%.2f", D_D03 * 1000 / 3) +
+                        ", " + String.format("%.2f", D_D05 * 1000 / 5) +
+                        ", " + String.format("%.2f", D_D10 * 1000 / 10) +
+                        ", " + String.format("%.2f", D_D15 * 1000 / 15) +
+                        ", " + String.format("%.2f", D_D20 * 1000 / 20) +
+                        ", " + String.format("%.2f", D_D25 * 1000 / 25) +
+                        ", " + String.format("%.2f", D_D30 * 1000 / 30) +
+                        ", " + String.format("%.2f", D_D60 * 1000 / 60) +
+                        ", " + String.format("%.2f", D_D72 * 1000 / 72) +
                         ")";
     }
 
