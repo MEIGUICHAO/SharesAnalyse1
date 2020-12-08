@@ -42,9 +42,19 @@ public class GapJsonBean {
 
     public static class GG {
         private int date;
-        private float range;
+        private float MLRange;
+        private float CORange;
         private float percent;
         private float tr;
+
+        public float getCORange() {
+            return CORange;
+        }
+
+        public void setCORange(float CORange) {
+            this.CORange = CORange;
+        }
+
         private float op;
         private float cp;
         private float mp;
@@ -55,25 +65,7 @@ public class GapJsonBean {
         private float topPrice;
         //good gap 下行价格
         private float BottomPrice;
-        private float SupportPrice;
 
-        public float getSupportPrice() {
-            return SupportPrice;
-        }
-
-        public void setSupportPrice(float supportPrice) {
-            SupportPrice = supportPrice;
-        }
-
-        public float getPressurePrice() {
-            return PressurePrice;
-        }
-
-        public void setPressurePrice(float pressurePrice) {
-            PressurePrice = pressurePrice;
-        }
-
-        private float PressurePrice;
 
         public int getDate() {
             return date;
@@ -83,12 +75,12 @@ public class GapJsonBean {
             this.date = date;
         }
 
-        public float getRange() {
-            return range;
+        public float getMLRange() {
+            return MLRange;
         }
 
-        public void setRange(float range) {
-            this.range = range;
+        public void setMLRange(float MLRange) {
+            this.MLRange = MLRange;
         }
 
         public float getPercent() {

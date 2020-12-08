@@ -1256,9 +1256,18 @@ class NewApiViewModel : BaseViewModel() {
                             if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
                                 if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
                                     curDBean.gaP_J.ggList[0].date = curDBean.date.toInt()
+                                    curDBean.gaP_J.ggList[0].mlRange =
+                                        ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
+                                    curDBean.gaP_J.ggList[0].coRange =
+                                        ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
+
                                 }
                                 if (null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0) {
                                     curDBean.gaP_J.bgList[0].date = curDBean.date.toInt()
+                                    curDBean.gaP_J.bgList[0].mlRange =
+                                        ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
+                                    curDBean.gaP_J.bgList[0].coRange =
+                                        ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
                                 }
                                 DBUtils.updateCHDDGapJson(
                                     "DD_${code.toCompleteCode()}",
