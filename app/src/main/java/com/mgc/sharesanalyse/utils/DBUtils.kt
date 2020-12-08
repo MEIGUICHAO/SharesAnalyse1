@@ -999,4 +999,42 @@ object DBUtils {
             db.execSQL(sqlStr)
         }
     }
+
+
+
+    fun insertGapRecordJTable(
+        tbName: String,
+        gapJsonBean: GapRecordBean
+    ) {
+        switchDBName(Datas.dataNamesDefault)
+        LogUtil.d("insertGapRecordJTable!!")
+        createGapRecordKJTable(tbName, gapJsonBean)
+        if (!queryDataIsExsitByCodeAndBDAndDate(tbName, gapJsonBean.code.toString(),gapJsonBean.b_D.toString(),gapJsonBean.date.toString())) {
+            var insertSqlStr = gapJsonBean.insertTB(tbName)
+            LogUtil.d("insertSqlStr:$insertSqlStr")
+            db.execSQL(insertSqlStr)
+        }
+    }
+
+    fun queryDataIsExsitByCodeAndBDAndDate(dbName: String, code: String, bd: String, date: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND B_D =? AND DATE =?", arrayOf(code,bd,date))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
+    }
+
+    private fun createGapRecordKJTable(
+        dbName: String,
+        gapJsonBean: GapRecordBean
+    ) {
+        if (!tabbleIsExist(dbName)) {
+            var sqlStr = gapJsonBean.insertTB()
+            db.execSQL(sqlStr)
+        }
+    }
 }

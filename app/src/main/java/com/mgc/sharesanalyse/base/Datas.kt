@@ -70,6 +70,8 @@ object Datas {
     const val A_SLL_TB_ = "A_SLL"
     const val REVERSE_KJ_DB = "REV_KJ_DB"
     const val Derby = "Derby_"
+    const val GAP_GG = "GAP_GG_"
+    const val GAP_BG = "GAP_BG_"
 //    const val HHQDayCount = 6
 
 }
