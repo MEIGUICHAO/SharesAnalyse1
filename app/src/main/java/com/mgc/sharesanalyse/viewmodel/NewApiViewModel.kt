@@ -1165,117 +1165,139 @@ class NewApiViewModel : BaseViewModel() {
         codelist.forEach { code ->
             mList.forEach {
                 val date = "20${it}01"
-                (mActivity as NewApiActivity).setBtnGapResultInfo("gap_$code _ $date")
-                var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
-                var chddDDBeanList =
-                    DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
-                var mCHDDList = ArrayList<CodeHDDBean>()
-                chddDDBeanList?.let {
-                    for (i in 0 until it.size) {
-                        mCHDDList.add(0, it[i])
-                        if (i == 0) {
-                            getLastMonthList(it, i, code, mCHDDList)
+                val gapIndex = 0
+                updateCodeHDDGapInfo(code, date, gapIndex)
+            }
+        }
+    }
+
+    private fun updateCodeHDDGapInfo(code: String, date: String, gapIndex: Int) {
+        (mActivity as NewApiActivity).setBtnGapResultInfo("gap_$code _ $date")
+        var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
+        var chddDDBeanList =
+            DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+        var mCHDDList = ArrayList<CodeHDDBean>()
+        chddDDBeanList?.let {
+            for (i in gapIndex until it.size) {
+                mCHDDList.add(0, it[i])
+                if (i == 0) {
+                    getLastMonthList(it, i, code, mCHDDList)
+                }
+                if (mCHDDList.size > 15) {
+                    val gapJsonBean = GapJsonBean()
+                    val curDBean = it[i]
+                    val lastDBean = mCHDDList[1]
+                    val curDMAJ = curDBean.p_MA_J
+                    val lastDMAJ = lastDBean.p_MA_J
+                    var gglist: ArrayList<GapJsonBean.GG>? = null
+                    var bglist: ArrayList<GapJsonBean.GG>? = null
+                    LogUtil.d("lastDBean:${GsonHelper.toJson(lastDBean)}")
+                    if (null != lastDBean.gaP_J) {
+                        if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0) {
+                            gglist = lastDBean.gaP_J.ggList
+                            val ggRemoveList = ArrayList<GapJsonBean.GG>()
+                            for (i in 0 until gglist.size) {
+                                if (curDMAJ.alp < gglist[i].bottomPrice) {
+                                    ggRemoveList.add(gglist[i])
+                                } else if (curDMAJ.alp < gglist[i].topPrice) {
+                                    gglist[i].topPrice = curDMAJ.alp
+                                    gglist[i].gap_OldCpRate =
+                                        ((gglist[i].topPrice - gglist[i].bottomPrice) / gglist[i].bottomPrice * 100).toKeep2()
+                                }
+                            }
+                            for (i in ggRemoveList.size-1 downTo 0) {
+                                gglist.remove(ggRemoveList[i])
+                                LogUtil.d("removeAt:${curDBean.date}")
+                            }
+
                         }
-                        if (mCHDDList.size > 15) {
-                            val gapJsonBean = GapJsonBean()
-                            val curDBean = it[i]
-                            val lastDBean = mCHDDList[1]
-                            val curDMAJ = curDBean.p_MA_J
-                            val lastDMAJ = lastDBean.p_MA_J
-                            var gglist: ArrayList<GapJsonBean.GG>? = null
-                            var bglist: ArrayList<GapJsonBean.GG>? = null
-                            LogUtil.d("lastDBean:${GsonHelper.toJson(lastDBean)}")
-                            if (null != lastDBean.gaP_J) {
-                                if (null != lastDBean.gaP_J.ggList && lastDBean.gaP_J.ggList.size > 0){
-                                    LogUtil.d("curDate:${curDBean.date},lp:${curDMAJ.alp},bottomP:${lastDBean.gaP_J.ggList[0].bottomPrice}")
-                                    gglist = lastDBean.gaP_J.ggList
-                                    if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].bottomPrice) {
-                                        lastDBean.gaP_J.ggList.removeAt(0)
-                                        LogUtil.d("removeAt:${curDBean.date}")
-                                    } else if (curDMAJ.alp < lastDBean.gaP_J.ggList[0].topPrice) {
-                                        gglist[0].topPrice = curDMAJ.alp
-                                        gglist[0].gap_OldCpRate = ((gglist[0].topPrice - gglist[0].bottomPrice) / gglist[0].bottomPrice* 100).toKeep2()
-                                    }
+                        if (null != lastDBean.gaP_J.bgList && lastDBean.gaP_J.bgList.size > 0) {
+                            bglist = lastDBean.gaP_J.bgList
+                            val bgRemoveList = ArrayList<GapJsonBean.GG>()
+                            for (i in 0 until bglist.size) {
+                                if (curDMAJ.amp > bglist[i].topPrice) {
+                                    bgRemoveList.add(bglist[i])
+                                } else if (curDMAJ.amp > bglist[i].bottomPrice) {
+                                    bglist[i].bottomPrice = curDMAJ.amp
+                                    bglist[i].gap_OldCpRate =
+                                        ((bglist[i].topPrice - bglist[i].bottomPrice) / bglist[i].bottomPrice * 100).toKeep2()
                                 }
-                                if (null != lastDBean.gaP_J.bgList && lastDBean.gaP_J.bgList.size > 0){
-                                    bglist = lastDBean.gaP_J.bgList
-                                    if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].topPrice) {
-                                        lastDBean.gaP_J.bgList.removeAt(0)
-                                        LogUtil.d("removeAt:${curDBean.date}")
-                                    } else if (curDMAJ.amp > lastDBean.gaP_J.bgList[0].bottomPrice) {
-                                        bglist[0].bottomPrice = curDMAJ.amp
-                                        bglist[0].gap_OldCpRate = ((bglist[0].topPrice - bglist[0].bottomPrice) / bglist[0].bottomPrice* 100).toKeep2()
-                                    }
-                                }
-                            }
-                            if (curDMAJ.alp > lastDMAJ.amp) {
-                                LogUtil.d("gap!!GG $code ----- ${curDBean.date} curDMAJ.alp:${curDMAJ.alp} lastDMAJ.amp:${lastDMAJ.amp}")
-                                if (null == gglist) {
-                                    gglist = ArrayList<GapJsonBean.GG>()
-                                }
-                                val gg = GapJsonBean.GG()
-                                gg.bottomPrice =  lastDMAJ.amp
-                                gg.topPrice =  curDMAJ.alp
-                                setComonGG(gg, date, curDMAJ, curDBean, lastDMAJ)
-                                gg.gap_OldCpRate = ((curDMAJ.alp - lastDMAJ.amp) / lastDMAJ.amp * 100).toKeep2()
-                                gglist.add(0,gg)
-                            } else if (curDMAJ.amp < lastDMAJ.alp) {
-                                LogUtil.d("gap!!BG $code ----- ${curDBean.date} curDMAJ.amp:${curDMAJ.amp} lastDMAJ.alp:${lastDMAJ.alp}")
-                                if (null == bglist) {
-                                    bglist = ArrayList<GapJsonBean.GG>()
-                                }
-                                val bg = GapJsonBean.GG()
-                                bg.topPrice =  curDMAJ.amp
-                                bg.bottomPrice =  lastDMAJ.alp
-                                setComonGG(bg, date, curDMAJ, curDBean, lastDMAJ)
-                                bg.bottomPrice =  lastDMAJ.aacp
-                                bg.gap_OldCpRate = ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
-                                bglist.add(0,bg)
-                            }
-                            if (null != gglist && gglist.size > 0) {
-                                gapJsonBean.ggList = gglist
-                                gapJsonBean.aggs = gglist.size
-                            }
-                            if (null != bglist && bglist.size > 0) {
-                                gapJsonBean.bgList = bglist
-                                gapJsonBean.abgs = bglist.size
                             }
 
-                            if ((null != gglist &&gglist.size > 0) || (null != bglist &&bglist.size > 0)) {
-                                curDBean.gaP_J = gapJsonBean
-
-                            } else {
-                                curDBean.gaP_J = null
-                            }
-                            if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
-                                if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
-                                    curDBean.gaP_J.ggList[0].date = curDBean.date.toInt()
-                                    curDBean.gaP_J.ggList[0].mlRange =
-                                        ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
-                                    curDBean.gaP_J.ggList[0].coRange =
-                                        ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
-
-                                }
-                                if (null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0) {
-                                    curDBean.gaP_J.bgList[0].date = curDBean.date.toInt()
-                                    curDBean.gaP_J.bgList[0].mlRange =
-                                        ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
-                                    curDBean.gaP_J.bgList[0].coRange =
-                                        ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
-                                }
-                                DBUtils.updateCHDDGapJson(
-                                    "DD_${code.toCompleteCode()}",
-                                    code.toCompleteCode(),
-                                    curDBean
-                                )
-//                                var ts = DateUtils.parse(curDBean.date,FormatterEnum.YYYYMMDD)
-//                                while (!DateUtils.isWeekDay(ts).first) {
-//                                    ts = ts + dayMillis
-//                                }
-
-                                mCHDDList.add(0, curDBean)
+                            for (i in bgRemoveList.size-1 downTo 0) {
+                                bglist.remove(bgRemoveList[i])
+                                LogUtil.d("removeAt bg:${curDBean.date}")
                             }
                         }
+                    }
+                    if (curDMAJ.alp > lastDMAJ.amp) {
+                        LogUtil.d("gap!!GG $code ----- ${curDBean.date} curDMAJ.alp:${curDMAJ.alp} lastDMAJ.amp:${lastDMAJ.amp}")
+                        if (null == gglist) {
+                            gglist = ArrayList<GapJsonBean.GG>()
+                        }
+                        val gg = GapJsonBean.GG()
+                        gg.bottomPrice = lastDMAJ.amp
+                        gg.topPrice = curDMAJ.alp
+                        setComonGG(gg, curDMAJ, curDBean, lastDMAJ)
+                        gg.gap_OldCpRate =
+                            ((curDMAJ.alp - lastDMAJ.amp) / lastDMAJ.amp * 100).toKeep2()
+                        gglist.add(0, gg)
+                    } else if (curDMAJ.amp < lastDMAJ.alp) {
+                        LogUtil.d("gap!!BG $code ----- ${curDBean.date} curDMAJ.amp:${curDMAJ.amp} lastDMAJ.alp:${lastDMAJ.alp}")
+                        if (null == bglist) {
+                            bglist = ArrayList<GapJsonBean.GG>()
+                        }
+                        val bg = GapJsonBean.GG()
+                        bg.topPrice = curDMAJ.amp
+                        bg.bottomPrice = lastDMAJ.alp
+                        setComonGG(bg,  curDMAJ, curDBean, lastDMAJ)
+                        bg.bottomPrice = lastDMAJ.aacp
+                        bg.gap_OldCpRate =
+                            ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
+                        bglist.add(0, bg)
+                    }
+                    if (null != gglist && gglist.size > 0) {
+                        gapJsonBean.ggList = gglist
+                        gapJsonBean.aggs = gglist.size
+                    }
+                    if (null != bglist && bglist.size > 0) {
+                        gapJsonBean.bgList = bglist
+                        gapJsonBean.abgs = bglist.size
+                    }
+
+                    if ((null != gglist && gglist.size > 0) || (null != bglist && bglist.size > 0)) {
+                        curDBean.gaP_J = gapJsonBean
+
+                    } else {
+                        curDBean.gaP_J = null
+                    }
+                    if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
+                        if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
+                            curDBean.gaP_J.ggList[0].date = curDBean.date.toInt()
+                            curDBean.gaP_J.ggList[0].mlRange =
+                                ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
+                            curDBean.gaP_J.ggList[0].coRange =
+                                ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
+
+                        }
+                        if (null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0) {
+                            curDBean.gaP_J.bgList[0].date = curDBean.date.toInt()
+                            curDBean.gaP_J.bgList[0].mlRange =
+                                ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
+                            curDBean.gaP_J.bgList[0].coRange =
+                                ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
+                        }
+                        DBUtils.updateCHDDGapJson(
+                            "DD_${code.toCompleteCode()}",
+                            code.toCompleteCode(),
+                            curDBean
+                        )
+    //                                var ts = DateUtils.parse(curDBean.date,FormatterEnum.YYYYMMDD)
+    //                                while (!DateUtils.isWeekDay(ts).first) {
+    //                                    ts = ts + dayMillis
+    //                                }
+
+                        mCHDDList.add(0, curDBean)
                     }
                 }
             }
@@ -1284,11 +1306,11 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun setComonGG(
         gg: GapJsonBean.GG,
-        date: String,
         curDMAJ: CodeHDDBean.P_MA_J,
         curDBean: CodeHDDBean,
         lastDMAJ: CodeHDDBean.P_MA_J
     ) {
+        gg.b_D = curDBean.date.toInt()
         gg.date = curDBean.date.toInt()
         gg.gapOp = curDMAJ.aaop
         gg.lp = curDMAJ.alp
@@ -2136,6 +2158,13 @@ class NewApiViewModel : BaseViewModel() {
         }
         operaNewCodeHDD(codeHDDBean, hq, hhqBeginIndex, code, date)
         DBUtils.insertCodeHDD(tbName, codeHDDBean, code, date)
+
+        var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
+        var chddDDBeanList =
+            DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+        chddDDBeanList?.let {
+            updateCodeHDDGapInfo(code, date, it.size-1)
+        }
     }
 
     private fun operaNewCodeHDD(

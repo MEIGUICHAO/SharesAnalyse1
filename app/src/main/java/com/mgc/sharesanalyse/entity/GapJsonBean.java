@@ -42,8 +42,18 @@ public class GapJsonBean {
 
     public static class GG {
         private int date;
+        private int B_D;
         private float MLRange;
         private float CORange;
+
+        public int getB_D() {
+            return B_D;
+        }
+
+        public void setB_D(int b_D) {
+            B_D = b_D;
+        }
+
         private float percent;
         private float tr;
 
