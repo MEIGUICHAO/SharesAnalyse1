@@ -1219,9 +1219,6 @@ class NewApiViewModel : BaseViewModel() {
                                 setComonGG(gg, date, curDMAJ, curDBean, lastDMAJ)
                                 gg.gap_OldCpRate = ((curDMAJ.alp - lastDMAJ.amp) / lastDMAJ.amp * 100).toKeep2()
                                 gglist.add(0,gg)
-                                gapJsonBean.ggList = gglist
-                                gapJsonBean.aggs = gglist.size
-                                curDBean.gaP_J = gapJsonBean
                             } else if (curDMAJ.amp < lastDMAJ.alp) {
                                 LogUtil.d("gap!!BG $code ----- ${curDBean.date} curDMAJ.amp:${curDMAJ.amp} lastDMAJ.alp:${lastDMAJ.alp}")
                                 if (null == bglist) {
@@ -1234,24 +1231,21 @@ class NewApiViewModel : BaseViewModel() {
                                 bg.bottomPrice =  lastDMAJ.aacp
                                 bg.gap_OldCpRate = ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
                                 bglist.add(0,bg)
+                            }
+                            if (null != gglist && gglist.size > 0) {
+                                gapJsonBean.ggList = gglist
+                                gapJsonBean.aggs = gglist.size
+                            }
+                            if (null != bglist && bglist.size > 0) {
                                 gapJsonBean.bgList = bglist
                                 gapJsonBean.abgs = bglist.size
-                                curDBean.gaP_J = gapJsonBean
-                            } else if (null != lastDBean.gaP_J) {
-                                if (null != gglist && gglist.size > 0) {
-                                    gapJsonBean.ggList = gglist
-                                    gapJsonBean.aggs = gglist.size
-                                }
-                                if (null != bglist && bglist.size > 0) {
-                                    gapJsonBean.bgList = bglist
-                                    gapJsonBean.abgs = bglist.size
-                                }
+                            }
 
-                                if ((null != gglist &&gglist.size > 0) || (null != bglist &&bglist.size > 0)) {
-                                    curDBean.gaP_J = gapJsonBean
-                                } else {
-                                    curDBean.gaP_J = null
-                                }
+                            if ((null != gglist &&gglist.size > 0) || (null != bglist &&bglist.size > 0)) {
+                                curDBean.gaP_J = gapJsonBean
+
+                            } else {
+                                curDBean.gaP_J = null
                             }
                             if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
                                 if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
