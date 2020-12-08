@@ -69,6 +69,7 @@ object Datas {
     const val REVERSE_TB_P50_10 = "A_RTB_50_10"
     const val A_SLL_TB_ = "A_SLL"
     const val REVERSE_KJ_DB = "REV_KJ_DB"
+    const val GAP_RECORD_DB = "GAP_RECORD_DB"
     const val Derby = "Derby_"
     const val GAP_GG = "GAP_GG_"
     const val GAP_BG = "GAP_BG_"

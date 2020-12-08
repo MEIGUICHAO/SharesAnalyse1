@@ -100,6 +100,14 @@ fun ArrayList<String>.sortStringDateAsc(formatterEnum: FormatterEnum) {
     })
 }
 
+fun ArrayList<Float>.sortFloatDateDesc() {
+    Collections.sort(this, object : Comparator<Float> {
+        override fun compare(p0: Float, p1: Float): Int {
+            return p1.compareTo(p0)
+        }
+    })
+}
+
 
 fun String.CHDD2YYMM():String {
     return this.replace("CY_CHDD_", "").replace("SH_CHDD_", "").replace("SZ_CHDD_", "")

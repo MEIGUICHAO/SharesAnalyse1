@@ -1180,8 +1180,8 @@ class NewApiViewModel : BaseViewModel() {
         chddDDBeanList?.let {
             for (i in gapIndex until it.size) {
                 mCHDDList.add(0, it[i])
-                if (i == 0) {
-                    getLastMonthList(it, i, code, mCHDDList)
+                if (i == gapIndex) {
+                    getLastTwoMonthList(it, i, code, mCHDDList)
                 }
                 if (mCHDDList.size > 15) {
                     val gapJsonBean = GapJsonBean()
@@ -1205,7 +1205,7 @@ class NewApiViewModel : BaseViewModel() {
                                         ((gglist[i].topPrice - gglist[i].bottomPrice) / gglist[i].bottomPrice * 100).toKeep2()
                                 }
                             }
-                            for (i in ggRemoveList.size-1 downTo 0) {
+                            for (i in ggRemoveList.size - 1 downTo 0) {
                                 gglist.remove(ggRemoveList[i])
                                 LogUtil.d("removeAt:${curDBean.date}")
                             }
@@ -1224,7 +1224,7 @@ class NewApiViewModel : BaseViewModel() {
                                 }
                             }
 
-                            for (i in bgRemoveList.size-1 downTo 0) {
+                            for (i in bgRemoveList.size - 1 downTo 0) {
                                 bglist.remove(bgRemoveList[i])
                                 LogUtil.d("removeAt bg:${curDBean.date}")
                             }
@@ -1250,7 +1250,7 @@ class NewApiViewModel : BaseViewModel() {
                         val bg = GapJsonBean.GG()
                         bg.topPrice = curDMAJ.amp
                         bg.bottomPrice = lastDMAJ.alp
-                        setComonGG(bg,  curDMAJ, curDBean, lastDMAJ)
+                        setComonGG(bg, curDMAJ, curDBean, lastDMAJ)
                         bg.bottomPrice = lastDMAJ.aacp
                         bg.gap_OldCpRate =
                             ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
@@ -1292,16 +1292,109 @@ class NewApiViewModel : BaseViewModel() {
                             code.toCompleteCode(),
                             curDBean
                         )
-    //                                var ts = DateUtils.parse(curDBean.date,FormatterEnum.YYYYMMDD)
-    //                                while (!DateUtils.isWeekDay(ts).first) {
-    //                                    ts = ts + dayMillis
-    //                                }
-
+                        mCHDDList.removeAt(0)
                         mCHDDList.add(0, curDBean)
+                        curDBean.gaP_J?.let {
+                            it.ggList?.let {
+                                it.forEach {
+                                    val gapRecordBean =
+                                        setGapRecordBeanData(code, it, curDBean, mCHDDList)
+                                    DBUtils.insertGapRecordJTable(Datas.GAP_GG+DateUtils.changeFromDefaultFormatter(curDBean.date,FormatterEnum.YYMM),gapRecordBean,curDBean.date)
+                                }
+
+                            }
+                            it.bgList?.let {
+                                it.forEach {
+                                    val gapRecordBean =
+                                        setGapRecordBeanData(code, it, curDBean, mCHDDList)
+                                    DBUtils.insertGapRecordJTable(Datas.GAP_BG+DateUtils.changeFromDefaultFormatter(curDBean.date,FormatterEnum.YYMM),gapRecordBean,curDBean.date)
+                                }
+                            }
+                        }
+//                        mCHDDList.forEach {
+//                            LogUtil.d("----\n${it.date}")
+//                        }
+//                        LogUtil.d("======================")
                     }
                 }
             }
         }
+    }
+
+    private fun setGapRecordBeanData(
+        code: String,
+        it: GapJsonBean.GG,
+        curDBean: CodeHDDBean,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ): GapRecordBean {
+        val gapRecordBean = GapRecordBean()
+        gapRecordBean.code = code.toInt()
+        gapRecordBean.b_D = DateUtils.changeFromDefaultFormatter(it.b_D.toString(),FormatterEnum.MMDD).toInt()
+        gapRecordBean.date = DateUtils.changeFromDefaultFormatter(it.date.toString(),FormatterEnum.MMDD).toInt()
+        gapRecordBean.n = curDBean.name
+        gapRecordBean.gaP_RATE = it.gap_OldCpRate
+        gapRecordBean.mL_RANGE = it.mlRange
+        gapRecordBean.cO_RANGE = it.coRange
+        gapRecordBean.json = GsonHelper.toJson(curDBean)
+        if (mCHDDList.size >= 5) {
+            val clList = ArrayList<Float>()
+            val cmList = ArrayList<Float>()
+            val mlList = ArrayList<Float>()
+            val (a, b, c) = setComonGapRecordBean(0, 5, clList, mCHDDList, cmList, mlList)
+            gapRecordBean.cD05LM = a
+            gapRecordBean.d05LM = b
+            gapRecordBean.d05OC = c
+            if (mCHDDList.size >= 10) {
+                val (a, b, c) = setComonGapRecordBean(5, 10, clList, mCHDDList, cmList, mlList)
+                gapRecordBean.cD10LM = a
+                gapRecordBean.d10LM = b
+                gapRecordBean.d10OC = c
+            }
+            if (mCHDDList.size >= 15) {
+                val (a, b, c) = setComonGapRecordBean(10, 15, clList, mCHDDList, cmList, mlList)
+                gapRecordBean.cD15LM = a
+                gapRecordBean.d15LM = b
+                gapRecordBean.d15OC = c
+            }
+            if (mCHDDList.size >= 20) {
+                val (a, b, c) = setComonGapRecordBean(15, 20, clList, mCHDDList, cmList, mlList)
+                gapRecordBean.cD20LM = a
+                gapRecordBean.d20LM = b
+                gapRecordBean.d20OC = c
+            }
+            if (mCHDDList.size >= 30) {
+                val (a, b, c) = setComonGapRecordBean(20, 30, clList, mCHDDList, cmList, mlList)
+                gapRecordBean.cD30LM = a
+                gapRecordBean.d30LM = b
+                gapRecordBean.d30OC = c
+            }
+        }
+        return gapRecordBean
+    }
+
+    fun setComonGapRecordBean(
+        begin: Int, end: Int,
+        clList: ArrayList<Float>,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        cmList: ArrayList<Float>,
+        mlList: ArrayList<Float>
+    ): Triple<Float, Float, Float> {
+        for (i in begin until end) {
+            clList.add(mCHDDList[i].p_MA_J.alp)
+            cmList.add(mCHDDList[i].p_MA_J.amp)
+            mlList.add(mCHDDList[i].p_MA_J.aacp)
+            mlList.add(mCHDDList[i].p_MA_J.aaop)
+        }
+        clList.sortFloatDateDesc()
+        cmList.sortFloatDateDesc()
+        mlList.sortFloatDateDesc()
+        val cDLM =
+            ((cmList[0] - clList[end - 1]) / clList[end - 1] * 100).toKeep2()
+        val dLM =
+            ((mlList[0] - mlList[end * 2 - 1]) / mlList[end * 2 - 1] * 100).toKeep2()
+       val dOC =
+            ((mCHDDList[0].cp - mCHDDList[end-1].op) / mCHDDList[end-1].op * 100).toKeep2()
+        return Triple(cDLM,dLM,dOC)
     }
 
     private fun setComonGG(
@@ -2163,7 +2256,7 @@ class NewApiViewModel : BaseViewModel() {
         var chddDDBeanList =
             DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
         chddDDBeanList?.let {
-            updateCodeHDDGapInfo(code, date, it.size-1)
+            updateCodeHDDGapInfo(code, date, it.size - 1)
         }
     }
 

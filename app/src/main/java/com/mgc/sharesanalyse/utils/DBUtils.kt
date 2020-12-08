@@ -1004,9 +1004,10 @@ object DBUtils {
 
     fun insertGapRecordJTable(
         tbName: String,
-        gapJsonBean: GapRecordBean
+        gapJsonBean: GapRecordBean,
+        date: String
     ) {
-        switchDBName(Datas.dataNamesDefault)
+        switchDBName(Datas.GAP_RECORD_DB+DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYMM))
         LogUtil.d("insertGapRecordJTable!!")
         createGapRecordKJTable(tbName, gapJsonBean)
         if (!queryDataIsExsitByCodeAndBDAndDate(tbName, gapJsonBean.code.toString(),gapJsonBean.b_D.toString(),gapJsonBean.date.toString())) {
@@ -1033,7 +1034,7 @@ object DBUtils {
         gapJsonBean: GapRecordBean
     ) {
         if (!tabbleIsExist(dbName)) {
-            var sqlStr = gapJsonBean.insertTB()
+            var sqlStr = gapJsonBean.createTB(dbName)
             db.execSQL(sqlStr)
         }
     }
