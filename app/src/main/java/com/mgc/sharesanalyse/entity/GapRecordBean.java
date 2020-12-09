@@ -255,4 +255,9 @@ public class GapRecordBean {
                 ",D05OC,D10OC,D15OC,D20OC ,D30OC ,JSON" +
                 ") VALUES (" + toString() + ");";
     }
+
+    public String updateGapInfo(String tbName) {
+        return "UPDATE " + tbName + " SET GAP_RATE = " + GAP_RATE + ",ML_RANGE = " + ML_RANGE + ",CO_RANGE = " + CO_RANGE + ",DATE = " + getDATE() + "  WHERE CODE=" + getCODE() + " AND B_D = " + getB_D();
+    }
+
 }

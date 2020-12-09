@@ -1010,18 +1010,27 @@ object DBUtils {
         switchDBName(Datas.GAP_RECORD_DB+DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYMM))
         LogUtil.d("insertGapRecordJTable!!")
         createGapRecordKJTable(tbName, gapJsonBean)
-        if (!queryDataIsExsitByCodeAndBDAndDate(tbName, gapJsonBean.code.toString(),gapJsonBean.b_D.toString(),gapJsonBean.date.toString())) {
-            var insertSqlStr = gapJsonBean.insertTB(tbName)
+        if (!queryDataIsExsitByCodeAndBDAndDate(
+                tbName,
+                gapJsonBean.code.toString(),
+                gapJsonBean.b_D.toString()
+            )
+        ) {
+            val insertSqlStr = gapJsonBean.insertTB(tbName)
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
+        } else {
+            val updateSql = gapJsonBean.updateGapInfo(tbName)
+            LogUtil.d("updateSql:$updateSql")
+            db.execSQL(updateSql)
         }
     }
 
-    fun queryDataIsExsitByCodeAndBDAndDate(dbName: String, code: String, bd: String, date: String): Boolean {
+    fun queryDataIsExsitByCodeAndBDAndDate(dbName: String, code: String, bd: String): Boolean {
         var isexsit = false
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND B_D =? AND DATE =?", arrayOf(code,bd,date))
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND B_D =?", arrayOf(code,bd))
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()

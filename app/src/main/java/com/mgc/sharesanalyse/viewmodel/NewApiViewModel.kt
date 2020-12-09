@@ -1241,7 +1241,9 @@ class NewApiViewModel : BaseViewModel() {
                         setComonGG(gg, curDMAJ, curDBean, lastDMAJ)
                         gg.gap_OldCpRate =
                             ((curDMAJ.alp - lastDMAJ.amp) / lastDMAJ.amp * 100).toKeep2()
-                        gglist.add(0, gg)
+                        if (gg.gap_OldCpRate > 2) {
+                            gglist.add(0, gg)
+                        }
                     } else if (curDMAJ.amp < lastDMAJ.alp) {
                         LogUtil.d("gap!!BG $code ----- ${curDBean.date} curDMAJ.amp:${curDMAJ.amp} lastDMAJ.alp:${lastDMAJ.alp}")
                         if (null == bglist) {
@@ -1253,8 +1255,10 @@ class NewApiViewModel : BaseViewModel() {
                         setComonGG(bg, curDMAJ, curDBean, lastDMAJ)
                         bg.bottomPrice = lastDMAJ.aacp
                         bg.gap_OldCpRate =
-                            ((curDMAJ.amp - lastDMAJ.alp) / lastDMAJ.alp * 100).toKeep2()
-                        bglist.add(0, bg)
+                            -((lastDMAJ.alp - curDMAJ.amp) / curDMAJ.amp * 100).toKeep2()
+                        if (bg.gap_OldCpRate < -2) {
+                            bglist.add(0, bg)
+                        }
                     }
                     if (null != gglist && gglist.size > 0) {
                         gapJsonBean.ggList = gglist
@@ -1333,7 +1337,7 @@ class NewApiViewModel : BaseViewModel() {
             )
         }
         DBUtils.insertGapRecordJTable(
-            Datas.GAP_GG + gapRecordBean.code, gapRecordBean, curDBean.date
+            (if (isGG) Datas.GAP_GG else Datas.GAP_BG) + "LIST", gapRecordBean, curDBean.date
         )
     }
 
