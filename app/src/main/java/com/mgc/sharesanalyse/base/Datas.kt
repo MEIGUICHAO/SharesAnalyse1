@@ -48,7 +48,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -73,6 +73,7 @@ object Datas {
     const val Derby = "Derby_"
     const val GAP_GG = "GAP_GG_"
     const val GAP_BG = "GAP_BG_"
+    const val GAP_BEGIN = "BEGIN"
 //    const val HHQDayCount = 6
 
 }

@@ -1272,21 +1272,8 @@ class NewApiViewModel : BaseViewModel() {
                         curDBean.gaP_J = null
                     }
                     if (null != curDBean.gaP_J && (gapJsonBean.abgs > 0 || gapJsonBean.aggs > 0)) {
-                        if (null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) {
-                            curDBean.gaP_J.ggList[0].date = curDBean.date.toInt()
-                            curDBean.gaP_J.ggList[0].mlRange =
-                                ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
-                            curDBean.gaP_J.ggList[0].coRange =
-                                ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
-
-                        }
-                        if (null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0) {
-                            curDBean.gaP_J.bgList[0].date = curDBean.date.toInt()
-                            curDBean.gaP_J.bgList[0].mlRange =
-                                ((curDMAJ.amp - curDMAJ.alp) / curDMAJ.alp * 100).toKeep2()
-                            curDBean.gaP_J.bgList[0].coRange =
-                                ((curDMAJ.aacp - curDMAJ.aaop) / curDMAJ.aaop * 100).toKeep2()
-                        }
+                        setGGBGRate(curDBean, curDMAJ,true)
+                        setGGBGRate(curDBean, curDMAJ,false)
                         DBUtils.updateCHDDGapJson(
                             "DD_${code.toCompleteCode()}",
                             code.toCompleteCode(),
@@ -1297,17 +1284,13 @@ class NewApiViewModel : BaseViewModel() {
                         curDBean.gaP_J?.let {
                             it.ggList?.let {
                                 it.forEach {
-                                    val gapRecordBean =
-                                        setGapRecordBeanData(code, it, curDBean, mCHDDList)
-                                    DBUtils.insertGapRecordJTable(Datas.GAP_GG+DateUtils.changeFromDefaultFormatter(curDBean.date,FormatterEnum.YYMM),gapRecordBean,curDBean.date)
+                                    insertGapRecord2DB(code, it, curDBean, mCHDDList,true)
                                 }
 
                             }
                             it.bgList?.let {
                                 it.forEach {
-                                    val gapRecordBean =
-                                        setGapRecordBeanData(code, it, curDBean, mCHDDList)
-                                    DBUtils.insertGapRecordJTable(Datas.GAP_BG+DateUtils.changeFromDefaultFormatter(curDBean.date,FormatterEnum.YYMM),gapRecordBean,curDBean.date)
+                                    insertGapRecord2DB(code, it, curDBean, mCHDDList,false)
                                 }
                             }
                         }
@@ -1319,6 +1302,39 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
+    }
+
+    private fun setGGBGRate(
+        curDBean: CodeHDDBean,
+        curDMAJ: CodeHDDBean.P_MA_J,
+        isGG: Boolean
+    ) {
+        if ((isGG && null != curDBean.gaP_J.ggList && curDBean.gaP_J.ggList.size > 0) || (!isGG && null != curDBean.gaP_J.bgList && curDBean.gaP_J.bgList.size > 0)) {
+            (if (isGG)curDBean.gaP_J.ggList else curDBean.gaP_J.bgList).forEach {
+                it.date = curDBean.date.toInt()
+                it.mlRange = ((it.mp - it.lp) / it.lp * 100).toKeep2()
+                it.coRange = ((it.cp - it.op) / it.op * 100).toKeep2()
+            }
+        }
+    }
+
+    private fun insertGapRecord2DB(
+        code: String,
+        it: GapJsonBean.GG,
+        curDBean: CodeHDDBean,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        isGG:Boolean
+    ) {
+        val gapRecordBean =
+            setGapRecordBeanData(code, it, curDBean, mCHDDList)
+        if (gapRecordBean.b_D == gapRecordBean.date) {
+            DBUtils.insertGapRecordJTable(
+                (if (isGG) Datas.GAP_GG else Datas.GAP_BG) + Datas.GAP_BEGIN , gapRecordBean, curDBean.date
+            )
+        }
+        DBUtils.insertGapRecordJTable(
+            Datas.GAP_GG + gapRecordBean.code, gapRecordBean, curDBean.date
+        )
     }
 
     private fun setGapRecordBeanData(
