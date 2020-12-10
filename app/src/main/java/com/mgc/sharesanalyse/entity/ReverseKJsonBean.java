@@ -62,8 +62,24 @@ public class ReverseKJsonBean implements BaseReverseImp {
     private float C_P;
     private float C_L;
 
+    public int getGS() {
+        return GS;
+    }
 
+    public void setGS(int GS) {
+        this.GS = GS;
+    }
 
+    private int GS;
+    private String GJ;
+
+    public String getGJ() {
+        return GJ;
+    }
+
+    public void setGJ(String GJ) {
+        this.GJ = GJ;
+    }
 
     public void setCode(int code) {
         this.code = code;
@@ -346,7 +362,9 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 "," + OL_M +
                 "," + OL_C +
                 ", " + OL_P +
-                ", " + OL_L + ")";
+                ", " + OL_L +
+                "," + GS +
+                ",'" + GJ + '\'' + ")";
     }
 
     public String toDerbyString() {
@@ -368,14 +386,14 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 ", " + M_L +
                 ", " + C_P +
                 ", " + C_L +
-                "," + P_L + ")";
+                "," + P_L +")";
     }
 
 
 
     public String createTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,TYPE INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
-                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER);";
+                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER,GJ TEXT);";
     }
 
     public String createDerbyTB(String tbname) {
@@ -386,7 +404,7 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
     public String insertTB(String tbName) {
         return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE,AO,CurP ,TYPE ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
-                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ) VALUES (" + toString();
+                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ,GS ,GJ ) VALUES (" + toString();
     }
 
     public String insertDerbyTB(String tbName) {

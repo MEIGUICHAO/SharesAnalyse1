@@ -3066,34 +3066,34 @@ class NewApiViewModel : BaseViewModel() {
             ), ""
         )
         reverseKJsonBean.curP = ((requestBean.cp - targetBean.cp) / targetBean.cp * 100).toKeep2()
-        reverseKJsonBean.oM_M = ((OM - M) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_C = ((OM - C) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_P = ((OM - O) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_L = ((OM - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oM_M = ((OM - M) / OM * 100).toKeep2()
+        reverseKJsonBean.oM_C = ((OM - C) / OM * 100).toKeep2()
+        reverseKJsonBean.oM_P = ((OM - O) / OM * 100).toKeep2()
+        reverseKJsonBean.oM_L = ((OM - L) / OM * 100).toKeep2()
         reverseKJsonBean.oC_M = ((OC - M) / OC * 100).toKeep2()
         reverseKJsonBean.oC_C = ((OC - C) / OC * 100).toKeep2()
         reverseKJsonBean.oC_P = ((OC - O) / OC * 100).toKeep2()
         reverseKJsonBean.oC_L = ((OC - L) / OC * 100).toKeep2()
-        reverseKJsonBean.oO_M = ((OP - M) / OC * 100).toKeep2()
-        reverseKJsonBean.oO_C = ((OP - C) / OC * 100).toKeep2()
-        reverseKJsonBean.oO_P = ((OP - O) / OC * 100).toKeep2()
-        reverseKJsonBean.oO_L = ((OP - L) / OC * 100).toKeep2()
-        reverseKJsonBean.oL_M = ((OL - M) / OC * 100).toKeep2()
-        reverseKJsonBean.oL_C = ((OL - C) / OC * 100).toKeep2()
-        reverseKJsonBean.oL_P = ((OL - O) / OC * 100).toKeep2()
-        reverseKJsonBean.oL_L = ((OL - L) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_OC = ((OM - OC) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_OP = ((OM - OP) / OC * 100).toKeep2()
-        reverseKJsonBean.oM_OL = ((OM - OL) / OC * 100).toKeep2()
+        reverseKJsonBean.oO_M = ((OP - M) / OP * 100).toKeep2()
+        reverseKJsonBean.oO_C = ((OP - C) / OP * 100).toKeep2()
+        reverseKJsonBean.oO_P = ((OP - O) / OP * 100).toKeep2()
+        reverseKJsonBean.oO_L = ((OP - L) / OP * 100).toKeep2()
+        reverseKJsonBean.oL_M = ((OL - M) / OL * 100).toKeep2()
+        reverseKJsonBean.oL_C = ((OL - C) / OL * 100).toKeep2()
+        reverseKJsonBean.oL_P = ((OL - O) / OL * 100).toKeep2()
+        reverseKJsonBean.oL_L = ((OL - L) / OL * 100).toKeep2()
+        reverseKJsonBean.oM_OC = ((OM - OC) / OM * 100).toKeep2()
+        reverseKJsonBean.oM_OP = ((OM - OP) / OM * 100).toKeep2()
+        reverseKJsonBean.oM_OL = ((OM - OL) / OM * 100).toKeep2()
         reverseKJsonBean.oC_OP = ((OC - OP) / OC * 100).toKeep2()
         reverseKJsonBean.oC_OL = ((OC - OL) / OC * 100).toKeep2()
-        reverseKJsonBean.oP_OL = ((OP - OL) / OC * 100).toKeep2()
-        reverseKJsonBean.m_C = ((M - C) / OC * 100).toKeep2()
-        reverseKJsonBean.m_P = ((M - O) / OC * 100).toKeep2()
-        reverseKJsonBean.m_L = ((M - L) / OC * 100).toKeep2()
-        reverseKJsonBean.c_P = ((C - O) / OC * 100).toKeep2()
-        reverseKJsonBean.c_L = ((C - L) / OC * 100).toKeep2()
-        reverseKJsonBean.p_L = ((O - L) / OC * 100).toKeep2()
+        reverseKJsonBean.oP_OL = ((OP - OL) / OP * 100).toKeep2()
+        reverseKJsonBean.m_C = ((M - C) / M * 100).toKeep2()
+        reverseKJsonBean.m_P = ((M - O) / M * 100).toKeep2()
+        reverseKJsonBean.m_L = ((M - L) / M * 100).toKeep2()
+        reverseKJsonBean.c_P = ((C - O) / C * 100).toKeep2()
+        reverseKJsonBean.c_L = ((C - L) / C * 100).toKeep2()
+        reverseKJsonBean.p_L = ((O - L) / O * 100).toKeep2()
         var type = 0
         targetBean.k_J.ctc?.ctC_U?.let {
             if (null != it.typeA) {
@@ -3114,6 +3114,10 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         reverseKJsonBean.type = type
+        if (null != targetBean.gaP_J) {
+            reverseKJsonBean.gs = targetBean.gaP_J.aggs
+            reverseKJsonBean.gj = GsonHelper.toJson(targetBean.gaP_J)
+        }
     }
 
     private fun kJForeach(
