@@ -44,7 +44,7 @@ public class FilterCodeHDDBean {
     @NotNull
     public String toUpdateSqlSumValues() {
         return "KJ_CTC_TYPE = " + KJ_CTC_TYPE +
-                "KJ_CTC_J = '" + KJ_CTC_J + "'"+
+                ",KJ_CTC_J = '" + KJ_CTC_J + "'"+
                 "";
     }
 }

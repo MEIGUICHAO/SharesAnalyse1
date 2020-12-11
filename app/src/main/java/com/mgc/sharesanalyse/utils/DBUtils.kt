@@ -163,6 +163,31 @@ object DBUtils {
         db = DaoManager.getDB()
     }
 
+    fun getLastCHDDBeanDate(code: String,tbName: String):String {
+        val pathList = FileUtil.getFileNameList(Datas.DBPath)
+        val mList = ArrayList<String>()
+        pathList.forEach {
+            if (it.contains("CHDD") && !it.contains("journal")) {
+                mList.add(
+                    it.replace("SZ_CHDD_", "").replace("SH_CHDD_", "").replace("CY_CHDD_", "")
+                )
+            }
+        }
+        mList.sortStringDateAsc(FormatterEnum.YYMM)
+        var chddbean :ArrayList<CodeHDDBean>? = null
+        var jianIndex = 1
+//                = queryCHDDByTableName(tbName,code.toCodeHDD(mList[mList.size - 1], FormatterEnum.YYMM))
+
+        while (null == chddbean) {
+            if (mList.size - jianIndex < 0) {
+                break
+            }
+            chddbean  = queryCHDDByTableName(tbName,code.toCodeHDD(mList[mList.size - jianIndex], FormatterEnum.YYMM))
+            jianIndex++
+        }
+
+        return if (null != chddbean) chddbean[chddbean.size - 1].date else ""
+    }
 
     fun queryOPByCHDD(code: String, isAll: Boolean, chddDateYM: String): Float {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)

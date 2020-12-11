@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse.base
 
 import android.annotation.SuppressLint
+import com.mgc.sharesanalyse.entity.CodeHDDBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
@@ -120,3 +121,22 @@ fun String.percent2Float():Float {
         return 0.toFloat()
     }
 }
+
+fun ArrayList<CodeHDDBean>.getRevBeansOM(): Float {
+    Collections.sort(this, object : Comparator<CodeHDDBean> {
+        override fun compare(p0: CodeHDDBean, p1: CodeHDDBean): Int {
+            return p1.p_MA_J.amp.compareTo(p0.p_MA_J.amp)
+        }
+    })
+    return this[0].p_MA_J.amp
+}
+
+fun ArrayList<CodeHDDBean>.getRevBeansOL(): Float {
+    Collections.sort(this, object : Comparator<CodeHDDBean> {
+        override fun compare(p0: CodeHDDBean, p1: CodeHDDBean): Int {
+            return p0.p_MA_J.alp.compareTo(p1.p_MA_J.alp)
+        }
+    })
+    return this[0].p_MA_J.alp
+}
+
