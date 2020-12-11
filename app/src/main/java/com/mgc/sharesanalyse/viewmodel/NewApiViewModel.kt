@@ -2689,6 +2689,16 @@ private fun insertRevBean(
 
     val C = targetBean.p_MA_J.aacp
     val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
+    mCHDDList[targetBeanEnd]
+    val MA05 = "1_${targetBean.p_MA_J.d05}"
+    val MA10 = "2_${targetBean.p_MA_J.d10}"
+    val MA15 = "3_${targetBean.p_MA_J.d15}"
+    val MA20 = "4_${targetBean.p_MA_J.d20}"
+    val MA30 = "5_${targetBean.p_MA_J.d30}"
+    val MA60 = "6_${targetBean.p_MA_J.d60}"
+    val MA72 = "7_${targetBean.p_MA_J.d72}"
+    val OP = "8_${targetBean.p_MA_J.aaop}"
+    val CP = "9_${targetBean.p_MA_J.aacp}"
 
     setReverseBeanData(
         reverseKJsonBean,
