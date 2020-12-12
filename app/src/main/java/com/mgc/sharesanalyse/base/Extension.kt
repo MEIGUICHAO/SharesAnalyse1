@@ -140,3 +140,16 @@ fun ArrayList<CodeHDDBean>.getRevBeansOL(): Float {
     return this[0].p_MA_J.alp
 }
 
+fun ArrayList<String>.getMADesc(): Int {
+    Collections.sort(this, object : Comparator<String> {
+        override fun compare(p0: String, p1: String): Int {
+            return p1.split("_")[1].compareTo(p0.split("_")[1])
+        }
+    })
+    var maArray = ""
+    this.forEach {
+        maArray = maArray+ it.split("_")[0]
+    }
+    return maArray.toInt()
+}
+

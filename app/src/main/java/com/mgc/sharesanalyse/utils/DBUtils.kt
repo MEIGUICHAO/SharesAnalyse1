@@ -993,13 +993,10 @@ object DBUtils {
         createReverseKJTable(tbName, reverseBean)
         if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(),date.replace(DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYYY),""))) {
             var insertSqlStr = ""
+            insertSqlStr = reverseBean.insertTB(tbName)
             if (reverseBean is ReverseKJsonBean) {
-                insertSqlStr = reverseBean.insertTB(tbName)
-                var insertDerbySqlStr = reverseBean.insertDerbyTB(Datas.Derby + tbName)
+                val insertDerbySqlStr = reverseBean.insertDerbyTB(Datas.Derby + tbName)
                 db.execSQL(insertDerbySqlStr)
-            }
-            if (reverseBean is ReverseKJSLLBean) {
-                insertSqlStr = reverseBean.insertTB(tbName)
             }
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -1013,13 +1010,10 @@ object DBUtils {
     ) {
         if (!tabbleIsExist(dbName)) {
             var sqlStr = ""
+            sqlStr = reverseBean.createTB(dbName)
             if (reverseBean is ReverseKJsonBean) {
-                sqlStr = reverseBean.createTB(dbName)
-                var sqlStr2 = reverseBean.createDerbyTB(Datas.Derby + dbName)
+                val sqlStr2 = reverseBean.createDerbyTB(Datas.Derby + dbName)
                 db.execSQL(sqlStr2)
-            }
-            if (reverseBean is ReverseKJSLLBean) {
-                sqlStr = reverseBean.createTB(dbName)
             }
             db.execSQL(sqlStr)
         }

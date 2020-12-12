@@ -48,13 +48,13 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
-    val DEBUG_Code = listOf("300278")
-    //    val DEBUG_Code = listOf("688133","300278","000544")
+//    val DEBUG_Code = listOf("300278")
+        val DEBUG_Code = listOf("688133","300278","000544")
     const val FILTER_TYPE_COUNT = 2
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()
@@ -77,6 +77,25 @@ object Datas {
     const val REVERSE_TB_P50_30 = "A_RTB_50_30"
     const val REVERSE_TB_P30_36 = "A_RTB_30_36"
     const val REVERSE_TB_P50_36 = "A_RTB_50_36"
+
+    const val REV_TR_TB_P30_11 = "TR_30_1"
+    const val REV_TR_TB_P50_11 = "TR_50_1"
+    const val REV_TR_TB_P30_33 = "TR_30_3"
+    const val REV_TR_TB_P50_33 = "TR_50_3"
+    const val REV_TR_TB_P30_55 = "TR_30_5"
+    const val REV_TR_TB_P50_55 = "TR_50_5"
+    const val REV_TR_TB_P30_10 = "TR_30_10"
+    const val REV_TR_TB_P50_10 = "TR_50_10"
+    const val REV_TR_TB_P30_15 = "TR_30_15"
+    const val REV_TR_TB_P50_15 = "TR_50_15"
+    const val REV_TR_TB_P30_20 = "TR_30_20"
+    const val REV_TR_TB_P50_20 = "TR_50_20"
+    const val REV_TR_TB_P30_25 = "TR_30_25"
+    const val REV_TR_TB_P50_25 = "TR_50_25"
+    const val REV_TR_TB_P30_30 = "TR_30_30"
+    const val REV_TR_TB_P50_30 = "TR_50_30"
+    const val REV_TR_TB_P30_36 = "TR_30_36"
+    const val REV_TR_TB_P50_36 = "TR_50_36"
     const val A_SLL_TB_ = "A_SLL"
     const val REVERSE_KJ_DB = "REV_KJ_DB"
     const val GAP_RECORD_DB = "GAP_RECORD_DB"
