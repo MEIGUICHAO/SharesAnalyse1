@@ -2709,6 +2709,14 @@ private fun insertRevBean(
         reverseKJsonBean,
         targetBean.date
     )
+    val dt = revName.split("RTB_")[1].split("_")[1]
+    reverseKJsonBean.d_T = dt
+    reverseKJsonBean.p_T = if (revName.contains("_50_")) "50" else "30"
+    DBUtils.insertRevCode(
+        code,
+        reverseKJsonBean,
+        targetBean.date
+    )
     if (targetBeanBegin >= 6 && !trkslName.isEmpty()) {
         val trKSllBean = TR_K_SLL_Bean()
         trKSllBean.setCODE(reverseKJsonBean.code)
@@ -2819,6 +2827,13 @@ private fun insertRevBean(
         }
         trKSllBean.k_SL_C_TR = (trKSllBean.k_SL_R_TR + trKSllBean.k_SL_B_TR).toKeep2()
         DBUtils.insertReverseKJTable(trkslName, trKSllBean, targetBean.date)
+        trKSllBean.d_T = dt
+        trKSllBean.p_T = if (revName.contains("_50_")) "50" else "30"
+        DBUtils.insertRevCode(
+            code,
+            trKSllBean,
+            targetBean.date
+        )
 
     }
 }

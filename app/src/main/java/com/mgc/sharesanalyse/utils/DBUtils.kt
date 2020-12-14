@@ -1066,4 +1066,69 @@ object DBUtils {
             db.execSQL(sqlStr)
         }
     }
+
+
+
+    fun insertRevCode(
+        code: String,
+        reverseBean: BaseReverseImp,
+        date: String
+    ) {
+        switchDBName(Datas.REV_CODE_DB)
+        LogUtil.d("insertReverseKJTable!!")
+        var tbName = Datas.REV_CODE + code
+        if (reverseBean is TR_K_SLL_Bean) {
+            tbName = Datas.REV_CODE_TR + code
+        }
+        createRevCodeTable(tbName, reverseBean,code)
+        if (!queryDataIsExsitInRevCodeTB(tbName, date.replace(DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYYY),""),kotlin.run {
+                if (reverseBean is ReverseKJsonBean) {
+                    reverseBean.d_T
+                } else if(reverseBean is TR_K_SLL_Bean) {
+                    reverseBean.d_T
+                } else {
+                    ""
+                }
+            })) {
+            var insertSqlStr = ""
+            if (reverseBean is ReverseKJsonBean) {
+                insertSqlStr = reverseBean.insertRevCodeTB(tbName)
+                val insertDerbySqlStr = reverseBean.insertRevCodeDerbyTB(Datas.REV_CODE_DERBY + code)
+                db.execSQL(insertDerbySqlStr)
+            } else if (reverseBean is TR_K_SLL_Bean) {
+                insertSqlStr = reverseBean.insertRevCodeTB(tbName)
+            }
+            db.execSQL(insertSqlStr)
+        }
+    }
+
+    fun queryDataIsExsitInRevCodeTB(dbName: String, date: String, DT: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(dbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $dbName WHERE D_T =? AND DATE =?", arrayOf(DT,date))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
+    }
+
+    private fun createRevCodeTable(
+        dbName: String,
+        reverseBean: BaseReverseImp,
+        code: String
+    ) {
+        if (!tabbleIsExist(dbName)) {
+            var sqlStr = ""
+            if (reverseBean is ReverseKJsonBean) {
+                sqlStr = reverseBean.createRevCodeTB(dbName)
+                val sqlDerbyStr = reverseBean.createRevCodeDerbyTB(Datas.REV_CODE_DERBY + code)
+                db.execSQL(sqlDerbyStr)
+            } else if (reverseBean is TR_K_SLL_Bean) {
+                sqlStr = reverseBean.createRevCodeTB(dbName)
+            }
+            db.execSQL(sqlStr)
+        }
+    }
 }

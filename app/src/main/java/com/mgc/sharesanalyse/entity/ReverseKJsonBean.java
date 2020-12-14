@@ -5,6 +5,17 @@ public class ReverseKJsonBean implements BaseReverseImp {
     private String date;
     private String N;
     private String D_D;
+    private String P_T;
+    private String D_T;
+
+    public String getP_T() {
+        return P_T;
+    }
+
+    public void setP_T(String p_T) {
+        P_T = p_T;
+    }
+
 
     public String getD_D() {
         return D_D;
@@ -12,6 +23,14 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
     public void setD_D(String d_D) {
         D_D = d_D;
+    }
+
+    public String getD_T() {
+        return D_T;
+    }
+
+    public void setD_T(String d_T) {
+        D_T = d_T;
     }
 
     private String AO;
@@ -363,8 +382,35 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 "," + OL_C +
                 ", " + OL_P +
                 ", " + OL_L +
-                "," + GS +
-                ",'" + GJ + '\'' + ")";
+                "," + GS + ")";
+    }
+
+    public String toRevCodeString() {
+        return "'" +D_T + '\'' +
+                ", '" + P_T + '\'' +
+                ", '" + N + '\'' +
+                ", '" + D_D + '\'' +
+                ", '" + date + '\'' +
+                ", '" + AO + '\'' +
+                ", " + CurP +
+                ", " + MA +
+                ", " + OM_M +
+                ", " + OM_C +
+                ", " + OM_P +
+                ", " + OM_L +
+                ", " + OC_M +
+                ", " + OC_C +
+                "," + OC_P +
+                ", " + OC_L +
+                "," + OO_M +
+                "," + OO_C +
+                "," + OO_P +
+                ", " + OO_L +
+                "," + OL_M +
+                "," + OL_C +
+                ", " + OL_P +
+                ", " + OL_L +
+                "," + GS + ")";
     }
 
     public String toDerbyString() {
@@ -389,27 +435,73 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 "," + P_L +")";
     }
 
-
-    @Override
-    public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
-                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER,GJ TEXT);";
+    public String toDerbyRevCodeString() {
+        return "'" +D_T + '\'' +
+                ", '" + P_T + '\'' +
+                ", '" + N + '\'' +
+                ", '" + D_D + '\'' +
+                ", '" + date + '\'' +
+                ", '" + AO + '\'' +
+                ", " + CurP +
+                ", " + MA +
+                ", " + OM_OC +
+                ", " + OM_OP +
+                "," + OM_OL +
+                "," + OC_OP +
+                "," + OC_OL +
+                "," + OP_OL +
+                ", " + M_C +
+                "," + M_P +
+                ", " + M_L +
+                ", " + C_P +
+                ", " + C_L +
+                "," + P_L +")";
     }
 
-    public String createDerbyTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+
+    public String createRevCodeTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER);";
+    }
+
+
+    public String insertRevCodeTB(String tbName) {
+        return "INSERT INTO " + tbName + "(D_T ,P_T ,N ,D_D ,DATE,AO,CurP ,MA ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
+                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ,GS  ) VALUES (" + toRevCodeString();
+    }
+
+
+    public String insertRevCodeDerbyTB(String tbName) {
+        return "INSERT INTO " + tbName + "(D_T ,P_T ,N ,D_D ,DATE,AO,CurP ,MA ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
+                ",OC_OL ,OP_OL ,M_C ,M_P ,M_L ,C_P ,C_L ,P_L ) VALUES (" + toDerbyRevCodeString();
+    }
+
+    public String createRevCodeDerbyTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
                 ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
 
     @Override
+    public String createTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+                ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER);";
+    }
+
+
+    @Override
     public String insertTB(String tbName) {
         return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE,AO,CurP ,MA ,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C " +
-                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ,GS ,GJ ) VALUES (" + toString();
+                ",OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ,GS  ) VALUES (" + toString();
     }
 
     public String insertDerbyTB(String tbName) {
         return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE,AO,CurP ,MA ,OM_OC ,OM_OP ,OM_OL ,OC_OP " +
                 ",OC_OL ,OP_OL ,M_C ,M_P ,M_L ,C_P ,C_L ,P_L ) VALUES (" + toDerbyString();
+    }
+
+    public String createDerbyTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+                ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
 
     @Override

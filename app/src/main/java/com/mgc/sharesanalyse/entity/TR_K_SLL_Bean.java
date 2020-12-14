@@ -14,6 +14,25 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
     private float K_B_TR;
     private float K_C_TR;
     private float K_SL_A_TR;
+    private String P_T;
+
+    public String getP_T() {
+        return P_T;
+    }
+
+    public void setP_T(String p_T) {
+        P_T = p_T;
+    }
+
+    public String getD_T() {
+        return D_T;
+    }
+
+    public void setD_T(String d_T) {
+        D_T = d_T;
+    }
+
+    private String D_T;
 
     public int getCODE() {
         return CODE;
@@ -155,6 +174,28 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
                 "K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
     }
 
+    @Override
+    public String insertTB(String tbName) {
+        return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE," +
+                "S_A_TR,S_R_TR ,S_B_TR ,S_C_TR ," +
+                "K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR , " +
+                "K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR) VALUES (" + toString()+");";
+    }
+
+    public String createRevCodeTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,P_T TEXT,D_T TEXT,D_D TEXT,DATE TEXT," +
+                "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER," +
+                "K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER," +
+                "K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
+    }
+
+    public String insertRevCodeTB(String tbName) {
+        return "INSERT INTO " + tbName + "(D_T ,P_T  ,N ,D_D ,DATE," +
+                "S_A_TR,S_R_TR ,S_B_TR ,S_C_TR ," +
+                "K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR , " +
+                "K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR) VALUES (" + toRevCodeString()+");";
+    }
+
 
     @Override
     public String toString() {
@@ -177,13 +218,27 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
                 ", " + K_SL_C_TR ;
     }
 
-    @Override
-    public String insertTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE," +
-                "S_A_TR,S_R_TR ,S_B_TR ,S_C_TR ," +
-                "K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR , " +
-                "K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR) VALUES (" + toString()+");";
+    public String toRevCodeString() {
+
+        return "'" +D_T + '\'' +
+                ", '" + P_T + '\'' +
+                ", '" + N + '\'' +
+                ", '" + D_D + '\'' +
+                ", '" + DATE + '\'' +
+                ", " + S_A_TR +
+                ", " + S_R_TR +
+                ", " + S_B_TR +
+                ", " + S_C_TR +
+                ", " + K_A_TR +
+                ", " + K_R_TR +
+                ", " + K_B_TR +
+                ", " + K_C_TR +
+                "," + K_SL_A_TR +
+                "," + K_SL_R_TR +
+                ", " + K_SL_B_TR +
+                ", " + K_SL_C_TR ;
     }
+
 
     @Override
     public int getCode() {
