@@ -3252,23 +3252,28 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
     fun filterRev() {
         DBUtils.switchDBName(Datas.REVERSE_KJ_DB +"2020")
         val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(Datas.REVERSE_TB_P30_36,"OM_M")
-        var smallerMap = HashMap<String,String>()
-        var biggerMap = HashMap<String,String>()
-        var minValue = (maxMinPari.first.toFloat()/1).toInt()
-        var maxValue = (maxMinPari.second.toFloat()/1).toInt()
-        val foreachValue = ((maxValue - minValue) / 5).toInt()
-        LogUtil.d("foreachValue:$foreachValue")
-        val maxForeach = if (maxValue>0.toFloat()) -5 else 5
-        val minForeach = if (minValue>0) -5 else 5
+        val smallerMap = HashMap<String,String>()
+        val biggerMap = HashMap<String,String>()
+        val minValue = (maxMinPari.first.toFloat()/1).toInt()
+        val maxValue = (maxMinPari.second.toFloat()/1).toInt()
+        var rateResult = 0
+        var result = ""
         for (i in minValue..maxValue step 10) {
-            LogUtil.d("$i==============================================================")
-            for (y in maxValue downTo minValue step 10) {
+            LogUtil.d("==============================================================$i")
+            for (y in maxValue downTo i step 10) {
                 LogUtil.d("maxValue------>$y minValue----->$i")
                 biggerMap.put("OM_M",i.toString())
                 smallerMap.put("OM_M",y.toString())
-                DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+                val count = DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+                val rate = count / (y - i)
+                if (count >= 300 && rate > rateResult) {
+                    rateResult = rate
+                    result = "maxValue------>$y,minValue----->$i,count----->$count"
+                }
             }
         }
+
+        LogUtil.d("fiterRevResult:$result")
     }
 
 

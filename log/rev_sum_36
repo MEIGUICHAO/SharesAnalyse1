@@ -1,3 +1,6 @@
 SELECT * FROM A_RTB_30_36 where _ID in (select min(_ID) from A_RTB_30_36 where 1 = 1 group by N) and OM_M>0 AND  OM_M<15
 SELECT * FROM A_RTB_30_36 where _ID in (select min(_ID) from A_RTB_30_36 where 1 = 1 group by N) and OM_M>0 AND  OM_M<15 AND OM_C> 5 AND OM_C< 25
+fiterRevResult:
+maxValue------>2,minValue----->-11,count----->231
+maxValue------>2,minValue----->-21,count----->363
 

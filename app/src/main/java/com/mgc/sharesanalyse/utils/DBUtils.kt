@@ -1133,16 +1133,19 @@ object DBUtils {
     }
 
 
-    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>) {
+    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>): Int {
 
         val pair = tbName.getQuerySql(smallerMap,biggerMap)
+        var cursorCount = 0
         LogUtil.d("queryRevLimit:${pair.first}")
         if (tabbleIsExist(tbName)) {
             var cursor =
                 db.rawQuery(pair.first, pair.second)
             LogUtil.d("queryRevLimit cursor.count:${cursor.count}")
+            cursorCount = cursor.count
             cursor.close()
         }
+        return cursorCount
     }
 
     fun selectMaxMinValueByTbAndColumn(tbName: String,column:String): Pair<String, String> {

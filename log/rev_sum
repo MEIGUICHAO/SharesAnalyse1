@@ -18,3 +18,7 @@ select * from A_RTB_30_15  WHERE _ID in (select min(_ID) from A_RTB_30_15 where 
 
 ctr+all visul studio添加前缀
 
+select * from A_RTB_30_10 where _ID in (select min(_ID) from A_RTB_30_10 where 1 = 1 group by N) AND OM_M>0 AND OM_M<10 AND OM_C>5 AND  OM_C<15 AND OM_P>0 AND  OM_P<10 AND OM_L>5 AND OM_L<20
+ AND OC_M>-15 AND OC_M<0 AND OC_C>-5 AND OC_C<8
+
+
