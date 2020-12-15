@@ -3254,9 +3254,25 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(Datas.REVERSE_TB_P30_36,"OM_M")
         var smallerMap = HashMap<String,String>()
         var biggerMap = HashMap<String,String>()
-        smallerMap.put("OM_M",maxMinPari.second)
-        biggerMap.put("OM_M",maxMinPari.first)
-        DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+        var minValue = maxMinPari.first.toFloat()
+        var maxValue = maxMinPari.second.toFloat()
+        val foreachValue = ((maxValue - minValue) / 5).toInt()
+        LogUtil.d("foreachValue:$foreachValue")
+        val maxForeach = if (maxValue>0.toFloat()) -5 else 5
+        val minForeach = if (minValue>0) -5 else 5
+        for (i in 0..foreachValue) {
+            LogUtil.d("$i==============================================================")
+            LogUtil.d("maxValue------>$maxValue minValue----->$minValue")
+            biggerMap.put("OM_M",minValue.toString())
+            smallerMap.put("OM_M",maxValue.toString())
+            DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+            maxValue = maxValue + maxForeach * i
+            LogUtil.d("maxValue------>$maxValue minValue----->$minValue")
+            biggerMap.put("OM_M",minValue.toString())
+            smallerMap.put("OM_M",maxValue.toString())
+            DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+            minValue = minValue + minForeach * i
+        }
     }
 
 
