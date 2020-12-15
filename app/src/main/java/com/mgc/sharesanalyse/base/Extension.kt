@@ -9,6 +9,7 @@ import com.mgc.sharesanalyse.utils.FormatterEnum
 import com.mgc.sharesanalyse.utils.GsonHelper
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 fun String.toSinaCode(): String {
     return if (this.toInt() >= 600000) "sh$this" else "sz$this"
@@ -152,4 +153,27 @@ fun ArrayList<String>.getMADesc(): Int {
     }
     return maArray.toInt()
 }
+
+fun String.getFilterSameNameSQL():String {
+    return "select * from $this where _ID in (select min(_ID) from $this where 1 = 1 group by N) "
+}
+
+
+fun String.getQuerySql(smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>):Pair<String,Array<String?>> {
+    var querySql = ""
+    val valueArray = arrayOfNulls<String>(smallerMap.size + biggerMap.size)
+    var index = 0
+    smallerMap.forEach {
+        querySql = querySql + " AND ${it.key}<=?"
+        valueArray.set(index,it.value)
+        index++
+    }
+    biggerMap.forEach {
+        querySql = querySql + " AND ${it.key}>?"
+        valueArray.set(index,it.value)
+        index++
+    }
+    return Pair(this.getFilterSameNameSQL()+querySql, valueArray)
+}
+
 

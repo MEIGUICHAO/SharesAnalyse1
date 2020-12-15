@@ -17,6 +17,7 @@ import org.jsoup.Jsoup
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class NewApiViewModel : BaseViewModel() {
 
@@ -3247,6 +3248,16 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
     return Pair(ddList, hhqList)
 
 }
+
+    fun filterRev() {
+        DBUtils.switchDBName(Datas.REVERSE_KJ_DB +"2020")
+        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(Datas.REVERSE_TB_P30_36,"OM_M")
+        var smallerMap = HashMap<String,String>()
+        var biggerMap = HashMap<String,String>()
+        smallerMap.put("OM_M",maxMinPari.second)
+        biggerMap.put("OM_M",maxMinPari.first)
+        DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
+    }
 
 
 }

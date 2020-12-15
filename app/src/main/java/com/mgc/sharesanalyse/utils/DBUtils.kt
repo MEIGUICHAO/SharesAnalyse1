@@ -1131,4 +1131,37 @@ object DBUtils {
             db.execSQL(sqlStr)
         }
     }
+
+
+    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>) {
+
+        val pair = tbName.getQuerySql(smallerMap,biggerMap)
+        LogUtil.d("queryRevLimit:${pair.first}")
+        if (tabbleIsExist(tbName)) {
+            var cursor =
+                db.rawQuery(pair.first, pair.second)
+            LogUtil.d("queryRevLimit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+    }
+
+    fun selectMaxMinValueByTbAndColumn(tbName: String,column:String): Pair<String, String> {
+        var minValue = ""
+        var maxValue = ""
+        var cursor =
+            db.rawQuery(" SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName))", null)
+        if (null != cursor && cursor.moveToFirst()) {
+            minValue = cursor.getString(cursor.getColumnIndex(column))
+        }
+        cursor.close()
+        cursor =
+            db.rawQuery(" SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName))", null)
+        if (null != cursor && cursor.moveToFirst()) {
+            maxValue = cursor.getString(cursor.getColumnIndex(column))
+        }
+        cursor.close()
+        LogUtil.d("minValue:$minValue maxValue:$maxValue")
+        return Pair(minValue, maxValue)
+    }
+
 }

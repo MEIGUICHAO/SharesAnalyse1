@@ -138,6 +138,11 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.foreachGapResult()
             }
         }
+        btnRevFilter.setOnClickListener {
+            App.getSinglePool().execute{
+                viewModel.filterRev()
+            }
+        }
 
     }
 
