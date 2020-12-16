@@ -1218,7 +1218,7 @@ object DBUtils {
                         var insertSqlStr = ""
                         when (type) {
                             1->{
-                                insertSqlStr = it.insertRevCodeTB(newTBName)
+                                insertSqlStr = it.insertTB(newTBName)
                             }
                         }
                         db.execSQL(insertSqlStr)
