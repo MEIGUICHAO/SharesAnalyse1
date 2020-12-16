@@ -1,6 +1,42 @@
+---------------30--------------------------
 SELECT * FROM A_RTB_30_36 where _ID in (select min(_ID) from A_RTB_30_36 where 1 = 1 group by N) and OM_M>0 AND  OM_M<15
 SELECT * FROM A_RTB_30_36 where _ID in (select min(_ID) from A_RTB_30_36 where 1 = 1 group by N) and OM_M>0 AND  OM_M<15 AND OM_C> 5 AND OM_C< 25
 fiterRevResult:
-maxValue------>2,minValue----->-11,count----->231
-maxValue------>2,minValue----->-21,count----->363
+range 60
+OM_M finish======fiterRevResult:maxValue------>22,minValue----->-31,count----->596
+OM_C finish======fiterRevResult:maxValue------>29,minValue----->-22,count----->556
+OM_P finish======fiterRevResult:maxValue------>24,minValue----->-33,count----->556
+OM_L finish======fiterRevResult:maxValue------>43,minValue----->1,count----->555
+OC_M finish======fiterRevResult:maxValue------>-9,minValue----->-62,count----->464
+OC_C finish======fiterRevResult:maxValue------>2,minValue----->-54,count----->452
+OC_P finish======fiterRevResult:maxValue------>2,minValue----->-56,count----->450
+OC_L finish======fiterRevResult:maxValue------>8,minValue----->-23,count----->420
+OO_M finish======fiterRevResult:maxValue------>10,minValue----->-35,count----->413
+OO_C finish======fiterRevResult:maxValue------>18,minValue----->-29,count----->406
+OO_P finish======fiterRevResult:maxValue------>12,minValue----->-40,count----->402
+OO_L finish======fiterRevResult:maxValue------>32,minValue----->-1,count----->401
+OL_M finish======fiterRevResult:maxValue------>-17,minValue----->-65,count----->375
+OL_C finish======fiterRevResult:maxValue------>-9,minValue----->-55,count----->358
+OL_P finish======fiterRevResult:maxValue------>-13,minValue----->-56,count----->351
+OL_L finish======fiterRevResult:maxValue------>14,minValue----->-28,count----->351
+
+range 30
+OM_M finish======fiterRevResult:maxValue------>2,minValue----->-21,count----->363
+OM_C finish======fiterRevResult:maxValue------>9,minValue----->-12,count----->271
+OM_P finish======fiterRevResult:maxValue------>4,minValue----->-23,count----->261
+OM_L finish======fiterRevResult:maxValue------>23,minValue----->1,count----->237
+OC_M finish======fiterRevResult:maxValue------>-19,minValue----->-42,count----->156
+OC_C finish======fiterRevResult:maxValue------>-8,minValue----->-24,count----->106
+OC_P finish======fiterRevResult:maxValue------>-8,minValue----->-36,count----->102
+OC_L finish======fiterRevResult:maxValue------>8,minValue----->-3,count----->56
+OO_M finish======fiterRevResult:maxValue------>0,minValue----->-25,count----->56
+OO_C finish======fiterRevResult:maxValue------>8,minValue----->-19,count----->56
+OO_P finish======fiterRevResult:maxValue------>2,minValue----->-20,count----->54
+OO_L finish======fiterRevResult:maxValue------>22,minValue----->-1,count----->54
+OL_M finish======fiterRevResult:maxValue------>-17,minValue----->-35,count----->46
+OL_C finish======fiterRevResult:maxValue------>-9,minValue----->-25,count----->39
+OL_P finish======fiterRevResult:maxValue------>-13,minValue----->-26,count----->32
+OL_L finish======fiterRevResult:maxValue------>4,minValue----->-8,count----->31
+
+
 

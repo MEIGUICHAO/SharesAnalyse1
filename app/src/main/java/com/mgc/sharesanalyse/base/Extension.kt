@@ -176,4 +176,15 @@ fun String.getQuerySql(smallerMap:HashMap<String,String>, biggerMap:HashMap<Stri
     return Pair(this.getFilterSameNameSQL()+querySql, valueArray)
 }
 
+fun String.copyFilterTB2NewTB(oldTB: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>): String {
+    var querySql = ""
+    smallerMap.forEach {
+        querySql = querySql + " AND ${it.key} <= ${it.value}"
+    }
+    biggerMap.forEach {
+        querySql = querySql + " AND ${it.key} > ${it.value}"
+    }
+    return "CREATE TABLE $this AS (SELECT COLUMNS FROM $oldTB  WHERE _ID IN (SELECT MIN(_ID) FROM $oldTB WHERE 1 = 1 GROUP BY N) $querySql)"
+}
+
 

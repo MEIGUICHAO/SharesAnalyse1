@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.utils
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.text.TextUtils
 import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 
@@ -1133,22 +1134,58 @@ object DBUtils {
     }
 
 
-    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>): Int {
-
+    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>,reverseType:Int): ArrayList<BaseReverseImp>? {
         val pair = tbName.getQuerySql(smallerMap,biggerMap)
-        var cursorCount = 0
+        var list: ArrayList<BaseReverseImp>? = null
         LogUtil.d("queryRevLimit:${pair.first}")
         if (tabbleIsExist(tbName)) {
-            var cursor =
+            val cursor =
                 db.rawQuery(pair.first, pair.second)
+            if (null != cursor && cursor.moveToFirst()) {
+                list = ArrayList()
+                cursor.moveToFirst()
+                while (!cursor.isAfterLast) {
+                    when (reverseType) {
+                        1->{
+                            val reverseBean = ReverseKJsonBean()
+                            reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+                            reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+                            reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
+                            reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+                            reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
+                            reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
+                            reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
+                            reverseBean.oM_M = cursor.getFloat(cursor.getColumnIndex("OM_M"))
+                            reverseBean.oM_C = cursor.getFloat(cursor.getColumnIndex("OM_C"))
+                            reverseBean.oM_P = cursor.getFloat(cursor.getColumnIndex("OM_P"))
+                            reverseBean.oM_L = cursor.getFloat(cursor.getColumnIndex("OM_L"))
+                            reverseBean.oC_M = cursor.getFloat(cursor.getColumnIndex("OC_M"))
+                            reverseBean.oC_C = cursor.getFloat(cursor.getColumnIndex("OC_C"))
+                            reverseBean.oC_P = cursor.getFloat(cursor.getColumnIndex("OC_P"))
+                            reverseBean.oC_L = cursor.getFloat(cursor.getColumnIndex("OC_L"))
+                            reverseBean.oO_M = cursor.getFloat(cursor.getColumnIndex("OO_M"))
+                            reverseBean.oO_C = cursor.getFloat(cursor.getColumnIndex("OO_C"))
+                            reverseBean.oO_P = cursor.getFloat(cursor.getColumnIndex("OO_P"))
+                            reverseBean.oO_L = cursor.getFloat(cursor.getColumnIndex("OO_L"))
+                            reverseBean.oL_M = cursor.getFloat(cursor.getColumnIndex("OL_M"))
+                            reverseBean.oL_C = cursor.getFloat(cursor.getColumnIndex("OL_C"))
+                            reverseBean.oL_P = cursor.getFloat(cursor.getColumnIndex("OL_P"))
+                            reverseBean.oL_L = cursor.getFloat(cursor.getColumnIndex("OL_L"))
+                            reverseBean.gs = cursor.getInt(cursor.getColumnIndex("GS"))
+                            list.add(reverseBean)
+                        }
+                    }
+                    cursor.moveToNext()
+                }
+            }
             LogUtil.d("queryRevLimit cursor.count:${cursor.count}")
-            cursorCount = cursor.count
             cursor.close()
         }
-        return cursorCount
+        return list
     }
 
     fun selectMaxMinValueByTbAndColumn(tbName: String,column:String): Pair<String, String> {
+        switchDBName(Datas.REVERSE_KJ_DB +"2020")
         var minValue = ""
         var maxValue = ""
         var cursor =
@@ -1166,5 +1203,50 @@ object DBUtils {
         LogUtil.d("minValue:$minValue maxValue:$maxValue")
         return Pair(minValue, maxValue)
     }
+
+    fun copyFilterTB2NewTB(
+        newTBName: String,
+        countList: java.util.ArrayList<BaseReverseImp>,
+        type: Int
+    ) {
+        switchDBName(Datas.REV_FILTERDB+"2020")
+        if (countList[0] is ReverseKJsonBean) {
+            createRevFilterTable(newTBName, countList[0],type)
+            countList.forEach {
+                if (it is ReverseKJsonBean) {
+                    if (!queryDataIsExsitByCodeAndDate(newTBName, it.code.toString(),it.date)){
+                        var insertSqlStr = ""
+                        when (type) {
+                            1->{
+                                insertSqlStr = it.insertRevCodeTB(newTBName)
+                            }
+                        }
+                        db.execSQL(insertSqlStr)
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    private fun createRevFilterTable(
+        dbName: String,
+        reverseBean: BaseReverseImp,
+        type: Int
+    ) {
+        if (!tabbleIsExist(dbName)) {
+            var sqlStr = ""
+            when (type) {
+                1->{
+                    sqlStr = reverseBean.createTB(dbName)
+                }
+            }
+            if (!TextUtils.isEmpty(sqlStr)) {
+                db.execSQL(sqlStr)
+            }
+        }
+    }
+
 
 }

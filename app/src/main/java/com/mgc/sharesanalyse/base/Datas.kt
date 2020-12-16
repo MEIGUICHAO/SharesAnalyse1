@@ -107,6 +107,8 @@ object Datas {
     const val REV_CODE = "RC_"
     const val REV_CODE_DERBY = "RC_DERBY_"
     const val REV_CODE_TR = "RC_TR_"
+    const val AA_FILTER_ = "AA_FILTER_"
+    const val REV_FILTERDB = "REV_FILTERDB"
 //    const val HHQDayCount = 6
 
 }

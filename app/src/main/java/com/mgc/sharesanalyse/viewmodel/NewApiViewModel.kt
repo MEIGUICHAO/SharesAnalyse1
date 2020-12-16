@@ -3251,29 +3251,88 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
 
     fun filterRev() {
         DBUtils.switchDBName(Datas.REVERSE_KJ_DB +"2020")
-        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(Datas.REVERSE_TB_P30_36,"OM_M")
         val smallerMap = HashMap<String,String>()
         val biggerMap = HashMap<String,String>()
-        val minValue = (maxMinPari.first.toFloat()/1).toInt()
-        val maxValue = (maxMinPari.second.toFloat()/1).toInt()
-        var rateResult = 0
-        var result = ""
-        for (i in minValue..maxValue step 10) {
-            LogUtil.d("==============================================================$i")
-            for (y in maxValue downTo i step 10) {
-                LogUtil.d("maxValue------>$y minValue----->$i")
-                biggerMap.put("OM_M",i.toString())
-                smallerMap.put("OM_M",y.toString())
-                val count = DBUtils.queryRevLimit(Datas.REVERSE_TB_P30_36,smallerMap,biggerMap)
-                val rate = count / (y - i)
-                if (count >= 300 && rate > rateResult) {
-                    rateResult = rate
-                    result = "maxValue------>$y,minValue----->$i,count----->$count"
+        val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
+        val tbName = Datas.REVERSE_TB_P30_36
+        val rangeMax = 60
+        indexNameList.forEach {
+            if (TextUtils.isEmpty(biggerMap.get(it)) && TextUtils.isEmpty(smallerMap.get(it))) {
+                val indexType = it
+                val stepValue = 10
+                val countLimit = 600
+                val mCountList: ArrayList<BaseReverseImp> = ArrayList()
+                fiterRevTableByIndex(tbName, indexType, stepValue, biggerMap, smallerMap,countLimit,rangeMax,mCountList)
+                LogUtil.d("finish======fiterRevResult:${it.equals(indexNameList[indexNameList.size - 1])} countList:${mCountList.size}")
+                if (it.equals(indexNameList[indexNameList.size - 1])) {
+                    val newTBName = tbName.replace("A_RTB_",Datas.AA_FILTER_+rangeMax+"_")
+                    DBUtils.copyFilterTB2NewTB(newTBName,mCountList,1)
+                    LogUtil.d("finish======fiterRevResult:$newTBName")
                 }
             }
         }
 
-        LogUtil.d("fiterRevResult:$result")
+
+    }
+
+    private fun fiterRevTableByIndex(
+        tbName: String,
+        indexType: String,
+        stepValue: Int,
+        biggerMap: HashMap<String, String>,
+        smallerMap: HashMap<String, String>,
+        countLimit: Int,
+        rangeMax: Int,
+        mCountList: ArrayList<BaseReverseImp>
+    ): ArrayList<BaseReverseImp> {
+        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType)
+        val minValue = (maxMinPari.first.toFloat() / 1).toInt()
+        val maxValue = (maxMinPari.second.toFloat() / 1).toInt()
+        var rateResult = 0
+        var result = ""
+        var range = 0
+        var biggerResult = 0
+        var smallerResult = 0
+        for (i in minValue..maxValue step stepValue) {
+            LogUtil.d("==============================================================$i")
+            for (y in maxValue downTo i step stepValue) {
+                LogUtil.d("maxValue------>$y minValue----->$i")
+                biggerMap.put(indexType, i.toString())
+                smallerMap.put(indexType, y.toString())
+                val countList = DBUtils.queryRevLimit(tbName, smallerMap, biggerMap,1)
+                countList?.let {
+                    val rate = it.size / (y - i)
+                    if (it.size >= countLimit && rate > rateResult) {
+                        range = (y - i)
+                        rateResult = rate
+                        biggerResult = y
+                        smallerResult = i
+                        mCountList.clear()
+                        mCountList.addAll(it)
+                        result = "maxValue------>$y,minValue----->$i,count----->${it.size},mCountList.size:${mCountList.size}  countLimit:$countLimit"
+                    }
+                }
+            }
+        }
+        if (range > rangeMax || TextUtils.isEmpty(result)) {
+            fiterRevTableByIndex(
+                tbName,
+                indexType,
+                stepValue,
+                biggerMap,
+                smallerMap,
+                countLimit - 50,
+                rangeMax,
+                mCountList
+            )
+            LogUtil.d("$indexType continue------fiterRevResult:$result")
+        } else {
+            biggerMap.put(indexType,smallerResult.toString())
+            smallerMap.put(indexType,biggerResult.toString())
+            LogUtil.d("$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
+        }
+        LogUtil.d("$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
+        return mCountList
     }
 
 
