@@ -148,6 +148,12 @@ class NewApiActivity : AppCompatActivity() {
 
 
 
+    fun setBtnRevFilterInfo(info: String) {
+        btnRevFilter.post {
+            btnRevFilter.setText(info)
+        }
+    }
+
     fun setBtnGapResultInfo(info: String) {
         btnGapResult.post {
             btnGapResult.setText(info)

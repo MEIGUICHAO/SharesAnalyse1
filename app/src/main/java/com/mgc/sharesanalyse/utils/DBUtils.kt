@@ -1174,6 +1174,29 @@ object DBUtils {
                             reverseBean.gs = cursor.getInt(cursor.getColumnIndex("GS"))
                             list.add(reverseBean)
                         }
+                        2->{
+                            val reverseBean = ReverseKJsonBean()
+                            reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+                            reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+                            reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
+                            reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+                            reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
+                            reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
+                            reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
+                            reverseBean.oM_OC = cursor.getFloat(cursor.getColumnIndex("OM_OC"))
+                            reverseBean.oM_OP = cursor.getFloat(cursor.getColumnIndex("OM_OP"))
+                            reverseBean.oM_OL = cursor.getFloat(cursor.getColumnIndex("OM_OL"))
+                            reverseBean.oC_OP = cursor.getFloat(cursor.getColumnIndex("OC_OP"))
+                            reverseBean.oC_OL = cursor.getFloat(cursor.getColumnIndex("OC_OL"))
+                            reverseBean.oP_OL = cursor.getFloat(cursor.getColumnIndex("OP_OL"))
+                            reverseBean.m_C = cursor.getFloat(cursor.getColumnIndex("M_C"))
+                            reverseBean.m_P = cursor.getFloat(cursor.getColumnIndex("M_P"))
+                            reverseBean.m_L = cursor.getFloat(cursor.getColumnIndex("M_L"))
+                            reverseBean.c_P = cursor.getFloat(cursor.getColumnIndex("C_P"))
+                            reverseBean.c_L = cursor.getFloat(cursor.getColumnIndex("C_L"))
+                            reverseBean.p_L = cursor.getFloat(cursor.getColumnIndex("P_L"))
+                            list.add(reverseBean)
+                        }
                     }
                     cursor.moveToNext()
                 }
