@@ -109,6 +109,8 @@ object Datas {
     const val REV_CODE_TR = "RC_TR_"
     const val AA_FILTER_ = "AA_FILTER_"
     const val REV_FILTERDB = "REV_FILTERDB"
+    const val RANGEMAX = 50
+    const val RANGEMAX_PROGRESS = 10
 //    const val HHQDayCount = 6
 
 }
