@@ -3249,7 +3249,6 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
 
 }
     var countLimit = 600
-    var rangeMax = Datas.RANGEMAX
     fun filterRev() {
         DBUtils.switchDBName(Datas.REVERSE_KJ_DB +"2020")
         val smallerMap = HashMap<String,String>()
@@ -3257,7 +3256,8 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
         val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
         //        val indexNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
-        val mTBList = getAllRevTBNameList()
+//        val mTBList = getAllRevTBNameList()
+        val mTBList = arrayListOf(Datas.REVERSE_TB_P50_36)
         mTBList.forEach {tbName->
             smallerMap.clear()
             biggerMap.clear()
@@ -3267,43 +3267,29 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 inedexList = indexDerbyNameList
             }
             inedexList.forEach {
-                val newTBName = tbName.replace("A_RTB_", Datas.AA_FILTER_ + rangeMax + "_")
+                val newTBName = tbName.replace("A_RTB_", Datas.AA_FILTER_)
                 FileLogUtil.d("${parentBasePath}FilerRev", newTBName)
                 if (TextUtils.isEmpty(biggerMap.get(it)) && TextUtils.isEmpty(smallerMap.get(it))) {
-                    rangeMax = Datas.RANGEMAX
                     if (it.equals(indexNameList[0])) {
                         countLimit = 600
                     }
                     val indexType = it
                     val stepValue = 10
                     val mCountList: ArrayList<BaseReverseImp> = ArrayList()
-                    (mActivity as NewApiActivity).setBtnRevFilterInfo("$tbName _ $it _ $rangeMax")
-                    if (countLimit > 50) {
-                        fiterRevTableByIndex(
+                    (mActivity as NewApiActivity).setBtnRevFilterInfo("$tbName _ $it _ $countLimit")
+
+                    while (fiterRevTableByIndex(
                             tbName,
                             indexType,
                             stepValue,
                             biggerMap,
                             smallerMap,
                             mCountList
-                        )
-                        LogUtil.d("filterRev======fiterRevResult:${it.equals(indexNameList[indexNameList.size - 1])} countList:${mCountList.size} countLimit:${countLimit}")
-                        if (it.equals(indexNameList[indexNameList.size - 1])) {
-                            DBUtils.copyFilterTB2NewTB(newTBName, mCountList, 1)
-                            LogUtil.d("finish======fiterRevResult:$newTBName")
-                        }
-                    } else {
-                        rangeMax = rangeMax + Datas.RANGEMAX_PROGRESS
-                        countLimit = 200
-                        fiterRevTableByIndex(
-                            tbName,
-                            indexType,
-                            stepValue,
-                            biggerMap,
-                            smallerMap,
-                            mCountList
-                        )
-                        (mActivity as NewApiActivity).setBtnRevFilterInfo("$it---error")
+                        ))
+                    LogUtil.d("filterRev======fiterRevResult:${it.equals(indexNameList[indexNameList.size - 1])} countList:${mCountList.size} countLimit:${countLimit}")
+                    if (it.equals(indexNameList[indexNameList.size - 1])) {
+                        DBUtils.copyFilterTB2NewTB(newTBName, mCountList, 1)
+                        LogUtil.d("finish======fiterRevResult:$newTBName")
                     }
                 }
             }
@@ -3349,7 +3335,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         biggerMap: HashMap<String, String>,
         smallerMap: HashMap<String, String>,
         mCountList: ArrayList<BaseReverseImp>
-    ) {
+    ): Boolean {
         val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType,Datas.REVERSE_KJ_DB +"2020")
         val minValue = (maxMinPari.first.toFloat() / 1).toInt()
         val maxValue = (maxMinPari.second.toFloat() / 1).toInt()
@@ -3383,39 +3369,25 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 }
             }
         }
-        LogUtil.d("$indexType @@fiterRevResult:$result---range:$range---rangeMax:$rangeMax")
-        if (range > rangeMax || TextUtils.isEmpty(result)) {
-            countLimit = countLimit - 50
-            if (countLimit > 50) {
-                fiterRevTableByIndex(
-                    tbName,
-                    indexType,
-                    stepValue,
-                    biggerMap,
-                    smallerMap,
-                    mCountList
-                )
+        LogUtil.d("$indexType @@fiterRevResult:$result---range:$range")
+        if (TextUtils.isEmpty(result)) {
+            if (countLimit - 10 > 0) {
+                countLimit = countLimit - 10
+                return true
             } else {
-                rangeMax = rangeMax + Datas.RANGEMAX_PROGRESS
-                countLimit = 200
-                fiterRevTableByIndex(
-                    tbName,
-                    indexType,
-                    stepValue,
-                    biggerMap,
-                    smallerMap,
-                    mCountList
-                )
-                (mActivity as NewApiActivity).setBtnRevFilterInfo("$indexType --- error")
+                return false
             }
-            LogUtil.d("$indexType continue------fiterRevResult:$result---range:$range---rangeMax:$rangeMax")
+
         } else {
-            biggerMap.put(indexType,smallerResult.toString())
-            smallerMap.put(indexType,biggerResult.toString())
-            FileLogUtil.d("${parentBasePath}FilerRev", "$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
+            biggerMap.put(indexType, smallerResult.toString())
+            smallerMap.put(indexType, biggerResult.toString())
+            FileLogUtil.d(
+                "${parentBasePath}FilerRev",
+                "$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit"
+            )
             LogUtil.d("$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
+            return false
         }
-        LogUtil.d("$indexType finish!!!!---fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
     }
 
 
