@@ -3433,7 +3433,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                                 } else {
                                     1
                                 }
-                            },tbName,"R_$range")
+                            },tbName,"_R_$range")
                         }
 
                     }
