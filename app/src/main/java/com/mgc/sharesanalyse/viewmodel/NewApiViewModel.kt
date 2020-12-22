@@ -3393,27 +3393,50 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
 
     fun getOtherResultByFilterTb(tbName: String) {
         if (tbName.contains(Datas.AA_FILTER_)) {
-            val list = DBUtils.getAAFilterAllByTbName(tbName)
-            val mTBList = getAllRevTBNameList()
-            val trList = getAllRevTRTBNameList()
-            trList.forEach {
-                mTBList.add(it)
-            }
-            list?.forEach {
-                if (it is ReverseKJsonBean) {
-                    mTBList.forEach {tbName->
-                        (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName+"_"+it.code)
-                        DBUtils.createOtherBBTBDataByOriginCodeAndDate(it.code,it.date,kotlin.run {
-                            if (tbName.contains("TR")) {
-                                3
-                            } else if (tbName.contains(Datas.Derby)) {
-                                2
-                            } else {
-                                1
-                            }
-                        },tbName)
+            val pair = DBUtils.selectMaxMinValueByTbAndColumn(tbName,"OM_M",Datas.REV_FILTERDB+"2020")
+            var rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 -20
+            var rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+            val rangeList = ArrayList<String>()
+            for (i in rangeMin..rangeMax step 20) {
+                val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                    arrayOf(i.toString(),(i+20).toString()))
+                LogUtil.d("==========$i=======${i + 20}")
+                list?.forEach {
+                    if (it is ReverseKJsonBean) {
+                        LogUtil.d(it.n)
+                        val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REV_FILTERDB+"2020",it.code,it.date,1,tbName,"_R_${Math.abs(i)}_${Math.abs(i+20)}")
+                        LogUtil.d(name)
+                        if (!rangeList.contains(name)) {
+                            rangeList.add(name)
+                        }
                     }
+                }
+            }
 
+            rangeList.forEach {rangename->
+                val range = rangename.split("_R_")[1]
+                val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $rangename",null)
+                val mTBList = getAllRevTBNameList()
+                val trList = getAllRevTRTBNameList()
+                trList.forEach {
+                    mTBList.add(it)
+                }
+                list?.forEach {
+                    if (it is ReverseKJsonBean) {
+                        mTBList.forEach {tbName->
+                            (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName+"_"+it.code)
+                            DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REVERSE_KJ_DB + 2020,it.code,it.date,kotlin.run {
+                                if (tbName.contains("TR")) {
+                                    3
+                                } else if (tbName.contains(Datas.Derby)) {
+                                    2
+                                } else {
+                                    1
+                                }
+                            },tbName,"R_$range")
+                        }
+
+                    }
                 }
             }
             (mActivity as NewApiActivity).setBtnCopyFilterTBResult("copy_finish")

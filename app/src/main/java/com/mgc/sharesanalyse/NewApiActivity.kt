@@ -146,7 +146,7 @@ class NewApiActivity : AppCompatActivity() {
         btnCopyFilterTBResult.setOnClickListener {
             App.getSinglePool().execute{
 //                DBUtils.queryDeleteTBByDBAndLimit("AA_FILTER_60_30_36",Datas.REV_FILTERDB+"2020")
-                viewModel.getOtherResultByFilterTb("AA_FILTER_60_30_36")
+                viewModel.getOtherResultByFilterTb("AA_FILTER_50_36")
             }
         }
         btnLogBBRangeFile.setOnClickListener {

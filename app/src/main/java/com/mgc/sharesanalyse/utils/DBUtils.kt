@@ -1312,11 +1312,11 @@ object DBUtils {
     }
 
     @SuppressLint("Recycle")
-    fun getAAFilterAllByTbName(tbName: String): ArrayList<BaseReverseImp>? {
+    fun getAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
         switchDBName(Datas.REV_FILTERDB + 2020)
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
-            db.rawQuery(" SELECT * FROM $tbName", null)
+            db.rawQuery(sqlStr, selection)
         cursor?.let {
             list = ArrayList()
             it.moveToFirst()
@@ -1331,10 +1331,11 @@ object DBUtils {
     }
 
 
-    fun createOtherBBTBDataByOriginCodeAndDate(code:Int,date:String,type: Int,tbName: String) {
-        switchDBName(Datas.REVERSE_KJ_DB + 2020)
+    fun createOtherBBTBDataByOriginCodeAndDate(dbName: String,code:Int,date:String,type: Int,tbName: String,endStr:String = ""):String {
+        var newTbName =""
+        switchDBName(dbName)
         if (!tabbleIsExist(tbName)) {
-            return
+            return ""
         }
         val cursor =
             db.rawQuery(" SELECT * FROM $tbName WHERE CODE=? AND DATE =?", arrayOf(code.toString(),date))
@@ -1363,12 +1364,12 @@ object DBUtils {
             switchDBName(Datas.REV_FILTERDB + 2020)
             var createTB =""
             var insertTB =""
-            var newTbName =""
             list.forEach {
                 when (type) {
                     1->{
                         if (it is ReverseKJsonBean) {
-                            newTbName = tbName.replace("A_RTB",Datas.BB_FIL_COPY_+"A_RTB")
+                            newTbName =
+                                tbName.replace("A_RTB", Datas.BB_FIL_COPY_ + "A_RTB") + endStr
                             createTB = it.createTB(newTbName)
                             insertTB = it.insertTB(newTbName)
 
@@ -1376,18 +1377,19 @@ object DBUtils {
                     }
                     2->{
                         if (it is ReverseKJsonBean) {
-                            newTbName = tbName.replace(Datas.Derby,Datas.BB_FIL_COPY_+Datas.Derby)
+                            newTbName = tbName.replace(Datas.Derby,Datas.BB_FIL_COPY_+Datas.Derby) + endStr
                             createTB = it.createDerbyTB(newTbName)
                             insertTB = it.insertDerbyTB(newTbName)
                         }
                     }
                     3->{
                         if (it is TR_K_SLL_Bean) {
-                            newTbName = tbName.replace("TR", "BB_TR" )
+                            newTbName = tbName.replace("TR", "BB_TR" ) + endStr
                             createTB = it.createTB(newTbName)
                             insertTB = it.insertTB(newTbName)
                         }
                     }
+
                 }
                 if (!createTB.isEmpty()&&!insertTB.isEmpty()) {
                     db.execSQL(createTB)
@@ -1399,6 +1401,7 @@ object DBUtils {
             }
         }
 
+        return newTbName
     }
 
     fun queryDeleteTBByDBAndLimit(tbName: String, dbName: String) {
