@@ -1243,8 +1243,12 @@ object DBUtils {
         return reverseBean
     }
 
-    fun selectMaxMinValueByTbAndColumn(tbName: String,column:String): Pair<String, String> {
-        switchDBName(Datas.REVERSE_KJ_DB +"2020")
+    fun selectMaxMinValueByTbAndColumn(
+        tbName: String,
+        column: String,
+        dbName: String
+    ): Pair<String, String> {
+        switchDBName(dbName)
         var minValue = ""
         var maxValue = ""
         var cursor =
@@ -1413,6 +1417,27 @@ object DBUtils {
             it.close()
         }
     }
+
+    fun getAllCopyBBTBNameList(): ArrayList<String> {
+        switchDBName(Datas.REV_FILTERDB+"2020")
+        val cursor =
+            db.rawQuery(" SELECT name FROM sqlite_master", null)
+        val list = ArrayList<String>()
+        cursor?.let {
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val name = it.getString(it.getColumnIndex("name"))
+                if (name.contains("BB_")) {
+                    list.add(name)
+                }
+                it.moveToNext()
+            }
+            it.close()
+        }
+        return list
+    }
+
+
 
 
 }

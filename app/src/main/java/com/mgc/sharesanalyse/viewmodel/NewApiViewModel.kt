@@ -3256,8 +3256,8 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val biggerMap = HashMap<String,String>()
         val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
         val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
-        val mTBList = getAllRevTBNameList()
         //        val indexNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
+        val mTBList = getAllRevTBNameList()
         mTBList.forEach {tbName->
             smallerMap.clear()
             biggerMap.clear()
@@ -3350,7 +3350,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         smallerMap: HashMap<String, String>,
         mCountList: ArrayList<BaseReverseImp>
     ) {
-        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType)
+        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType,Datas.REVERSE_KJ_DB +"2020")
         val minValue = (maxMinPari.first.toFloat() / 1).toInt()
         val maxValue = (maxMinPari.second.toFloat() / 1).toInt()
         var rateResult = 0
@@ -3470,6 +3470,37 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             Datas.REV_TR_TB_P30_36,
             Datas.REV_TR_TB_P50_36
         )
+    }
+
+    fun logBBRangeFile() {
+        val list = DBUtils.getAllCopyBBTBNameList()
+
+        val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
+        val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
+        val indextrNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
+        val date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val filename = "${parentBasePath}bb_range$date"
+        (mActivity as NewApiActivity).setBtnLogBBRangeFile("copy_finish")
+        list.forEach {
+            (mActivity as NewApiActivity).setBtnLogBBRangeFile(it)
+            FileLogUtil.d(filename,"------------------------$it")
+            kotlin.run {
+                if (it.contains(Datas.Derby)) {
+                    indexDerbyNameList
+                } else if (it.contains("TR")) {
+                    indextrNameList
+                } else {
+                    indexNameList
+                }
+            }.forEach { indexStr->
+                val pair = DBUtils.selectMaxMinValueByTbAndColumn(it,indexStr,Datas.REV_FILTERDB+"2020")
+                FileLogUtil.d(filename,"${indexStr}->min:${pair.first},max:${pair.second}")
+            }
+
+
+
+        }
+        (mActivity as NewApiActivity).setBtnLogBBRangeFile("FINISH")
     }
 
 

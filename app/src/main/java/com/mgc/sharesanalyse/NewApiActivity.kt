@@ -149,11 +149,21 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.getOtherResultByFilterTb("AA_FILTER_60_30_36")
             }
         }
+        btnLogBBRangeFile.setOnClickListener {
+            App.getSinglePool().execute{
+                viewModel.logBBRangeFile()
+            }
+        }
 
     }
 
 
 
+    fun setBtnLogBBRangeFile(info: String) {
+        btnLogBBRangeFile.post {
+            btnLogBBRangeFile.setText(info)
+        }
+    }
     fun setBtnCopyFilterTBResult(info: String) {
         btnCopyFilterTBResult.post {
             btnCopyFilterTBResult.setText(info)
