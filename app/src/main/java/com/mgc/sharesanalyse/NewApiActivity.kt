@@ -143,10 +143,22 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.filterRev()
             }
         }
+        btnCopyFilterTBResult.setOnClickListener {
+            App.getSinglePool().execute{
+//                DBUtils.queryDeleteTBByDBAndLimit("AA_FILTER_60_30_36",Datas.REV_FILTERDB+"2020")
+                viewModel.getOtherResultByFilterTb("AA_FILTER_60_30_36")
+            }
+        }
 
     }
 
 
+
+    fun setBtnCopyFilterTBResult(info: String) {
+        btnCopyFilterTBResult.post {
+            btnCopyFilterTBResult.setText(info)
+        }
+    }
 
     fun setBtnRevFilterInfo(info: String) {
         btnRevFilter.post {

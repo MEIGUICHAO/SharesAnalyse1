@@ -3256,16 +3256,8 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val biggerMap = HashMap<String,String>()
         val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
         val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
-
-        val tbList = arrayListOf(Datas.REVERSE_TB_P30_33,Datas.REVERSE_TB_P50_33,Datas.REVERSE_TB_P30_55,Datas.REVERSE_TB_P50_55,Datas.REVERSE_TB_P30_10,Datas.REVERSE_TB_P50_10
-            ,Datas.REVERSE_TB_P30_15,Datas.REVERSE_TB_P50_15,Datas.REVERSE_TB_P30_20,Datas.REVERSE_TB_P50_20,Datas.REVERSE_TB_P30_25,Datas.REVERSE_TB_P50_25
-            ,Datas.REVERSE_TB_P30_30,Datas.REVERSE_TB_P50_30,Datas.REVERSE_TB_P30_36,Datas.REVERSE_TB_P50_36)
-        val mTBList = ArrayList<String>()
-        mTBList.addAll(tbList)
-        tbList.forEach {
-            mTBList.add(Datas.Derby + it)
-        }
-//        val indexNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
+        val mTBList = getAllRevTBNameList()
+        //        val indexNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
         mTBList.forEach {tbName->
             smallerMap.clear()
             biggerMap.clear()
@@ -3319,6 +3311,35 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
 
 
 
+    }
+
+    private fun getAllRevTBNameList(): ArrayList<String> {
+        val mTBList = ArrayList<String>()
+        val tbList = arrayListOf(
+            Datas.REVERSE_TB_P30_33,
+            Datas.REVERSE_TB_P50_33,
+            Datas.REVERSE_TB_P30_55,
+            Datas.REVERSE_TB_P50_55,
+            Datas.REVERSE_TB_P30_10,
+            Datas.REVERSE_TB_P50_10
+            ,
+            Datas.REVERSE_TB_P30_15,
+            Datas.REVERSE_TB_P50_15,
+            Datas.REVERSE_TB_P30_20,
+            Datas.REVERSE_TB_P50_20,
+            Datas.REVERSE_TB_P30_25,
+            Datas.REVERSE_TB_P50_25
+            ,
+            Datas.REVERSE_TB_P30_30,
+            Datas.REVERSE_TB_P50_30,
+            Datas.REVERSE_TB_P30_36,
+            Datas.REVERSE_TB_P50_36
+        )
+        mTBList.addAll(tbList)
+        tbList.forEach {
+            mTBList.add(Datas.Derby + it)
+        }
+        return mTBList
     }
 
     private fun fiterRevTableByIndex(
@@ -3395,6 +3416,60 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             LogUtil.d("$indexType finish======fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
         }
         LogUtil.d("$indexType finish!!!!---fiterRevResult:$result mCountList:${mCountList.size} countLimit:$countLimit")
+    }
+
+
+    fun getOtherResultByFilterTb(tbName: String) {
+        if (tbName.contains(Datas.AA_FILTER_)) {
+            val list = DBUtils.getAAFilterAllByTbName(tbName)
+            val mTBList = getAllRevTBNameList()
+            val trList = getAllRevTRTBNameList()
+            trList.forEach {
+                mTBList.add(it)
+            }
+            list?.forEach {
+                if (it is ReverseKJsonBean) {
+                    mTBList.forEach {tbName->
+                        (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName+"_"+it.code)
+                        DBUtils.createOtherBBTBDataByOriginCodeAndDate(it.code,it.date,kotlin.run {
+                            if (tbName.contains("TR")) {
+                                3
+                            } else if (tbName.contains(Datas.Derby)) {
+                                2
+                            } else {
+                                1
+                            }
+                        },tbName)
+                    }
+
+                }
+            }
+            (mActivity as NewApiActivity).setBtnCopyFilterTBResult("copy_finish")
+        }
+
+    }
+
+    private fun getAllRevTRTBNameList():ArrayList<String> {
+        return arrayListOf(
+            Datas.REV_TR_TB_P30_11,
+            Datas.REV_TR_TB_P50_11,
+            Datas.REV_TR_TB_P30_33,
+            Datas.REV_TR_TB_P50_33,
+            Datas.REV_TR_TB_P30_55,
+            Datas.REV_TR_TB_P50_55,
+            Datas.REV_TR_TB_P30_10,
+            Datas.REV_TR_TB_P50_10,
+            Datas.REV_TR_TB_P30_15,
+            Datas.REV_TR_TB_P50_15,
+            Datas.REV_TR_TB_P30_20,
+            Datas.REV_TR_TB_P50_20,
+            Datas.REV_TR_TB_P30_25,
+            Datas.REV_TR_TB_P50_25,
+            Datas.REV_TR_TB_P30_30,
+            Datas.REV_TR_TB_P50_30,
+            Datas.REV_TR_TB_P30_36,
+            Datas.REV_TR_TB_P50_36
+        )
     }
 
 

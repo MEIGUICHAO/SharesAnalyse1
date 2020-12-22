@@ -1,5 +1,6 @@
 package com.mgc.sharesanalyse.utils
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.text.TextUtils
@@ -105,6 +106,7 @@ object DBUtils {
 
     fun dropTable(dbName: String) {
         val dropTable = "DROP TABLE IF EXISTS $dbName"
+        LogUtil.d("dropTable:$dropTable")
         db.execSQL(dropTable)
     }
 
@@ -1147,54 +1149,11 @@ object DBUtils {
                 while (!cursor.isAfterLast) {
                     when (reverseType) {
                         1->{
-                            val reverseBean = ReverseKJsonBean()
-                            reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
-                            reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
-                            reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
-                            reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
-                            reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
-                            reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
-                            reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
-                            reverseBean.oM_M = cursor.getFloat(cursor.getColumnIndex("OM_M"))
-                            reverseBean.oM_C = cursor.getFloat(cursor.getColumnIndex("OM_C"))
-                            reverseBean.oM_P = cursor.getFloat(cursor.getColumnIndex("OM_P"))
-                            reverseBean.oM_L = cursor.getFloat(cursor.getColumnIndex("OM_L"))
-                            reverseBean.oC_M = cursor.getFloat(cursor.getColumnIndex("OC_M"))
-                            reverseBean.oC_C = cursor.getFloat(cursor.getColumnIndex("OC_C"))
-                            reverseBean.oC_P = cursor.getFloat(cursor.getColumnIndex("OC_P"))
-                            reverseBean.oC_L = cursor.getFloat(cursor.getColumnIndex("OC_L"))
-                            reverseBean.oO_M = cursor.getFloat(cursor.getColumnIndex("OO_M"))
-                            reverseBean.oO_C = cursor.getFloat(cursor.getColumnIndex("OO_C"))
-                            reverseBean.oO_P = cursor.getFloat(cursor.getColumnIndex("OO_P"))
-                            reverseBean.oO_L = cursor.getFloat(cursor.getColumnIndex("OO_L"))
-                            reverseBean.oL_M = cursor.getFloat(cursor.getColumnIndex("OL_M"))
-                            reverseBean.oL_C = cursor.getFloat(cursor.getColumnIndex("OL_C"))
-                            reverseBean.oL_P = cursor.getFloat(cursor.getColumnIndex("OL_P"))
-                            reverseBean.oL_L = cursor.getFloat(cursor.getColumnIndex("OL_L"))
-                            reverseBean.gs = cursor.getInt(cursor.getColumnIndex("GS"))
+                            val reverseBean = getRevKJBeanByCursor(cursor)
                             list.add(reverseBean)
                         }
                         2->{
-                            val reverseBean = ReverseKJsonBean()
-                            reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
-                            reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
-                            reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
-                            reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
-                            reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
-                            reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
-                            reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
-                            reverseBean.oM_OC = cursor.getFloat(cursor.getColumnIndex("OM_OC"))
-                            reverseBean.oM_OP = cursor.getFloat(cursor.getColumnIndex("OM_OP"))
-                            reverseBean.oM_OL = cursor.getFloat(cursor.getColumnIndex("OM_OL"))
-                            reverseBean.oC_OP = cursor.getFloat(cursor.getColumnIndex("OC_OP"))
-                            reverseBean.oC_OL = cursor.getFloat(cursor.getColumnIndex("OC_OL"))
-                            reverseBean.oP_OL = cursor.getFloat(cursor.getColumnIndex("OP_OL"))
-                            reverseBean.m_C = cursor.getFloat(cursor.getColumnIndex("M_C"))
-                            reverseBean.m_P = cursor.getFloat(cursor.getColumnIndex("M_P"))
-                            reverseBean.m_L = cursor.getFloat(cursor.getColumnIndex("M_L"))
-                            reverseBean.c_P = cursor.getFloat(cursor.getColumnIndex("C_P"))
-                            reverseBean.c_L = cursor.getFloat(cursor.getColumnIndex("C_L"))
-                            reverseBean.p_L = cursor.getFloat(cursor.getColumnIndex("P_L"))
+                            val reverseBean = getDerbyRevKJBeanByCursor(cursor)
                             list.add(reverseBean)
                         }
                     }
@@ -1205,6 +1164,83 @@ object DBUtils {
             cursor.close()
         }
         return list
+    }
+
+    private fun getDerbyRevKJBeanByCursor(cursor: Cursor): ReverseKJsonBean {
+        val reverseBean = ReverseKJsonBean()
+        reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+        reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
+        reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
+        reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
+        reverseBean.oM_OC = cursor.getFloat(cursor.getColumnIndex("OM_OC"))
+        reverseBean.oM_OP = cursor.getFloat(cursor.getColumnIndex("OM_OP"))
+        reverseBean.oM_OL = cursor.getFloat(cursor.getColumnIndex("OM_OL"))
+        reverseBean.oC_OP = cursor.getFloat(cursor.getColumnIndex("OC_OP"))
+        reverseBean.oC_OL = cursor.getFloat(cursor.getColumnIndex("OC_OL"))
+        reverseBean.oP_OL = cursor.getFloat(cursor.getColumnIndex("OP_OL"))
+        reverseBean.m_C = cursor.getFloat(cursor.getColumnIndex("M_C"))
+        reverseBean.m_P = cursor.getFloat(cursor.getColumnIndex("M_P"))
+        reverseBean.m_L = cursor.getFloat(cursor.getColumnIndex("M_L"))
+        reverseBean.c_P = cursor.getFloat(cursor.getColumnIndex("C_P"))
+        reverseBean.c_L = cursor.getFloat(cursor.getColumnIndex("C_L"))
+        reverseBean.p_L = cursor.getFloat(cursor.getColumnIndex("P_L"))
+        return reverseBean
+    }
+
+    private fun getRevKJBeanByCursor(cursor: Cursor): ReverseKJsonBean {
+        val reverseBean = ReverseKJsonBean()
+        reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+        reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
+        reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
+        reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
+        reverseBean.oM_M = cursor.getFloat(cursor.getColumnIndex("OM_M"))
+        reverseBean.oM_C = cursor.getFloat(cursor.getColumnIndex("OM_C"))
+        reverseBean.oM_P = cursor.getFloat(cursor.getColumnIndex("OM_P"))
+        reverseBean.oM_L = cursor.getFloat(cursor.getColumnIndex("OM_L"))
+        reverseBean.oC_M = cursor.getFloat(cursor.getColumnIndex("OC_M"))
+        reverseBean.oC_C = cursor.getFloat(cursor.getColumnIndex("OC_C"))
+        reverseBean.oC_P = cursor.getFloat(cursor.getColumnIndex("OC_P"))
+        reverseBean.oC_L = cursor.getFloat(cursor.getColumnIndex("OC_L"))
+        reverseBean.oO_M = cursor.getFloat(cursor.getColumnIndex("OO_M"))
+        reverseBean.oO_C = cursor.getFloat(cursor.getColumnIndex("OO_C"))
+        reverseBean.oO_P = cursor.getFloat(cursor.getColumnIndex("OO_P"))
+        reverseBean.oO_L = cursor.getFloat(cursor.getColumnIndex("OO_L"))
+        reverseBean.oL_M = cursor.getFloat(cursor.getColumnIndex("OL_M"))
+        reverseBean.oL_C = cursor.getFloat(cursor.getColumnIndex("OL_C"))
+        reverseBean.oL_P = cursor.getFloat(cursor.getColumnIndex("OL_P"))
+        reverseBean.oL_L = cursor.getFloat(cursor.getColumnIndex("OL_L"))
+        reverseBean.gs = cursor.getInt(cursor.getColumnIndex("GS"))
+        return reverseBean
+    }
+//    " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT," +
+//    " INTEGER, INTEGER, INTEGER, INTEGER," +
+//    " INTEGER, INTEGER, INTEGER, INTEGER," +
+//    " INTEGER, INTEGER, INTEGER, INTEGER);"
+    private fun getTRKSLLBeanByCursor(cursor: Cursor): TR_K_SLL_Bean {
+        val reverseBean = TR_K_SLL_Bean()
+        reverseBean.setCODE(cursor.getInt(cursor.getColumnIndex("CODE")))
+        reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.s_A_TR = cursor.getFloat(cursor.getColumnIndex("S_A_TR"))
+        reverseBean.s_R_TR = cursor.getFloat(cursor.getColumnIndex("S_R_TR"))
+        reverseBean.s_B_TR = cursor.getFloat(cursor.getColumnIndex("S_B_TR"))
+        reverseBean.s_C_TR = cursor.getFloat(cursor.getColumnIndex("S_C_TR"))
+        reverseBean.k_A_TR = cursor.getFloat(cursor.getColumnIndex("K_A_TR"))
+        reverseBean.k_R_TR = cursor.getFloat(cursor.getColumnIndex("K_R_TR"))
+        reverseBean.k_B_TR = cursor.getFloat(cursor.getColumnIndex("K_B_TR"))
+        reverseBean.k_C_TR = cursor.getFloat(cursor.getColumnIndex("K_C_TR"))
+        reverseBean.k_SL_A_TR = cursor.getFloat(cursor.getColumnIndex("K_SL_A_TR"))
+        reverseBean.k_SL_R_TR = cursor.getFloat(cursor.getColumnIndex("K_SL_R_TR"))
+        reverseBean.k_SL_B_TR = cursor.getFloat(cursor.getColumnIndex("K_SL_B_TR"))
+        reverseBean.k_SL_C_TR = cursor.getFloat(cursor.getColumnIndex("K_SL_C_TR"))
+        return reverseBean
     }
 
     fun selectMaxMinValueByTbAndColumn(tbName: String,column:String): Pair<String, String> {
@@ -1268,6 +1304,113 @@ object DBUtils {
             if (!TextUtils.isEmpty(sqlStr)) {
                 db.execSQL(sqlStr)
             }
+        }
+    }
+
+    @SuppressLint("Recycle")
+    fun getAAFilterAllByTbName(tbName: String): ArrayList<BaseReverseImp>? {
+        switchDBName(Datas.REV_FILTERDB + 2020)
+        var list: ArrayList<BaseReverseImp>? = null
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName", null)
+        cursor?.let {
+            list = ArrayList()
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val bean = getRevKJBeanByCursor(it)
+                list!!.add(bean)
+                it.moveToNext()
+            }
+            it.close()
+        }
+        return list
+    }
+
+
+    fun createOtherBBTBDataByOriginCodeAndDate(code:Int,date:String,type: Int,tbName: String) {
+        switchDBName(Datas.REVERSE_KJ_DB + 2020)
+        if (!tabbleIsExist(tbName)) {
+            return
+        }
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName WHERE CODE=? AND DATE =?", arrayOf(code.toString(),date))
+        cursor?.let {
+            val list: ArrayList<BaseReverseImp>
+                    = ArrayList()
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                when (type) {
+                    1->{
+                        val bean = getRevKJBeanByCursor(it)
+                        list.add(bean)
+                    }
+                    2->{
+                        val bean = getDerbyRevKJBeanByCursor(it)
+                        list.add(bean)
+                    }
+                    3->{
+                        val bean = getTRKSLLBeanByCursor(it)
+                        list.add(bean)
+                    }
+                }
+                it.moveToNext()
+            }
+            it.close()
+            switchDBName(Datas.REV_FILTERDB + 2020)
+            var createTB =""
+            var insertTB =""
+            var newTbName =""
+            list.forEach {
+                when (type) {
+                    1->{
+                        if (it is ReverseKJsonBean) {
+                            newTbName = tbName.replace("A_RTB",Datas.BB_FIL_COPY_+"A_RTB")
+                            createTB = it.createTB(newTbName)
+                            insertTB = it.insertTB(newTbName)
+
+                        }
+                    }
+                    2->{
+                        if (it is ReverseKJsonBean) {
+                            newTbName = tbName.replace(Datas.Derby,Datas.BB_FIL_COPY_+Datas.Derby)
+                            createTB = it.createDerbyTB(newTbName)
+                            insertTB = it.insertDerbyTB(newTbName)
+                        }
+                    }
+                    3->{
+                        if (it is TR_K_SLL_Bean) {
+                            newTbName = tbName.replace("TR", "BB_TR" )
+                            createTB = it.createTB(newTbName)
+                            insertTB = it.insertTB(newTbName)
+                        }
+                    }
+                }
+                if (!createTB.isEmpty()&&!insertTB.isEmpty()) {
+                    db.execSQL(createTB)
+                    if (!queryDataIsExsitByCodeAndDate(newTbName,code.toString(),date)) {
+                        LogUtil.d("insertTB:$insertTB")
+                        db.execSQL(insertTB)
+                    }
+                }
+            }
+        }
+
+    }
+
+    fun queryDeleteTBByDBAndLimit(tbName: String, dbName: String) {
+        switchDBName(dbName)
+        val cursor =
+            db.rawQuery(" SELECT name FROM sqlite_master", null)
+        cursor?.let {
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val name = it.getString(it.getColumnIndex("name"))
+                if (!name.equals(tbName)&&!name.equals("sqlite_sequence")) {
+                    dropTable(name)
+                }
+                it.moveToNext()
+            }
+            it.close()
         }
     }
 
