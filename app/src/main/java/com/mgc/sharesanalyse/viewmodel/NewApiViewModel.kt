@@ -3289,6 +3289,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                     LogUtil.d("filterRev======fiterRevResult:${it.equals(indexNameList[indexNameList.size - 1])} countList:${mCountList.size} countLimit:${countLimit}")
                     if (it.equals(indexNameList[indexNameList.size - 1])) {
                         DBUtils.copyFilterTB2NewTB(newTBName, mCountList, 1)
+                        (mActivity as NewApiActivity).setBtnRevFilterInfo("$tbName _ $it _ $countLimit _finish")
                         LogUtil.d("finish======fiterRevResult:$newTBName")
                     }
                 }
@@ -3394,17 +3395,17 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
     fun getOtherResultByFilterTb(tbName: String) {
         if (tbName.contains(Datas.AA_FILTER_)) {
             val pair = DBUtils.selectMaxMinValueByTbAndColumn(tbName,"OM_M",Datas.REV_FILTERDB+"2020")
-            var rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 -20
+            var rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 -Datas.FILTER_PROGRESS
             var rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
             val rangeList = ArrayList<String>()
-            for (i in rangeMin..rangeMax step 20) {
+            for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
                 val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
-                    arrayOf(i.toString(),(i+20).toString()))
-                LogUtil.d("==========$i=======${i + 20}")
+                    arrayOf(i.toString(),(i+Datas.FILTER_PROGRESS).toString()))
+                LogUtil.d("==========$i=======${i + Datas.FILTER_PROGRESS}")
                 list?.forEach {
                     if (it is ReverseKJsonBean) {
                         LogUtil.d(it.n)
-                        val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REV_FILTERDB+"2020",it.code,it.date,1,tbName,"_R_${Math.abs(i)}_${Math.abs(i+20)}")
+                        val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REV_FILTERDB+"2020",it.code,it.date,1,tbName,"_R_${Math.abs(i)}_${Math.abs(i+Datas.FILTER_PROGRESS)}")
                         LogUtil.d(name)
                         if (!rangeList.contains(name)) {
                             rangeList.add(name)
@@ -3474,11 +3475,16 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
         val indextrNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
         val date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
-        val filename = "${parentBasePath}bb_range$date"
+
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("copy_finish")
         list.forEach {
+            val count = DBUtils.queryTBCountByTBAndDB(it,Datas.REV_FILTERDB+"2020")
+            val filename = "${parentBasePath}$count _bb_range$date"
             (mActivity as NewApiActivity).setBtnLogBBRangeFile(it)
-            FileLogUtil.d(filename,"------------------------$it")
+            val mFileName =  filename + "_R_" + it.split("_R_")[1]
+//            FileLogUtil.d(mFileName,"size-->$it")
+            FileLogUtil.d(mFileName,"------------------------$it")
+
             kotlin.run {
                 if (it.contains(Datas.Derby)) {
                     indexDerbyNameList
@@ -3489,7 +3495,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 }
             }.forEach { indexStr->
                 val pair = DBUtils.selectMaxMinValueByTbAndColumn(it,indexStr,Datas.REV_FILTERDB+"2020")
-                FileLogUtil.d(filename,"${indexStr}->min:${pair.first},max:${pair.second}")
+                FileLogUtil.d(mFileName,"${indexStr}->min:${pair.first},max:${pair.second}")
             }
 
 

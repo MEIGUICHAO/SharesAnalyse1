@@ -1421,6 +1421,18 @@ object DBUtils {
         }
     }
 
+    fun queryTBCountByTBAndDB(tbName: String, dbName: String): Int {
+        switchDBName(dbName)
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName", null)
+        var count = 0
+        cursor?.let {
+            count = it.count
+            it.close()
+        }
+        return count
+    }
+
     fun getAllCopyBBTBNameList(): ArrayList<String> {
         switchDBName(Datas.REV_FILTERDB+"2020")
         val cursor =

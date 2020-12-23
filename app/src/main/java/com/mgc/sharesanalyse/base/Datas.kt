@@ -110,8 +110,7 @@ object Datas {
     const val AA_FILTER_ = "AA_FILTER_"
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
-    const val RANGEMAX = 50
-    const val RANGEMAX_PROGRESS = 10
+    const val FILTER_PROGRESS = 10
 //    const val HHQDayCount = 6
 
 }
