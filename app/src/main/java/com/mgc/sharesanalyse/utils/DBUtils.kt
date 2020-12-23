@@ -1452,7 +1452,32 @@ object DBUtils {
         return list
     }
 
+    fun insertFilterResultJson(p50FilterBBKjRangeBean: P50FilterBBKJRangeBean) {
+        switchDBName(Datas.REV_FILTERDB+"2020")
+        val tbName = "AAA_FILTER_RESULT"
+        val createSql = p50FilterBBKjRangeBean.createTB(tbName)
+        db.execSQL(createSql)
+        var sqlStr = ""
+        if (!queryIsExsitByCodeAndCustomColumn(tbName,"P_TYPE","50")) {
+            sqlStr = p50FilterBBKjRangeBean.insertTB(tbName,"50", GsonHelper.toJson(p50FilterBBKjRangeBean))
+        } else {
+            sqlStr = p50FilterBBKjRangeBean.updateTB(tbName,GsonHelper.toJson(p50FilterBBKjRangeBean))
+        }
+        LogUtil.d(sqlStr)
+        db.execSQL(sqlStr)
+    }
 
 
+    fun queryIsExsitByCodeAndCustomColumn(tbName: String, customKey: String, customValue: String): Boolean {
+        var isexsit = false
+        if (tabbleIsExist(tbName)) {
+            var cursor =
+                db.rawQuery("SELECT * FROM $tbName WHERE $customKey =?", arrayOf(customValue))
+            isexsit = cursor.count > 0
+            LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
+            cursor.close()
+        }
+        return isexsit
+    }
 
 }

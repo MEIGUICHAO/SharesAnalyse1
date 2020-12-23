@@ -3475,32 +3475,44 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
         val indextrNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
         val date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val p50FilterBBKjRangeBean = P50FilterBBKJRangeBean()
 
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("copy_finish")
         list.forEach {
             val count = DBUtils.queryTBCountByTBAndDB(it,Datas.REV_FILTERDB+"2020")
-            val filename = "${parentBasePath}$count _bb_range$date"
-            (mActivity as NewApiActivity).setBtnLogBBRangeFile(it)
-            val mFileName =  filename + "_R_" + it.split("_R_")[1]
-//            FileLogUtil.d(mFileName,"size-->$it")
-            FileLogUtil.d(mFileName,"------------------------$it")
-
-            kotlin.run {
-                if (it.contains(Datas.Derby)) {
-                    indexDerbyNameList
-                } else if (it.contains("TR")) {
-                    indextrNameList
-                } else {
-                    indexNameList
+            if (count >= 5) {
+                val filename = "${parentBasePath}$count _bb_range$date"
+                (mActivity as NewApiActivity).setBtnLogBBRangeFile(it)
+                val endStr = it.split("_R_")[1]
+                val rangeArray = endStr.split("_")
+                var rangeMin = rangeArray[0].toInt()
+                if ((rangeArray[0].toInt() - rangeArray[1].toInt())>0) {
+                    rangeMin = -rangeArray[0].toInt()
                 }
-            }.forEach { indexStr->
-                val pair = DBUtils.selectMaxMinValueByTbAndColumn(it,indexStr,Datas.REV_FILTERDB+"2020")
-                FileLogUtil.d(mFileName,"${indexStr}->min:${pair.first},max:${pair.second}")
+
+                val mFileName =  filename + "_R_" + endStr
+                FileLogUtil.d(mFileName,"------------------------$it")
+                var mDFilter = P50FilterBBKJRangeBean.DFilter()
+                mDFilter.count = count
+                DataSettingUtils.setP50BeanInit(mDFilter)
+                kotlin.run {
+                    if (it.contains(Datas.Derby)) {
+                        indexDerbyNameList
+                    } else if (it.contains("TR")) {
+                        indextrNameList
+                    } else {
+                        indexNameList
+                    }
+                }.forEach { indexStr->
+                    val pair = DBUtils.selectMaxMinValueByTbAndColumn(it,indexStr,Datas.REV_FILTERDB+"2020")
+                    FileLogUtil.d(mFileName,"${indexStr}->min:${pair.first},max:${pair.second}")
+                    mDFilter = DataSettingUtils.setP50FilterMaxMinValue(indexStr,it,mDFilter,pair)
+                }
+                DataSettingUtils.setFilterBeanType(rangeMin,mDFilter,p50FilterBBKjRangeBean)
             }
 
-
-
         }
+        DBUtils.insertFilterResultJson(p50FilterBBKjRangeBean)
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("FINISH")
     }
 

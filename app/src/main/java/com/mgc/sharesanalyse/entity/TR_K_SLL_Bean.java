@@ -14,6 +14,9 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
     private float K_B_TR;
     private float K_C_TR;
     private float K_SL_A_TR;
+    private float K_SL_R_TR;
+    private float K_SL_B_TR;
+    private float K_SL_C_TR;
     private String P_T;
 
     public String getP_T() {
@@ -162,9 +165,6 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
         K_SL_C_TR = k_SL_C_TR;
     }
 
-    private float K_SL_R_TR;
-    private float K_SL_B_TR;
-    private float K_SL_C_TR;
 
     @Override
     public String createTB(String tbname) {
