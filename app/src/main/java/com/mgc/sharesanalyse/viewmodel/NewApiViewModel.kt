@@ -1528,6 +1528,9 @@ class NewApiViewModel : BaseViewModel() {
                 for (ddidnex in hisHqBean[0].hq.size-1 downTo 0) {
                     //        for (ddidnex in 0 until 4) {
                     val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
+                    if (date.isEmpty() || date1.isEmpty()) {
+                        continue
+                    }
                     if (date.toInt() <= date1.toInt()) {
                         continue
                     }
