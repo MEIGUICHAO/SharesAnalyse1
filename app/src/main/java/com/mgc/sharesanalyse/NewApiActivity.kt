@@ -154,9 +154,20 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.logBBRangeFile()
             }
         }
-
+        btnResoning.setOnClickListener {
+            App.getSinglePool().execute{
+                viewModel.reasoningResult()
+            }
+        }
     }
 
+
+
+    fun setBtnResoning(info: String) {
+        btnResoning.post {
+            btnResoning.setText(info)
+        }
+    }
 
 
     fun setBtnLogBBRangeFile(info: String) {

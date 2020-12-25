@@ -2493,8 +2493,6 @@ class NewApiViewModel : BaseViewModel() {
                 mCHDDList.add(0, it[i])
                 if (i == 0) {
                     getLastTwoMonthList(it, i, code, mCHDDList)
-                    mCHDDList.forEach {
-                    }
                 }
                 val requestBean = it[i]
                 val targetBeanList = ArrayList<CodeHDDBean>()
@@ -3520,6 +3518,61 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         DBUtils.insertFilterResultJson(p50FilterBBKjRangeBean)
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("FINISH")
     }
+
+    fun reasoningResult() {
+        val (mList, codelist) = getCHDDDateListAndCodeList()
+        val initList = arrayOf(3,5,10,15,20,25,30,36)
+        val foreachLimitList = ArrayList<Array<Int>>()
+        initList.forEach {
+            //target begin  old:begin end
+            foreachLimitList.add(arrayOf(72-it+1, 72-it, 72-2*it+1))
+        }
+
+        codelist.forEach { code ->
+            val mCHDDList = ArrayList<CodeHDDBean>()
+            mList.forEach {
+                val date = "20${it}01"
+                var month = DateUtils.changeFormatter(
+                    DateUtils.parse(date, FormatterEnum.YYYYMMDD),
+                    FormatterEnum.YYMM
+                ).toInt()
+                val dbName=   code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
+                val codeList  = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+                codeList?.let {
+                    mCHDDList.addAll(it)
+                }
+            }
+            LogUtil.d("$code================================")
+            if (mCHDDList.size >= 77) {
+                for (i in 72..mCHDDList.size-1) {
+                    for (x in foreachLimitList.size - 1 downTo 0) {
+                        val targetBeanList = ArrayList<CodeHDDBean>()
+                        for (y in i-foreachLimitList[x][0]..i) {
+                            targetBeanList.add(mCHDDList[y])
+                        }
+                        LogUtil.d("targetBeanList:${targetBeanList.size}")
+                        val oldBeanList = ArrayList<CodeHDDBean>()
+                        for (z in i-foreachLimitList[x][1]..i-foreachLimitList[x][2]) {
+                            oldBeanList.add(mCHDDList[z])
+                        }
+                        LogUtil.d("oldBeanList:${oldBeanList.size}")
+                    }
+                }
+            }
+
+        }
+    }
+
+//    fun getAllChddByCodeName() {
+//        for (index in 1..4) {
+//            getLastMonthChddList((it[i].date.toInt() - 100 * index).toString(), code)?.let {
+//                for (i in (it.size - 1) downTo 0) {
+//                    mCHDDList.add(it[i])
+//                }
+//            }
+//        }
+//    }
+
 
 
 }

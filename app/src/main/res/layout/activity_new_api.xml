@@ -89,6 +89,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="LogBBRangeFile" />
+        <Button
+            android:id="@+id/btnResoning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Resoning" />
 
     </LinearLayout>
 
