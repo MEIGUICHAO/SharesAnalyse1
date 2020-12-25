@@ -53,8 +53,8 @@ object Datas {
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
-//    val DEBUG_Code = listOf("300278")
-        val DEBUG_Code = listOf("688133","300278","000544")
+    val DEBUG_Code = listOf("300278")
+//        val DEBUG_Code = listOf("688133","300278","000544")
     const val FILTER_TYPE_COUNT = 2
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()

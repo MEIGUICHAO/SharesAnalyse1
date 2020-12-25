@@ -3524,8 +3524,8 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         val initList = arrayOf(3,5,10,15,20,25,30,36)
         val foreachLimitList = ArrayList<Array<Int>>()
         initList.forEach {
-            //target begin  old:begin end
-            foreachLimitList.add(arrayOf(72-it+1, 72-it, 72-2*it+1))
+            //target end  old:begin end
+            foreachLimitList.add(arrayOf(it-1, it, 2*it-1,it))
         }
 
         codelist.forEach { code ->
@@ -3546,16 +3546,23 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             if (mCHDDList.size >= 77) {
                 for (i in 72..mCHDDList.size-1) {
                     for (x in foreachLimitList.size - 1 downTo 0) {
+                        LogUtil.d("-----------------${foreachLimitList[x][3]}--------------------")
                         val targetBeanList = ArrayList<CodeHDDBean>()
-                        for (y in i-foreachLimitList[x][0]..i) {
+                        val beinBegin = i
+                        val beinEnd = i-foreachLimitList[x][0]
+                        for (y in i downTo beinEnd) {
                             targetBeanList.add(mCHDDList[y])
+                            LogUtil.d("-${foreachLimitList[x][3]}-bein,date:${mCHDDList[y].date}")
                         }
-                        LogUtil.d("targetBeanList:${targetBeanList.size}")
+                        LogUtil.d("-${foreachLimitList[x][3]}-beinBegin:${beinBegin},beinEnd:${beinEnd},targetBeanList:${targetBeanList.size}")
                         val oldBeanList = ArrayList<CodeHDDBean>()
-                        for (z in i-foreachLimitList[x][1]..i-foreachLimitList[x][2]) {
+                        val endBegin = i-foreachLimitList[x][1]
+                        val endEnd = i-foreachLimitList[x][2]
+                        for (z in endBegin  downTo endEnd) {
                             oldBeanList.add(mCHDDList[z])
+                            LogUtil.d("-${foreachLimitList[x][3]}-old,date:${mCHDDList[z].date}")
                         }
-                        LogUtil.d("oldBeanList:${oldBeanList.size}")
+                        LogUtil.d("-${foreachLimitList[x][3]}-endBegin:${endBegin},endEnd:${endEnd},oldBeanList:${oldBeanList.size}")
                     }
                 }
             }
