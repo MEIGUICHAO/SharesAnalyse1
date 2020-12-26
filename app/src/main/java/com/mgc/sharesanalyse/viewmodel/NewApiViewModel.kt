@@ -3542,28 +3542,27 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                     mCHDDList.addAll(it)
                 }
             }
-            LogUtil.d("$code================================")
             if (mCHDDList.size >= 77) {
                 for (i in 72..mCHDDList.size-1) {
+//                    LogUtil.d("curDay-->${mCHDDList[i].date}")
+//                    var logStr = ""
                     for (x in foreachLimitList.size - 1 downTo 0) {
-                        LogUtil.d("-----------------${foreachLimitList[x][3]}--------------------")
-                        val targetBeanList = ArrayList<CodeHDDBean>()
                         val beinBegin = i
                         val beinEnd = i-foreachLimitList[x][0]
-                        for (y in i downTo beinEnd) {
-                            targetBeanList.add(mCHDDList[y])
-                            LogUtil.d("-${foreachLimitList[x][3]}-bein,date:${mCHDDList[y].date}")
-                        }
-                        LogUtil.d("-${foreachLimitList[x][3]}-beinBegin:${beinBegin},beinEnd:${beinEnd},targetBeanList:${targetBeanList.size}")
-                        val oldBeanList = ArrayList<CodeHDDBean>()
                         val endBegin = i-foreachLimitList[x][1]
                         val endEnd = i-foreachLimitList[x][2]
+                        val targetBeanList = ArrayList<CodeHDDBean>()
+                        for (y in beinBegin downTo beinEnd) {
+                            targetBeanList.add(mCHDDList[y])
+                        }
+                        val oldBeanList = ArrayList<CodeHDDBean>()
                         for (z in endBegin  downTo endEnd) {
                             oldBeanList.add(mCHDDList[z])
-                            LogUtil.d("-${foreachLimitList[x][3]}-old,date:${mCHDDList[z].date}")
                         }
-                        LogUtil.d("-${foreachLimitList[x][3]}-endBegin:${endBegin},endEnd:${endEnd},oldBeanList:${oldBeanList.size}")
+//                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
                     }
+//                    LogUtil.d("curDay-->${logStr}")
+
                 }
             }
 
