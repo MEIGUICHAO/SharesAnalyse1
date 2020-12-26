@@ -3552,6 +3552,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                     val mDFilter = P50FilterBBKJRangeBean.DFilter()
                     var needContinue:Boolean
                     var originOM_M = -10086.toFloat()
+                    var fitlerType = 10086
                     for (x in foreachLimitList.size - 1 downTo 0) {
                         val beinBegin = i
                         val beinEnd = i-foreachLimitList[x][0]
@@ -3569,14 +3570,15 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                             val OM = oldBeanList.getRevBeansOM()
                             val M = targetBeanList.getRevBeansOM()
                             originOM_M = OM-M
+                            fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
                         }
-                        needContinue = DataSettingUtils.filterP50Result(originOM_M,mDFilter,p50FilterBBKJRangeBean!!,foreachLimitList[x][0],targetBeanList,oldBeanList)
+                        needContinue = DataSettingUtils.filterP50Result(fitlerType,originOM_M,mDFilter,p50FilterBBKJRangeBean!!,foreachLimitList[x][0],targetBeanList,oldBeanList)
                         if (!needContinue) {
                             break
                         }
                         if (x == 0 && needContinue) {
                             DataSettingUtils.setFilterP50ResultType(originOM_M,mDFilter,mP50Bean)
-                            LogUtil.d("date:${mCHDDList[i].date}-->\n${GsonHelper.toJson(mP50Bean)}")
+                            LogUtil.d("code:${code},date:${mCHDDList[i].date}-->\n${GsonHelper.toJson(mP50Bean)}")
                         }
 //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
                     }

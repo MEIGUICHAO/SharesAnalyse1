@@ -1577,6 +1577,7 @@ object DataSettingUtils {
     }
 
     fun filterP50Result(
+        fitlerType: Int,
         originOM_M: Float,
         mDFilter: P50FilterBBKJRangeBean.DFilter,
         p50FilterBBKJRangeBean: P50FilterBBKJRangeBean,
@@ -1598,28 +1599,553 @@ object DataSettingUtils {
 
         when (x) {
             35->{
-                mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
-                val mMaxBean = BaseFilterKJBBRangeBean()
                 if ((originOM_M >= -70 && originOM_M <= -60)||(originOM_M >= -50 && originOM_M <= -40)||(originOM_M >= -40 && originOM_M <= -30)
                     ||(originOM_M >= -30 && originOM_M <= -20)||(originOM_M >= -20 && originOM_M <= -10)||(originOM_M >= -10 && originOM_M <= 0)
                     || (originOM_M >= 0 && originOM_M <= 10)||(originOM_M >= 10 && originOM_M <= 20)) {
-                    setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
-                    mDFilter.d36Bean.maxBean = mMaxBean
+                    mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                    needContinue = judeParameterAndGetResult(
+                        x,
+                        fitlerType,
+                        p50FilterBBKJRangeBean,
+                        OM,
+                        M,
+                        C,
+                        O,
+                        L,
+                        OL,
+                        OC,
+                        OO,
+                        mDFilter.d36Bean,
+                        needContinue
+                    )
                 } else {
                     needContinue = false
                 }
 
             }
-            29->{}
-            24->{}
-            19->{}
-            14->{}
-            9->{}
-            4->{}
-            2->{}
+            29->{
+                mDFilter.d30Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d30Bean,
+                    needContinue
+                )
+            }
+            24->{
+                mDFilter.d25Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d25Bean,
+                    needContinue
+                )
+            }
+            19->{
+                mDFilter.d20Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d20Bean,
+                    needContinue
+                )
+            }
+            14->{
+                mDFilter.d15Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d15Bean,
+                    needContinue
+                )
+            }
+            9->{
+                mDFilter.d10Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d10Bean,
+                    needContinue
+                )
+            }
+            4->{
+                mDFilter.d05Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d05Bean,
+                    needContinue
+                )
+            }
+            2->{
+                mDFilter.d03Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                needContinue = judeParameterAndGetResult(
+                    x,
+                    fitlerType,
+                    p50FilterBBKJRangeBean,
+                    OM,
+                    M,
+                    C,
+                    O,
+                    L,
+                    OL,
+                    OC,
+                    OO,
+                    mDFilter.d03Bean,
+                    needContinue
+                )
+            }
         }
+        LogUtil.d("needContinue:${needContinue}")
         return needContinue
 
+    }
+
+    private fun judeParameterAndGetResult(
+        day: Int,
+        fitlerType: Int,
+        p50FilterBBKJRangeBean: P50FilterBBKJRangeBean,
+        OM: Float,
+        M: Float,
+        C: Float,
+        O: Float,
+        L: Float,
+        OL: Float,
+        OC: Float,
+        OO: Float,
+        mDMaxBean: P50FilterBBKJRangeBean.MaxMinBean,
+        needContinue: Boolean
+    ): Boolean {
+        var needContinue1 = needContinue
+        val bean = kotlin.run {
+//            arrayOf(3,5,10,15,20,25,30,36)
+            when (fitlerType) {
+                -70->{
+                    p50FilterBBKJRangeBean.r_N70_N60?.let {
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                -50->{
+                    p50FilterBBKJRangeBean.r_N50_N40?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                -40->{
+                    p50FilterBBKJRangeBean.r_N40_N30?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                -30->{
+                    p50FilterBBKJRangeBean.r_N30_N20?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                -20->{
+                    p50FilterBBKJRangeBean.r_N20_N10?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                -10->{
+                    p50FilterBBKJRangeBean.r_N10_0?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                0->{
+                    p50FilterBBKJRangeBean.r_0_10?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                10->{
+                    p50FilterBBKJRangeBean.r_10_20?.let{
+                        when (day) {
+                            35->it.d36Bean
+                            29->it.d30Bean
+                            24->it.d25Bean
+                            19->it.d20Bean
+                            14->it.d15Bean
+                            9->it.d10Bean
+                            4->it.d05Bean
+                            2->it.d03Bean
+                            else->null
+                        }
+                    }
+                }
+                else->{
+                    null
+                }
+            }
+        }
+        val trBean = kotlin.run {
+            when (fitlerType) {
+                -70->{
+                    p50FilterBBKJRangeBean.r_N70_N60?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                -50->{
+                    p50FilterBBKJRangeBean.r_N50_N40?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                -40->{
+                    p50FilterBBKJRangeBean.r_N40_N30?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                -30->{
+                    p50FilterBBKJRangeBean.r_N30_N20?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                -20->{
+                    p50FilterBBKJRangeBean.r_N20_N10?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                -10->{
+                    p50FilterBBKJRangeBean.r_N10_0?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                0->{
+                    p50FilterBBKJRangeBean.r_0_10?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                10->{
+                    p50FilterBBKJRangeBean.r_10_20?.let{
+                        when (day) {
+                            35->it.d36TRBean
+                            29->it.d30TRBean
+                            24->it.d25TRBean
+                            19->it.d20TRBean
+                            14->it.d15TRBean
+                            9->it.d10TRBean
+                            4->it.d05TRBean
+                            2->it.d03TRBean
+                            else->null
+                        }
+                    }
+                }
+                else->{
+                    null
+                }
+            }
+        }
+        if (null==bean){
+            return false
+        }
+        val maxBean = bean.maxBean
+        val minBean = bean.minBean
+        val OM_M = OM - M
+        val OM_C = OM - C
+        val OM_P = OM - O
+        val OM_L = OM - L
+
+        val OL_M = OL - M
+        val OL_C = OL - C
+        val OL_P = OL - O
+        val OL_L = OL - L
+
+        val OC_M = OC - M
+        val OC_C = OC - C
+        val OC_P = OC - O
+        val OC_L = OC - L
+
+        val OP_M = OO - M
+        val OP_C = OO - C
+        val OP_P = OO - O
+        val OP_L = OO - L
+
+        val OM_OC = OM - OC
+        val OM_OP = OM - OO
+        val OM_OL = OM - OL
+        val OC_OP = OC - OO
+        val OC_OL = OC - OL
+        val OP_OL = OO - OL
+
+        val M_C = M - C
+        val M_P = M - O
+        val M_L = M - L
+        val C_P = C - O
+        val C_L = C - L
+        val P_L = O - L
+
+
+        val mMaxBean = BaseFilterKJBBRangeBean()
+        if (judeFilterParameter(
+                OM_M,
+                minBean,
+                maxBean,
+                OM_C,
+                OM_P,
+                OM_L,
+                OL_M,
+                OL_C,
+                OL_P,
+                OL_L,
+                OC_M,
+                OC_C,
+                OC_P,
+                OC_L,
+                OP_M,
+                OP_C,
+                OP_P,
+                OP_L,
+                OM_OC,
+                OM_OP,
+                OM_OL,
+                OC_OP,
+                OC_OL,
+                OP_OL,
+                M_C,
+                M_P,
+                M_L,
+                C_P,
+                C_L,
+                P_L
+            )
+        ) {
+            setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
+            mDMaxBean.maxBean = mMaxBean
+        } else {
+            needContinue1 = false
+        }
+        return needContinue1
+    }
+
+    private fun judeFilterParameter(
+        OM_M: Float,
+        minBean: BaseFilterKJBBRangeBean,
+        maxBean: BaseFilterKJBBRangeBean,
+        OM_C: Float,
+        OM_P: Float,
+        OM_L: Float,
+        OL_M: Float,
+        OL_C: Float,
+        OL_P: Float,
+        OL_L: Float,
+        OC_M: Float,
+        OC_C: Float,
+        OC_P: Float,
+        OC_L: Float,
+        OP_M: Float,
+        OP_C: Float,
+        OP_P: Float,
+        OP_L: Float,
+        OM_OC: Float,
+        OM_OP: Float,
+        OM_OL: Float,
+        OC_OP: Float,
+        OC_OL: Float,
+        OP_OL: Float,
+        M_C: Float,
+        M_P: Float,
+        M_L: Float,
+        C_P: Float,
+        C_L: Float,
+        P_L: Float
+    ): Boolean {
+        return (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
+                (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
+                (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
+                (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L) &&
+                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
+                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
     }
 
     private fun setMaxDatas(
@@ -1684,6 +2210,28 @@ object DataSettingUtils {
         } else if (originOM_M >= 10 && originOM_M <= 20) {
             mP50Bean.r_10_20 = mDFilter
         }
+    }
+
+    fun getFilterP50ResultType(originOM_M:Float): Int {
+        var type = -10086
+        if (originOM_M >= -70 && originOM_M <= -60) {
+            type = -70
+        } else if (originOM_M >= -50 && originOM_M <= -40) {
+            type = -50
+        } else if (originOM_M >= -40 && originOM_M <= -30) {
+            type = -40
+        } else if (originOM_M >= -30 && originOM_M <= -20) {
+            type = -30
+        } else if (originOM_M >= -20 && originOM_M <= -10) {
+            type = -20
+        } else if (originOM_M >= -10 && originOM_M <= 0) {
+            type = -10
+        } else if (originOM_M >= 0 && originOM_M <= 10) {
+            type = 0
+        } else if (originOM_M >= 10 && originOM_M <= 20) {
+            type = 10
+        }
+        return type
     }
 
 }
