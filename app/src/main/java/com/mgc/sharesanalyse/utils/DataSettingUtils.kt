@@ -1,7 +1,10 @@
 package com.mgc.sharesanalyse.utils
 
+import com.mgc.sharesanalyse.base.getRevBeansOL
+import com.mgc.sharesanalyse.base.getRevBeansOM
 import com.mgc.sharesanalyse.entity.BaseFilterKJBBRangeBean
 import com.mgc.sharesanalyse.entity.BaseFilterTRBBRangeBean
+import com.mgc.sharesanalyse.entity.CodeHDDBean
 import com.mgc.sharesanalyse.entity.P50FilterBBKJRangeBean
 
 object DataSettingUtils {
@@ -1571,6 +1574,116 @@ object DataSettingUtils {
         mDFilter.d36TRBean = P50FilterBBKJRangeBean.MaxMinTRBean()
         mDFilter.d36TRBean.maxBean = BaseFilterTRBBRangeBean()
         mDFilter.d36TRBean.minBean = BaseFilterTRBBRangeBean()
+    }
+
+    fun filterP50Result(
+        originOM_M: Float,
+        mDFilter: P50FilterBBKJRangeBean.DFilter,
+        p50FilterBBKJRangeBean: P50FilterBBKJRangeBean,
+        x: Int,
+        targetBeanList: ArrayList<CodeHDDBean>,
+        oldBeanList: ArrayList<CodeHDDBean>
+    ): Boolean {
+        val OM = oldBeanList.getRevBeansOM()
+        val OL = oldBeanList.getRevBeansOL()
+        val OC = oldBeanList[0].p_MA_J.aacp
+        val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
+
+        val M = targetBeanList.getRevBeansOM()
+        val L = targetBeanList.getRevBeansOL()
+
+        val C = targetBeanList[0].p_MA_J.aacp
+        val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
+        var needContinue = true
+
+        when (x) {
+            35->{
+                mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                val mMaxBean = BaseFilterKJBBRangeBean()
+                if ((originOM_M >= -70 && originOM_M <= -60)||(originOM_M >= -50 && originOM_M <= -40)||(originOM_M >= -40 && originOM_M <= -30)
+                    ||(originOM_M >= -30 && originOM_M <= -20)||(originOM_M >= -20 && originOM_M <= -10)||(originOM_M >= -10 && originOM_M <= 0)
+                    || (originOM_M >= 0 && originOM_M <= 10)||(originOM_M >= 10 && originOM_M <= 20)) {
+                    setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
+                    mDFilter.d36Bean.maxBean = mMaxBean
+                } else {
+                    needContinue = false
+                }
+
+            }
+            29->{}
+            24->{}
+            19->{}
+            14->{}
+            9->{}
+            4->{}
+            2->{}
+        }
+        return needContinue
+
+    }
+
+    private fun setMaxDatas(
+        mMaxBean: BaseFilterKJBBRangeBean,
+        OM: Float,
+        M: Float,
+        C: Float,
+        L: Float,
+        OC: Float,
+        OL: Float,
+        OO: Float,
+        O: Float
+    ) {
+        mMaxBean.oM_M = OM - M
+        mMaxBean.oM_C = OM - C
+        mMaxBean.oM_L = OM - L
+        mMaxBean.oM_OC = OM - OC
+        mMaxBean.oM_OL = OM - OL
+        mMaxBean.oM_OP = OM - OO
+
+        mMaxBean.oL_L = OL - L
+        mMaxBean.oL_M = OL - M
+        mMaxBean.oL_C = OL - C
+        mMaxBean.oL_P = OL - O
+
+        mMaxBean.oC_L = OC - L
+        mMaxBean.oC_M = OC - M
+        mMaxBean.oC_C = OC - C
+        mMaxBean.oC_P = OC - O
+        mMaxBean.oC_OL = OC - OL
+        mMaxBean.oC_OP = OC - OO
+
+        mMaxBean.oO_L = OO - L
+        mMaxBean.oO_M = OO - M
+        mMaxBean.oO_C = OO - C
+        mMaxBean.oO_P = OO - O
+        mMaxBean.oP_OL = OO - OL
+
+        mMaxBean.m_C = M - C
+        mMaxBean.m_P = M - O
+        mMaxBean.m_L = M - L
+        mMaxBean.c_P = C - O
+        mMaxBean.c_L = C - L
+        mMaxBean.p_L = O - L
+    }
+
+    fun setFilterP50ResultType(originOM_M:Float,mDFilter: P50FilterBBKJRangeBean.DFilter,mP50Bean: P50FilterBBKJRangeBean) {
+        if (originOM_M >= -70 && originOM_M <= -60) {
+            mP50Bean.r_N70_N60 = mDFilter
+        } else if (originOM_M >= -50 && originOM_M <= -40) {
+            mP50Bean.r_N50_N40 = mDFilter
+        } else if (originOM_M >= -40 && originOM_M <= -30) {
+            mP50Bean.r_N40_N30 = mDFilter
+        } else if (originOM_M >= -30 && originOM_M <= -20) {
+            mP50Bean.r_N30_N20 = mDFilter
+        } else if (originOM_M >= -20 && originOM_M <= -10) {
+            mP50Bean.r_N20_N10 = mDFilter
+        } else if (originOM_M >= -10 && originOM_M <= 0) {
+            mP50Bean.r_N10_0 = mDFilter
+        } else if (originOM_M >= 0 && originOM_M <= 10) {
+            mP50Bean.r_0_10 = mDFilter
+        } else if (originOM_M >= 10 && originOM_M <= 20) {
+            mP50Bean.r_10_20 = mDFilter
+        }
     }
 
 }

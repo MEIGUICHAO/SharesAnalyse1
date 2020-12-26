@@ -29,6 +29,8 @@ public class BaseFilterKJBBRangeBean {
     private float M_L;
     private float C_P;
     private float C_L;
+    private float P_L;
+
 
     public float getP_L() {
         return P_L;
@@ -38,7 +40,6 @@ public class BaseFilterKJBBRangeBean {
         P_L = p_L;
     }
 
-    private float P_L;
 
     public float getOM_M() {
         return OM_M;

@@ -1467,6 +1467,19 @@ object DBUtils {
         db.execSQL(sqlStr)
     }
 
+    fun getFilterResultJsonByType(P_TYPE: String): String {
+        switchDBName(Datas.REV_FILTERDB + "2020")
+        val tbName = "AAA_FILTER_RESULT"
+        val cursor =
+            db.rawQuery(" SELECT JSON FROM $tbName WHERE P_TYPE = ?", arrayOf(P_TYPE))
+        var json = ""
+        if (null != cursor && cursor.moveToFirst()) {
+            json = cursor.getString(cursor.getColumnIndex("JSON"))
+            cursor.close()
+        }
+        return json
+    }
+
 
     fun queryIsExsitByCodeAndCustomColumn(tbName: String, customKey: String, customValue: String): Boolean {
         var isexsit = false

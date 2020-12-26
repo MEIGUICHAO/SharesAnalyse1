@@ -3527,6 +3527,8 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             //target end  old:begin end
             foreachLimitList.add(arrayOf(it-1, it, 2*it-1,it))
         }
+        val json = DBUtils.getFilterResultJsonByType("50")
+        val p50FilterBBKJRangeBean = GsonHelper.parse(json,P50FilterBBKJRangeBean::class.java)
 
         codelist.forEach { code ->
             val mCHDDList = ArrayList<CodeHDDBean>()
@@ -3546,6 +3548,10 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 for (i in 72..mCHDDList.size-1) {
 //                    LogUtil.d("curDay-->${mCHDDList[i].date}")
 //                    var logStr = ""
+                    val mP50Bean  = P50FilterBBKJRangeBean()
+                    val mDFilter = P50FilterBBKJRangeBean.DFilter()
+                    var needContinue:Boolean
+                    var originOM_M = -10086.toFloat()
                     for (x in foreachLimitList.size - 1 downTo 0) {
                         val beinBegin = i
                         val beinEnd = i-foreachLimitList[x][0]
@@ -3558,6 +3564,19 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                         val oldBeanList = ArrayList<CodeHDDBean>()
                         for (z in endBegin  downTo endEnd) {
                             oldBeanList.add(mCHDDList[z])
+                        }
+                        if (originOM_M == -10086.toFloat()) {
+                            val OM = oldBeanList.getRevBeansOM()
+                            val M = targetBeanList.getRevBeansOM()
+                            originOM_M = OM-M
+                        }
+                        needContinue = DataSettingUtils.filterP50Result(originOM_M,mDFilter,p50FilterBBKJRangeBean!!,foreachLimitList[x][0],targetBeanList,oldBeanList)
+                        if (!needContinue) {
+                            break
+                        }
+                        if (x == 0 && needContinue) {
+                            DataSettingUtils.setFilterP50ResultType(originOM_M,mDFilter,mP50Bean)
+                            LogUtil.d("date:${mCHDDList[i].date}-->\n${GsonHelper.toJson(mP50Bean)}")
                         }
 //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
                     }
