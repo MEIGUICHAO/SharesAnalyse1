@@ -2655,22 +2655,27 @@ private fun insertRevBean(
         oldBeanList.add(mCHDDList[i])
     }
 
+    oldBeanList.sortAscByDate()
+    targetBeanList.sortAscByDate()
+
     val reverseKJsonBean = newReverseKJsonBean(
         afterBean,
         targetBean,
         requestBean
     )
-    val OM = oldBeanList.getRevBeansOM()
-    val OL = oldBeanList.getRevBeansOL()
     val OC = oldBeanList[0].p_MA_J.aacp
     val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
 
-    val M = targetBeanList.getRevBeansOM()
-    val L = targetBeanList.getRevBeansOL()
 
     val C = targetBean.p_MA_J.aacp
     val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
 
+    val OM = oldBeanList.getRevBeansOM()
+    val OL = oldBeanList.getRevBeansOL()
+    val M = targetBeanList.getRevBeansOM()
+    val L = targetBeanList.getRevBeansOL()
+    oldBeanList.sortAscByDate()
+    targetBeanList.sortAscByDate()
     val maList = ArrayList<String>()
     val MA05 = "1_${mCHDDList[targetBeanEnd].p_MA_J.d05}"
     val MA10 = "2_${mCHDDList[targetBeanEnd].p_MA_J.d10}"
@@ -3515,7 +3520,9 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             }
 
         }
-        DBUtils.insertFilterResultJson(p50FilterBBKjRangeBean)
+        val json = DBUtils.insertFilterResultJson(p50FilterBBKjRangeBean)
+
+        FileLogUtil.d("${parentBasePath}rangeJson$date",json)
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("FINISH")
     }
 

@@ -1452,7 +1452,7 @@ object DBUtils {
         return list
     }
 
-    fun insertFilterResultJson(p50FilterBBKjRangeBean: P50FilterBBKJRangeBean) {
+    fun insertFilterResultJson(p50FilterBBKjRangeBean: P50FilterBBKJRangeBean):String {
         switchDBName(Datas.REV_FILTERDB+"2020")
         val tbName = "AAA_FILTER_RESULT"
         val createSql = p50FilterBBKjRangeBean.createTB(tbName)
@@ -1465,6 +1465,7 @@ object DBUtils {
         }
         LogUtil.d(sqlStr)
         db.execSQL(sqlStr)
+        return sqlStr
     }
 
     fun getFilterResultJsonByType(P_TYPE: String): String {

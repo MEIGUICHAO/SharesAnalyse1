@@ -123,6 +123,14 @@ fun String.percent2Float():Float {
     }
 }
 
+fun ArrayList<CodeHDDBean>.sortAscByDate() {
+    Collections.sort(this, object : Comparator<CodeHDDBean> {
+        override fun compare(p0: CodeHDDBean, p1: CodeHDDBean): Int {
+            return p1.date.toInt().compareTo(p0.date.toInt())
+        }
+    })
+}
+
 fun ArrayList<CodeHDDBean>.getRevBeansOM(): Float {
     Collections.sort(this, object : Comparator<CodeHDDBean> {
         override fun compare(p0: CodeHDDBean, p1: CodeHDDBean): Int {

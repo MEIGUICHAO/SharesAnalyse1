@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.utils
 
 import com.mgc.sharesanalyse.base.getRevBeansOL
 import com.mgc.sharesanalyse.base.getRevBeansOM
+import com.mgc.sharesanalyse.base.sortAscByDate
 import com.mgc.sharesanalyse.base.toKeep2
 import com.mgc.sharesanalyse.entity.BaseFilterKJBBRangeBean
 import com.mgc.sharesanalyse.entity.BaseFilterTRBBRangeBean
@@ -1499,28 +1500,36 @@ object DataSettingUtils {
     ) {
         when (rangeMin) {
             -70->{
-                p50FilterBBKjRangeBean.r_N70_N60 = mDFilter
+                p50FilterBBKjRangeBean.r_N70_N60 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N70_N60-->${GsonHelper.toJson(mDFilter)}")
             }
             -50->{
-                p50FilterBBKjRangeBean.r_N50_N40 = mDFilter
+                p50FilterBBKjRangeBean.r_N50_N40 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N50_N40-->${GsonHelper.toJson(mDFilter)}")
             }
             -40->{
-                p50FilterBBKjRangeBean.r_N40_N30 = mDFilter
+                p50FilterBBKjRangeBean.r_N40_N30 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N40_N30-->${GsonHelper.toJson(mDFilter)}")
             }
             -30->{
-                p50FilterBBKjRangeBean.r_N30_N20 = mDFilter
+                p50FilterBBKjRangeBean.r_N30_N20 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N30_N20-->${GsonHelper.toJson(mDFilter)}")
             }
             -20->{
-                p50FilterBBKjRangeBean.r_N20_N10 = mDFilter
+                p50FilterBBKjRangeBean.r_N20_N10 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N20_N10-->${GsonHelper.toJson(mDFilter)}")
             }
             -10->{
-                p50FilterBBKjRangeBean.r_N10_0 = mDFilter
+                p50FilterBBKjRangeBean.r_N10_0 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_N10_0-->${GsonHelper.toJson(mDFilter)}")
             }
             0->{
-                p50FilterBBKjRangeBean.r_0_10 = mDFilter
+                p50FilterBBKjRangeBean.r_0_10 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_0_10-->${GsonHelper.toJson(mDFilter)}")
             }
             10->{
-                p50FilterBBKjRangeBean.r_10_20 = mDFilter
+                p50FilterBBKjRangeBean.r_10_20 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+                LogUtil.d("r_10_20-->${GsonHelper.toJson(mDFilter)}")
             }
 
         }
@@ -1586,16 +1595,33 @@ object DataSettingUtils {
         targetBeanList: ArrayList<CodeHDDBean>,
         oldBeanList: ArrayList<CodeHDDBean>
     ): Boolean {
-        val OM = oldBeanList.getRevBeansOM()
-        val OL = oldBeanList.getRevBeansOL()
+        oldBeanList.sortAscByDate()
+        targetBeanList.sortAscByDate()
+
+        LogUtil.d("------oldBeanList----------")
+        for (i in 0..oldBeanList.size-1) {
+            LogUtil.d("${oldBeanList[i].date}---cp:${oldBeanList[i].cp}---op:${oldBeanList[i].op}")
+        }
+
         val OC = oldBeanList[0].p_MA_J.aacp
         val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
+        LogUtil.d("OC:${oldBeanList[0].date}--$OC,OO:$OO")
 
-        val M = targetBeanList.getRevBeansOM()
-        val L = targetBeanList.getRevBeansOL()
+
+
+        LogUtil.d("------targetBeanList----------")
+        targetBeanList.forEach {
+            LogUtil.d("${it.date}---cp:${it.cp}---op:${it.op}")
+        }
 
         val C = targetBeanList[0].p_MA_J.aacp
         val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
+
+        val OM = oldBeanList.getRevBeansOM()
+        val OL = oldBeanList.getRevBeansOL()
+        val M = targetBeanList.getRevBeansOM()
+        val L = targetBeanList.getRevBeansOL()
+        LogUtil.d("M:$M,L:$L,C:$C,O:$O")
         var needContinue = true
         LogUtil.d("originOM_M:$originOM_M")
         when (x) {
@@ -2072,6 +2098,7 @@ object DataSettingUtils {
         val mMaxBean = BaseFilterKJBBRangeBean()
         setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
         LogUtil.d("mMaxBean-->\n${GsonHelper.toJson(mMaxBean)}")
+        LogUtil.d("OC_C-->\n${OC_C},C:$C,OC:$OC")
         LogUtil.d("bean-->\n${GsonHelper.toJson(bean)}")
         if (judeFilterParameter(
                 OM_M,
@@ -2146,6 +2173,7 @@ object DataSettingUtils {
         C_L: Float,
         P_L: Float
     ): Boolean {
+//        LogUtil.d("OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M):${OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M}")
         return (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
                 (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
                 (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
