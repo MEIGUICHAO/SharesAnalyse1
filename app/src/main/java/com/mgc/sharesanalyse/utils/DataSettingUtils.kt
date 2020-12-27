@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.utils
 
 import com.mgc.sharesanalyse.base.getRevBeansOL
 import com.mgc.sharesanalyse.base.getRevBeansOM
+import com.mgc.sharesanalyse.base.toKeep2
 import com.mgc.sharesanalyse.entity.BaseFilterKJBBRangeBean
 import com.mgc.sharesanalyse.entity.BaseFilterTRBBRangeBean
 import com.mgc.sharesanalyse.entity.CodeHDDBean
@@ -1596,13 +1597,14 @@ object DataSettingUtils {
         val C = targetBeanList[0].p_MA_J.aacp
         val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
         var needContinue = true
-
+        LogUtil.d("originOM_M:$originOM_M")
         when (x) {
             35->{
                 if ((originOM_M >= -70 && originOM_M <= -60)||(originOM_M >= -50 && originOM_M <= -40)||(originOM_M >= -40 && originOM_M <= -30)
                     ||(originOM_M >= -30 && originOM_M <= -20)||(originOM_M >= -20 && originOM_M <= -10)||(originOM_M >= -10 && originOM_M <= 0)
                     || (originOM_M >= 0 && originOM_M <= 10)||(originOM_M >= 10 && originOM_M <= 20)) {
                     mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
+                    LogUtil.d("originOM_M:$originOM_M")
                     needContinue = judeParameterAndGetResult(
                         x,
                         fitlerType,
@@ -1773,6 +1775,7 @@ object DataSettingUtils {
         var needContinue1 = needContinue
         val bean = kotlin.run {
 //            arrayOf(3,5,10,15,20,25,30,36)
+            LogUtil.d("fitlerType:$fitlerType,day:$day")
             when (fitlerType) {
                 -70->{
                     p50FilterBBKJRangeBean.r_N70_N60?.let {
@@ -2031,42 +2034,45 @@ object DataSettingUtils {
         }
         val maxBean = bean.maxBean
         val minBean = bean.minBean
-        val OM_M = OM - M
-        val OM_C = OM - C
-        val OM_P = OM - O
-        val OM_L = OM - L
+        val OM_M = (OM - M) / OM * 100
+        val OM_C = (OM - C) / OM * 100
+        val OM_P = (OM - O) / OM * 100
+        val OM_L = (OM - L) / OM * 100
 
-        val OL_M = OL - M
-        val OL_C = OL - C
-        val OL_P = OL - O
-        val OL_L = OL - L
+        val OL_M = (OL - M) / OL * 100
+        val OL_C = (OL - C) / OL * 100
+        val OL_P = (OL - O) / OL * 100
+        val OL_L = (OL - L) / OL * 100
 
-        val OC_M = OC - M
-        val OC_C = OC - C
-        val OC_P = OC - O
-        val OC_L = OC - L
+        val OC_M = (OC - M) / OC * 100
+        val OC_C = (OC - C) / OC * 100
+        val OC_P = (OC - O) / OC * 100
+        val OC_L = (OC - L) / OC * 100
 
-        val OP_M = OO - M
-        val OP_C = OO - C
-        val OP_P = OO - O
-        val OP_L = OO - L
+        val OP_M = (OO - M) / OO * 100
+        val OP_C = (OO - C) / OO * 100
+        val OP_P = (OO - O) / OO * 100
+        val OP_L = (OO - L) / OO * 100
 
-        val OM_OC = OM - OC
-        val OM_OP = OM - OO
-        val OM_OL = OM - OL
-        val OC_OP = OC - OO
-        val OC_OL = OC - OL
-        val OP_OL = OO - OL
+        val OM_OC = (OM - OC) / OM * 100
+        val OM_OP = (OM - OO) / OM * 100
+        val OM_OL = (OM - OL) / OM * 100
+        val OC_OP = (OC - OO) / OC * 100
+        val OC_OL = (OC - OL) / OC * 100
+        val OP_OL = (OO - OL) / OO * 100
 
-        val M_C = M - C
-        val M_P = M - O
-        val M_L = M - L
-        val C_P = C - O
-        val C_L = C - L
-        val P_L = O - L
+        val M_C = (M - C) / M * 100
+        val M_P = (M - O) / M * 100
+        val M_L = (M - L) / M * 100
+        val C_P = (C - O) / C * 100
+        val C_L = (C - L) / C * 100
+        val P_L = (O - L) / O * 100
 
 
         val mMaxBean = BaseFilterKJBBRangeBean()
+        setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
+        LogUtil.d("mMaxBean-->\n${GsonHelper.toJson(mMaxBean)}")
+        LogUtil.d("bean-->\n${GsonHelper.toJson(bean)}")
         if (judeFilterParameter(
                 OM_M,
                 minBean,
@@ -2159,37 +2165,37 @@ object DataSettingUtils {
         OO: Float,
         O: Float
     ) {
-        mMaxBean.oM_M = OM - M
-        mMaxBean.oM_C = OM - C
-        mMaxBean.oM_L = OM - L
-        mMaxBean.oM_OC = OM - OC
-        mMaxBean.oM_OL = OM - OL
-        mMaxBean.oM_OP = OM - OO
+        mMaxBean.oM_M = ((OM - M) / OM * 100).toKeep2()
+        mMaxBean.oM_C = ((OM - C) / OM * 100).toKeep2()
+        mMaxBean.oM_L = ((OM - L) / OM * 100).toKeep2()
+        mMaxBean.oM_OC = ((OM - OC) / OM * 100).toKeep2()
+        mMaxBean.oM_OL = ((OM - OL) / OM * 100).toKeep2()
+        mMaxBean.oM_OP = ((OM - OO) / OM * 100).toKeep2()
 
-        mMaxBean.oL_L = OL - L
-        mMaxBean.oL_M = OL - M
-        mMaxBean.oL_C = OL - C
-        mMaxBean.oL_P = OL - O
+        mMaxBean.oL_L = ((OL - L) / OL * 100).toKeep2()
+        mMaxBean.oL_M = ((OL - M) / OL * 100).toKeep2()
+        mMaxBean.oL_C = ((OL - C) / OL * 100).toKeep2()
+        mMaxBean.oL_P = ((OL - O) / OL * 100).toKeep2()
 
-        mMaxBean.oC_L = OC - L
-        mMaxBean.oC_M = OC - M
-        mMaxBean.oC_C = OC - C
-        mMaxBean.oC_P = OC - O
-        mMaxBean.oC_OL = OC - OL
-        mMaxBean.oC_OP = OC - OO
+        mMaxBean.oC_L = ((OC - L) / OC * 100).toKeep2()
+        mMaxBean.oC_M = ((OC - M) / OC * 100).toKeep2()
+        mMaxBean.oC_C = ((OC - C) / OC * 100).toKeep2()
+        mMaxBean.oC_P = ((OC - O) / OC * 100).toKeep2()
+        mMaxBean.oC_OL = ((OC - OL) / OC * 100).toKeep2()
+        mMaxBean.oC_OP = ((OC - OO) / OC * 100).toKeep2()
 
-        mMaxBean.oO_L = OO - L
-        mMaxBean.oO_M = OO - M
-        mMaxBean.oO_C = OO - C
-        mMaxBean.oO_P = OO - O
-        mMaxBean.oP_OL = OO - OL
+        mMaxBean.oO_L = ((OO - L) / OO * 100).toKeep2()
+        mMaxBean.oO_M = ((OO - M) / OO * 100).toKeep2()
+        mMaxBean.oO_C = ((OO - C) / OO * 100).toKeep2()
+        mMaxBean.oO_P = ((OO - O) / OO * 100).toKeep2()
+        mMaxBean.oP_OL = ((OO - OL) / OO * 100).toKeep2()
 
-        mMaxBean.m_C = M - C
-        mMaxBean.m_P = M - O
-        mMaxBean.m_L = M - L
-        mMaxBean.c_P = C - O
-        mMaxBean.c_L = C - L
-        mMaxBean.p_L = O - L
+        mMaxBean.m_C = ((M - C) / M * 100).toKeep2()
+        mMaxBean.m_P = ((M - O) / M * 100).toKeep2()
+        mMaxBean.m_L = ((M - L) / M * 100).toKeep2()
+        mMaxBean.c_P = ((C - O) / C * 100).toKeep2()
+        mMaxBean.c_L = ((C - L) / C * 100).toKeep2()
+        mMaxBean.p_L = ((O - L) / O * 100).toKeep2()
     }
 
     fun setFilterP50ResultType(originOM_M:Float,mDFilter: P50FilterBBKJRangeBean.DFilter,mP50Bean: P50FilterBBKJRangeBean) {
@@ -2231,6 +2237,7 @@ object DataSettingUtils {
         } else if (originOM_M >= 10 && originOM_M <= 20) {
             type = 10
         }
+        LogUtil.d(type.toString())
         return type
     }
 
