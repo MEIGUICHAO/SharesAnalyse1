@@ -110,6 +110,14 @@ fun ArrayList<Float>.sortFloatDateDesc() {
     })
 }
 
+fun ArrayList<Float>.sortFloatAsc() {
+    Collections.sort(this, object : Comparator<Float> {
+        override fun compare(p0: Float, p1: Float): Int {
+            return p0.compareTo(p1)
+        }
+    })
+}
+
 
 fun String.CHDD2YYMM():String {
     return this.replace("CY_CHDD_", "").replace("SH_CHDD_", "").replace("SZ_CHDD_", "")

@@ -1,13 +1,7 @@
 package com.mgc.sharesanalyse.utils
 
-import com.mgc.sharesanalyse.base.getRevBeansOL
-import com.mgc.sharesanalyse.base.getRevBeansOM
-import com.mgc.sharesanalyse.base.sortAscByDate
-import com.mgc.sharesanalyse.base.toKeep2
-import com.mgc.sharesanalyse.entity.BaseFilterKJBBRangeBean
-import com.mgc.sharesanalyse.entity.BaseFilterTRBBRangeBean
-import com.mgc.sharesanalyse.entity.CodeHDDBean
-import com.mgc.sharesanalyse.entity.P50FilterBBKJRangeBean
+import com.mgc.sharesanalyse.base.*
+import com.mgc.sharesanalyse.entity.*
 
 object DataSettingUtils {
 
@@ -1597,6 +1591,9 @@ object DataSettingUtils {
     ): Boolean {
         oldBeanList.sortAscByDate()
         targetBeanList.sortAscByDate()
+        val mCodeList = ArrayList<CodeHDDBean>()
+        mCodeList.addAll(targetBeanList)
+        mCodeList.addAll(oldBeanList)
 
 //        LogUtil.d("------oldBeanList----------")
 //        for (i in 0..oldBeanList.size-1) {
@@ -1632,6 +1629,7 @@ object DataSettingUtils {
                     mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
                     LogUtil.d("originOM_M:$originOM_M")
                     needContinue = judeParameterAndGetResult(
+                        mCodeList,
                         x,
                         fitlerType,
                         p50FilterBBKJRangeBean,
@@ -1654,6 +1652,7 @@ object DataSettingUtils {
             29->{
                 mDFilter.d30Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1672,6 +1671,7 @@ object DataSettingUtils {
             24->{
                 mDFilter.d25Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1690,6 +1690,7 @@ object DataSettingUtils {
             19->{
                 mDFilter.d20Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1708,6 +1709,7 @@ object DataSettingUtils {
             14->{
                 mDFilter.d15Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1726,6 +1728,7 @@ object DataSettingUtils {
             9->{
                 mDFilter.d10Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1744,6 +1747,7 @@ object DataSettingUtils {
             4->{
                 mDFilter.d05Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1762,6 +1766,7 @@ object DataSettingUtils {
             2->{
                 mDFilter.d03Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
+                    mCodeList,
                     x,
                     fitlerType,
                     p50FilterBBKJRangeBean,
@@ -1784,6 +1789,7 @@ object DataSettingUtils {
     }
 
     private fun judeParameterAndGetResult(
+        mCodeList: ArrayList<CodeHDDBean>,
         day: Int,
         fitlerType: Int,
         p50FilterBBKJRangeBean: P50FilterBBKJRangeBean,
@@ -2055,7 +2061,10 @@ object DataSettingUtils {
                 }
             }
         }
-        if (null==bean){
+        val mTrBean = TR_K_SLL_Bean()
+        setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
+
+        if (null==bean||null==trBean){
             return false
         }
         val maxBean = bean.maxBean
@@ -2096,10 +2105,6 @@ object DataSettingUtils {
 
 
         val mMaxBean = BaseFilterKJBBRangeBean()
-        setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
-        LogUtil.d("mMaxBean-->\n${GsonHelper.toJson(mMaxBean)}")
-        LogUtil.d("OC_C-->\n${OC_C},C:$C,OC:$OC")
-        LogUtil.d("bean-->\n${GsonHelper.toJson(bean)}")
         if (judeFilterParameter(
                 OM_M,
                 minBean,
@@ -2131,7 +2136,7 @@ object DataSettingUtils {
                 C_P,
                 C_L,
                 P_L
-            )
+            )&&judeTRParameter(mTrBean,trBean)
         ) {
             setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
             mDMaxBean.maxBean = mMaxBean
@@ -2139,6 +2144,17 @@ object DataSettingUtils {
             needContinue1 = false
         }
         return needContinue1
+    }
+
+    private fun judeTRParameter(
+        mTrBean: TR_K_SLL_Bean,
+        trBean: P50FilterBBKJRangeBean.MaxMinTRBean
+    ): Boolean {
+        val trMaxBean = trBean.maxBean
+        val trMinBean = trBean.minBean
+        return mTrBean.k_A_TR>=trMinBean.k_A_TR&&mTrBean.k_A_TR<=trMaxBean.k_A_TR&&mTrBean.k_R_TR>=trMinBean.k_R_TR&&mTrBean.k_R_TR<=trMaxBean.k_R_TR&&mTrBean.k_B_TR>=trMinBean.k_B_TR&&mTrBean.k_B_TR<=trMaxBean.k_B_TR&&
+        mTrBean.s_A_TR>=trMinBean.s_A_TR&&mTrBean.s_A_TR<=trMaxBean.s_A_TR&&mTrBean.s_R_TR>=trMinBean.s_R_TR&&mTrBean.s_R_TR<=trMaxBean.s_R_TR&&mTrBean.s_B_TR>=trMinBean.s_B_TR&&mTrBean.s_B_TR<=trMaxBean.s_B_TR&&
+        mTrBean.k_SL_A_TR>=trMinBean.k_SL_A_TR&&mTrBean.k_SL_A_TR<=trMaxBean.k_SL_A_TR&&mTrBean.k_SL_R_TR>=trMinBean.k_SL_R_TR&&mTrBean.k_SL_R_TR<=trMaxBean.k_SL_R_TR&&mTrBean.k_SL_B_TR>=trMinBean.k_SL_B_TR&&mTrBean.k_SL_B_TR<=trMaxBean.k_SL_B_TR
     }
 
     private fun judeFilterParameter(
@@ -2283,5 +2299,114 @@ object DataSettingUtils {
         LogUtil.d(type.toString())
         return type
     }
+    fun setTRDatas(
+        trKSllBean: TR_K_SLL_Bean,
+        targetBeanBegin: Int,
+        oldBeanEnd: Int,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ) {
+        trKSllBean.s_A_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                val bean = mCHDDList[i]
+                result = result + bean.tr.percent2Float()
+            }
+            result.toKeep2()
+        }
+        trKSllBean.s_R_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op < mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+                    result = result + bean.tr.percent2Float()
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.s_B_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op > mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+                    result = result + bean.tr.percent2Float()
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.s_C_TR = (trKSllBean.s_R_TR - trKSllBean.s_B_TR).toKeep2()
 
+        //K_TR
+        trKSllBean.k_A_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                val bean = mCHDDList[i]
+                result = result + bean.tr.percent2Float() * bean.p
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_R_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op < mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+                    result = result + bean.tr.percent2Float() * bean.p
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_B_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op > mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+                    result = result + bean.tr.percent2Float() * bean.p
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_C_TR = (trKSllBean.k_R_TR + trKSllBean.k_B_TR).toKeep2()
+        //K_TR_SLL
+        trKSllBean.k_SL_A_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                val bean = mCHDDList[i]
+                val mp = bean.p_MA_J.amp
+                val lp = bean.p_MA_J.alp
+                result = result + ((mp - lp) / lp) * 100 * bean.p
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_SL_R_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op < mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+                    val mp = bean.p_MA_J.amp
+                    val lp = bean.p_MA_J.alp
+                    val op = bean.op
+                    val cp = bean.cp
+                    result =
+                        result + (bean.tr.percent2Float() + ((cp - lp) / lp) * 100 - ((mp - cp) / cp) * 100) * bean.p
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_SL_B_TR = kotlin.run {
+            var result = 0.toFloat()
+            for (i in targetBeanBegin..oldBeanEnd) {
+                if (mCHDDList[i].op > mCHDDList[i].cp) {
+                    val bean = mCHDDList[i]
+
+                    val mp = bean.p_MA_J.amp
+                    val lp = bean.p_MA_J.alp
+                    val op = bean.op
+                    val cp = bean.cp
+                    result =
+                        result + (bean.tr.percent2Float() + ((mp - cp) / cp) * 100 - ((cp - lp) / lp) * 100) * bean.p
+                }
+            }
+            result.toKeep2()
+        }
+        trKSllBean.k_SL_C_TR = (trKSllBean.k_SL_R_TR + trKSllBean.k_SL_B_TR).toKeep2()
+    }
 }

@@ -2730,109 +2730,7 @@ private fun insertRevBean(
         trKSllBean.n = reverseKJsonBean.n
         trKSllBean.date = reverseKJsonBean.date
         trKSllBean.d_D = reverseKJsonBean.d_D
-        trKSllBean.s_A_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                val bean = mCHDDList[i]
-                result = result + bean.tr.percent2Float()
-            }
-            result.toKeep2()
-        }
-        trKSllBean.s_R_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op < mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-                    result = result + bean.tr.percent2Float()
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.s_B_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op > mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-                    result = result + bean.tr.percent2Float()
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.s_C_TR = (trKSllBean.s_R_TR - trKSllBean.s_B_TR).toKeep2()
-
-        //K_TR
-        trKSllBean.k_A_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                val bean = mCHDDList[i]
-                result = result + bean.tr.percent2Float() * bean.p
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_R_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op < mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-                    result = result + bean.tr.percent2Float() * bean.p
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_B_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op > mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-                    result = result + bean.tr.percent2Float() * bean.p
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_C_TR = (trKSllBean.k_R_TR + trKSllBean.k_B_TR).toKeep2()
-        //K_TR_SLL
-        trKSllBean.k_SL_A_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                val bean = mCHDDList[i]
-                val mp = bean.p_MA_J.amp
-                val lp = bean.p_MA_J.alp
-                result = result + ((mp - lp) / lp) * 100 * bean.p
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_SL_R_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op < mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-                    val mp = bean.p_MA_J.amp
-                    val lp = bean.p_MA_J.alp
-                    val op = bean.op
-                    val cp = bean.cp
-                    result =
-                        result + (bean.tr.percent2Float() + ((cp - lp) / lp) * 100 - ((mp - cp) / cp) * 100) * bean.p
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_SL_B_TR = kotlin.run {
-            var result = 0.toFloat()
-            for (i in targetBeanBegin..oldBeanEnd) {
-                if (mCHDDList[i].op > mCHDDList[i].cp) {
-                    val bean = mCHDDList[i]
-
-                    val mp = bean.p_MA_J.amp
-                    val lp = bean.p_MA_J.alp
-                    val op = bean.op
-                    val cp = bean.cp
-                    result =
-                        result + (bean.tr.percent2Float() + ((mp - cp) / cp) * 100 - ((cp - lp) / lp) * 100) * bean.p
-                }
-            }
-            result.toKeep2()
-        }
-        trKSllBean.k_SL_C_TR = (trKSllBean.k_SL_R_TR + trKSllBean.k_SL_B_TR).toKeep2()
+        DataSettingUtils.setTRDatas(trKSllBean, targetBeanBegin, oldBeanEnd, mCHDDList)
         DBUtils.insertReverseKJTable(trkslName, trKSllBean, targetBean.date)
         trKSllBean.d_T = dt
         trKSllBean.p_T = if (revName.contains("_50_")) "50" else "30"
@@ -2845,7 +2743,8 @@ private fun insertRevBean(
     }
 }
 
-private fun getLastTwoMonthList(
+
+    private fun getLastTwoMonthList(
     it: ArrayList<CodeHDDBean>,
     i: Int,
     code: String,
@@ -3555,9 +3454,6 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 for (i in 72..mCHDDList.size-1) {
 //                    LogUtil.d("curDay-->${mCHDDList[i].date}")
 //                    var logStr = ""
-                    if (!"20200717".equals(mCHDDList[i].date)) {
-                        continue
-                    }
                     val mP50Bean  = P50FilterBBKJRangeBean()
                     val mDFilter = P50FilterBBKJRangeBean.DFilter()
                     var needContinue:Boolean
@@ -3588,7 +3484,29 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                         }
                         if (x == 0 && needContinue) {
                             DataSettingUtils.setFilterP50ResultType(originOM_M,mDFilter,mP50Bean)
-                            LogUtil.d("code:${code},date:${mCHDDList[i].date}-->\n${GsonHelper.toJson(mP50Bean)}")
+                            val reasoningRevBean = ReasoningRevBean()
+                            reasoningRevBean.code = code.toInt()
+                            reasoningRevBean.n = mCHDDList[i].name
+                            reasoningRevBean.d = mCHDDList[i].date
+                            reasoningRevBean.fitlertype = fitlerType.toString()
+                            if (i + 5 < mCHDDList.size) {
+                                val pList = ArrayList<Float>()
+                                for (m in (i+1) .. (i + 5)) {
+                                    pList.add((BigDecimalUtils.safeDiv((mCHDDList[m].cp-mCHDDList[i].cp),mCHDDList[i].cp)*100).toKeep2())
+                                }
+                                reasoningRevBean.p = pList[4]
+                                reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv((mCHDDList[i+1].op-mCHDDList[i].cp),mCHDDList[i].cp)*100).toKeep2()
+                                reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv((mCHDDList[i+1].cp-mCHDDList[i].cp),mCHDDList[i].cp)*100).toKeep2()
+                                pList.sortFloatAsc()
+                                reasoningRevBean.lp = pList[0]
+                                reasoningRevBean.mp = pList[4]
+
+                                LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
+                                (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
+                                reasoningRevBean.d_D =mCHDDList[i+5].date
+                            }
+                            reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
+                            DBUtils.insertReasoningRevTB(reasoningRevBean)
                         }
 //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
                     }
@@ -3598,6 +3516,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
             }
 
         }
+        (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
     }
 
 //    fun getAllChddByCodeName() {

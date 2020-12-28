@@ -1458,7 +1458,7 @@ object DBUtils {
         val createSql = p50FilterBBKjRangeBean.createTB(tbName)
         db.execSQL(createSql)
         var sqlStr = ""
-        if (!queryIsExsitByCodeAndCustomColumn(tbName,"P_TYPE","50")) {
+        if (!queryIsExsitByCodeAndCustomColumn(tbName, arrayOf("P_TYPE"), arrayOf("50"))) {
             sqlStr = p50FilterBBKjRangeBean.insertTB(tbName,"50", GsonHelper.toJson(p50FilterBBKjRangeBean))
         } else {
             sqlStr = p50FilterBBKjRangeBean.updateTB(tbName,GsonHelper.toJson(p50FilterBBKjRangeBean))
@@ -1482,16 +1482,30 @@ object DBUtils {
     }
 
 
-    fun queryIsExsitByCodeAndCustomColumn(tbName: String, customKey: String, customValue: String): Boolean {
+    fun queryIsExsitByCodeAndCustomColumn(tbName: String, customKey: Array<String>, customValue: Array<String>): Boolean {
         var isexsit = false
         if (tabbleIsExist(tbName)) {
+            var whereLimit = ""
+            customKey.forEach {
+                whereLimit = if (whereLimit.isEmpty()) "$whereLimit $it = ?" else "$whereLimit AND $it = ?"
+            }
             var cursor =
-                db.rawQuery("SELECT * FROM $tbName WHERE $customKey =?", arrayOf(customValue))
+                db.rawQuery("SELECT * FROM $tbName WHERE $whereLimit", customValue)
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
         }
         return isexsit
+    }
+
+    fun insertReasoningRevTB(reasoningRevBean: ReasoningRevBean) {
+        switchDBName(Datas.REV_RESONING_DB)
+        val createSql = reasoningRevBean.createTB("Reasoning")
+        db.execSQL(createSql)
+        if (!queryIsExsitByCodeAndCustomColumn("Reasoning",arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))){
+            val insert = reasoningRevBean.insertTB("Reasoning")
+            db.execSQL(insert)
+        }
     }
 
 
