@@ -1598,10 +1598,10 @@ object DataSettingUtils {
         oldBeanList.sortAscByDate()
         targetBeanList.sortAscByDate()
 
-        LogUtil.d("------oldBeanList----------")
-        for (i in 0..oldBeanList.size-1) {
-            LogUtil.d("${oldBeanList[i].date}---cp:${oldBeanList[i].cp}---op:${oldBeanList[i].op}")
-        }
+//        LogUtil.d("------oldBeanList----------")
+//        for (i in 0..oldBeanList.size-1) {
+//            LogUtil.d("${oldBeanList[i].date}---cp:${oldBeanList[i].cp}---op:${oldBeanList[i].op}")
+//        }
 
         val OC = oldBeanList[0].p_MA_J.aacp
         val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
@@ -1609,10 +1609,10 @@ object DataSettingUtils {
 
 
 
-        LogUtil.d("------targetBeanList----------")
-        targetBeanList.forEach {
-            LogUtil.d("${it.date}---cp:${it.cp}---op:${it.op}")
-        }
+//        LogUtil.d("------targetBeanList----------")
+//        targetBeanList.forEach {
+//            LogUtil.d("${it.date}---cp:${it.cp}---op:${it.op}")
+//        }
 
         val C = targetBeanList[0].p_MA_J.aacp
         val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
@@ -2060,39 +2060,39 @@ object DataSettingUtils {
         }
         val maxBean = bean.maxBean
         val minBean = bean.minBean
-        val OM_M = (OM - M) / OM * 100
-        val OM_C = (OM - C) / OM * 100
-        val OM_P = (OM - O) / OM * 100
-        val OM_L = (OM - L) / OM * 100
+        val OM_M = ((OM - M) / OM * 100).toKeep2()
+        val OM_C = ((OM - C) / OM * 100).toKeep2()
+        val OM_P = ((OM - O) / OM * 100).toKeep2()
+        val OM_L = ((OM - L) / OM * 100).toKeep2()
 
-        val OL_M = (OL - M) / OL * 100
-        val OL_C = (OL - C) / OL * 100
-        val OL_P = (OL - O) / OL * 100
-        val OL_L = (OL - L) / OL * 100
+        val OL_M = ((OL - M) / OL * 100).toKeep2()
+        val OL_C = ((OL - C) / OL * 100).toKeep2()
+        val OL_P = ((OL - O) / OL * 100).toKeep2()
+        val OL_L = ((OL - L) / OL * 100).toKeep2()
 
-        val OC_M = (OC - M) / OC * 100
-        val OC_C = (OC - C) / OC * 100
-        val OC_P = (OC - O) / OC * 100
-        val OC_L = (OC - L) / OC * 100
+        val OC_M = ((OC - M) / OC * 100).toKeep2()
+        val OC_C = ((OC - C) / OC * 100).toKeep2()
+        val OC_P = ((OC - O) / OC * 100).toKeep2()
+        val OC_L = ((OC - L) / OC * 100).toKeep2()
 
-        val OP_M = (OO - M) / OO * 100
-        val OP_C = (OO - C) / OO * 100
-        val OP_P = (OO - O) / OO * 100
-        val OP_L = (OO - L) / OO * 100
+        val OP_M = ((OO - M) / OO * 100).toKeep2()
+        val OP_C = ((OO - C) / OO * 100).toKeep2()
+        val OP_P = ((OO - O) / OO * 100).toKeep2()
+        val OP_L = ((OO - L) / OO * 100).toKeep2()
 
-        val OM_OC = (OM - OC) / OM * 100
-        val OM_OP = (OM - OO) / OM * 100
-        val OM_OL = (OM - OL) / OM * 100
-        val OC_OP = (OC - OO) / OC * 100
-        val OC_OL = (OC - OL) / OC * 100
-        val OP_OL = (OO - OL) / OO * 100
+        val OM_OC = ((OM - OC) / OM * 100).toKeep2()
+        val OM_OP = ((OM - OO) / OM * 100).toKeep2()
+        val OM_OL = ((OM - OL) / OM * 100).toKeep2()
+        val OC_OP = ((OC - OO) / OC * 100).toKeep2()
+        val OC_OL = ((OC - OL) / OC * 100).toKeep2()
+        val OP_OL = ((OO - OL) / OO * 100).toKeep2()
 
-        val M_C = (M - C) / M * 100
-        val M_P = (M - O) / M * 100
-        val M_L = (M - L) / M * 100
-        val C_P = (C - O) / C * 100
-        val C_L = (C - L) / C * 100
-        val P_L = (O - L) / O * 100
+        val M_C = ((M - C) / M * 100).toKeep2()
+        val M_P = ((M - O) / M * 100).toKeep2()
+        val M_L = ((M - L) / M * 100).toKeep2()
+        val C_P = ((C - O) / C * 100).toKeep2()
+        val C_L = ((C - L) / C * 100).toKeep2()
+        val P_L = ((O - L) / O * 100).toKeep2()
 
 
         val mMaxBean = BaseFilterKJBBRangeBean()
@@ -2174,6 +2174,21 @@ object DataSettingUtils {
         P_L: Float
     ): Boolean {
 //        LogUtil.d("OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M):${OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M}")
+//        LogUtil.d("(OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C):${(OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C)}")
+//        LogUtil.d("(OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P):${OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P}")
+//        LogUtil.d("(OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L):${OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L}")
+//        LogUtil.d("(OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M):${OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M}")
+//        LogUtil.d("(OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C):${OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C}")
+//        LogUtil.d("(OL_P:${OL_P} >= minBean.oL_P:${minBean.oL_P} && OL_P <= maxBean.oL_P:${maxBean.oL_P}):${OL_P >= minBean.oL_P} && ${OL_P <= maxBean.oL_P}")
+//        LogUtil.d("(OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L):${OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L}")
+//        LogUtil.d("(OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M):${OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M}")
+//        LogUtil.d("(OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C):${OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C}")
+//        LogUtil.d("(OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P):${OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P}")
+//        LogUtil.d("(OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L):${OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L}")
+//        LogUtil.d("(OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M):${OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M}")
+//        LogUtil.d("(OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C):${OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C}")
+//        LogUtil.d("(OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P):${OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P}")
+//        LogUtil.d("(OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L):${OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L}")
         return (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
                 (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
                 (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&

@@ -48,7 +48,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -111,6 +111,7 @@ object Datas {
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
     const val FILTER_PROGRESS = 10
+    const val REV_RESONING_DB = "REV_RESONING_DB"
 //    const val HHQDayCount = 6
 
 }
