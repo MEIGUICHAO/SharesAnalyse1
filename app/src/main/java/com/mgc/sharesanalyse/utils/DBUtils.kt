@@ -1498,14 +1498,16 @@ object DBUtils {
         return isexsit
     }
 
-    fun insertReasoningRevTB(reasoningRevBean: ReasoningRevBean) {
+    fun insertReasoningRevTB(reasoningRevBean: ReasoningRevBean): Boolean {
         switchDBName(Datas.REV_RESONING_DB)
         val createSql = reasoningRevBean.createTB("Reasoning")
         db.execSQL(createSql)
-        if (!queryIsExsitByCodeAndCustomColumn("Reasoning",arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))){
+        val isExit = queryIsExsitByCodeAndCustomColumn("Reasoning",arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))
+        if (!isExit){
             val insert = reasoningRevBean.insertTB("Reasoning")
             db.execSQL(insert)
         }
+        return isExit
     }
 
 

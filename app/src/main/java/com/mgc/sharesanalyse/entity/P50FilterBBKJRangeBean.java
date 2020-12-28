@@ -1,5 +1,7 @@
 package com.mgc.sharesanalyse.entity;
 
+import java.util.ArrayList;
+
 public class P50FilterBBKJRangeBean {
     private DFilter R_N40_N30;
     private DFilter R_0_10;
@@ -72,6 +74,10 @@ public class P50FilterBBKJRangeBean {
 
     public void setR_N50_N40(DFilter r_N50_N40) {
         R_N50_N40 = r_N50_N40;
+    }
+
+    public void insertTBByFilterType(ArrayList<String> tbList, float p) {
+        "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, P_TYPE INTEGER,JSON TEXT);";
     }
 
     public static class DFilter {

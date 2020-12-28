@@ -3506,7 +3506,10 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                                 reasoningRevBean.d_D =mCHDDList[i+5].date
                             }
                             reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
-                            DBUtils.insertReasoningRevTB(reasoningRevBean)
+                            val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
+                            if (!DneedInsert) {
+                                mP50Bean.insertTBByFilterType(getReasoningTBList(),reasoningRevBean.p)
+                            }
                         }
 //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
                     }
@@ -3519,6 +3522,34 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
     }
 
+    val rangeArray = arrayOf(
+        "R_N70_N60",
+        "R_N50_N40",
+        "R_N40_N30",
+        "R_N30_N20",
+        "R_N20_N10",
+        "R_N10_0",
+        "R_0_10",
+        "R_10_20"
+    )
+    val dayArray = arrayOf("D36","D30","D25","D20","D15","D10","D05","D03")
+    val mtbList = ArrayList<String>()
+    fun getReasoningTBList(): ArrayList<String> {
+        if (mtbList.size < 1) {
+            rangeArray.forEach { range->
+                dayArray.forEach { day->
+                    mtbList.add("$day _ $range")
+                }
+
+            }
+        }
+        return mtbList
+    }
+
+
+//        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];
+//        String[] dayArray = ["36","30","25","20","15","10","5","3"];
+//        ArrayList mtbList = new ArrayList<String>();
 //    fun getAllChddByCodeName() {
 //        for (index in 1..4) {
 //            getLastMonthChddList((it[i].date.toInt() - 100 * index).toString(), code)?.let {
