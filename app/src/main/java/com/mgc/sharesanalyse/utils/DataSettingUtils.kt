@@ -2227,6 +2227,7 @@ object DataSettingUtils {
         mMaxBean.oM_M = ((OM - M) / OM * 100).toKeep2()
         mMaxBean.oM_C = ((OM - C) / OM * 100).toKeep2()
         mMaxBean.oM_L = ((OM - L) / OM * 100).toKeep2()
+        mMaxBean.oM_P = ((OM - O) / OM * 100).toKeep2()
         mMaxBean.oM_OC = ((OM - OC) / OM * 100).toKeep2()
         mMaxBean.oM_OL = ((OM - OL) / OM * 100).toKeep2()
         mMaxBean.oM_OP = ((OM - OO) / OM * 100).toKeep2()

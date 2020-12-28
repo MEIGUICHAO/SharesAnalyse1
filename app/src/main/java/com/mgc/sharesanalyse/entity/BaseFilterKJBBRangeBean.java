@@ -31,6 +31,40 @@ public class BaseFilterKJBBRangeBean {
     private float C_L;
     private float P_L;
 
+    @Override
+    public String toString() {
+        return OM_M +
+                ", " + OM_C +
+                ", " + OM_P +
+                ", " + OM_L +
+                ", " + OC_M +
+                ", " + OC_C +
+                ", " + OC_P +
+                ", " + OC_L +
+                ", " + OO_M +
+                ", " + OO_C +
+                ", " + OO_P +
+                ", " + OO_L +
+                ", " + OL_M +
+                ", " + OL_C +
+                ", " + OL_P +
+                ", " + OL_L;
+    }
+
+    public String toDerbyString() {
+        return OM_OC +
+                ", " + OM_OP +
+                ", " + OM_OL +
+                ", " + OC_OP +
+                ", " + OC_OL +
+                ", " + OP_OL +
+                ", " + M_C +
+                ", " + M_P +
+                ", " + M_L +
+                ", " + C_P +
+                ", " + C_L +
+                ", " + P_L ;
+    }
 
     public float getP_L() {
         return P_L;

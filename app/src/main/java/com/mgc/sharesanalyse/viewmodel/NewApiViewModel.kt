@@ -3508,7 +3508,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                             reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
                             val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
                             if (!DneedInsert) {
-                                mP50Bean.insertTBByFilterType(getReasoningTBList(),reasoningRevBean.p)
+                                mP50Bean.insertTBByFilterType(code,mCHDDList[i].date,getReasoningTBList(),reasoningRevBean.p)
                             }
                         }
 //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
@@ -3532,13 +3532,13 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
         "R_0_10",
         "R_10_20"
     )
-    val dayArray = arrayOf("D36","D30","D25","D20","D15","D10","D05","D03")
+    val dayArray = arrayOf("D36_","D30_","D25_","D20_","D15_","D10_","D05_","D03_")
     val mtbList = ArrayList<String>()
     fun getReasoningTBList(): ArrayList<String> {
         if (mtbList.size < 1) {
             rangeArray.forEach { range->
                 dayArray.forEach { day->
-                    mtbList.add("$day _ $range")
+                    mtbList.add("$day$range")
                 }
 
             }
