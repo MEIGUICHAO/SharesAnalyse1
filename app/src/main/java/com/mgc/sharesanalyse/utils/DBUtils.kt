@@ -1331,6 +1331,26 @@ object DBUtils {
     }
 
 
+    @SuppressLint("Recycle")
+    fun getDerbyAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+        switchDBName(Datas.REV_FILTERDB + 2020)
+        var list: ArrayList<BaseReverseImp>? = null
+        val cursor =
+            db.rawQuery(sqlStr, selection)
+        cursor?.let {
+            list = ArrayList()
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val bean = getDerbyRevKJBeanByCursor(it)
+                list!!.add(bean)
+                it.moveToNext()
+            }
+            it.close()
+        }
+        return list
+    }
+
+
     fun createOtherBBTBDataByOriginCodeAndDate(dbName: String,code:Int,date:String,type: Int,tbName: String,endStr:String = ""):String {
         var newTbName =""
         switchDBName(dbName)

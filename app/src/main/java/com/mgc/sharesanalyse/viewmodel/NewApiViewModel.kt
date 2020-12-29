@@ -3455,7 +3455,10 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 for (i in 72..mCHDDList.size-1) {
 //                    LogUtil.d("curDay-->${mCHDDList[i].date}")
 //                    var logStr = ""
-                    LogUtil.d("date--->:${mCHDDList[i].date}")
+                    if (!mCHDDList[i].date.equals("20201029")) {
+                        continue
+                    }
+                    LogUtil.d("date--->:${mCHDDList[i].date}--->${mCHDDList[i].date.equals("20201029")}")
                     val mP50Bean  = P50FilterBBKJRangeBean()
                     val mDFilter = P50FilterBBKJRangeBean.DFilter()
                     var needContinue:Boolean
@@ -3481,7 +3484,7 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                             fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
                         }
                         //TODO debug
-                        if (fitlerType != -30) {
+                        if (fitlerType != -20) {
                             break
                         }
                         needContinue = DataSettingUtils.filterP50Result(fitlerType,originOM_M,mDFilter,p50FilterBBKJRangeBean!!,foreachLimitList[x][0],targetBeanList,oldBeanList)
