@@ -2252,10 +2252,11 @@ object DataSettingUtils {
                         }
                     }
                 }
-                -20->{
+
+                else->{
                     if (day < 35) {
-                        val tbName = "${Datas.BB_FIL_COPY_}A_RTB_50_${day+1}_R_20_10"
-                        val tbDerbyName = "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day+1}_R_20_10"
+                        val tbName = "${Datas.BB_FIL_COPY_}A_RTB_50_${day+1}_R_${Math.abs(fitlerType)}_${Math.abs(fitlerType+10)}"
+                        val tbDerbyName = "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day+1}_R_${Math.abs(fitlerType)}_${Math.abs(fitlerType+10)}"
 
                         beginBoolean = stepByStepJudge(
                             tbName,

@@ -3482,9 +3482,9 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                             fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
                         }
                         //TODO debug
-                        if (fitlerType != -20) {
-                            break
-                        }
+//                        if (fitlerType != -20) {
+//                            break
+//                        }
                         needContinue = DataSettingUtils.filterP50Result(fitlerType,originOM_M,mDFilter,p50FilterBBKJRangeBean!!,foreachLimitList[x][0],targetBeanList,oldBeanList)
                         if (!needContinue) {
                             break
