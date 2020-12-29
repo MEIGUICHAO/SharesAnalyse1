@@ -1650,6 +1650,7 @@ object DataSettingUtils {
                     needContinue = false
                 }
 
+                LogUtil.d("needContinue:${needContinue}")
             }
             29->{
                 mDFilter.d30Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1669,6 +1670,8 @@ object DataSettingUtils {
                     mDFilter.d30Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             24->{
                 mDFilter.d25Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1688,6 +1691,8 @@ object DataSettingUtils {
                     mDFilter.d25Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             19->{
                 mDFilter.d20Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1707,6 +1712,8 @@ object DataSettingUtils {
                     mDFilter.d20Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             14->{
                 mDFilter.d15Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1726,6 +1733,8 @@ object DataSettingUtils {
                     mDFilter.d15Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             9->{
                 mDFilter.d10Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1745,6 +1754,8 @@ object DataSettingUtils {
                     mDFilter.d10Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             4->{
                 mDFilter.d05Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1764,6 +1775,8 @@ object DataSettingUtils {
                     mDFilter.d05Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
             2->{
                 mDFilter.d03Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1783,9 +1796,13 @@ object DataSettingUtils {
                     mDFilter.d03Bean,
                     needContinue
                 )
+
+                LogUtil.d("needContinue:${needContinue}")
             }
         }
         LogUtil.d("needContinue:${needContinue}")
+        //TODO error
+        LogUtil.d("------------------error--------------------")
         return needContinue
 
     }
@@ -2066,6 +2083,7 @@ object DataSettingUtils {
         val mTrBean = TR_K_SLL_Bean()
         setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
 
+        LogUtil.d("null==bean:${null==bean},ull==trBean:${null==trBean}")
         if (null==bean||null==trBean){
             return false
         }
@@ -2140,11 +2158,13 @@ object DataSettingUtils {
                 C_P,
                 C_L,
                 P_L
-            )&&judeTRParameter(mTrBean,trBean)
+            )
+//            &&judeTRParameter(mTrBean,trBean)
         ) {
             setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
             mDMaxBean.maxBean = mMaxBean
         } else {
+            LogUtil.d("needContinue1:${needContinue1}")
             needContinue1 = false
         }
         return needContinue1
@@ -2221,6 +2241,7 @@ object DataSettingUtils {
                 (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
                 (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
         if (!beginBoolean) {
+            LogUtil.d("beginBoolean:$beginBoolean")
             return beginBoolean
         } else {
             when (fitlerType) {
@@ -2336,6 +2357,7 @@ object DataSettingUtils {
             DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", Datas.REV_FILTERDB + "2020")
         val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
         val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        var firstStepBoolean = false
         for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
             if (OM_M < (i + Datas.FILTER_PROGRESS) && OM_M > i) {
                 val list = DBUtils.getAAFilterAllByTbName(
@@ -2479,151 +2501,150 @@ object DataSettingUtils {
                 }
                 LogUtil.d("(OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L)-->${(OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L)}")
                 LogUtil.d("($OM_M >= $minOM_M && $OM_M <= $maxOM_M) && ($OM_C >= $minOM_C && $OM_C <= $maxOM_C) && ($OM_P >= $minOM_P && $OM_P <= $maxOM_P) && ($OM_L >= $minOM_L && $OM_L <= $maxOM_L)")
-                if (
-                    (OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L) &&
-                    (OL_M >= minOL_M && OL_M <= maxOL_M) && (OL_C >= minOL_C && OL_C <= maxOL_C) && (OL_P >= minOL_P && OL_P <= maxOL_P) && (OL_L >= minOL_L && OL_L <= maxOL_L) &&
-                    (OC_M >= minOC_M && OC_M <= maxOC_M) && (OC_C >= minOC_C && OC_C <= maxOC_C) && (OC_P >= minOC_P && OC_P <= maxOC_P) && (OC_L >= minOC_L && OC_L <= maxOC_L) &&
-                    (OP_M >= minOO_M && OP_M <= maxOO_M) && (OP_C >= minOO_C && OP_C <= maxOO_C) && (OP_P >= minOO_P && OP_P <= maxOO_P) && (OP_L >= minOO_L && OP_L <= maxOO_L)
-                ) {
-
-                    val pairDerby = DBUtils.selectMaxMinValueByTbAndColumn(
-                        tbDerbyName,
-                        "OM_OC",
-                        Datas.REV_FILTERDB + "2020"
+                firstStepBoolean = (OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L) &&
+                        (OL_M >= minOL_M && OL_M <= maxOL_M) && (OL_C >= minOL_C && OL_C <= maxOL_C) && (OL_P >= minOL_P && OL_P <= maxOL_P) && (OL_L >= minOL_L && OL_L <= maxOL_L) &&
+                        (OC_M >= minOC_M && OC_M <= maxOC_M) && (OC_C >= minOC_C && OC_C <= maxOC_C) && (OC_P >= minOC_P && OC_P <= maxOC_P) && (OC_L >= minOC_L && OC_L <= maxOC_L) &&
+                        (OP_M >= minOO_M && OP_M <= maxOO_M) && (OP_C >= minOO_C && OP_C <= maxOO_C) && (OP_P >= minOO_P && OP_P <= maxOO_P) && (OP_L >= minOO_L && OP_L <= maxOO_L)
+                break
+            } else {
+                LogUtil.d("beginBoolean1")
+                beginBoolean1 = false
+            }
+        }
+        LogUtil.d("firstStepBoolean:$firstStepBoolean")
+        if (firstStepBoolean) {
+            val pairDerby = DBUtils.selectMaxMinValueByTbAndColumn(
+                tbDerbyName,
+                "OM_OC",
+                Datas.REV_FILTERDB + "2020"
+            )
+            val rangeDerbyMax =
+                (pairDerby.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_DERBY_PROGRESS
+            val rangeDerbyMin = (pairDerby.first.toFloat() / 10).toInt() * 10 - 10
+            for (y in rangeDerbyMin..rangeDerbyMax step Datas.FILTER_DERBY_PROGRESS) {
+                LogUtil.d("OM_OC:$OM_OC,rangeDerbyMax:$rangeDerbyMax,rangeDerbyMin:$rangeDerbyMin,y:$y")
+                if (OM_OC < (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC > y) {
+                    val derbylist = DBUtils.getDerbyAAFilterAllByTbName(
+                        "SELECT * FROM $tbDerbyName WHERE OM_OC >=? AND OM_OC<?",
+                        arrayOf(
+                            y.toString(),
+                            (y + Datas.FILTER_DERBY_PROGRESS).toString()
+                        )
                     )
-                    val rangeDerbyMax =
-                        (pairDerby.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_DERBY_PROGRESS
-                    val rangeDerbyMin = (pairDerby.first.toFloat() / 10).toInt() * 10 - 10
-                    for (y in rangeDerbyMin..rangeDerbyMax step Datas.FILTER_DERBY_PROGRESS) {
-                        if (OM_OC < (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC > y) {
-                            val derbylist = DBUtils.getDerbyAAFilterAllByTbName(
-                                "SELECT * FROM $tbDerbyName WHERE OM_OC >=? AND OM_OC<?",
-                                arrayOf(
-                                    y.toString(),
-                                    (y + Datas.FILTER_DERBY_PROGRESS).toString()
-                                )
-                            )
-                            var maxOM_OC = -10086.toFloat()
-                            var maxOM_OP = -10086.toFloat()
-                            var maxOM_OL = -10086.toFloat()
-                            var maxOC_OP = -10086.toFloat()
-                            var maxOC_OL = -10086.toFloat()
-                            var maxOP_OL = -10086.toFloat()
-                            var maxM_C = -10086.toFloat()
-                            var maxM_P = -10086.toFloat()
-                            var maxM_L = -10086.toFloat()
-                            var maxC_P = -10086.toFloat()
-                            var maxC_L = -10086.toFloat()
-                            var maxP_L = -10086.toFloat()
-                            var minOM_OC = 10086.toFloat()
-                            var minOM_OP = 10086.toFloat()
-                            var minOM_OL = 10086.toFloat()
-                            var minOC_OP = 10086.toFloat()
-                            var minOC_OL = 10086.toFloat()
-                            var minOP_OL = 10086.toFloat()
-                            var minM_C = 10086.toFloat()
-                            var minM_P = 10086.toFloat()
-                            var minM_L = 10086.toFloat()
-                            var minC_P = 10086.toFloat()
-                            var minC_L = 10086.toFloat()
-                            var minP_L = 10086.toFloat()
-                            derbylist?.forEach {
-                                if (it is ReverseKJsonBean) {
-                                    if (maxOM_OC < it.oM_OC) {
-                                        maxOM_OC = it.oM_OC
-                                    }
-                                    if (minOM_OC > it.oM_OC) {
-                                        minOM_OC = it.oM_OC
-                                    }
-                                    if (maxOM_OP < it.oM_OP) {
-                                        maxOM_OP = it.oM_OP
-                                    }
-                                    if (minOM_OP > it.oM_OP) {
-                                        minOM_OP = it.oM_OP
-                                    }
-                                    if (maxOM_OL < it.oM_OL) {
-                                        maxOM_OL = it.oM_OL
-                                    }
-                                    if (minOM_OL > it.oM_OL) {
-                                        minOM_OL = it.oM_OL
-                                    }
-                                    if (maxOC_OL < it.oC_OL) {
-                                        maxOC_OL = it.oC_OL
-                                    }
-                                    if (minOC_OL > it.oC_OL) {
-                                        minOC_OL = it.oC_OL
-                                    }
-                                    if (maxOC_OP < it.oC_OP) {
-                                        maxOC_OP = it.oC_OP
-                                    }
-                                    if (minOC_OP > it.oC_OP) {
-                                        minOC_OP = it.oC_OP
-                                    }
-                                    if (maxOP_OL < it.oP_OL) {
-                                        maxOP_OL = it.oP_OL
-                                    }
-                                    if (minOP_OL > it.oP_OL) {
-                                        minOP_OL = it.oP_OL
-                                    }
-                                    if (maxM_C < it.m_C) {
-                                        maxM_C = it.m_C
-                                    }
-                                    if (minM_C > it.m_C) {
-                                        minM_C = it.m_C
-                                    }
-                                    if (maxM_P < it.m_P) {
-                                        maxM_P = it.m_P
-                                    }
-                                    if (minM_P > it.m_P) {
-                                        minM_P = it.m_P
-                                    }
-                                    if (maxM_L < it.m_L) {
-                                        maxM_L = it.m_L
-                                    }
-                                    if (minM_L > it.m_L) {
-                                        minM_L = it.m_L
-                                    }
-                                    if (maxC_P < it.c_P) {
-                                        maxC_P = it.c_P
-                                    }
-                                    if (minC_P > it.c_P) {
-                                        minC_P = it.c_P
-                                    }
-                                    if (maxC_L < it.c_L) {
-                                        maxC_L = it.c_L
-                                    }
-                                    if (minC_L > it.c_L) {
-                                        minC_L = it.c_L
-                                    }
-                                    if (maxP_L < it.p_L) {
-                                        maxP_L = it.p_L
-                                    }
-                                    if (minP_L > it.p_L) {
-                                        minP_L = it.p_L
-                                    }
-                                }
+                    var maxOM_OC = -10086.toFloat()
+                    var maxOM_OP = -10086.toFloat()
+                    var maxOM_OL = -10086.toFloat()
+                    var maxOC_OP = -10086.toFloat()
+                    var maxOC_OL = -10086.toFloat()
+                    var maxOP_OL = -10086.toFloat()
+                    var maxM_C = -10086.toFloat()
+                    var maxM_P = -10086.toFloat()
+                    var maxM_L = -10086.toFloat()
+                    var maxC_P = -10086.toFloat()
+                    var maxC_L = -10086.toFloat()
+                    var maxP_L = -10086.toFloat()
+                    var minOM_OC = 10086.toFloat()
+                    var minOM_OP = 10086.toFloat()
+                    var minOM_OL = 10086.toFloat()
+                    var minOC_OP = 10086.toFloat()
+                    var minOC_OL = 10086.toFloat()
+                    var minOP_OL = 10086.toFloat()
+                    var minM_C = 10086.toFloat()
+                    var minM_P = 10086.toFloat()
+                    var minM_L = 10086.toFloat()
+                    var minC_P = 10086.toFloat()
+                    var minC_L = 10086.toFloat()
+                    var minP_L = 10086.toFloat()
+                    derbylist?.forEach {
+                        if (it is ReverseKJsonBean) {
+                            if (maxOM_OC < it.oM_OC) {
+                                maxOM_OC = it.oM_OC
                             }
-
-                            if ((OM_OC >= minOM_OC && OM_OC <= maxOM_OC) && (OM_OP >= minOM_OP && OM_OP <= maxOM_OP) && (OM_OL >= minOM_OL && OM_OL <= maxOM_OL) && (OC_OP >= minOC_OP && OC_OP <= maxOC_OP) && (OC_OL >= minOC_OL && OC_OL <= maxOC_OL) && (OP_OL >= minOP_OL && OP_OL <= maxOP_OL) &&
-                                (M_C >= minM_C && M_C <= maxM_C) && (M_P >= minM_P && M_P <= maxM_P) && (M_L >= minM_L && M_L <= maxM_L) && (C_P >= minC_P && C_P <= maxC_P) && (C_L >= minC_L && C_L <= maxC_L) && (P_L >= minP_L && P_L <= maxP_L)
-                            ) {
-                                beginBoolean1 = true
-                            } else {
-                                LogUtil.d("beginBoolean1")
-                                beginBoolean1 = false
+                            if (minOM_OC > it.oM_OC) {
+                                minOM_OC = it.oM_OC
                             }
-                        } else {
-                            LogUtil.d("beginBoolean1")
-                            beginBoolean1 = false
+                            if (maxOM_OP < it.oM_OP) {
+                                maxOM_OP = it.oM_OP
+                            }
+                            if (minOM_OP > it.oM_OP) {
+                                minOM_OP = it.oM_OP
+                            }
+                            if (maxOM_OL < it.oM_OL) {
+                                maxOM_OL = it.oM_OL
+                            }
+                            if (minOM_OL > it.oM_OL) {
+                                minOM_OL = it.oM_OL
+                            }
+                            if (maxOC_OL < it.oC_OL) {
+                                maxOC_OL = it.oC_OL
+                            }
+                            if (minOC_OL > it.oC_OL) {
+                                minOC_OL = it.oC_OL
+                            }
+                            if (maxOC_OP < it.oC_OP) {
+                                maxOC_OP = it.oC_OP
+                            }
+                            if (minOC_OP > it.oC_OP) {
+                                minOC_OP = it.oC_OP
+                            }
+                            if (maxOP_OL < it.oP_OL) {
+                                maxOP_OL = it.oP_OL
+                            }
+                            if (minOP_OL > it.oP_OL) {
+                                minOP_OL = it.oP_OL
+                            }
+                            if (maxM_C < it.m_C) {
+                                maxM_C = it.m_C
+                            }
+                            if (minM_C > it.m_C) {
+                                minM_C = it.m_C
+                            }
+                            if (maxM_P < it.m_P) {
+                                maxM_P = it.m_P
+                            }
+                            if (minM_P > it.m_P) {
+                                minM_P = it.m_P
+                            }
+                            if (maxM_L < it.m_L) {
+                                maxM_L = it.m_L
+                            }
+                            if (minM_L > it.m_L) {
+                                minM_L = it.m_L
+                            }
+                            if (maxC_P < it.c_P) {
+                                maxC_P = it.c_P
+                            }
+                            if (minC_P > it.c_P) {
+                                minC_P = it.c_P
+                            }
+                            if (maxC_L < it.c_L) {
+                                maxC_L = it.c_L
+                            }
+                            if (minC_L > it.c_L) {
+                                minC_L = it.c_L
+                            }
+                            if (maxP_L < it.p_L) {
+                                maxP_L = it.p_L
+                            }
+                            if (minP_L > it.p_L) {
+                                minP_L = it.p_L
+                            }
                         }
+                    }
+
+                    if ((OM_OC >= minOM_OC && OM_OC <= maxOM_OC) && (OM_OP >= minOM_OP && OM_OP <= maxOM_OP) && (OM_OL >= minOM_OL && OM_OL <= maxOM_OL) && (OC_OP >= minOC_OP && OC_OP <= maxOC_OP) && (OC_OL >= minOC_OL && OC_OL <= maxOC_OL) && (OP_OL >= minOP_OL && OP_OL <= maxOP_OL) &&
+                        (M_C >= minM_C && M_C <= maxM_C) && (M_P >= minM_P && M_P <= maxM_P) && (M_L >= minM_L && M_L <= maxM_L) && (C_P >= minC_P && C_P <= maxC_P) && (C_L >= minC_L && C_L <= maxC_L) && (P_L >= minP_L && P_L <= maxP_L)
+                    ) {
+                        beginBoolean1 = true
+                        break
+                    } else {
+                        LogUtil.d("beginBoolean1")
+                        beginBoolean1 = false
                     }
                 } else {
                     LogUtil.d("beginBoolean1")
                     beginBoolean1 = false
                 }
-            } else {
-                LogUtil.d("beginBoolean1")
-                beginBoolean1 = false
             }
         }
         return beginBoolean1
