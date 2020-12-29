@@ -3438,7 +3438,6 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
 
         codelist.forEach { code ->
             val mCHDDList = ArrayList<CodeHDDBean>()
-            LogUtil.d("code------->$code")
             mList.forEach {
                 val date = "20${it}01"
                 var month = DateUtils.changeFormatter(
@@ -3455,10 +3454,9 @@ private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
                 for (i in 72..mCHDDList.size-1) {
 //                    LogUtil.d("curDay-->${mCHDDList[i].date}")
 //                    var logStr = ""
-                    if (!mCHDDList[i].date.equals("20201029")) {
-                        continue
-                    }
-                    LogUtil.d("date--->:${mCHDDList[i].date}--->${mCHDDList[i].date.equals("20201029")}")
+//                    if (!mCHDDList[i].date.equals("20201029")) {
+//                        continue
+//                    }
                     val mP50Bean  = P50FilterBBKJRangeBean()
                     val mDFilter = P50FilterBBKJRangeBean.DFilter()
                     var needContinue:Boolean

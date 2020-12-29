@@ -18,10 +18,8 @@ object DataSettingUtils {
             "OM_M"->{
                 when (day) {
                     3->{
-                        LogUtil.d("day:$day,indexType:$indexType,min:${pair.first},max:${pair.second}")
                         dFilter.d03Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_M = pair.second.toFloat()
-                        LogUtil.d("day:$day,indexType:$indexType,!!!min:${ dFilter.d03Bean.minBean.oM_M },max:${dFilter.d03Bean.maxBean.oM_M }")
                     }
                     5->{
                         dFilter.d05Bean.minBean.oM_M = pair.first.toFloat()
@@ -1589,7 +1587,6 @@ object DataSettingUtils {
         targetBeanList: ArrayList<CodeHDDBean>,
         oldBeanList: ArrayList<CodeHDDBean>
     ): Boolean {
-        LogUtil.d("filterP50Result")
         oldBeanList.sortAscByDate()
         targetBeanList.sortAscByDate()
         val mCodeList = ArrayList<CodeHDDBean>()
@@ -1603,7 +1600,6 @@ object DataSettingUtils {
 
         val OC = oldBeanList[0].p_MA_J.aacp
         val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
-        LogUtil.d("OC:${oldBeanList[0].date}--$OC,OO:$OO")
 
 
 
@@ -1622,14 +1618,12 @@ object DataSettingUtils {
 //        LogUtil.d("M:$M,L:$L,C:$C,O:$O")
         var needContinue = true
 
-        LogUtil.d("originOM_M:$originOM_M")
         when (x) {
             35->{
                 if ((originOM_M >= -70 && originOM_M <= -60)||(originOM_M >= -50 && originOM_M <= -40)||(originOM_M >= -40 && originOM_M <= -30)
                     ||(originOM_M >= -30 && originOM_M <= -20)||(originOM_M >= -20 && originOM_M <= -10)||(originOM_M >= -10 && originOM_M <= 0)
                     || (originOM_M >= 0 && originOM_M <= 10)||(originOM_M >= 10 && originOM_M <= 20)) {
                     mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
-                    LogUtil.d("originOM_M:$originOM_M")
                     needContinue = judeParameterAndGetResult(
                         mCodeList,
                         x,
@@ -1650,7 +1644,6 @@ object DataSettingUtils {
                     needContinue = false
                 }
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             29->{
                 mDFilter.d30Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1671,7 +1664,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             24->{
                 mDFilter.d25Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1692,7 +1684,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             19->{
                 mDFilter.d20Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1713,7 +1704,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             14->{
                 mDFilter.d15Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1734,7 +1724,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             9->{
                 mDFilter.d10Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1755,7 +1744,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             4->{
                 mDFilter.d05Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1776,7 +1764,6 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
             2->{
                 mDFilter.d03Bean = P50FilterBBKJRangeBean.MaxMinBean()
@@ -1797,12 +1784,8 @@ object DataSettingUtils {
                     needContinue
                 )
 
-                LogUtil.d("needContinue:${needContinue}")
             }
         }
-        LogUtil.d("needContinue:${needContinue}")
-        //TODO error
-        LogUtil.d("------------------error--------------------")
         return needContinue
 
     }
@@ -1826,7 +1809,6 @@ object DataSettingUtils {
         var needContinue1 = needContinue
         val bean = kotlin.run {
 //            arrayOf(3,5,10,15,20,25,30,36)
-            LogUtil.d("fitlerType:$fitlerType,day:$day")
             when (fitlerType) {
                 -70->{
                     p50FilterBBKJRangeBean.r_N70_N60?.let {
@@ -2083,7 +2065,6 @@ object DataSettingUtils {
         val mTrBean = TR_K_SLL_Bean()
         setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
 
-        LogUtil.d("null==bean:${null==bean},ull==trBean:${null==trBean}")
         if (null==bean||null==trBean){
             return false
         }
@@ -2164,7 +2145,6 @@ object DataSettingUtils {
             setMaxDatas(mMaxBean, OM, M, C, L, OC, OL, OO, O)
             mDMaxBean.maxBean = mMaxBean
         } else {
-            LogUtil.d("needContinue1:${needContinue1}")
             needContinue1 = false
         }
         return needContinue1
@@ -2307,9 +2287,10 @@ object DataSettingUtils {
                             M_L,
                             C_P,
                             C_L,
-                            P_L,
-                            beginBoolean
+                            P_L
                         )
+                        LogUtil.d("stepByStepJudge-->$beginBoolean")
+
                     }
                 }
             }
@@ -2349,17 +2330,17 @@ object DataSettingUtils {
         M_L: Float,
         C_P: Float,
         C_L: Float,
-        P_L: Float,
-        beginBoolean: Boolean
+        P_L: Float
     ): Boolean {
-        var beginBoolean1 = beginBoolean
+        var beginBoolean1 = false
         val pair =
             DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", Datas.REV_FILTERDB + "2020")
         val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
         val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
         var firstStepBoolean = false
         for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
-            if (OM_M < (i + Datas.FILTER_PROGRESS) && OM_M > i) {
+            if (OM_M <= (i + Datas.FILTER_PROGRESS) && OM_M >= i) {
+                LogUtil.d("OM_M------>begin")
                 val list = DBUtils.getAAFilterAllByTbName(
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                     arrayOf(
@@ -2499,19 +2480,14 @@ object DataSettingUtils {
                         }
                     }
                 }
-                LogUtil.d("(OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L)-->${(OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L)}")
-                LogUtil.d("($OM_M >= $minOM_M && $OM_M <= $maxOM_M) && ($OM_C >= $minOM_C && $OM_C <= $maxOM_C) && ($OM_P >= $minOM_P && $OM_P <= $maxOM_P) && ($OM_L >= $minOM_L && $OM_L <= $maxOM_L)")
+//                LogUtil.d("($OM_M >= $minOM_M && $OM_M <= $maxOM_M) && ($OM_C >= $minOM_C && $OM_C <= $maxOM_C) && ($OM_P >= $minOM_P && $OM_P <= $maxOM_P) && ($OM_L >= $minOM_L && $OM_L <= $maxOM_L)")
                 firstStepBoolean = (OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L) &&
                         (OL_M >= minOL_M && OL_M <= maxOL_M) && (OL_C >= minOL_C && OL_C <= maxOL_C) && (OL_P >= minOL_P && OL_P <= maxOL_P) && (OL_L >= minOL_L && OL_L <= maxOL_L) &&
                         (OC_M >= minOC_M && OC_M <= maxOC_M) && (OC_C >= minOC_C && OC_C <= maxOC_C) && (OC_P >= minOC_P && OC_P <= maxOC_P) && (OC_L >= minOC_L && OC_L <= maxOC_L) &&
                         (OP_M >= minOO_M && OP_M <= maxOO_M) && (OP_C >= minOO_C && OP_C <= maxOO_C) && (OP_P >= minOO_P && OP_P <= maxOO_P) && (OP_L >= minOO_L && OP_L <= maxOO_L)
                 break
-            } else {
-                LogUtil.d("beginBoolean1")
-                beginBoolean1 = false
             }
         }
-        LogUtil.d("firstStepBoolean:$firstStepBoolean")
         if (firstStepBoolean) {
             val pairDerby = DBUtils.selectMaxMinValueByTbAndColumn(
                 tbDerbyName,
@@ -2522,8 +2498,8 @@ object DataSettingUtils {
                 (pairDerby.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_DERBY_PROGRESS
             val rangeDerbyMin = (pairDerby.first.toFloat() / 10).toInt() * 10 - 10
             for (y in rangeDerbyMin..rangeDerbyMax step Datas.FILTER_DERBY_PROGRESS) {
-                LogUtil.d("OM_OC:$OM_OC,rangeDerbyMax:$rangeDerbyMax,rangeDerbyMin:$rangeDerbyMin,y:$y")
-                if (OM_OC < (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC > y) {
+                if (OM_OC <= (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC >= y) {
+                    LogUtil.d("OM_OC------>begin")
                     val derbylist = DBUtils.getDerbyAAFilterAllByTbName(
                         "SELECT * FROM $tbDerbyName WHERE OM_OC >=? AND OM_OC<?",
                         arrayOf(
@@ -2637,13 +2613,7 @@ object DataSettingUtils {
                     ) {
                         beginBoolean1 = true
                         break
-                    } else {
-                        LogUtil.d("beginBoolean1")
-                        beginBoolean1 = false
                     }
-                } else {
-                    LogUtil.d("beginBoolean1")
-                    beginBoolean1 = false
                 }
             }
         }
@@ -2734,7 +2704,6 @@ object DataSettingUtils {
         } else if (originOM_M >= 10 && originOM_M <= 20) {
             type = 10
         }
-        LogUtil.d(type.toString())
         return type
     }
     fun setTRDatas(
