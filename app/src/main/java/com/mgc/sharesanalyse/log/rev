@@ -1,1 +1,49 @@
-
+N30_N20
+D03:
+D03_Derby:
+D05:
+    OM_P:<6;OL_C>-20
+D05_Derby:
+    OM_OC<6
+D10:
+    OC_M>-23&&OC_C>-16&&OP_M>-25&&OP_C>-28&&OP_P>-10&&OP_L>-5&&OP_M>-32&&OL_C>-25&&OL_C>-15&&OL_P>-16&&OL_L>-8
+D10_Derby:
+    C_P<15
+D15:
+    OM_M>-17&&OM_C>-15&&OC_M>-30&&OC_C>-20&&OP_M>-28&&OP_C>-20&&OL_M>-35&&OL_C>-30
+D15_Derby:
+    M_P<23&&M_L<26&&C_P<18&&C_L<20
+D20:
+    OM_M>-17&&OC_M>-30&&OC_C>-20&&OL_M>-42&&OL_C>-35
+D20_Derby:
+    M_P<22&&M_L<25&&C_P<17&&C_L<20
+D25:
+    OC_M>-30&&OC_C>-25&&OP_M>-40&&OP_C>-30&&OL_M>-48
+D25_Derby:
+    M_L<28&&C_P<20&&C_L<20
+D30:
+    OP_M>-44&&OP_C>-33&&
+D30_Derby:
+    M_L<28&&C_L<22
+D36:
+    OC_M>-30&&OP_M>-42&&OP_C>-40&&OL_M>-51&&OL_C>-50
+D36_Derby:
+    M_L<30
+------------------------------------------------------------------------------------------------------------
+D36_Derby:N20_N10
+D03:
+D03_Derby:
+D05:
+D05_Derby:
+D10:
+D10_Derby:
+D15:
+D15_Derby:
+D20:
+D20_Derby:
+D25:
+D25_Derby:
+D30:
+D30_Derby:
+D36:
+D36_Derby:

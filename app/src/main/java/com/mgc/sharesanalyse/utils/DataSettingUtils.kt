@@ -1618,8 +1618,9 @@ object DataSettingUtils {
         val OL = oldBeanList.getRevBeansOL()
         val M = targetBeanList.getRevBeansOM()
         val L = targetBeanList.getRevBeansOL()
-        LogUtil.d("M:$M,L:$L,C:$C,O:$O")
+//        LogUtil.d("M:$M,L:$L,C:$C,O:$O")
         var needContinue = true
+
         LogUtil.d("originOM_M:$originOM_M")
         when (x) {
             35->{
@@ -2106,6 +2107,8 @@ object DataSettingUtils {
 
         val mMaxBean = BaseFilterKJBBRangeBean()
         if (judeFilterParameter(
+                fitlerType,
+                day,
                 OM_M,
                 minBean,
                 maxBean,
@@ -2152,12 +2155,16 @@ object DataSettingUtils {
     ): Boolean {
         val trMaxBean = trBean.maxBean
         val trMinBean = trBean.minBean
-        return mTrBean.k_A_TR>=trMinBean.k_A_TR&&mTrBean.k_A_TR<=trMaxBean.k_A_TR&&mTrBean.k_R_TR>=trMinBean.k_R_TR&&mTrBean.k_R_TR<=trMaxBean.k_R_TR&&mTrBean.k_B_TR>=trMinBean.k_B_TR&&mTrBean.k_B_TR<=trMaxBean.k_B_TR&&
+        val mBoolean =  mTrBean.k_A_TR>=trMinBean.k_A_TR&&mTrBean.k_A_TR<=trMaxBean.k_A_TR&&mTrBean.k_R_TR>=trMinBean.k_R_TR&&mTrBean.k_R_TR<=trMaxBean.k_R_TR&&mTrBean.k_B_TR>=trMinBean.k_B_TR&&mTrBean.k_B_TR<=trMaxBean.k_B_TR&&
         mTrBean.s_A_TR>=trMinBean.s_A_TR&&mTrBean.s_A_TR<=trMaxBean.s_A_TR&&mTrBean.s_R_TR>=trMinBean.s_R_TR&&mTrBean.s_R_TR<=trMaxBean.s_R_TR&&mTrBean.s_B_TR>=trMinBean.s_B_TR&&mTrBean.s_B_TR<=trMaxBean.s_B_TR&&
         mTrBean.k_SL_A_TR>=trMinBean.k_SL_A_TR&&mTrBean.k_SL_A_TR<=trMaxBean.k_SL_A_TR&&mTrBean.k_SL_R_TR>=trMinBean.k_SL_R_TR&&mTrBean.k_SL_R_TR<=trMaxBean.k_SL_R_TR&&mTrBean.k_SL_B_TR>=trMinBean.k_SL_B_TR&&mTrBean.k_SL_B_TR<=trMaxBean.k_SL_B_TR
+        LogUtil.d("$mBoolean")
+        return mBoolean
     }
 
     private fun judeFilterParameter(
+        fitlerType: Int,
+        day: Int,
         OM_M: Float,
         minBean: BaseFilterKJBBRangeBean,
         maxBean: BaseFilterKJBBRangeBean,
@@ -2205,12 +2212,48 @@ object DataSettingUtils {
 //        LogUtil.d("(OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C):${OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C}")
 //        LogUtil.d("(OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P):${OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P}")
 //        LogUtil.d("(OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L):${OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L}")
-        return (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
+        var beginBoolean =  (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
                 (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
                 (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
                 (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L) &&
                 (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
                 (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
+        if (!beginBoolean) {
+            return beginBoolean
+        } else {
+            when (fitlerType) {
+                -30->{
+                    when (day) {
+                        4->{
+                            beginBoolean = OM_P<6&&OL_C>-20&&OM_OC<6
+                        }
+                        9->{
+                            LogUtil.d("9---> $OC_M>-23,$OC_C>-16,$OP_M>-25,$OP_C>-28,$OP_P>-10,$OP_L>-5,$OP_M>-32,$OL_C>-25,$OL_C>-25,$OL_P>-16,$OL_L>-8,$C_P<15")
+                            beginBoolean = OC_M>-23&&OC_C>-16&&OP_M>-25&&OP_C>-28&&OP_P>-10&&OP_L>-5&&OP_M>-32&&OL_C>-25&&OL_C>-25&&OL_P>-16&&OL_L>-8&&C_P<15
+                        }
+                        14->{
+                            beginBoolean = OM_M>-17&&OM_C>-15&&OC_M>-30&&OC_C>-20&&OP_M>-28&&OP_C>-20&&OL_M>-35&&OL_C>-30&&M_P<23&&M_L<26&&C_P<18&&C_L<20
+                        }
+                        19->{
+                            beginBoolean = OM_M>-17&&OC_M>-30&&OC_C>-20&&OL_M>-42&&OL_C>-35&&M_P<22&&M_L<25&&C_P<17&&C_L<20
+                        }
+                        24->{
+                            beginBoolean = OC_M>-30&&OC_C>-25&&OP_M>-40&&OP_C>-30&&OL_M>-48&&M_L<28&&C_P<20&&C_L<20
+                        }
+                        29->{
+                            beginBoolean = OP_M>-44&&OP_C>-33&&M_L<28&&C_L<22
+                        }
+                        35->{
+//                            LogUtil.d("35--->$OC_M>-40,$OP_M>-50,$OP_C>-40,$OL_M>-51,$OL_C>-50,$M_L<30")
+                            beginBoolean = OC_M>-40&&OP_M>-50&&OP_C>-40&&OL_M>-51&&OL_C>-50&&M_L<30
+                        }
+                    }
+                }
+            }
+
+        }
+        LogUtil.d("fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
+        return beginBoolean
     }
 
     private fun setMaxDatas(
