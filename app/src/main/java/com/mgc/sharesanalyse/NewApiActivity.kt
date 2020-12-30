@@ -156,7 +156,7 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnResoning.setOnClickListener {
             App.getSinglePool().execute{
-                viewModel.reasoningResult()
+                viewModel.reasoningResult(false)
             }
         }
     }
