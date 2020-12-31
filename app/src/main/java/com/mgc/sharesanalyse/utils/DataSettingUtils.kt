@@ -2489,135 +2489,136 @@ object DataSettingUtils {
                 break
             }
         }
-        if (firstStepBoolean) {
-            val pairDerby = DBUtils.selectMaxMinValueByTbAndColumn(
-                tbDerbyName,
-                "OM_OC",
-                Datas.REV_FILTERDB + "2020"
-            )
-            val rangeDerbyMax =
-                (pairDerby.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_DERBY_PROGRESS
-            val rangeDerbyMin = (pairDerby.first.toFloat() / 10).toInt() * 10 - 10
-            for (y in rangeDerbyMin..rangeDerbyMax step Datas.FILTER_DERBY_PROGRESS) {
-                if (OM_OC <= (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC >= y) {
-                    LogUtil.d("OM_OC------>begin")
-                    val derbylist = DBUtils.getDerbyAAFilterAllByTbName(
-                        "SELECT * FROM $tbDerbyName WHERE OM_OC >=? AND OM_OC<?",
-                        arrayOf(
-                            y.toString(),
-                            (y + Datas.FILTER_DERBY_PROGRESS).toString()
-                        )
-                    )
-                    var maxOM_OC = -10086.toFloat()
-                    var maxOM_OP = -10086.toFloat()
-                    var maxOM_OL = -10086.toFloat()
-                    var maxOC_OP = -10086.toFloat()
-                    var maxOC_OL = -10086.toFloat()
-                    var maxOP_OL = -10086.toFloat()
-                    var maxM_C = -10086.toFloat()
-                    var maxM_P = -10086.toFloat()
-                    var maxM_L = -10086.toFloat()
-                    var maxC_P = -10086.toFloat()
-                    var maxC_L = -10086.toFloat()
-                    var maxP_L = -10086.toFloat()
-                    var minOM_OC = 10086.toFloat()
-                    var minOM_OP = 10086.toFloat()
-                    var minOM_OL = 10086.toFloat()
-                    var minOC_OP = 10086.toFloat()
-                    var minOC_OL = 10086.toFloat()
-                    var minOP_OL = 10086.toFloat()
-                    var minM_C = 10086.toFloat()
-                    var minM_P = 10086.toFloat()
-                    var minM_L = 10086.toFloat()
-                    var minC_P = 10086.toFloat()
-                    var minC_L = 10086.toFloat()
-                    var minP_L = 10086.toFloat()
-                    derbylist?.forEach {
-                        if (it is ReverseKJsonBean) {
-                            if (maxOM_OC < it.oM_OC) {
-                                maxOM_OC = it.oM_OC
-                            }
-                            if (minOM_OC > it.oM_OC) {
-                                minOM_OC = it.oM_OC
-                            }
-                            if (maxOM_OP < it.oM_OP) {
-                                maxOM_OP = it.oM_OP
-                            }
-                            if (minOM_OP > it.oM_OP) {
-                                minOM_OP = it.oM_OP
-                            }
-                            if (maxOM_OL < it.oM_OL) {
-                                maxOM_OL = it.oM_OL
-                            }
-                            if (minOM_OL > it.oM_OL) {
-                                minOM_OL = it.oM_OL
-                            }
-                            if (maxOC_OL < it.oC_OL) {
-                                maxOC_OL = it.oC_OL
-                            }
-                            if (minOC_OL > it.oC_OL) {
-                                minOC_OL = it.oC_OL
-                            }
-                            if (maxOC_OP < it.oC_OP) {
-                                maxOC_OP = it.oC_OP
-                            }
-                            if (minOC_OP > it.oC_OP) {
-                                minOC_OP = it.oC_OP
-                            }
-                            if (maxOP_OL < it.oP_OL) {
-                                maxOP_OL = it.oP_OL
-                            }
-                            if (minOP_OL > it.oP_OL) {
-                                minOP_OL = it.oP_OL
-                            }
-                            if (maxM_C < it.m_C) {
-                                maxM_C = it.m_C
-                            }
-                            if (minM_C > it.m_C) {
-                                minM_C = it.m_C
-                            }
-                            if (maxM_P < it.m_P) {
-                                maxM_P = it.m_P
-                            }
-                            if (minM_P > it.m_P) {
-                                minM_P = it.m_P
-                            }
-                            if (maxM_L < it.m_L) {
-                                maxM_L = it.m_L
-                            }
-                            if (minM_L > it.m_L) {
-                                minM_L = it.m_L
-                            }
-                            if (maxC_P < it.c_P) {
-                                maxC_P = it.c_P
-                            }
-                            if (minC_P > it.c_P) {
-                                minC_P = it.c_P
-                            }
-                            if (maxC_L < it.c_L) {
-                                maxC_L = it.c_L
-                            }
-                            if (minC_L > it.c_L) {
-                                minC_L = it.c_L
-                            }
-                            if (maxP_L < it.p_L) {
-                                maxP_L = it.p_L
-                            }
-                            if (minP_L > it.p_L) {
-                                minP_L = it.p_L
-                            }
-                        }
-                    }
-
-                    if ((OM_OC >= minOM_OC && OM_OC <= maxOM_OC) && (OM_OP >= minOM_OP && OM_OP <= maxOM_OP) && (OM_OL >= minOM_OL && OM_OL <= maxOM_OL) && (OC_OP >= minOC_OP && OC_OP <= maxOC_OP) && (OC_OL >= minOC_OL && OC_OL <= maxOC_OL) && (OP_OL >= minOP_OL && OP_OL <= maxOP_OL) &&
-                        (M_C >= minM_C && M_C <= maxM_C) && (M_P >= minM_P && M_P <= maxM_P) && (M_L >= minM_L && M_L <= maxM_L) && (C_P >= minC_P && C_P <= maxC_P) && (C_L >= minC_L && C_L <= maxC_L) && (P_L >= minP_L && P_L <= maxP_L)
-                    ) {
-                        beginBoolean1 = true
-                        break
-                    }
-                }
-            }
-        }
+//        if (firstStepBoolean) {
+//            val pairDerby = DBUtils.selectMaxMinValueByTbAndColumn(
+//                tbDerbyName,
+//                "OM_OC",
+//                Datas.REV_FILTERDB + "2020"
+//            )
+//            val rangeDerbyMax =
+//                (pairDerby.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_DERBY_PROGRESS
+//            val rangeDerbyMin = (pairDerby.first.toFloat() / 10).toInt() * 10 - 10
+//            for (y in rangeDerbyMin..rangeDerbyMax step Datas.FILTER_DERBY_PROGRESS) {
+//                if (OM_OC <= (y + Datas.FILTER_DERBY_PROGRESS) && OM_OC >= y) {
+//                    LogUtil.d("OM_OC------>begin")
+//                    val derbylist = DBUtils.getDerbyAAFilterAllByTbName(
+//                        "SELECT * FROM $tbDerbyName WHERE OM_OC >=? AND OM_OC<?",
+//                        arrayOf(
+//                            y.toString(),
+//                            (y + Datas.FILTER_DERBY_PROGRESS).toString()
+//                        )
+//                    )
+//                    var maxOM_OC = -10086.toFloat()
+//                    var maxOM_OP = -10086.toFloat()
+//                    var maxOM_OL = -10086.toFloat()
+//                    var maxOC_OP = -10086.toFloat()
+//                    var maxOC_OL = -10086.toFloat()
+//                    var maxOP_OL = -10086.toFloat()
+//                    var maxM_C = -10086.toFloat()
+//                    var maxM_P = -10086.toFloat()
+//                    var maxM_L = -10086.toFloat()
+//                    var maxC_P = -10086.toFloat()
+//                    var maxC_L = -10086.toFloat()
+//                    var maxP_L = -10086.toFloat()
+//                    var minOM_OC = 10086.toFloat()
+//                    var minOM_OP = 10086.toFloat()
+//                    var minOM_OL = 10086.toFloat()
+//                    var minOC_OP = 10086.toFloat()
+//                    var minOC_OL = 10086.toFloat()
+//                    var minOP_OL = 10086.toFloat()
+//                    var minM_C = 10086.toFloat()
+//                    var minM_P = 10086.toFloat()
+//                    var minM_L = 10086.toFloat()
+//                    var minC_P = 10086.toFloat()
+//                    var minC_L = 10086.toFloat()
+//                    var minP_L = 10086.toFloat()
+//                    derbylist?.forEach {
+//                        if (it is ReverseKJsonBean) {
+//                            if (maxOM_OC < it.oM_OC) {
+//                                maxOM_OC = it.oM_OC
+//                            }
+//                            if (minOM_OC > it.oM_OC) {
+//                                minOM_OC = it.oM_OC
+//                            }
+//                            if (maxOM_OP < it.oM_OP) {
+//                                maxOM_OP = it.oM_OP
+//                            }
+//                            if (minOM_OP > it.oM_OP) {
+//                                minOM_OP = it.oM_OP
+//                            }
+//                            if (maxOM_OL < it.oM_OL) {
+//                                maxOM_OL = it.oM_OL
+//                            }
+//                            if (minOM_OL > it.oM_OL) {
+//                                minOM_OL = it.oM_OL
+//                            }
+//                            if (maxOC_OL < it.oC_OL) {
+//                                maxOC_OL = it.oC_OL
+//                            }
+//                            if (minOC_OL > it.oC_OL) {
+//                                minOC_OL = it.oC_OL
+//                            }
+//                            if (maxOC_OP < it.oC_OP) {
+//                                maxOC_OP = it.oC_OP
+//                            }
+//                            if (minOC_OP > it.oC_OP) {
+//                                minOC_OP = it.oC_OP
+//                            }
+//                            if (maxOP_OL < it.oP_OL) {
+//                                maxOP_OL = it.oP_OL
+//                            }
+//                            if (minOP_OL > it.oP_OL) {
+//                                minOP_OL = it.oP_OL
+//                            }
+//                            if (maxM_C < it.m_C) {
+//                                maxM_C = it.m_C
+//                            }
+//                            if (minM_C > it.m_C) {
+//                                minM_C = it.m_C
+//                            }
+//                            if (maxM_P < it.m_P) {
+//                                maxM_P = it.m_P
+//                            }
+//                            if (minM_P > it.m_P) {
+//                                minM_P = it.m_P
+//                            }
+//                            if (maxM_L < it.m_L) {
+//                                maxM_L = it.m_L
+//                            }
+//                            if (minM_L > it.m_L) {
+//                                minM_L = it.m_L
+//                            }
+//                            if (maxC_P < it.c_P) {
+//                                maxC_P = it.c_P
+//                            }
+//                            if (minC_P > it.c_P) {
+//                                minC_P = it.c_P
+//                            }
+//                            if (maxC_L < it.c_L) {
+//                                maxC_L = it.c_L
+//                            }
+//                            if (minC_L > it.c_L) {
+//                                minC_L = it.c_L
+//                            }
+//                            if (maxP_L < it.p_L) {
+//                                maxP_L = it.p_L
+//                            }
+//                            if (minP_L > it.p_L) {
+//                                minP_L = it.p_L
+//                            }
+//                        }
+//                    }
+//
+//                    if ((OM_OC >= minOM_OC && OM_OC <= maxOM_OC) && (OM_OP >= minOM_OP && OM_OP <= maxOM_OP) && (OM_OL >= minOM_OL && OM_OL <= maxOM_OL) && (OC_OP >= minOC_OP && OC_OP <= maxOC_OP) && (OC_OL >= minOC_OL && OC_OL <= maxOC_OL) && (OP_OL >= minOP_OL && OP_OL <= maxOP_OL) &&
+//                        (M_C >= minM_C && M_C <= maxM_C) && (M_P >= minM_P && M_P <= maxM_P) && (M_L >= minM_L && M_L <= maxM_L) && (C_P >= minC_P && C_P <= maxC_P) && (C_L >= minC_L && C_L <= maxC_L) && (P_L >= minP_L && P_L <= maxP_L)
+//                    ) {
+//                        beginBoolean1 = true
+//                        break
+//                    }
+//                }
+//            }
+//        }
+        beginBoolean1 = firstStepBoolean
         return beginBoolean1
     }
 
