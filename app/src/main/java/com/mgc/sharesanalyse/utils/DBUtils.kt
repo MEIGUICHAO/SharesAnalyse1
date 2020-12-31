@@ -1040,7 +1040,15 @@ object DBUtils {
         ) {
             val insertSqlStr = gapJsonBean.insertTB(tbName)
             LogUtil.d("insertSqlStr:$insertSqlStr")
-            db.execSQL(insertSqlStr)
+            try {
+                db.execSQL(insertSqlStr)
+            } catch (e: java.lang.Exception) {
+                insertGapRecordJTable(
+                    tbName,
+                    gapJsonBean,
+                    date
+                )
+            }
         } else {
             val updateSql = gapJsonBean.updateGapInfo(tbName)
             LogUtil.d("updateSql:$updateSql")
