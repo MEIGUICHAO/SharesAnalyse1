@@ -1538,20 +1538,20 @@ class NewApiViewModel : BaseViewModel() {
                     if (ddidnex == 0) {
                         val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
                     }
-                    val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
-                    if (curIndexTs >= curYearTS) {
-                        if (!date1.isEmpty()) {
-                            if (date.toInt()> date1.toInt()) {
-                                insertOrUpdateCodeHDD(
-                                    hisHqBean[0].hq,
-                                    ddidnex,
-                                    code,
-                                    namelist[codeidnex],
-                                    date
-                                )
-                                (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
-                                reasoningResult(true,code)
-                            }
+//                    val curIndexTs = DateUtils.parse(date, FormatterEnum.YYYYMMDD)
+//                    if (curIndexTs >= curYearTS) {
+//                    }
+                    if (!date1.isEmpty()) {
+                        if (date.toInt()> date1.toInt()) {
+                            insertOrUpdateCodeHDD(
+                                hisHqBean[0].hq,
+                                ddidnex,
+                                code,
+                                namelist[codeidnex],
+                                date
+                            )
+                            (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
+                            reasoningResult(true,code)
                         }
                     }
                 }
@@ -2151,12 +2151,12 @@ class NewApiViewModel : BaseViewModel() {
         operaNewCodeHDD(codeHDDBean, hq, hhqBeginIndex, code, date)
         DBUtils.insertCodeHDD(tbName, codeHDDBean, code, date)
 
-        var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
-        var chddDDBeanList =
-            DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
-        chddDDBeanList?.let {
-            updateCodeHDDGapInfo(code, date, it.size - 1)
-        }
+//        var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
+//        var chddDDBeanList =
+//            DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+//        chddDDBeanList?.let {
+//            updateCodeHDDGapInfo(code, date, it.size - 1)
+//        }
     }
 
     private fun operaNewCodeHDD(

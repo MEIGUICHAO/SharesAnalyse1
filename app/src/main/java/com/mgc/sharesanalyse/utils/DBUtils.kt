@@ -1032,28 +1032,30 @@ object DBUtils {
         switchDBName(Datas.GAP_RECORD_DB+DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYMM))
         LogUtil.d("insertGapRecordJTable!!")
         createGapRecordKJTable(tbName, gapJsonBean)
-        if (!queryDataIsExsitByCodeAndBDAndDate(
-                tbName,
-                gapJsonBean.code.toString(),
-                gapJsonBean.b_D.toString()
-            )
-        ) {
-            val insertSqlStr = gapJsonBean.insertTB(tbName)
-            LogUtil.d("insertSqlStr:$insertSqlStr")
-            try {
-                db.execSQL(insertSqlStr)
-            } catch (e: java.lang.Exception) {
-                insertGapRecordJTable(
+        try {
+            if (!queryDataIsExsitByCodeAndBDAndDate(
                     tbName,
-                    gapJsonBean,
-                    date
+                    gapJsonBean.code.toString(),
+                    gapJsonBean.b_D.toString()
                 )
+            ) {
+                val insertSqlStr = gapJsonBean.insertTB(tbName)
+                LogUtil.d("insertSqlStr:$insertSqlStr")
+
+                db.execSQL(insertSqlStr)
+            } else {
+                val updateSql = gapJsonBean.updateGapInfo(tbName)
+                LogUtil.d("updateSql:$updateSql")
+                db.execSQL(updateSql)
             }
-        } else {
-            val updateSql = gapJsonBean.updateGapInfo(tbName)
-            LogUtil.d("updateSql:$updateSql")
-            db.execSQL(updateSql)
+        } catch (e: java.lang.Exception) {
+            insertGapRecordJTable(
+                tbName,
+                gapJsonBean,
+                date
+            )
         }
+
     }
 
     fun queryDataIsExsitByCodeAndBDAndDate(dbName: String, code: String, bd: String): Boolean {
