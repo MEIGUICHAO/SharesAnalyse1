@@ -90,6 +90,13 @@ class NewApiActivity : AppCompatActivity() {
         }
 
         btnCopy.setOnClickListener {
+//            DBUtils.switchDBName("SH_CHDD_2012")
+//            if (Datas.DEBUG) {
+//                Datas.DEBUG_Code.forEach { code->
+//                    DBUtils.dropTable("DD_$code")
+//                }
+//
+//            }
             copyDB()
         }
         btnRequestDealDetail.setOnClickListener {

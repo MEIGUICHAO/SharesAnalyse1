@@ -821,72 +821,74 @@ object DBUtils {
     fun queryCHDDByTableName(tableName: String, dbName: String): ArrayList<CodeHDDBean>? {
         switchDBName(dbName)
         var list: ArrayList<CodeHDDBean>? = null
-        if (tabbleIsExist(tableName)) {
-            var cursor =
-                db.rawQuery("SELECT * FROM $tableName", null)
-            LogUtil.d("cursor:${cursor.count}")
-            if (null != cursor && cursor.moveToFirst()) {
-                list = ArrayList<CodeHDDBean>()
-                while (!cursor.isAfterLast) {
-                    val codeHDDBean = CodeHDDBean()
-                    val NAME = cursor.getString(cursor.getColumnIndex("NAME"))
-                    val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
-                    val OP = cursor.getFloat(cursor.getColumnIndex("OP"))
-                    val CP = cursor.getFloat(cursor.getColumnIndex("CP"))
-                    val PP = cursor.getFloat(cursor.getColumnIndex("PP"))
-                    val P = cursor.getFloat(cursor.getColumnIndex("P"))
-                    val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
-                    val TR = cursor.getString(cursor.getColumnIndex("TR"))
-                    val p_autr_j = cursor.getString(cursor.getColumnIndex("P_AUTR_J"))
-                    val P_DA_J = cursor.getString(cursor.getColumnIndex("P_DA_J"))
-                    val P_PP_J = cursor.getString(cursor.getColumnIndex("P_PP_J"))
-                    val P_MA_J = cursor.getString(cursor.getColumnIndex("P_MA_J"))
+        try {
+
+            if (tabbleIsExist(tableName)) {
+                var cursor =
+                        db.rawQuery("SELECT * FROM $tableName", null)
+                LogUtil.d("cursor:${cursor.count}")
+                if (null != cursor && cursor.moveToFirst()) {
+                    list = ArrayList<CodeHDDBean>()
+                    while (!cursor.isAfterLast) {
+                        val codeHDDBean = CodeHDDBean()
+                        val NAME = cursor.getString(cursor.getColumnIndex("NAME"))
+                        val DATE = cursor.getString(cursor.getColumnIndex("DATE"))
+                        val OP = cursor.getFloat(cursor.getColumnIndex("OP"))
+                        val CP = cursor.getFloat(cursor.getColumnIndex("CP"))
+                        val PP = cursor.getFloat(cursor.getColumnIndex("PP"))
+                        val P = cursor.getFloat(cursor.getColumnIndex("P"))
+                        val AUP = cursor.getFloat(cursor.getColumnIndex("AUP"))
+                        val TR = cursor.getString(cursor.getColumnIndex("TR"))
+                        val p_autr_j = cursor.getString(cursor.getColumnIndex("P_AUTR_J"))
+                        val P_DA_J = cursor.getString(cursor.getColumnIndex("P_DA_J"))
+                        val P_PP_J = cursor.getString(cursor.getColumnIndex("P_PP_J"))
+                        val P_MA_J = cursor.getString(cursor.getColumnIndex("P_MA_J"))
 //                    val SpePP_J = cursor.getString(cursor.getColumnIndex("SpePP_J"))
 //                    val DA_J = cursor.getString(cursor.getColumnIndex("DA_J"))
-                    val K_J = cursor.getString(cursor.getColumnIndex("K_J"))
-                    val Shape_J = cursor.getString(cursor.getColumnIndex("Shape_J"))
-                    val K_TR_J = cursor.getString(cursor.getColumnIndex("K_TR_J"))
-                    val GAP_J = cursor.getString(cursor.getColumnIndex("GAP_J"))
+                        val K_J = cursor.getString(cursor.getColumnIndex("K_J"))
+                        val Shape_J = cursor.getString(cursor.getColumnIndex("Shape_J"))
+                        val K_TR_J = cursor.getString(cursor.getColumnIndex("K_TR_J"))
+                        val GAP_J = cursor.getString(cursor.getColumnIndex("GAP_J"))
 //                    val MS_J = cursor.getString(cursor.getColumnIndex("MS_J"))
 
-                    codeHDDBean.name = NAME
-                    codeHDDBean.date = DATE
-                    codeHDDBean.op = OP
-                    codeHDDBean.cp = CP
-                    codeHDDBean.pp = PP
-                    codeHDDBean.p = P
-                    codeHDDBean.aup = AUP
-                    codeHDDBean.tr = TR
+                        codeHDDBean.name = NAME
+                        codeHDDBean.date = DATE
+                        codeHDDBean.op = OP
+                        codeHDDBean.cp = CP
+                        codeHDDBean.pp = PP
+                        codeHDDBean.p = P
+                        codeHDDBean.aup = AUP
+                        codeHDDBean.tr = TR
 
-                    if (!GAP_J.isNullOrEmpty()) {
-                        codeHDDBean.gaP_J = GsonHelper.parse(GAP_J, GapJsonBean::class.java)
-                    }
-                    if (!K_TR_J.isNullOrEmpty()) {
-                        codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J, K_TR_Json::class.java)
-                    }
-                    if (!Shape_J.isNullOrEmpty()) {
-                        codeHDDBean.shape_J = GsonHelper.parse(Shape_J, ShapeJsonBean::class.java)
-                    }
-                    if (!K_J.isNullOrEmpty()) {
-                        codeHDDBean.k_J = GsonHelper.parse(K_J, KJsonBean::class.java)
-                    }
+                        if (!GAP_J.isNullOrEmpty()) {
+                            codeHDDBean.gaP_J = GsonHelper.parse(GAP_J, GapJsonBean::class.java)
+                        }
+                        if (!K_TR_J.isNullOrEmpty()) {
+                            codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J, K_TR_Json::class.java)
+                        }
+                        if (!Shape_J.isNullOrEmpty()) {
+                            codeHDDBean.shape_J = GsonHelper.parse(Shape_J, ShapeJsonBean::class.java)
+                        }
+                        if (!K_J.isNullOrEmpty()) {
+                            codeHDDBean.k_J = GsonHelper.parse(K_J, KJsonBean::class.java)
+                        }
 
-                    if (!p_autr_j.isNullOrEmpty()) {
-                        codeHDDBean.p_autr_j =
-                            GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
-                    }
-                    if (!P_DA_J.isNullOrEmpty()) {
-                        codeHDDBean.p_DA_J =
-                            GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
-                    }
-                    if (!P_PP_J.isNullOrEmpty()) {
-                        codeHDDBean.p_PP_J =
-                            GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
-                    }
-                    if (!P_MA_J.isNullOrEmpty()) {
-                        codeHDDBean.p_MA_J =
-                            GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
-                    }
+                        if (!p_autr_j.isNullOrEmpty()) {
+                            codeHDDBean.p_autr_j =
+                                    GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
+                        }
+                        if (!P_DA_J.isNullOrEmpty()) {
+                            codeHDDBean.p_DA_J =
+                                    GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
+                        }
+                        if (!P_PP_J.isNullOrEmpty()) {
+                            codeHDDBean.p_PP_J =
+                                    GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
+                        }
+                        if (!P_MA_J.isNullOrEmpty()) {
+                            codeHDDBean.p_MA_J =
+                                    GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
+                        }
 //                    if (!SpePP_J.isNullOrEmpty()) {
 //                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
 //                    }
@@ -896,12 +898,15 @@ object DBUtils {
 //                    if (!MS_J.isNullOrEmpty()) {
 //                        codeHDDBean.mS_J = GsonHelper.parse(MS_J, CodeHDDBean.MS_J::class.java)
 //                    }
-                    list.add(codeHDDBean)
-                    cursor.moveToNext()
-                }
+                        list.add(codeHDDBean)
+                        cursor.moveToNext()
+                    }
 
+                }
+                cursor.close()
             }
-            cursor.close()
+        } catch (e: java.lang.Exception) {
+            queryCHDDByTableName(tableName,dbName)
         }
         return list
     }
@@ -1533,6 +1538,7 @@ object DBUtils {
         val createSql = reasoningRevBean.createTB("Reasoning")
         db.execSQL(createSql)
         val isExit = queryIsExsitByCodeAndCustomColumn("Reasoning",arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))
+        LogUtil.d("insertReasoningRevTB--->${reasoningRevBean.code},date--->${reasoningRevBean.d}")
         if (!isExit){
             val insert = reasoningRevBean.insertTB("Reasoning")
             db.execSQL(insert)

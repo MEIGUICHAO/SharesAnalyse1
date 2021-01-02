@@ -1531,10 +1531,11 @@ class NewApiViewModel : BaseViewModel() {
                     if (date.isEmpty() || date1.isEmpty()) {
                         continue
                     }
+//                    LogUtil.d("date--->$date,date1--->$date1,code:$code")
                     if (date.toInt() <= date1.toInt()) {
+                        (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
                         continue
                     }
-                    LogUtil.d("date--->$date,date1--->$date1,code:$code")
                     if (ddidnex == 0) {
                         val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
                     }
@@ -1542,16 +1543,18 @@ class NewApiViewModel : BaseViewModel() {
 //                    if (curIndexTs >= curYearTS) {
 //                    }
                     if (!date1.isEmpty()) {
-                        if (date.toInt()> date1.toInt()) {
+                        if (date.toInt() > date1.toInt()) {
                             insertOrUpdateCodeHDD(
-                                hisHqBean[0].hq,
-                                ddidnex,
-                                code,
-                                namelist[codeidnex],
-                                date
+                                    hisHqBean[0].hq,
+                                    ddidnex,
+                                    code,
+                                    namelist[codeidnex],
+                                    date
                             )
                             (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
-                            reasoningResult(true,code)
+                            reasoningResult(true, code)
+                        } else {
+                            (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
                         }
                     }
                 }
@@ -3436,7 +3439,9 @@ class NewApiViewModel : BaseViewModel() {
                 getReasoningResult(mList, code, isLive, foreachLimitList, p50FilterBBKJRangeBean)
             }
         }
-        (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
+        if (!isLive) {
+            (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
+        }
     }
 
     private fun getReasoningForeachLimitListAndP50Bean(): Pair<ArrayList<Array<Int>>, P50FilterBBKJRangeBean> {
@@ -3480,6 +3485,7 @@ class NewApiViewModel : BaseViewModel() {
                     //                        continue
                     //                    }
                     insertReasoning(
+                            isLive,
                         foreachLimitList,
                         i,
                         mCHDDList,
@@ -3492,6 +3498,7 @@ class NewApiViewModel : BaseViewModel() {
             } else {
                 LogUtil.d("liveDay-->${mCHDDList[mCHDDList.size - 1].date},code--->$code")
                 insertReasoning(
+                        isLive,
                     foreachLimitList,
                     mCHDDList.size - 1,
                     mCHDDList,
@@ -3503,6 +3510,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun insertReasoning(
+            isLive: Boolean,
         foreachLimitList: ArrayList<Array<Int>>,
         i: Int,
         mCHDDList: ArrayList<CodeHDDBean>,
@@ -3580,17 +3588,19 @@ class NewApiViewModel : BaseViewModel() {
                     reasoningRevBean.mp = pList[4]
 
                     LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
-                    (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
+
                     reasoningRevBean.d_D = mCHDDList[i + 5].date
                 }
                 reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
+                (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
                 val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
-                if (!DneedInsert) {
+                if (!DneedInsert && !isLive) {
+                    LogUtil.d("===insertTBByFilterType===")
                     mP50Bean.insertTBByFilterType(
-                        code,
-                        mCHDDList[i].date,
-                        getReasoningTBList(),
-                        reasoningRevBean.p
+                            code,
+                            mCHDDList[i].date,
+                            getReasoningTBList(),
+                            reasoningRevBean.p
                     )
                 }
             }
