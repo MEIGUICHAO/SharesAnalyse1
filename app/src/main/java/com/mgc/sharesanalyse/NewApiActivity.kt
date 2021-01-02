@@ -1,5 +1,6 @@
 package com.mgc.sharesanalyse
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -165,6 +166,9 @@ class NewApiActivity : AppCompatActivity() {
             App.getSinglePool().execute{
                 viewModel.reasoningResult(false)
             }
+        }
+        btnGetResoningResult.setOnClickListener {
+            startActivity(Intent(this,ReasoningActivity::class.java))
         }
     }
 

@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="BwcList" />
 
         <Button
@@ -70,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="Gap" />
         <Button
             android:id="@+id/btnRevFilter"
@@ -95,6 +97,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Resoning" />
+
+        <Button
+            android:id="@+id/btnGetResoningResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetResoningResult" />
 
     </LinearLayout>
 

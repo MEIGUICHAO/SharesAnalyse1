@@ -1546,6 +1546,40 @@ object DBUtils {
         return isExit
     }
 
+    fun getReasoningResult(): ArrayList<ReasoningRevBean> {
+        switchDBName(Datas.REV_RESONING_DB)
+        val list = ArrayList<ReasoningRevBean>()
+        if (tabbleIsExist("Reasoning")) {
+            val cursor =
+                    db.rawQuery(" SELECT * FROM Reasoning", null)
+            if (null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast) {
+                    val bean = ReasoningRevBean()
+                    val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
+                    val D = cursor.getString(cursor.getColumnIndex("D"))
+                    val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
+                    val P = cursor.getFloat(cursor.getColumnIndex("P"))
+                    val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
+                    val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
+                    val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
+                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+                    bean.code = CODE
+                    bean.d = D
+                    bean.d_D = D_D
+                    bean.p = P
+                    bean.mp = MP
+                    bean.after_O_P = AFTER_O_P
+                    bean.after_C_P = AFTER_C_P
+                    bean.fitlertype = FITLERTYPE
+                    list.add(bean)
+                    cursor.moveToNext()
+                }
+                cursor.close()
+            }
+        }
+        return list
+
+    }
 
 
 }

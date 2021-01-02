@@ -3,6 +3,7 @@ package com.mgc.sharesanalyse.base
 import android.annotation.SuppressLint
 import com.mgc.sharesanalyse.entity.CodeHDDBean
 import com.mgc.sharesanalyse.entity.DealDetailTableBean
+import com.mgc.sharesanalyse.entity.ReasoningRevBean
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
@@ -201,6 +202,17 @@ fun String.copyFilterTB2NewTB(oldTB: String,smallerMap:HashMap<String,String>, b
         querySql = querySql + " AND ${it.key} > ${it.value}"
     }
     return "CREATE TABLE $this AS (SELECT COLUMNS FROM $oldTB  WHERE _ID IN (SELECT MIN(_ID) FROM $oldTB WHERE 1 = 1 GROUP BY N) $querySql)"
+
+}
+
+fun ArrayList<ReasoningRevBean>.sortDescReasoningByDate(){
+    Collections.sort(this, object : Comparator<ReasoningRevBean> {
+        override fun compare(p0: ReasoningRevBean, p1: ReasoningRevBean): Int {
+            return p1.d.toInt().compareTo(
+                p0.d.toInt()
+            )
+        }
+    })
 }
 
 

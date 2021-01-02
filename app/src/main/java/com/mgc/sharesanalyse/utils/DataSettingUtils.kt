@@ -1935,137 +1935,137 @@ object DataSettingUtils {
                 }
             }
         }
-        val trBean = kotlin.run {
-            when (fitlerType) {
-                -70->{
-                    p50FilterBBKJRangeBean.r_N70_N60?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                -50->{
-                    p50FilterBBKJRangeBean.r_N50_N40?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                -40->{
-                    p50FilterBBKJRangeBean.r_N40_N30?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                -30->{
-                    p50FilterBBKJRangeBean.r_N30_N20?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                -20->{
-                    p50FilterBBKJRangeBean.r_N20_N10?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                -10->{
-                    p50FilterBBKJRangeBean.r_N10_0?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                0->{
-                    p50FilterBBKJRangeBean.r_0_10?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                10->{
-                    p50FilterBBKJRangeBean.r_10_20?.let{
-                        when (day) {
-                            35->it.d36TRBean
-                            29->it.d30TRBean
-                            24->it.d25TRBean
-                            19->it.d20TRBean
-                            14->it.d15TRBean
-                            9->it.d10TRBean
-                            4->it.d05TRBean
-                            2->it.d03TRBean
-                            else->null
-                        }
-                    }
-                }
-                else->{
-                    null
-                }
-            }
-        }
-        val mTrBean = TR_K_SLL_Bean()
-        setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
+//        val trBean = kotlin.run {
+//            when (fitlerType) {
+//                -70->{
+//                    p50FilterBBKJRangeBean.r_N70_N60?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                -50->{
+//                    p50FilterBBKJRangeBean.r_N50_N40?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                -40->{
+//                    p50FilterBBKJRangeBean.r_N40_N30?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                -30->{
+//                    p50FilterBBKJRangeBean.r_N30_N20?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                -20->{
+//                    p50FilterBBKJRangeBean.r_N20_N10?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                -10->{
+//                    p50FilterBBKJRangeBean.r_N10_0?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                0->{
+//                    p50FilterBBKJRangeBean.r_0_10?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                10->{
+//                    p50FilterBBKJRangeBean.r_10_20?.let{
+//                        when (day) {
+//                            35->it.d36TRBean
+//                            29->it.d30TRBean
+//                            24->it.d25TRBean
+//                            19->it.d20TRBean
+//                            14->it.d15TRBean
+//                            9->it.d10TRBean
+//                            4->it.d05TRBean
+//                            2->it.d03TRBean
+//                            else->null
+//                        }
+//                    }
+//                }
+//                else->{
+//                    null
+//                }
+//            }
+//        }
+//        val mTrBean = TR_K_SLL_Bean()
+//        setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
 
-        if (null==bean||null==trBean){
+        if (null==bean){
             return false
         }
         val maxBean = bean.maxBean
