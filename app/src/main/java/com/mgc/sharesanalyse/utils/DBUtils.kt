@@ -1557,6 +1557,7 @@ object DBUtils {
                     val bean = ReasoningRevBean()
                     val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
                     val D = cursor.getString(cursor.getColumnIndex("D"))
+                    val N = cursor.getString(cursor.getColumnIndex("N"))
                     val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
                     val P = cursor.getFloat(cursor.getColumnIndex("P"))
                     val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
@@ -1564,6 +1565,7 @@ object DBUtils {
                     val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
                     val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                     bean.code = CODE
+                    bean.n = N
                     bean.d = D
                     bean.d_D = D_D
                     bean.p = P

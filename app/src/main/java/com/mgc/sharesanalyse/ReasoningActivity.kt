@@ -15,7 +15,7 @@ class ReasoningActivity : AppCompatActivity() {
         list.sortDescReasoningByDate()
         var result = ""
         list.forEach {
-            result = result+ "code-->${it.code},d-->${it.d}\n"
+            result = result+ "n-->${it.n},code-->${it.code},d-->${it.d}\n"
         }
         tvResult.setText(result)
     }
