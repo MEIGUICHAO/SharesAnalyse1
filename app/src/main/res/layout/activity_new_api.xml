@@ -54,6 +54,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="HisHq" />
+
+        <Button
+            android:id="@+id/btnRequestWYToDayHq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="WYToDayHq" />
         <Button
             android:id="@+id/btnRequestSumDd"
             android:layout_width="wrap_content"

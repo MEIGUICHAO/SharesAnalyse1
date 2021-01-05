@@ -466,6 +466,27 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
+    fun getCurrentHq(
+        code: String
+    ) {
+        var bean =
+            DBUtils.queryHHqBeanByCode(getCurrentHQTableName(), code)
+
+        if (null != bean) {
+            LogUtil.d("cache_${Datas.sohuStockUrl}--------$code")
+            loadState.value = LoadState.Success(REQUEST_HIS_HQ, bean.json)
+        } else {
+            val msg = mHandler.obtainMessage()
+            msg.what = CHECK_HQ_CODE
+            msg.obj = code
+            hqCurCode = code
+            mHandler.sendMessageDelayed(msg, 20 * 1000)
+            requestCurrentHq(true,code)
+        }
+
+
+    }
+
     private fun jsoupParseMineInfoHtml(json: String): ArrayList<InfoDateBean> {
         LogUtil.d("jsoupParseMineInfoHtml")
         val document = Jsoup.parse(json)
@@ -486,14 +507,6 @@ class NewApiViewModel : BaseViewModel() {
     private fun requestHisPriceHq(isinsertInTx: Boolean, start: String, end: String, code: String) {
 
         launch({
-//            val xq1 = RetrofitManager.reqApi.getXQInfo(code, "1")
-//            val xq2 = requestXQInfo(code,"2",xq1.await())
-//            val xq3 = requestXQInfo(code,"3",xq2.await())
-//            var xq1Bean:XQInfoBean? = GsonHelper.parse(xq1.await(),XQInfoBean::class.java)
-//            var xq2Bean:XQInfoBean? = GsonHelper.parse(xq2.await(),XQInfoBean::class.java)
-//            var xq3Bean:XQInfoBean? = GsonHelper.parse(xq3.await(),XQInfoBean::class.java)
-
-//            val mine = RetrofitManager.reqApi.getSinaMineInfo(code)
             val result: Deferred<String>
             if (start.isEmpty() && end.isEmpty()) {
                 result = RetrofitManager.reqApi.getHisHq("cn_$code")
@@ -504,6 +517,19 @@ class NewApiViewModel : BaseViewModel() {
                 result.await(),
                 code,
                 isinsertInTx
+            )
+        })
+
+
+    }
+
+    private fun requestCurrentHq(isinsertInTx: Boolean ,code: String) {
+
+        launch({
+            val result: Deferred<String> = RetrofitManager.reqApi.getWyStockData(code.toWYCode())
+            updateInTxCurHQInfo(
+                result.await(),
+                code
             )
         })
 
@@ -539,11 +565,41 @@ class NewApiViewModel : BaseViewModel() {
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
     }
+    private fun updateInTxCurHQInfo(
+        json: String,
+        code: String
+    ) {
+        LogUtil.d("updateInTxHisPriceInfo")
+        val bean = PricesHisGDBean()
+        val mJson = json.replace("_ntes_quote_callback({\"${code.toWYCode()}\":","").replace(" });","")
+        val mwybean = GsonHelper.getInstance().fromJson(mJson,WYHQBean::class.java)
+        val hhbean = HisHqBean()
+        //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
+        val MutableList = mutableListOf<String>(mwybean.time.split(" ")[0].replace("/","-"),mwybean.open.toString(),mwybean.price.toString(),mwybean.updown.toString(),(mwybean.percent.toFloat()*100).toKeep2().toString(),
+        mwybean.low.toString(),mwybean.high.toString(),(mwybean.volume/1000000).toFloat().toKeep2().toString(),(mwybean.turnover/10000).toFloat().toKeep2().toString(),0.toString())
+        hhbean.hq = arrayListOf(MutableList)
+        hhbean.code = code
+
+        val hhlist = arrayListOf(hhbean)
+
+        bean.code = code
+        bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+        val insertJson = GsonHelper.toJson(hhlist)
+        bean.json = insertJson
+        DBUtils.insertHHq2DateTable(getCurrentHQTableName(), bean)
+        loadState.value = LoadState.Success(REQUEST_HIS_HQ, insertJson)
+    }
 
     fun getHHQTableName(): String {
 //        return "HHQ_" + if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
 //            FormatterEnum.YYYYMMDD
         return "HHQ_" + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
+    }
+
+    fun getCurrentHQTableName(): String {
+//        return "HHQ_" + if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
+//            FormatterEnum.YYYYMMDD
+        return "CurHQ_" + DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
     }
 
     private fun getXQInfo(xq1Bean: XQInfoBean?): ArrayList<InfoDateBean> {
@@ -915,13 +971,13 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     val detailCodeList = ArrayList<String>()
-    fun getPriceHisFileLog() {
+    fun getPriceHisFileLog(isCurrentHq: Boolean) {
         var date =
             if (DateUtils.ifAfterToday1530()) DateUtils.formatToDay(FormatterEnum.YYYYMMDD) else DateUtils.formatYesterDay(
                 FormatterEnum.YYYYMMDD
             )
         SPUtils.put(Datas.SPGetHQCodeDate, date)
-        logDealDetailHqSum()
+        logDealDetailHqSum(isCurrentHq)
 //        if (mActivity is NewApiActivity) {
 //            (mActivity as NewApiActivity).requestDealDetailBtn()
 //        }
@@ -937,17 +993,21 @@ class NewApiViewModel : BaseViewModel() {
         })
     }
 
-    fun logDealDetailHqSum() {
+    fun logDealDetailHqSum(currentHq: Boolean) {
         needGoOn = false
         LogUtil.d("complete==========================")
-        val hhqList = getDDList().second
-        for (i in 0 until hhqList.size - 1) {
-            DBUtils.dropTable(hhqList[i])
+        if (currentHq) {
+
+        } else {
+            val hhqList = getDDList(currentHq).second
+            for (i in 0 until hhqList.size - 1) {
+                DBUtils.dropTable(hhqList[i])
+            }
+            (mActivity as NewApiActivity).setBtnHHQInfo("hhq_complete")
         }
-        (mActivity as NewApiActivity).setBtnHHQInfo("hhq_complete")
         App.getSinglePool().execute {
             DBUtils.switchDBName(Datas.dataNamesDefault)
-            getSumDD()
+            getSumDD(currentHq)
         }
 
 //        sortpriceHisRecordGDBean(list)
@@ -965,11 +1025,11 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-    fun getSumDD() {
+    fun getSumDD(currentHq: Boolean) {
 
         val sddTableNameALL = Datas.sddALL
         val sddTableName = Datas.sdd + DateUtils.formatToDay(FormatterEnum.YYMM)
-        val pair = getDDList()
+        val pair = getDDList(currentHq)
         val ddlist = pair.first
         val hhqlist = pair.second
         var codelist = kotlin.run {
@@ -1531,7 +1591,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (date.isEmpty() || date1.isEmpty()) {
                         continue
                     }
-//                    LogUtil.d("date--->$date,date1--->$date1,code:$code")
+                    LogUtil.d("date--->$date,date1--->$date1,code:$code")
                     if (date.toInt() <= date1.toInt()) {
                         (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
                         continue
@@ -3085,7 +3145,7 @@ class NewApiViewModel : BaseViewModel() {
         }
     }
 
-    private fun getDDList(): Pair<ArrayList<String>, ArrayList<String>> {
+    private fun getDDList(currentHq: Boolean): Pair<ArrayList<String>, ArrayList<String>> {
         var cursor: Cursor? = null
         var ddList = ArrayList<String>()
         var hhqList = ArrayList<String>()
@@ -3130,7 +3190,9 @@ class NewApiViewModel : BaseViewModel() {
 //                        ddList.add(name)
 //                    }
                 }
-                if (name.contains("HHQ")) {
+                if (name.contains("HHQ")&&!currentHq) {
+                    hhqList.add(name)
+                } else if (name.contains("CurHQ") && currentHq) {
                     hhqList.add(name)
                 }
 
@@ -3430,6 +3492,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun reasoningResult(isLive:Boolean,mCode:String = "") {
+        LogUtil.d("reasoningResult-->$mCode")
         val (mList, codelist) = getCHDDDateListAndCodeList()
         val (foreachLimitList, p50FilterBBKJRangeBean) = getReasoningForeachLimitListAndP50Bean()
         if (isLive) {

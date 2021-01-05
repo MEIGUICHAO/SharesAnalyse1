@@ -15,6 +15,7 @@ object Datas {
     const val sinaVipStockUrl = "https://vip.stock.finance.sina.com.cn"
     const val sinaMarketUrl = "http://market.finance.sina.com.cn"
     const val sohuStockUrl = "https://q.stock.sohu.com/"
+    const val wyStockUrl = "http://api.money.126.net"
     const val xqUrl = "https://xueqiu.com"
     const val NUM_100M = 100000000
     const val NUM_W2Y = 10000
@@ -48,18 +49,18 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
 //    val DEBUG_Code = listOf("601216")
-    val DEBUG_Code = listOf("600006","600199")
+//    val DEBUG_Code = listOf("600006","600199")
 //    val DEBUG_Code = listOf("300247")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")
 
-//        val DEBUG_Code = listOf("688133","300278","000544")
+        val DEBUG_Code = listOf("688133","300278","000544")
     const val FILTER_TYPE_COUNT = 2
     const val FILTER_TYPE_BEGIN = 2
     const val BIG_RED_RANGE = 0.07.toFloat()

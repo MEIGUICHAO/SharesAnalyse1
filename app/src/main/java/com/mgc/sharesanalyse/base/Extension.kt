@@ -215,4 +215,11 @@ fun ArrayList<ReasoningRevBean>.sortDescReasoningByDate(){
     })
 }
 
+fun String.toWYCode(): String {
+    if (this.toInt() > 600000) {
+        return "0$this"
+    } else {
+        return "1${this.toCompleteCode()}"
+    }
+}
 

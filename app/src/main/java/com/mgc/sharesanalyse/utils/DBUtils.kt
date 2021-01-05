@@ -562,6 +562,7 @@ object DBUtils {
         code: String,
         percent: String
     ) {
+        LogUtil.d("updateDDPercentByCode--->$dbname")
         if (tabbleIsExist(dbname)) {
             var sql = "UPDATE $dbname SET PERCENT=${percent} WHERE CODE=${code.toInt()}"
             db.execSQL(sql)

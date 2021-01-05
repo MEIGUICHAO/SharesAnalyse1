@@ -35,6 +35,10 @@ interface RequestService {
     @GET("/hisHq")
     fun getHisHq(@Query("code") code: String, @Query("stat") stat: String = "1"): Deferred<String>
 
+    @Headers("urlname:${Datas.wyStockUrl}")
+    @GET("/data/feed/{path}")
+    fun getWyStockData(@Path("path")code:String): Deferred<String>
+
 
     @Headers("urlname:${Datas.bwcUrl}","User-Agent:${Datas.UserAgent}","Content-Type:application/json")
     @POST("/api/v2/overbearfood/api_overbear_ordinary_data_list")
