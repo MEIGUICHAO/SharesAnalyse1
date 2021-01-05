@@ -3555,23 +3555,24 @@ class NewApiViewModel : BaseViewModel() {
         }
         if (mCHDDList.size >= 77) {
             if (!isLive) {
-                for (i in 72..mCHDDList.size - 1) {
-                    //                    LogUtil.d("curDay-->${mCHDDList[i].date}")
-                    //                    var logStr = ""
-                    //                    if (!mCHDDList[i].date.equals("20201029")) {
-                    //                        continue
-                    //                    }
-                    insertReasoning(
-                            isLive,
-                        foreachLimitList,
-                        i,
-                        mCHDDList,
-                        p50FilterBBKJRangeBean,
-                        code
-                    )
-                    //                    LogUtil.d("curDay-->${logStr}")
-
-                }
+//                for (i in 72..mCHDDList.size - 1) {
+//                    insertReasoning(
+//                            isLive,
+//                        foreachLimitList,
+//                        i,
+//                        mCHDDList,
+//                        p50FilterBBKJRangeBean,
+//                        code
+//                    )
+//                }
+                insertReasoning(
+                    isLive,
+                    foreachLimitList,
+                    mCHDDList.size - 1,
+                    mCHDDList,
+                    p50FilterBBKJRangeBean,
+                    code
+                )
             } else {
                 LogUtil.d("liveDay-->${mCHDDList[mCHDDList.size - 1].date},code--->$code")
                 insertReasoning(
