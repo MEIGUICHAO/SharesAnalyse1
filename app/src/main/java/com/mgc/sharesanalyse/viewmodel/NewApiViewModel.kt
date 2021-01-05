@@ -446,6 +446,7 @@ class NewApiViewModel : BaseViewModel() {
         start: String = getStartDateByDaysCount(Datas.HHQDayCount),
         end: String = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
     ) {
+        LogUtil.d("start-->$start,end-->$end")
         var bean =
             DBUtils.queryHHqBeanByCode(getHHQTableName(), code)
 //            DaoUtilsStore.getInstance().pricesHisGDBeanCommonDaoUtils.queryById(code.toLong())
@@ -467,7 +468,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getCurrentHq(
-        code: String
+            code: String,
+            lastDealDay: String
     ) {
         var bean =
             DBUtils.queryHHqBeanByCode(getCurrentHQTableName(), code)
@@ -481,7 +483,14 @@ class NewApiViewModel : BaseViewModel() {
             msg.obj = code
             hqCurCode = code
             mHandler.sendMessageDelayed(msg, 20 * 1000)
-            requestCurrentHq(true,code)
+            val lastDate = DBUtils.getLastCHDDBeanDate(code, "DD_${code.toCompleteCode()}")
+            LogUtil.d("lastDate:$lastDate,lastDealDay:$lastDealDay")
+            if (lastDealDay.equals(lastDate)) {
+                requestCurrentHq(true, code)
+            } else {
+                loadState.value = LoadState.GoNext(REQUEST_HIS_HQ)
+                (mActivity as NewApiActivity).setBtnCurHQInfo("$code-->not series")
+            }
         }
 
 
@@ -1032,6 +1041,10 @@ class NewApiViewModel : BaseViewModel() {
         val pair = getDDList(currentHq)
         val ddlist = pair.first
         val hhqlist = pair.second
+        if (hhqlist.size < 1) {
+            (mActivity as NewApiActivity).setBtnSumDDInfo("list==0")
+            return
+        }
         var codelist = kotlin.run {
             val list = ArrayList<String>()
             codeNameList.forEach {
@@ -3193,6 +3206,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (name.contains("HHQ")&&!currentHq) {
                     hhqList.add(name)
                 } else if (name.contains("CurHQ") && currentHq) {
+                    LogUtil.d("CurHQ name-->$name")
                     hhqList.add(name)
                 }
 

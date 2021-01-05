@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.base.toCodeHDD
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
 import com.mgc.sharesanalyse.entity.SinaDealDatailBean
@@ -20,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import java.nio.charset.Charset
 
 class NewApiActivity : AppCompatActivity() {
 
@@ -49,7 +47,7 @@ class NewApiActivity : AppCompatActivity() {
         }
 
     var needLogAfterDD = false
-
+    var lastDealDay = ""
 
     private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
         val path = "/data/data/" + getPackageName() + "/databases"
@@ -128,6 +126,7 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
+//            DBUtils.dropTable(viewModel.getHHQTableName())
             clickHHQ()
         }
         btnRequestWYToDayHq.setOnClickListener {
@@ -136,14 +135,14 @@ class NewApiActivity : AppCompatActivity() {
                 while (!DateUtils.isWeekDay(ysdts).first) {
                     ysdts = ysdts - 24 * 60 * 60 * 1000
                 }
-                val lastDealDay = DateUtils.format(
+                lastDealDay = DateUtils.format(
                         ysdts,
                         FormatterEnum.YYYYMMDD
                 )
 //                DBUtils.switchDBName("688126".toCodeHDD(lastDealDay, FormatterEnum.YYYYMMDD))
 //                DBUtils.queryCodeHDDIsExsitByDate()
 //                DBUtils.switchDBName(Datas.dataNamesDefault)
-                DBUtils.dropTable(viewModel.getCurrentHQTableName())
+//                DBUtils.dropTable(viewModel.getCurrentHQTableName())
                 clickCurrentHQ()
             } else {
                 Toast.makeText(this,"时间未到",Toast.LENGTH_SHORT).show()
@@ -265,6 +264,7 @@ class NewApiActivity : AppCompatActivity() {
     fun clickHHQ() {
         DBUtils.switchDBName(Datas.dataNamesDefault)
         btnRequestHisHq.setText("HHQ_WORKING")
+        isCurrentHq = false
         needLogAfterDD = true
         judeWeekDayIndex = 0
         progressIndex = 0
@@ -306,7 +306,7 @@ class NewApiActivity : AppCompatActivity() {
     private fun getCurrentHq() {
         val code = viewModel.codeNameList[progressIndex].split("####")[0].replace("sz", "")
             .replace("sh", "")
-        viewModel.getCurrentHq(code)
+        viewModel.getCurrentHq(code,lastDealDay)
     }
 
 
