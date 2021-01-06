@@ -83,12 +83,14 @@ object DBUtils {
 //    ALLSIZESDJ 20201015:2074,M100SDJ ,M50SDJ 20201015:2,M30SDJ ,M10SDJ 20201015:6,M5SDJ ,M1SDJ 20201015:455,M05SDJ 20201015:527,M01SDJ 20201015:1059)
 
     fun insertHHq2DateTable(dbName: String, hisHqBean: PricesHisGDBean) {
+        switchDBName(Datas.dataNamesDefault)
+//        LogUtil.d("dbName:$dbName")
         createHHqTable(dbName)
         if (!queryHHqIsExsitByCode(dbName, hisHqBean.code.toInt().toString())) {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,JSON,MINEINFO)" +
                     " VALUES(${hisHqBean.code},'${hisHqBean.json}','${hisHqBean.mineInfo}')"
-            LogUtil.d("insertSqlStr:$insertSqlStr")
+//            LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         }
     }
@@ -99,7 +101,7 @@ object DBUtils {
             var insertSqlStr = "INSERT INTO $dbName" +
                     "(CODE,NAME)" +
                     " VALUES(${dealDetailTableBean.code},${dealDetailTableBean.name})"
-            LogUtil.d("insertSqlStr:$insertSqlStr")
+//            LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
         }
     }
@@ -120,6 +122,7 @@ object DBUtils {
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
         }
+//        LogUtil.d("queryHHqIsExsitByCode:$isexsit")
         return isexsit
     }
 
@@ -388,6 +391,7 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             val sqlStr =
                 "CREATE TABLE IF NOT EXISTS $dbName(_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT, JSON TEXT, MINEINFO TEXT);"
+            LogUtil.d("createHHqTable:$sqlStr")
             db.execSQL(sqlStr)
         }
     }

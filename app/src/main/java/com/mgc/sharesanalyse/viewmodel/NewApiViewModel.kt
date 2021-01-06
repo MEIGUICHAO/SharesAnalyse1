@@ -96,7 +96,11 @@ class NewApiViewModel : BaseViewModel() {
                     CHECK_HQ_CODE -> {
                         val code = msg.obj as String
                         if (code == hqCurCode) {
-                            getHisHq(code)
+                            if (!(mActivity as NewApiActivity).isCurrentHq) {
+                                getHisHq(code)
+                            } else {
+                                getCurrentHq(code,(mActivity as NewApiActivity).lastDealDay)
+                            }
                         }
 
                     }
@@ -578,24 +582,31 @@ class NewApiViewModel : BaseViewModel() {
         json: String,
         code: String
     ) {
-        LogUtil.d("updateInTxHisPriceInfo")
+        LogUtil.d("updateInTxHisPriceInfo:$code")
         val bean = PricesHisGDBean()
         val mJson = json.replace("_ntes_quote_callback({\"${code.toWYCode()}\":","").replace(" });","")
-        val mwybean = GsonHelper.getInstance().fromJson(mJson,WYHQBean::class.java)
+        LogUtil.d("updateInTxHisPriceInfo:$json")
+        LogUtil.d("updateInTxHisPriceInfo:$mJson")
+//        停牌
+//        _ntes_quote_callback({"1000670": {"time": "2020/04/26 08:00:02", "code": "1000670", "name": "*ST\u76c8\u65b9", "update": "2020/04/26 08:00:02"} });
+        val mwybean = GsonHelper.parse(mJson,WYHQBean::class.java)
+        LogUtil.d("updateInTxHisPriceInfo:$code")
         val hhbean = HisHqBean()
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
         val MutableList = mutableListOf<String>(mwybean.time.split(" ")[0].replace("/","-"),mwybean.open.toString(),mwybean.price.toString(),mwybean.updown.toString(),(mwybean.percent.toFloat()*100).toKeep2().toString(),
         mwybean.low.toString(),mwybean.high.toString(),(mwybean.volume/1000000).toFloat().toKeep2().toString(),(mwybean.turnover/10000).toFloat().toKeep2().toString(),0.toString())
         hhbean.hq = arrayListOf(MutableList)
         hhbean.code = code
-
+        LogUtil.d("updateInTxHisPriceInfo:$code")
         val hhlist = arrayListOf(hhbean)
 
         bean.code = code
         bean.date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         val insertJson = GsonHelper.toJson(hhlist)
         bean.json = insertJson
+        LogUtil.d("updateInTxHisPriceInfo:$code")
         DBUtils.insertHHq2DateTable(getCurrentHQTableName(), bean)
+        LogUtil.d("updateInTxHisPriceInfo:$code")
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, insertJson)
     }
 

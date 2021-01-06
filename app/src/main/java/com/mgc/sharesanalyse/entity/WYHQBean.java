@@ -357,11 +357,11 @@ public class WYHQBean {
         this.time = time;
     }
 
-    public Integer getTurnover() {
+    public float getTurnover() {
         return turnover;
     }
 
-    public void setTurnover(Integer turnover) {
+    public void setTurnover(float turnover) {
         this.turnover = turnover;
     }
 
@@ -376,5 +376,5 @@ public class WYHQBean {
     private Double ask2;
     private String arrow;
     private String time;
-    private Integer turnover;
+    private float turnover;
 }
