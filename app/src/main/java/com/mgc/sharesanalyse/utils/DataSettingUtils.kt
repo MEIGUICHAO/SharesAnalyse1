@@ -1,9 +1,15 @@
 package com.mgc.sharesanalyse.utils
 
+import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
 import com.mgc.sharesanalyse.entity.*
 
 object DataSettingUtils {
+    lateinit var mActivity: NewApiActivity
+
+    fun setActivity(activity: NewApiActivity) {
+        mActivity = activity
+    }
 
     fun setP50FilterMaxMinValue(
         indexType: String,
@@ -2107,6 +2113,7 @@ object DataSettingUtils {
 
         val mMaxBean = BaseFilterKJBBRangeBean()
         if (judeFilterParameter(
+                        mCodeList[0],
                 fitlerType,
                 day,
                 OM_M,
@@ -2164,38 +2171,39 @@ object DataSettingUtils {
     }
 
     private fun judeFilterParameter(
-        fitlerType: Int,
-        day: Int,
-        OM_M: Float,
-        minBean: BaseFilterKJBBRangeBean,
-        maxBean: BaseFilterKJBBRangeBean,
-        OM_C: Float,
-        OM_P: Float,
-        OM_L: Float,
-        OL_M: Float,
-        OL_C: Float,
-        OL_P: Float,
-        OL_L: Float,
-        OC_M: Float,
-        OC_C: Float,
-        OC_P: Float,
-        OC_L: Float,
-        OP_M: Float,
-        OP_C: Float,
-        OP_P: Float,
-        OP_L: Float,
-        OM_OC: Float,
-        OM_OP: Float,
-        OM_OL: Float,
-        OC_OP: Float,
-        OC_OL: Float,
-        OP_OL: Float,
-        M_C: Float,
-        M_P: Float,
-        M_L: Float,
-        C_P: Float,
-        C_L: Float,
-        P_L: Float
+            codeHDDBean: CodeHDDBean,
+            fitlerType: Int,
+            day: Int,
+            OM_M: Float,
+            minBean: BaseFilterKJBBRangeBean,
+            maxBean: BaseFilterKJBBRangeBean,
+            OM_C: Float,
+            OM_P: Float,
+            OM_L: Float,
+            OL_M: Float,
+            OL_C: Float,
+            OL_P: Float,
+            OL_L: Float,
+            OC_M: Float,
+            OC_C: Float,
+            OC_P: Float,
+            OC_L: Float,
+            OP_M: Float,
+            OP_C: Float,
+            OP_P: Float,
+            OP_L: Float,
+            OM_OC: Float,
+            OM_OP: Float,
+            OM_OL: Float,
+            OC_OP: Float,
+            OC_OL: Float,
+            OP_OL: Float,
+            M_C: Float,
+            M_P: Float,
+            M_L: Float,
+            C_P: Float,
+            C_L: Float,
+            P_L: Float
     ): Boolean {
         LogUtil.d("judeFilterParameter")
 //        LogUtil.d("OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M):${OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M}")
@@ -2220,6 +2228,7 @@ object DataSettingUtils {
                 (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L) &&
                 (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
                 (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
+        mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->beginBoolean:${beginBoolean}")
         if (!beginBoolean) {
             LogUtil.d("beginBoolean:$beginBoolean")
             return beginBoolean
@@ -2297,6 +2306,7 @@ object DataSettingUtils {
             }
 
         }
+        mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->day:$day,stepByStepJudge:${beginBoolean}")
         LogUtil.d("fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
         return beginBoolean
     }

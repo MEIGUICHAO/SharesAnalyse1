@@ -60,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="WYToDayHq" />
         <Button
             android:id="@+id/btnRequestSumDd"
@@ -104,12 +105,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Resoning" />
+        <TextView
+            android:id="@+id/tvReasoning"
+            android:text="reasoning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btnGetResoningResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="50dp"
             android:text="GetResoningResult" />
 
     </LinearLayout>

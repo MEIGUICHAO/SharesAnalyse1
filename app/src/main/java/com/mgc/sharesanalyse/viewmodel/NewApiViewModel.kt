@@ -3517,6 +3517,7 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
         if (!isLive) {
+            LogUtil.d("reasoningResult-->$isLive")
             (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
         }
     }

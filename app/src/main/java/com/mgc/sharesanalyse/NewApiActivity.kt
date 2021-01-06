@@ -184,18 +184,26 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnResoning.setOnClickListener {
             App.getSinglePool().execute{
+                setBtnResoning("Resoning_Working")
                 viewModel.reasoningResult(false)
-               setBtnResoning("Resoning_Working")
             }
         }
         btnGetResoningResult.setOnClickListener {
             startActivity(Intent(this,ReasoningActivity::class.java))
         }
+        DataSettingUtils.setActivity(this)
     }
 
 
 
+    public fun setReasoningProgress(info: String) {
+        tvReasoning.post {
+            tvReasoning.setText(info)
+        }
+    }
+
     fun setBtnResoning(info: String) {
+        LogUtil.d("setBtnResoning-->$info")
         btnResoning.post {
             btnResoning.setText(info)
         }
