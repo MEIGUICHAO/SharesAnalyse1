@@ -1617,7 +1617,7 @@ class NewApiViewModel : BaseViewModel() {
                     }
                     LogUtil.d("date--->$date,date1--->$date1,code:$code")
                     if (date.toInt() <= date1.toInt()) {
-                        (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
+//                        (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
                         continue
                     }
                     if (ddidnex == 0) {
@@ -3567,24 +3567,19 @@ class NewApiViewModel : BaseViewModel() {
         }
         if (mCHDDList.size >= 77) {
             if (!isLive) {
-//                for (i in 72..mCHDDList.size - 1) {
-//                    insertReasoning(
-//                            isLive,
-//                        foreachLimitList,
-//                        i,
-//                        mCHDDList,
-//                        p50FilterBBKJRangeBean,
-//                        code
-//                    )
-//                }
-                insertReasoning(
-                    isLive,
-                    foreachLimitList,
-                    mCHDDList.size - 1,
-                    mCHDDList,
-                    p50FilterBBKJRangeBean,
-                    code
-                )
+                for (i in 72..mCHDDList.size - 1) {
+                    if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
+                        insertReasoning(
+                                isLive,
+                                foreachLimitList,
+                                i,
+                                mCHDDList,
+                                p50FilterBBKJRangeBean,
+                                code
+                        )
+                    }
+                }
+
             } else {
                 LogUtil.d("liveDay-->${mCHDDList[mCHDDList.size - 1].date},code--->$code")
                 insertReasoning(

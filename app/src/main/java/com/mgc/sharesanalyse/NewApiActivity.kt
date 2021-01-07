@@ -126,7 +126,10 @@ class NewApiActivity : AppCompatActivity() {
             viewModel.getPricehis("601216", "2020-09-11", "2020-09-11")
         }
         btnRequestHisHq.setOnClickListener {
-//            DBUtils.dropTable(viewModel.getHHQTableName())
+            if (DateUtils.ifAfterToday1530()) {
+                DBUtils.switchDBName(Datas.dataNamesDefault)
+                DBUtils.dropTable(viewModel.getHHQTableName())
+            }
             clickHHQ()
         }
         btnRequestWYToDayHq.setOnClickListener {
