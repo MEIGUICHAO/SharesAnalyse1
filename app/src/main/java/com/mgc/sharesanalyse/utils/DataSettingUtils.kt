@@ -2225,12 +2225,13 @@ object DataSettingUtils {
         var beginBoolean =  (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
                 (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
                 (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
-                (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L) &&
-                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
-                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
+                (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L)
+//                &&
+//                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
+//                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
         mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->beginBoolean:${beginBoolean}")
         if (!beginBoolean) {
-            LogUtil.d("beginBoolean:$beginBoolean")
+            LogUtil.d("${codeHDDBean.name}-->fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
             return beginBoolean
         } else {
             when (fitlerType) {
@@ -2299,7 +2300,7 @@ object DataSettingUtils {
                             C_L,
                             P_L
                         )
-                        LogUtil.d("stepByStepJudge-->$beginBoolean")
+                        LogUtil.d("${codeHDDBean.name}-->stepByStepJudge-->$beginBoolean")
 
                     }
                 }
@@ -2307,7 +2308,7 @@ object DataSettingUtils {
 
         }
         mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->day:$day,stepByStepJudge:${beginBoolean}")
-        LogUtil.d("fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
+        LogUtil.d("${codeHDDBean.name}-->fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
         return beginBoolean
     }
 
@@ -2351,7 +2352,7 @@ object DataSettingUtils {
         var firstStepBoolean = false
         for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
             if (OM_M <= (i + Datas.FILTER_PROGRESS) && OM_M >= i) {
-                LogUtil.d("OM_M------>begin")
+//                LogUtil.d("OM_M------>begin")
                 val list = DBUtils.getAAFilterAllByTbName(
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                     arrayOf(
