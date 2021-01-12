@@ -1287,6 +1287,47 @@ object DBUtils {
         return Pair(minValue, maxValue)
     }
 
+    fun selectMaxMinValueByTbAndColumnByCodeList(
+        codeList: ArrayList<String>,
+        tbName: String,
+        column: String,
+        dbName: String
+    ): Pair<String, String> {
+        switchDBName(dbName)
+        var minValue = ""
+        var maxValue = ""
+        val array = arrayOfNulls<String>(codeList.size)
+        codeList.toArray(array)
+        var addSql = ""
+        array.forEach {
+            addSql = addSql +" AND CODE = ? "
+        }
+        var codeStr = ""
+        array.forEach {
+            codeStr = codeStr + "$it ,"
+        }
+        val queryMinSql = " SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName)) $addSql"
+        var cursor =
+            db.rawQuery(queryMinSql, array)
+        if (null != cursor && cursor.moveToFirst()) {
+            minValue = cursor.getString(cursor.getColumnIndex(column))
+        }
+        LogUtil.d("queryMinSql-->$queryMinSql \n $codeStr cursor.count:${cursor.count}")
+
+        cursor.close()
+
+        val queryMaxSql = " SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName)) $addSql"
+        cursor =
+            db.rawQuery(queryMaxSql, null)
+        LogUtil.d("queryMaxSql-->$queryMaxSql \n $codeStr  cursor.count:${cursor.count}")
+        if (null != cursor && cursor.moveToFirst()) {
+            maxValue = cursor.getString(cursor.getColumnIndex(column))
+        }
+        cursor.close()
+        LogUtil.d("minValue:$minValue maxValue:$maxValue")
+        return Pair(minValue, maxValue)
+    }
+
     fun copyFilterTB2NewTB(
         newTBName: String,
         countList: java.util.ArrayList<BaseReverseImp>,
@@ -1334,6 +1375,24 @@ object DBUtils {
     @SuppressLint("Recycle")
     fun getAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
         switchDBName(Datas.REV_FILTERDB + 2020)
+        var list: ArrayList<BaseReverseImp>? = null
+        val cursor =
+            db.rawQuery(sqlStr, selection)
+        cursor?.let {
+            list = ArrayList()
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val bean = getRevKJBeanByCursor(it)
+                list!!.add(bean)
+                it.moveToNext()
+            }
+            it.close()
+        }
+        return list
+    }
+
+    fun getFilterAllByTbName(dbName: String, sqlStr:String,selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+        switchDBName(dbName)
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
             db.rawQuery(sqlStr, selection)
@@ -1586,6 +1645,21 @@ object DBUtils {
         }
         return list
 
+    }
+
+    fun insertAllJudgeTB(
+        reasoningAllJudgeBean: ReasoningAllJudgeBean,
+        insertTB: String
+    ) {
+        switchDBName(Datas.REV_RESONING_DB)
+        if (!tabbleIsExist(insertTB)) {
+            val createSQL = reasoningAllJudgeBean.createTB(insertTB)
+            db.execSQL(createSQL)
+        }
+        if (tabbleIsExist(insertTB)) {
+            val insertSQL = reasoningAllJudgeBean.insertTB(insertTB)
+            db.execSQL(insertSQL)
+        }
     }
 
 

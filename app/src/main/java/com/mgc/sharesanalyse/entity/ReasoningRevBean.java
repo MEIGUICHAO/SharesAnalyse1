@@ -10,7 +10,78 @@ public class ReasoningRevBean {
     private float LP;
     private float After_O_P;
     private float After_C_P;
+    private int F36_T;
+    private int F30_T;
+    private int F25_T;
+    private int F20_T;
+    private int F15_T;
+    private int F10_T;
+    private int F05_T;
+    private int F03_T;
 
+    public int getF36_T() {
+        return F36_T;
+    }
+
+    public void setF36_T(int f36_T) {
+        F36_T = f36_T;
+    }
+
+    public int getF30_T() {
+        return F30_T;
+    }
+
+    public void setF30_T(int f30_T) {
+        F30_T = f30_T;
+    }
+
+    public int getF25_T() {
+        return F25_T;
+    }
+
+    public void setF25_T(int f25_T) {
+        F25_T = f25_T;
+    }
+
+    public int getF20_T() {
+        return F20_T;
+    }
+
+    public void setF20_T(int f20_T) {
+        F20_T = f20_T;
+    }
+
+    public int getF15_T() {
+        return F15_T;
+    }
+
+    public void setF15_T(int f15_T) {
+        F15_T = f15_T;
+    }
+
+    public int getF10_T() {
+        return F10_T;
+    }
+
+    public void setF10_T(int f10_T) {
+        F10_T = f10_T;
+    }
+
+    public int getF05_T() {
+        return F05_T;
+    }
+
+    public void setF05_T(int f05_T) {
+        F05_T = f05_T;
+    }
+
+    public int getF03_T() {
+        return F03_T;
+    }
+
+    public void setF03_T(int f03_T) {
+        F03_T = f03_T;
+    }
 
     public float getMP() {
         return MP;
@@ -120,6 +191,27 @@ public class ReasoningRevBean {
                 ", '" + JSON + '\'' ;
     }
 
+    public String toAllString() {
+        return  CODE +
+                ", '" + N + '\'' +
+                ", '" + D + '\'' +
+                ", '" + D_D + '\'' +
+                ", " + P  +
+                ", " + MP  +
+                ", " + LP  +
+                ", " + After_O_P  +
+                ", " + After_C_P  +
+                ", " + F36_T  +
+                ", " + F30_T  +
+                ", " + F25_T  +
+                ", " + F20_T  +
+                ", " + F15_T  +
+                ", " + F10_T  +
+                ", " + F05_T  +
+                ", " + F03_T
+                ;
+    }
+
     public String createTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER,FITLERTYPE TEXT,JSON TEXT);";
     }
@@ -127,5 +219,17 @@ public class ReasoningRevBean {
 
     public String insertTB(String tbName) {
         return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,FITLERTYPE,JSON ) VALUES (" + toString()+")";
+    }
+
+
+    public String createAllTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER" +
+                ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER);";
+    }
+
+
+
+    public String insertAllTB(String tbName) {
+        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F10_T,F03_T) VALUES (" + toAllString()+")";
     }
 }

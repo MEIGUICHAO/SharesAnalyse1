@@ -3552,19 +3552,7 @@ class NewApiViewModel : BaseViewModel() {
         foreachLimitList: ArrayList<Array<Int>>,
         p50FilterBBKJRangeBean: P50FilterBBKJRangeBean?
     ) {
-        val mCHDDList = ArrayList<CodeHDDBean>()
-        mList.forEach {
-            val date = "20${it}01"
-            var month = DateUtils.changeFormatter(
-                DateUtils.parse(date, FormatterEnum.YYYYMMDD),
-                FormatterEnum.YYMM
-            ).toInt()
-            val dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
-            val codeList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
-            codeList?.let {
-                mCHDDList.addAll(it)
-            }
-        }
+        val mCHDDList = getCHDDCodeAllList(mList, code)
         if (mCHDDList.size >= 77) {
             if (!isLive) {
                 for (i in 72..mCHDDList.size - 1) {
@@ -3592,6 +3580,26 @@ class NewApiViewModel : BaseViewModel() {
                 )
             }
         }
+    }
+
+    private fun getCHDDCodeAllList(
+        mList: ArrayList<String>,
+        code: String
+    ): ArrayList<CodeHDDBean> {
+        val mCHDDList = ArrayList<CodeHDDBean>()
+        mList.forEach {
+            val date = "20${it}01"
+            var month = DateUtils.changeFormatter(
+                DateUtils.parse(date, FormatterEnum.YYYYMMDD),
+                FormatterEnum.YYMM
+            ).toInt()
+            val dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
+            val codeList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+            codeList?.let {
+                mCHDDList.addAll(it)
+            }
+        }
+        return mCHDDList
     }
 
     private fun insertReasoning(
@@ -3716,6 +3724,77 @@ class NewApiViewModel : BaseViewModel() {
         }
         return mtbList
     }
+
+    fun revAllJudgeResult() {
+        val dayList = arrayOf(3,5,10,15,20,25,30,36)
+        val ptList = arrayOf(50,30)
+        ptList.forEach { pt->
+
+            val tbName = "A_RTB_${pt}_36"
+            val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
+                tbName,
+                Datas.REVERSE_KJ_DB + "2020"
+            )
+            var date = 36
+            for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
+                var dateRangeIndex = dayList.size-1
+                val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB + "2020",
+                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                    arrayOf(
+                        i.toString(),
+                        (i + Datas.FILTER_PROGRESS).toString()
+                    )
+                )
+                if (null != list && list.size > 1) {
+                    val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list, date, i)
+                    reasoningAllJudgeBean.f36_T = i
+                    val insertTB = "All_${pt}"
+                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean,insertTB)
+                    dateRangeIndex = dayList.size-2
+                    date = dayList[dateRangeIndex]
+                    if (dateRangeIndex > 0) {
+                        DataSettingUtils.revAllReasoning30(
+                            pt,
+                            dayList,
+                            dateRangeIndex,
+                            list,
+                            date,
+                            insertTB,
+                            arrayListOf<Int>(i)
+                        )
+                    }
+
+                }
+            }
+
+        }
+
+
+    }
+
+
+
+
+//    fun reasoningAll() {
+//        val (mList, codelist) = getCHDDDateListAndCodeList()
+//        codelist.forEach {code->
+//            val mCHDDList = getCHDDCodeAllList(mList, code)
+//            if (mCHDDList.size > 77) {
+//                for (i in 72..mCHDDList.size - 1) {
+//                    if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
+//                        insertReasoning(
+//                            isLive,
+//                            foreachLimitList,
+//                            i,
+//                            mCHDDList,
+//                            p50FilterBBKJRangeBean,
+//                            code
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
 //        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];

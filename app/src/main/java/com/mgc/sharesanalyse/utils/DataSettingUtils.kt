@@ -2226,9 +2226,9 @@ object DataSettingUtils {
                 (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
                 (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
                 (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L)
-//                &&
-//                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
-//                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
+                &&
+                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
+                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
         mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->beginBoolean:${beginBoolean}")
         if (!beginBoolean) {
             LogUtil.d("${codeHDDBean.name}-->fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
@@ -2345,10 +2345,7 @@ object DataSettingUtils {
         P_L: Float
     ): Boolean {
         var beginBoolean1 = false
-        val pair =
-            DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", Datas.REV_FILTERDB + "2020")
-        val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
-        val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        val (rangeMax, rangeMin) = getRangeMaxMin(tbName, Datas.REV_FILTERDB + "2020")
         var firstStepBoolean = false
         for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
             if (OM_M <= (i + Datas.FILTER_PROGRESS) && OM_M >= i) {
@@ -2633,6 +2630,26 @@ object DataSettingUtils {
         return beginBoolean1
     }
 
+    fun getRangeMaxMin(tbName: String,dbName:String): Pair<Int, Int> {
+        val pair =
+            DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", dbName)
+        val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
+        val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        return Pair(rangeMax, rangeMin)
+    }
+
+    fun getRangeMaxMiByCodeList(
+        tbName: String,
+        codeList: ArrayList<String>,
+        dbName: String
+    ): Pair<Int, Int> {
+        val pair =
+            DBUtils.selectMaxMinValueByTbAndColumnByCodeList(codeList, tbName, "OM_M", dbName)
+        val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
+        val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        return Pair(rangeMax, rangeMin)
+    }
+
     private fun setMaxDatas(
         mMaxBean: BaseFilterKJBBRangeBean,
         OM: Float,
@@ -2828,5 +2845,287 @@ object DataSettingUtils {
             result.toKeep2()
         }
         trKSllBean.k_SL_C_TR = (trKSllBean.k_SL_R_TR + trKSllBean.k_SL_B_TR).toKeep2()
+    }
+
+    fun getReasoningAllJudgeBean(
+        list: ArrayList<BaseReverseImp>,
+        date: Int,
+        i: Int
+    ): ReasoningAllJudgeBean {
+        val reasoningAllJudgeBean = ReasoningAllJudgeBean()
+
+        var maxOM_M = -10086.toFloat()
+        var maxOM_C = -10086.toFloat()
+        var maxOM_P = -10086.toFloat()
+        var maxOM_L = -10086.toFloat()
+        var maxOC_M = -10086.toFloat()
+        var maxOC_C = -10086.toFloat()
+        var maxOC_P = -10086.toFloat()
+        var maxOC_L = -10086.toFloat()
+        var maxOO_M = -10086.toFloat()
+        var maxOO_C = -10086.toFloat()
+        var maxOO_P = -10086.toFloat()
+        var maxOO_L = -10086.toFloat()
+        var maxOL_M = -10086.toFloat()
+        var maxOL_C = -10086.toFloat()
+        var maxOL_P = -10086.toFloat()
+        var maxOL_L = -10086.toFloat()
+        var minOM_M = 10086.toFloat()
+        var minOM_C = 10086.toFloat()
+        var minOM_P = 10086.toFloat()
+        var minOM_L = 10086.toFloat()
+        var minOC_M = 10086.toFloat()
+        var minOC_C = 10086.toFloat()
+        var minOC_P = 10086.toFloat()
+        var minOC_L = 10086.toFloat()
+        var minOO_M = 10086.toFloat()
+        var minOO_C = 10086.toFloat()
+        var minOO_P = 10086.toFloat()
+        var minOO_L = 10086.toFloat()
+        var minOL_M = 10086.toFloat()
+        var minOL_C = 10086.toFloat()
+        var minOL_P = 10086.toFloat()
+        var minOL_L = 10086.toFloat()
+        list.forEach {
+            if (it is ReverseKJsonBean) {
+                if (maxOM_M < it.oM_M) {
+                    maxOM_M = it.oM_M
+                }
+                if (minOM_M > it.oM_M) {
+                    minOM_M = it.oM_M
+                }
+                if (maxOM_C < it.oM_C) {
+                    maxOM_C = it.oM_C
+                }
+                if (minOM_C > it.oM_C) {
+                    minOM_C = it.oM_C
+                }
+                if (maxOM_P < it.oM_P) {
+                    maxOM_P = it.oM_P
+                }
+                if (minOM_P > it.oM_P) {
+                    minOM_P = it.oM_P
+                }
+                if (maxOM_L < it.oM_L) {
+                    maxOM_L = it.oM_L
+                }
+                if (minOM_L > it.oM_L) {
+                    minOM_L = it.oM_L
+                }
+                if (maxOC_M < it.oC_M) {
+                    maxOC_M = it.oC_M
+                }
+                if (minOC_M > it.oC_M) {
+                    minOC_M = it.oC_M
+                }
+                if (maxOC_C < it.oC_C) {
+                    maxOC_C = it.oC_C
+                }
+                if (minOC_C > it.oC_C) {
+                    minOC_C = it.oC_C
+                }
+                if (maxOC_P < it.oC_P) {
+                    maxOC_P = it.oC_P
+                }
+                if (minOC_P > it.oC_P) {
+                    minOC_P = it.oC_P
+                }
+                if (maxOC_L < it.oC_L) {
+                    maxOC_L = it.oC_L
+                }
+                if (minOC_L > it.oC_L) {
+                    minOC_L = it.oC_L
+                }
+                if (maxOO_M < it.oO_M) {
+                    maxOO_M = it.oO_M
+                }
+                if (minOO_M > it.oO_M) {
+                    minOO_M = it.oO_M
+                }
+                if (maxOO_C < it.oO_C) {
+                    maxOO_C = it.oO_C
+                }
+                if (minOO_C > it.oO_C) {
+                    minOO_C = it.oO_C
+                }
+                if (maxOO_P < it.oO_P) {
+                    maxOO_P = it.oO_P
+                }
+                if (minOO_P > it.oO_P) {
+                    minOO_P = it.oO_P
+                }
+                if (maxOO_L < it.oO_L) {
+                    maxOO_L = it.oO_L
+                }
+                if (minOO_L > it.oO_L) {
+                    minOO_L = it.oO_L
+                }
+                if (maxOL_M < it.oL_M) {
+                    maxOL_M = it.oL_M
+                }
+                if (minOL_M > it.oL_M) {
+                    minOL_M = it.oL_M
+                }
+                if (maxOL_C < it.oL_C) {
+                    maxOL_C = it.oL_C
+                }
+                if (minOL_C > it.oL_C) {
+                    minOL_C = it.oL_C
+                }
+                if (maxOL_P < it.oL_P) {
+                    maxOL_P = it.oL_P
+                }
+                if (minOL_P > it.oL_P) {
+                    minOL_P = it.oL_P
+                }
+                if (maxOL_L < it.oL_L) {
+                    maxOL_L = it.oL_L
+                }
+                if (minOL_L > it.oL_L) {
+                    minOL_L = it.oL_L
+                }
+            }
+        }
+        reasoningAllJudgeBean.count = list.size
+        reasoningAllJudgeBean.d_T = date
+//        if (date != 36) {
+//            reasoningAllJudgeBean.l_S_T = i - Datas.FILTER_PROGRESS
+//        }
+        reasoningAllJudgeBean.oM_M_D = maxOM_M
+        reasoningAllJudgeBean.oM_C_D = maxOM_C
+        reasoningAllJudgeBean.oM_P_D = maxOM_P
+        reasoningAllJudgeBean.oM_L_D = maxOM_L
+        reasoningAllJudgeBean.oC_M_D = maxOC_M
+        reasoningAllJudgeBean.oC_C_D = maxOC_C
+        reasoningAllJudgeBean.oC_P_D = maxOC_P
+        reasoningAllJudgeBean.oC_L_D = maxOC_L
+        reasoningAllJudgeBean.oO_M_D = maxOO_M
+        reasoningAllJudgeBean.oO_C_D = maxOO_C
+        reasoningAllJudgeBean.oO_P_D = maxOO_P
+        reasoningAllJudgeBean.oO_L_D = maxOO_L
+        reasoningAllJudgeBean.oL_M_D = maxOL_M
+        reasoningAllJudgeBean.oL_C_D = maxOL_C
+        reasoningAllJudgeBean.oL_P_D = maxOL_P
+        reasoningAllJudgeBean.oL_L_D = maxOL_L
+
+        reasoningAllJudgeBean.oM_M_X = minOM_M
+        reasoningAllJudgeBean.oM_C_X = minOM_C
+        reasoningAllJudgeBean.oM_P_X = minOM_P
+        reasoningAllJudgeBean.oM_L_X = minOM_L
+        reasoningAllJudgeBean.oC_M_X = minOC_M
+        reasoningAllJudgeBean.oC_C_X = minOC_C
+        reasoningAllJudgeBean.oC_P_X = minOC_P
+        reasoningAllJudgeBean.oC_L_X = minOC_L
+        reasoningAllJudgeBean.oO_M_X = minOO_M
+        reasoningAllJudgeBean.oO_C_X = minOO_C
+        reasoningAllJudgeBean.oO_P_X = minOO_P
+        reasoningAllJudgeBean.oO_L_X = minOO_L
+        reasoningAllJudgeBean.oL_M_X = minOL_M
+        reasoningAllJudgeBean.oL_C_X = minOL_C
+        reasoningAllJudgeBean.oL_P_X = minOL_P
+        reasoningAllJudgeBean.oL_L_X = minOL_L
+        return reasoningAllJudgeBean
+    }
+
+    fun revAllReasoning30(
+        pt: Int,
+        dayList: Array<Int>,
+        dateRangeIndex: Int,
+        list: ArrayList<BaseReverseImp>,
+        date: Int,
+        insertTB: String,
+        iList: ArrayList<Int>
+    ) {
+
+        val nextTb30Name = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
+        val mNextCode30List = list.getCodeList()
+        val (add30str, code30Array) = mNextCode30List.getCodeArrayAndLimitSQL()
+        val (next30Max, next30Min) = getRangeMaxMiByCodeList(
+            nextTb30Name,
+            mNextCode30List,
+            Datas.REVERSE_KJ_DB + "2020"
+        )
+        for (n in next30Min..next30Max step Datas.FILTER_PROGRESS) {
+            val d30array = arrayOfNulls<String>(code30Array.size + 2)
+            d30array[0] = n.toString()
+            d30array[1] = (n + Datas.FILTER_PROGRESS).toString()
+            var d30arrayIndex = 2
+            code30Array.forEach {
+                d30array[d30arrayIndex] = it
+            }
+            val d30list = DBUtils.getFilterAllByTbName(
+                Datas.REVERSE_KJ_DB + "2020",
+                "SELECT * FROM $nextTb30Name WHERE OM_M >=? AND OM_M<? $add30str",
+                d30array
+            )
+            if (null != d30list && d30list.size > 1) {
+                val reasoningAllJudgeBean =
+                    getReasoningAllJudgeBean(d30list, date, n)
+                when (iList.size) {
+                    1-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = n
+                    }
+                    2-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = n
+                    }
+                    3-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = iList[2]
+                        reasoningAllJudgeBean.f20_T = n
+                    }
+                    4-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = iList[2]
+                        reasoningAllJudgeBean.f20_T = iList[3]
+                        reasoningAllJudgeBean.f15_T = n
+                    }
+                    5-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = iList[2]
+                        reasoningAllJudgeBean.f20_T = iList[3]
+                        reasoningAllJudgeBean.f15_T = iList[4]
+                        reasoningAllJudgeBean.f10_T = n
+                    }
+                    6-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = iList[2]
+                        reasoningAllJudgeBean.f20_T = iList[3]
+                        reasoningAllJudgeBean.f15_T = iList[4]
+                        reasoningAllJudgeBean.f10_T = iList[5]
+                        reasoningAllJudgeBean.f05_T = n
+                    }
+                    7-> {
+                        reasoningAllJudgeBean.f36_T = iList[0]
+                        reasoningAllJudgeBean.f30_T = iList[1]
+                        reasoningAllJudgeBean.f25_T = iList[2]
+                        reasoningAllJudgeBean.f20_T = iList[3]
+                        reasoningAllJudgeBean.f15_T = iList[4]
+                        reasoningAllJudgeBean.f10_T = iList[5]
+                        reasoningAllJudgeBean.f05_T = iList[6]
+                        reasoningAllJudgeBean.f03_T = n
+                    }
+                }
+                iList.add(n)
+                DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+                if ((dateRangeIndex-1) > 0) {
+                    revAllReasoning30(
+                        pt,
+                        dayList,
+                        dateRangeIndex-1,
+                        d30list,
+                        dayList[dateRangeIndex],
+                        insertTB,
+                        iList
+                    )
+                }
+            }
+        }
     }
 }

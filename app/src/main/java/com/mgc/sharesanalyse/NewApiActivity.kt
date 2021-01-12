@@ -194,12 +194,24 @@ class NewApiActivity : AppCompatActivity() {
         btnGetResoningResult.setOnClickListener {
             startActivity(Intent(this,ReasoningActivity::class.java))
         }
+        btnRevAllTb.setOnClickListener {
+            revAllJudgeResult()
+        }
+        btnReasoningAll.setOnClickListener {
+//            viewModel.reasoningAll()
+        }
         DataSettingUtils.setActivity(this)
     }
 
 
+    fun revAllJudgeResult() {
+        DBUtils.switchDBName(Datas.REVERSE_KJ_DB + "2020")
+        DBUtils.dropTable("All_30")
+        DBUtils.dropTable("All_50")
+        viewModel.revAllJudgeResult()
+    }
 
-    public fun setReasoningProgress(info: String) {
+     fun setReasoningProgress(info: String) {
         tvReasoning.post {
             tvReasoning.setText(info)
         }

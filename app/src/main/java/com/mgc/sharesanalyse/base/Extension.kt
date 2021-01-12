@@ -1,9 +1,7 @@
 package com.mgc.sharesanalyse.base
 
 import android.annotation.SuppressLint
-import com.mgc.sharesanalyse.entity.CodeHDDBean
-import com.mgc.sharesanalyse.entity.DealDetailTableBean
-import com.mgc.sharesanalyse.entity.ReasoningRevBean
+import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.utils.BigDecimalUtils
 import com.mgc.sharesanalyse.utils.DateUtils
 import com.mgc.sharesanalyse.utils.FormatterEnum
@@ -223,3 +221,22 @@ fun String.toWYCode(): String {
     }
 }
 
+fun ArrayList<BaseReverseImp>.getCodeList(): ArrayList<String> {
+    val mNextCodeList = ArrayList<String>()
+    this.forEach {
+        if (it is ReverseKJsonBean) {
+            mNextCodeList.add(it.code.toString())
+        }
+    }
+    return mNextCodeList
+}
+
+fun ArrayList<String>.getCodeArrayAndLimitSQL(): Pair<String, Array<String?>> {
+    val array = arrayOfNulls<String>(this.size)
+    this.toArray(array)
+    var addSql = ""
+    array.forEach {
+        addSql = addSql + " AND CODE = ? "
+    }
+    return Pair(addSql,array)
+}

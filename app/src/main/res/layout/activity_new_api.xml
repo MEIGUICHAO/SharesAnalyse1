@@ -125,11 +125,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Button
-            android:id="@+id/btn_rev_all_tb"
+            android:id="@+id/btnRevAllTb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="rev_all_tb" />
+        <Button
+            android:id="@+id/btnReasoningAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="reasoning_all" />
 
 
     </LinearLayout>
