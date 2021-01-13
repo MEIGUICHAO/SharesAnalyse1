@@ -205,10 +205,19 @@ class NewApiActivity : AppCompatActivity() {
 
 
     fun revAllJudgeResult() {
-        DBUtils.switchDBName(Datas.REVERSE_KJ_DB + "2020")
+        LogUtil.d("revAllJudgeResult")
+        DBUtils.switchDBName(Datas.REV_RESONING_DB)
         DBUtils.dropTable("All_30")
         DBUtils.dropTable("All_50")
+
+        LogUtil.d("revAllJudgeResult")
         viewModel.revAllJudgeResult()
+    }
+
+     fun setBtnRevAllTb(info: String) {
+         btnRevAllTb.post {
+             btnRevAllTb.setText(info)
+        }
     }
 
      fun setReasoningProgress(info: String) {

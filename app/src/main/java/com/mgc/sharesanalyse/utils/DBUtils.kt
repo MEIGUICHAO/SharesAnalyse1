@@ -1296,36 +1296,27 @@ object DBUtils {
         switchDBName(dbName)
         var minValue = ""
         var maxValue = ""
-        val array = arrayOfNulls<String>(codeList.size)
-        codeList.toArray(array)
-        var addSql = ""
-        array.forEach {
-            addSql = addSql +" AND CODE = ? "
-        }
-        var codeStr = ""
-        array.forEach {
-            codeStr = codeStr + "$it ,"
-        }
-        val queryMinSql = " SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName)) $addSql"
+        val addSql =  codeList.getCodeArrayAndLimitSQL(false)
+
+
+        val querySql = " SELECT * FROM $tbName WHERE $addSql "
         var cursor =
-            db.rawQuery(queryMinSql, array)
+            db.rawQuery(querySql, null)
+        val ommList = ArrayList<Float>()
         if (null != cursor && cursor.moveToFirst()) {
-            minValue = cursor.getString(cursor.getColumnIndex(column))
+            while (!cursor.isAfterLast) {
+                ommList.add(cursor.getFloat(cursor.getColumnIndex("OM_M")))
+                cursor.moveToNext()
+            }
         }
-        LogUtil.d("queryMinSql-->$queryMinSql \n $codeStr cursor.count:${cursor.count}")
-
+        ommList.sortFloatAsc()
+        LogUtil.d("querySql-->$querySql \n $addSql cursor.count:${cursor.count}")
+//        SELECT * FROM A_RTB_50_30 WHERE (OM_M IN (SELECT MIN(OM_M) FROM A_RTB_50_30 WHERE  CODE = ?  AND CODE = ?  AND CODE = ? ))
+//        SELECT * FROM A_RTB_50_30 WHERE (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?)
+//        300064 ,0928 ,300064 ,0929 ,600211 ,0724 , cursor.count:0
         cursor.close()
 
-        val queryMaxSql = " SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName)) $addSql"
-        cursor =
-            db.rawQuery(queryMaxSql, null)
-        LogUtil.d("queryMaxSql-->$queryMaxSql \n $codeStr  cursor.count:${cursor.count}")
-        if (null != cursor && cursor.moveToFirst()) {
-            maxValue = cursor.getString(cursor.getColumnIndex(column))
-        }
-        cursor.close()
-        LogUtil.d("minValue:$minValue maxValue:$maxValue")
-        return Pair(minValue, maxValue)
+        return Pair(ommList[0].toString(), ommList[ommList.size-1].toString())
     }
 
     fun copyFilterTB2NewTB(

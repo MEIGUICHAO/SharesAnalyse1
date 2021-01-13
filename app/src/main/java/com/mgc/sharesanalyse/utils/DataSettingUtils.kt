@@ -3037,30 +3037,36 @@ object DataSettingUtils {
         iList: ArrayList<Int>
     ) {
 
-        val nextTb30Name = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
-        val mNextCode30List = list.getCodeList()
-        val (add30str, code30Array) = mNextCode30List.getCodeArrayAndLimitSQL()
-        val (next30Max, next30Min) = getRangeMaxMiByCodeList(
-            nextTb30Name,
-            mNextCode30List,
+        val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
+        val mNextCodeList = list.getCodeList()
+        val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true)
+        val (nextMax, nextMin) = getRangeMaxMiByCodeList(
+            nextTbName,
+            mNextCodeList,
             Datas.REVERSE_KJ_DB + "2020"
         )
-        for (n in next30Min..next30Max step Datas.FILTER_PROGRESS) {
-            val d30array = arrayOfNulls<String>(code30Array.size + 2)
-            d30array[0] = n.toString()
-            d30array[1] = (n + Datas.FILTER_PROGRESS).toString()
-            var d30arrayIndex = 2
-            code30Array.forEach {
-                d30array[d30arrayIndex] = it
+        var nextContinue = 0
+        for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
+            if (nextContinue > 0) {
+                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
+                nextContinue--
+                continue
             }
-            val d30list = DBUtils.getFilterAllByTbName(
-                Datas.REVERSE_KJ_DB + "2020",
-                "SELECT * FROM $nextTb30Name WHERE OM_M >=? AND OM_M<? $add30str",
-                d30array
-            )
-            if (null != d30list && d30list.size > 1) {
+            var dlist = getDlist(nextTbName, addstr, n,nextContinue)
+            if (null == dlist) {
+                continue
+            }
+            if ("A_RTB_50_15".equals(nextTbName)) {
+                LogUtil.d("nextTbName-->$nextTbName ,nextContinue++:$nextContinue,OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS})")
+            }
+            while (dlist!!.size < 2 && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
+                nextContinue++
+                dlist = getDlist(nextTbName, addstr, n, nextContinue)
+            }
+            LogUtil.d("nextTbName-->$nextTbName ,OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS}) ,36OM-->${(list[0] as ReverseKJsonBean).n},${(list[0] as ReverseKJsonBean).date} ,dlist.size-->${dlist?.size}")
+            if ( dlist.size > 1) {
                 val reasoningAllJudgeBean =
-                    getReasoningAllJudgeBean(d30list, date, n)
+                    getReasoningAllJudgeBean(dlist, date, n)
                 when (iList.size) {
                     1-> {
                         reasoningAllJudgeBean.f36_T = iList[0]
@@ -3114,18 +3120,35 @@ object DataSettingUtils {
                 }
                 iList.add(n)
                 DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
-                if ((dateRangeIndex-1) > 0) {
+                if ((dateRangeIndex) > 0) {
                     revAllReasoning30(
                         pt,
                         dayList,
                         dateRangeIndex-1,
-                        d30list,
-                        dayList[dateRangeIndex],
+                        dlist,
+                        dayList[dateRangeIndex-1],
                         insertTB,
                         iList
                     )
                 }
             }
         }
+    }
+
+    private fun getDlist(
+        nextTbName: String,
+        addstr: String,
+        n: Int,
+        nextContinue: Int
+    ): ArrayList<BaseReverseImp>? {
+        val dlist = DBUtils.getFilterAllByTbName(
+            Datas.REVERSE_KJ_DB + "2020",
+            "SELECT * FROM $nextTbName WHERE OM_M >=? AND OM_M<? $addstr",
+            arrayOf(
+                n.toString(),
+                (n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS).toString()
+            )
+        )
+        return dlist
     }
 }

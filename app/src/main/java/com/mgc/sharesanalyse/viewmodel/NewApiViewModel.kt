@@ -3726,17 +3726,24 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun revAllJudgeResult() {
+
+        LogUtil.d("revAllJudgeResult")
         val dayList = arrayOf(3,5,10,15,20,25,30,36)
         val ptList = arrayOf(50,30)
+        (mActivity as NewApiActivity).setBtnRevAllTb("begin")
         ptList.forEach { pt->
 
+            LogUtil.d("revAllJudgeResult")
             val tbName = "A_RTB_${pt}_36"
+            (mActivity as NewApiActivity).setBtnRevAllTb(tbName)
             val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
                 tbName,
                 Datas.REVERSE_KJ_DB + "2020"
             )
+            LogUtil.d("revAllJudgeResult")
             var date = 36
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
+                LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size-1
                 val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB + "2020",
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
@@ -3745,20 +3752,25 @@ class NewApiViewModel : BaseViewModel() {
                         (i + Datas.FILTER_PROGRESS).toString()
                     )
                 )
+//                list?.forEach {
+//                    LogUtil.d("$tbName code:$it")
+//                }
                 if (null != list && list.size > 1) {
+                    LogUtil.d("revAllJudgeResult")
                     val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list, date, i)
                     reasoningAllJudgeBean.f36_T = i
                     val insertTB = "All_${pt}"
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean,insertTB)
                     dateRangeIndex = dayList.size-2
                     date = dayList[dateRangeIndex]
+                    LogUtil.d("nextTbName!!!-->($i,${(i + Datas.FILTER_PROGRESS)})")
                     if (dateRangeIndex > 0) {
                         DataSettingUtils.revAllReasoning30(
                             pt,
                             dayList,
                             dateRangeIndex,
                             list,
-                            date,
+                            dayList[dateRangeIndex],
                             insertTB,
                             arrayListOf<Int>(i)
                         )

@@ -225,18 +225,26 @@ fun ArrayList<BaseReverseImp>.getCodeList(): ArrayList<String> {
     val mNextCodeList = ArrayList<String>()
     this.forEach {
         if (it is ReverseKJsonBean) {
-            mNextCodeList.add(it.code.toString())
+            mNextCodeList.add(it.code.toString()+"###"+it.date.toString())
         }
     }
     return mNextCodeList
 }
 
-fun ArrayList<String>.getCodeArrayAndLimitSQL(): Pair<String, Array<String?>> {
-    val array = arrayOfNulls<String>(this.size)
-    this.toArray(array)
+fun ArrayList<String>.getCodeArrayAndLimitSQL(needFirstAnd: Boolean): String {
+//    val array = arrayOfNulls<String>(this.size*2)
+//    for (i in 0 until this.size ) {
+//        array[i*2] = this[i].split("###")[0]
+//        array[i*2+1] = "'${ this[i].split("###")[1] }'"
+//    }
     var addSql = ""
-    array.forEach {
-        addSql = addSql + " AND CODE = ? "
+    this.forEach {
+        if (needFirstAnd) {
+            addSql =if (addSql.isEmpty()) "AND ( (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')" else addSql + " OR (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
+        } else {
+            addSql = if (addSql.isEmpty()) "(CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
+            else addSql + " OR (CODE =${it.split("###")[0]} AND DATE ='${it.split("###")[1]}')"
+        }
     }
-    return Pair(addSql,array)
+    return if (needFirstAnd) addSql+")" else addSql
 }
