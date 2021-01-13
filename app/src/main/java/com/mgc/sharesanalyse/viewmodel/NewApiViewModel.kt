@@ -3741,8 +3741,8 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.REVERSE_KJ_DB + "2020"
             )
             LogUtil.d("revAllJudgeResult")
-            var date = 36
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
+                var date = 36
                 LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size-1
                 val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB + "2020",
@@ -3772,7 +3772,7 @@ class NewApiViewModel : BaseViewModel() {
                             list,
                             dayList[dateRangeIndex],
                             insertTB,
-                            arrayListOf<Int>(i)
+                            arrayListOf(i,0,0,0,0,0,0,0)
                         )
                     }
 

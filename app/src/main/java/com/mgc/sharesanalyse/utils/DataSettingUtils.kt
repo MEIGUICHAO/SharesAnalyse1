@@ -3039,6 +3039,7 @@ object DataSettingUtils {
 
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
+        val countLimit = if (list.size>=4) 4 else 2
         val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true)
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             nextTbName,
@@ -3048,7 +3049,7 @@ object DataSettingUtils {
         var nextContinue = 0
         for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
             if (nextContinue > 0) {
-                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
+//                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--
                 continue
             }
@@ -3056,69 +3057,35 @@ object DataSettingUtils {
             if (null == dlist) {
                 continue
             }
-            if ("A_RTB_50_15".equals(nextTbName)) {
-                LogUtil.d("nextTbName-->$nextTbName ,nextContinue++:$nextContinue,OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS})")
-            }
-            while (dlist!!.size < 2 && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
+            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
                 nextContinue++
                 dlist = getDlist(nextTbName, addstr, n, nextContinue)
             }
-            LogUtil.d("nextTbName-->$nextTbName ,OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS}) ,36OM-->${(list[0] as ReverseKJsonBean).n},${(list[0] as ReverseKJsonBean).date} ,dlist.size-->${dlist?.size}")
+            while ((list.size-dlist!!.size==1)) {
+                nextContinue++
+                dlist = getDlist(nextTbName, addstr, n, nextContinue)
+            }
             if ( dlist.size > 1) {
                 val reasoningAllJudgeBean =
                     getReasoningAllJudgeBean(dlist, date, n)
-                when (iList.size) {
-                    1-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = n
-                    }
-                    2-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = n
-                    }
-                    3-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = iList[2]
-                        reasoningAllJudgeBean.f20_T = n
-                    }
-                    4-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = iList[2]
-                        reasoningAllJudgeBean.f20_T = iList[3]
-                        reasoningAllJudgeBean.f15_T = n
-                    }
-                    5-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = iList[2]
-                        reasoningAllJudgeBean.f20_T = iList[3]
-                        reasoningAllJudgeBean.f15_T = iList[4]
-                        reasoningAllJudgeBean.f10_T = n
-                    }
-                    6-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = iList[2]
-                        reasoningAllJudgeBean.f20_T = iList[3]
-                        reasoningAllJudgeBean.f15_T = iList[4]
-                        reasoningAllJudgeBean.f10_T = iList[5]
-                        reasoningAllJudgeBean.f05_T = n
-                    }
-                    7-> {
-                        reasoningAllJudgeBean.f36_T = iList[0]
-                        reasoningAllJudgeBean.f30_T = iList[1]
-                        reasoningAllJudgeBean.f25_T = iList[2]
-                        reasoningAllJudgeBean.f20_T = iList[3]
-                        reasoningAllJudgeBean.f15_T = iList[4]
-                        reasoningAllJudgeBean.f10_T = iList[5]
-                        reasoningAllJudgeBean.f05_T = iList[6]
-                        reasoningAllJudgeBean.f03_T = n
-                    }
+                for (a in 7-dateRangeIndex until  iList.size) {
+                    iList[a] = 0
                 }
-                iList.add(n)
+                iList[7-dateRangeIndex] = n
+                reasoningAllJudgeBean.f36_T = iList[0]
+                reasoningAllJudgeBean.f30_T = iList[1]
+                reasoningAllJudgeBean.f25_T = iList[2]
+                reasoningAllJudgeBean.f20_T = iList[3]
+                reasoningAllJudgeBean.f15_T = iList[4]
+                reasoningAllJudgeBean.f10_T = iList[5]
+                reasoningAllJudgeBean.f05_T = iList[6]
+                reasoningAllJudgeBean.f03_T = iList[7]
+                var istr = ""
+                val idaylist = arrayListOf("36","30","25","20","15","10","5","3")
+                for (q in 0 until iList.size) {
+                    istr = istr+ "F_T_${idaylist[q]}-->${iList[q]};"
+                }
+                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
                 DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 if ((dateRangeIndex) > 0) {
                     revAllReasoning30(
