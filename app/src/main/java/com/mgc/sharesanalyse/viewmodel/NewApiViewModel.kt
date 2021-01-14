@@ -2606,16 +2606,7 @@ class NewApiViewModel : BaseViewModel() {
                             (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
                             ""
                         )
-                        val foreachLimitList = arrayListOf(
-                            arrayOf(11, 6, 7, 8, 10),//33
-                            arrayOf(15, 8, 9, 10, 14),//55
-                            arrayOf(25, 10, 14, 15, 24),//10
-                            arrayOf(35, 15, 19, 20, 34),//15
-                            arrayOf(45, 20, 24, 25, 44),//20
-                            arrayOf(55, 25, 29, 30, 54),//25
-                            arrayOf(65, 30, 34, 35, 64),//30
-                            arrayOf(77, 35, 40, 41, 76)//36
-                        )
+                        val foreachLimitList = getForeachLimitList()
                         val foreachTBNAmeList = arrayListOf(
                             arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
                             arrayOf(Datas.REVERSE_TB_P50_55, Datas.REVERSE_TB_P30_55),
@@ -2664,6 +2655,20 @@ class NewApiViewModel : BaseViewModel() {
 
 
         }
+    }
+
+    private fun getForeachLimitList(): ArrayList<Array<Int>> {
+        val foreachLimitList = arrayListOf(
+            arrayOf(11, 6, 7, 8, 10),//33
+            arrayOf(15, 8, 9, 10, 14),//55
+            arrayOf(25, 10, 14, 15, 24),//10
+            arrayOf(35, 15, 19, 20, 34),//15
+            arrayOf(45, 20, 24, 25, 44),//20
+            arrayOf(55, 25, 29, 30, 54),//25
+            arrayOf(65, 30, 34, 35, 64),//30
+            arrayOf(77, 35, 40, 41, 76)//36
+        )
+        return foreachLimitList
     }
 
     private fun insertReverseKJSLL(
@@ -3534,15 +3539,20 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun getReasoningForeachLimitListAndP50Bean(): Pair<ArrayList<Array<Int>>, P50FilterBBKJRangeBean> {
-        val initList = arrayOf(3,5,10,15,20,25,30,36)
+        val foreachLimitList = getReasoningForeachLimitList()
+        val json = DBUtils.getFilterResultJsonByType("50")
+        val p50FilterBBKJRangeBean = GsonHelper.parse(json, P50FilterBBKJRangeBean::class.java)
+        return Pair(foreachLimitList, p50FilterBBKJRangeBean)
+    }
+
+    private fun getReasoningForeachLimitList(): ArrayList<Array<Int>> {
+        val initList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
         val foreachLimitList = ArrayList<Array<Int>>()
         initList.forEach {
             //target end  old:begin end
             foreachLimitList.add(arrayOf(it - 1, it, 2 * it - 1, it))
         }
-        val json = DBUtils.getFilterResultJsonByType("50")
-        val p50FilterBBKJRangeBean = GsonHelper.parse(json, P50FilterBBKJRangeBean::class.java)
-        return Pair(foreachLimitList, p50FilterBBKJRangeBean)
+        return foreachLimitList
     }
 
     private fun getReasoningResult(
@@ -3602,103 +3612,35 @@ class NewApiViewModel : BaseViewModel() {
         return mCHDDList
     }
 
-    private fun insertReasoning(
-            isLive: Boolean,
-        foreachLimitList: ArrayList<Array<Int>>,
+
+    private fun getOldBeanList(
         i: Int,
-        mCHDDList: ArrayList<CodeHDDBean>,
-        p50FilterBBKJRangeBean: P50FilterBBKJRangeBean?,
-        code: String
-    ) {
-        val mP50Bean = P50FilterBBKJRangeBean()
-        val mDFilter = P50FilterBBKJRangeBean.DFilter()
-        var needContinue: Boolean
-        var originOM_M = -10086.toFloat()
-        var fitlerType = 10086
-        for (x in foreachLimitList.size - 1 downTo 0) {
-            val beinBegin = i
-            val beinEnd = i - foreachLimitList[x][0]
-            val endBegin = i - foreachLimitList[x][1]
-            val endEnd = i - foreachLimitList[x][2]
-            val targetBeanList = ArrayList<CodeHDDBean>()
-            for (y in beinBegin downTo beinEnd) {
-                targetBeanList.add(mCHDDList[y])
-            }
-            val oldBeanList = ArrayList<CodeHDDBean>()
-            for (z in endBegin downTo endEnd) {
-                oldBeanList.add(mCHDDList[z])
-            }
-            if (originOM_M == -10086.toFloat()) {
-                val OM = oldBeanList.getRevBeansOM()
-                val M = targetBeanList.getRevBeansOM()
-                originOM_M = ((OM - M) / OM) * 100
-                fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
-            }
-            //TODO debug
-            //                        if (fitlerType != -20) {
-            //                            break
-            //                        }
-            needContinue = DataSettingUtils.filterP50Result(
-                fitlerType,
-                originOM_M,
-                mDFilter,
-                p50FilterBBKJRangeBean!!,
-                foreachLimitList[x][0],
-                targetBeanList,
-                oldBeanList
-            )
-            if (!needContinue) {
-                break
-            }
-            if (x == 0 && needContinue) {
-                DataSettingUtils.setFilterP50ResultType(originOM_M, mDFilter, mP50Bean)
-                val reasoningRevBean = ReasoningRevBean()
-                reasoningRevBean.code = code.toInt()
-                reasoningRevBean.n = mCHDDList[i].name
-                reasoningRevBean.d = mCHDDList[i].date
-                reasoningRevBean.fitlertype = fitlerType.toString()
-                if (i + 5 < mCHDDList.size) {
-                    val pList = ArrayList<Float>()
-                    for (m in (i + 1)..(i + 5)) {
-                        pList.add(
-                            (BigDecimalUtils.safeDiv(
-                                (mCHDDList[m].cp - mCHDDList[i].cp),
-                                mCHDDList[i].cp
-                            ) * 100).toKeep2()
-                        )
-                    }
-                    reasoningRevBean.p = pList[4]
-                    reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
-                        (mCHDDList[i + 1].op - mCHDDList[i].cp),
-                        mCHDDList[i].cp
-                    ) * 100).toKeep2()
-                    reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
-                        (mCHDDList[i + 1].cp - mCHDDList[i].cp),
-                        mCHDDList[i].cp
-                    ) * 100).toKeep2()
-                    pList.sortFloatAsc()
-                    reasoningRevBean.lp = pList[0]
-                    reasoningRevBean.mp = pList[4]
-
-                    LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
-
-                    reasoningRevBean.d_D = mCHDDList[i + 5].date
-                }
-                reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
-                (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
-                val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
-                if (!DneedInsert && !isLive) {
-                    LogUtil.d("===insertTBByFilterType===")
-                    mP50Bean.insertTBByFilterType(
-                            code,
-                            mCHDDList[i].date,
-                            getReasoningTBList(),
-                            reasoningRevBean.p
-                    )
-                }
-            }
-            //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
+        foreachLimitList: ArrayList<Array<Int>>,
+        x: Int,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ): ArrayList<CodeHDDBean> {
+        val oldBeanList = ArrayList<CodeHDDBean>()
+        val endBegin = i - foreachLimitList[x][1]
+        val endEnd = i - foreachLimitList[x][2]
+        for (z in endBegin downTo endEnd) {
+            oldBeanList.add(mCHDDList[z])
         }
+        return oldBeanList
+    }
+
+    private fun getTargetBeanList(
+        i: Int,
+        foreachLimitList: ArrayList<Array<Int>>,
+        x: Int,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ): ArrayList<CodeHDDBean> {
+        val beinBegin = i
+        val targetBeanList = ArrayList<CodeHDDBean>()
+        val beinEnd = i - foreachLimitList[x][0]
+        for (y in beinBegin downTo beinEnd) {
+            targetBeanList.add(mCHDDList[y])
+        }
+        return targetBeanList
     }
 
     val rangeArray = arrayOf(
@@ -3786,28 +3728,156 @@ class NewApiViewModel : BaseViewModel() {
 
 
 
+    fun reasoningAll() {
+        val (mList, codelist) = getCHDDDateListAndCodeList()
+        val foreachLimitList = getReasoningForeachLimitList()
+        codelist.forEach {code->
+            val mCHDDList = getCHDDCodeAllList(mList, code)
+            if (mCHDDList.size > 77) {
+                for (i in 72..mCHDDList.size - 1) {
+                    if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
+                        if (mCHDDList[i].date == "20200721" || mCHDDList[i].date == "20200729") {
+                            insertAllReasoning(
+                                false,
+                                foreachLimitList,
+                                i,
+                                mCHDDList,
+                                code
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-//    fun reasoningAll() {
-//        val (mList, codelist) = getCHDDDateListAndCodeList()
-//        codelist.forEach {code->
-//            val mCHDDList = getCHDDCodeAllList(mList, code)
-//            if (mCHDDList.size > 77) {
-//                for (i in 72..mCHDDList.size - 1) {
-//                    if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
-//                        insertReasoning(
-//                            isLive,
-//                            foreachLimitList,
-//                            i,
-//                            mCHDDList,
-//                            p50FilterBBKJRangeBean,
-//                            code
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
+    private fun insertAllReasoning(
+        isLive: Boolean,
+        foreachLimitList: java.util.ArrayList<Array<Int>>,
+        i: Int,
+        mCHDDList: java.util.ArrayList<CodeHDDBean>,
+        code: String
+    ) {
 
+        var needContinueAll: Boolean
+        var fitlerType = 10086
+        val allReasoningBean = ReasoningRevBean()
+        for (x in foreachLimitList.size - 1 downTo 0) {
+            val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
+            LogUtil.d("date-->${targetBeanList[0].date}")
+            val oldBeanList = getOldBeanList(i, foreachLimitList, x, mCHDDList)
+            val OM = oldBeanList.getRevBeansOM()
+            val M = targetBeanList.getRevBeansOM()
+            val allOM_M = ((OM - M) / OM) * 100
+            needContinueAll = DataSettingUtils.filterAllReasoning(false,allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoningBean)
+            if (!needContinueAll) {
+                break
+            }
+            if (x == 0 && needContinueAll) {
+                setReasoningRevBeanBasicInfo(allReasoningBean, code, mCHDDList, i, fitlerType)
+                DBUtils.insertReasoningAllTB(allReasoningBean,false)
+            }
+        }
+    }
+
+    private fun insertReasoning(
+        isLive: Boolean,
+        foreachLimitList: ArrayList<Array<Int>>,
+        i: Int,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        p50FilterBBKJRangeBean: P50FilterBBKJRangeBean?,
+        code: String
+    ) {
+        val mP50Bean = P50FilterBBKJRangeBean()
+        val mDFilter = P50FilterBBKJRangeBean.DFilter()
+        var needContinue: Boolean
+        var originOM_M = -10086.toFloat()
+        var fitlerType = 10086
+        for (x in foreachLimitList.size - 1 downTo 0) {
+            val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
+            val oldBeanList = getOldBeanList(i, foreachLimitList, x, mCHDDList)
+            if (originOM_M == -10086.toFloat()) {
+                val OM = oldBeanList.getRevBeansOM()
+                val M = targetBeanList.getRevBeansOM()
+                originOM_M = ((OM - M) / OM) * 100
+                fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
+            }
+            //TODO debug
+            //                        if (fitlerType != -20) {
+            //                            break
+            //                        }
+            needContinue = DataSettingUtils.filterP50Result(
+                fitlerType,
+                originOM_M,
+                mDFilter,
+                p50FilterBBKJRangeBean!!,
+                foreachLimitList[x][0],
+                targetBeanList,
+                oldBeanList
+            )
+            if (!needContinue) {
+                break
+            }
+            if (x == 0 && needContinue) {
+                DataSettingUtils.setFilterP50ResultType(originOM_M, mDFilter, mP50Bean)
+                val reasoningRevBean = ReasoningRevBean()
+                setReasoningRevBeanBasicInfo(reasoningRevBean, code, mCHDDList, i, fitlerType)
+                reasoningRevBean.fitlertype = fitlerType.toString()
+                reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
+                (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
+                val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
+                if (!DneedInsert && !isLive) {
+                    LogUtil.d("===insertTBByFilterType===")
+                    mP50Bean.insertTBByFilterType(
+                        code,
+                        mCHDDList[i].date,
+                        getReasoningTBList(),
+                        reasoningRevBean.p
+                    )
+                }
+            }
+            //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
+        }
+    }
+
+    private fun setReasoningRevBeanBasicInfo(
+        reasoningRevBean: ReasoningRevBean,
+        code: String,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        i: Int,
+        fitlerType: Int
+    ) {
+        reasoningRevBean.code = code.toInt()
+        reasoningRevBean.n = mCHDDList[i].name
+        reasoningRevBean.d = mCHDDList[i].date
+        if (i + 5 < mCHDDList.size) {
+            val pList = ArrayList<Float>()
+            for (m in (i + 1)..(i + 5)) {
+                pList.add(
+                    (BigDecimalUtils.safeDiv(
+                        (mCHDDList[m].cp - mCHDDList[i].cp),
+                        mCHDDList[i].cp
+                    ) * 100).toKeep2()
+                )
+            }
+            reasoningRevBean.p = pList[4]
+            reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
+                (mCHDDList[i + 1].op - mCHDDList[i].cp),
+                mCHDDList[i].cp
+            ) * 100).toKeep2()
+            reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
+                (mCHDDList[i + 1].cp - mCHDDList[i].cp),
+                mCHDDList[i].cp
+            ) * 100).toKeep2()
+            pList.sortFloatAsc()
+            reasoningRevBean.lp = pList[0]
+            reasoningRevBean.mp = pList[4]
+
+            LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
+
+            reasoningRevBean.d_D = mCHDDList[i + 5].date
+        }
+    }
 
 //        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];
 //        String[] dayArray = ["36","30","25","20","15","10","5","3"];

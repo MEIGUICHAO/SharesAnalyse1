@@ -198,7 +198,9 @@ class NewApiActivity : AppCompatActivity() {
             revAllJudgeResult()
         }
         btnReasoningAll.setOnClickListener {
-//            viewModel.reasoningAll()
+            DBUtils.switchDBName(Datas.REV_RESONING_DB)
+            DBUtils.dropTable("All_Reasoning_50")
+            viewModel.reasoningAll()
         }
         DataSettingUtils.setActivity(this)
     }

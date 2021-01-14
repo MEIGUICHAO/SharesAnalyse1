@@ -2,10 +2,7 @@ package com.mgc.sharesanalyse.base
 
 import android.annotation.SuppressLint
 import com.mgc.sharesanalyse.entity.*
-import com.mgc.sharesanalyse.utils.BigDecimalUtils
-import com.mgc.sharesanalyse.utils.DateUtils
-import com.mgc.sharesanalyse.utils.FormatterEnum
-import com.mgc.sharesanalyse.utils.GsonHelper
+import com.mgc.sharesanalyse.utils.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -247,4 +244,25 @@ fun ArrayList<String>.getCodeArrayAndLimitSQL(needFirstAnd: Boolean): String {
         }
     }
     return if (needFirstAnd) addSql+")" else addSql
+}
+
+
+fun ReasoningRevBean.getF_TSql(dT: Int): String {
+    val fList = arrayOf("36","30","25","20","15","10","05","03")
+    var sql = ""
+    fList.forEach {
+        if (it.toInt() != dT) {
+            sql = sql + " AND F${it}_T = ${when (it.toInt()) {
+                36->this.f36_T
+                30->this.f30_T
+                25->this.f25_T
+                20->this.f20_T
+                15->this.f15_T
+                10->this.f10_T
+                5->this.f05_T
+                else->this.f03_T
+            }}"
+        }
+    }
+    return sql
 }

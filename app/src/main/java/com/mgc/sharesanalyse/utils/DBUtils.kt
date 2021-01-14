@@ -1601,6 +1601,20 @@ object DBUtils {
         return isExit
     }
 
+    fun insertReasoningAllTB(reasoningRevBean: ReasoningRevBean,is50: Boolean): Boolean {
+        switchDBName(Datas.REV_RESONING_DB)
+        val tbName = if (is50) "All_Reasoning_50" else "All_Reasoning_30"
+        val createSql = reasoningRevBean.createAllTB(tbName)
+        db.execSQL(createSql)
+        val isExit = queryIsExsitByCodeAndCustomColumn(tbName,arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))
+        LogUtil.d("insertReasoningAllTB--->${reasoningRevBean.code},date--->${reasoningRevBean.d}")
+        if (!isExit){
+            val insert = reasoningRevBean.insertAllTB(tbName)
+            db.execSQL(insert)
+        }
+        return isExit
+    }
+
     fun getReasoningResult(): ArrayList<ReasoningRevBean> {
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
@@ -1652,6 +1666,79 @@ object DBUtils {
             db.execSQL(insertSQL)
         }
     }
+
+    fun getReasoningAllJudgeBeanByAllOmM(
+        allOmM: Float,
+        is50: Boolean,
+        D_T: Int,
+        allReasoningBean: ReasoningRevBean
+    ): ArrayList<ReasoningAllJudgeBean> {
+        switchDBName(Datas.REV_RESONING_DB)
+        val list = ArrayList<ReasoningAllJudgeBean>()
+        val tbName = if (is50) "All_50" else "All_30"
+        val querySql = allReasoningBean.getF_TSql(D_T)
+        LogUtil.d("$D_T querySql-->$querySql")
+        if (tabbleIsExist(tbName)) {
+            val cursor =
+                db.rawQuery(" SELECT * FROM $tbName WHERE D_T=$D_T AND OM_M_X<=$allOmM AND OM_M_D>=$allOmM $querySql", null)
+            if (null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast) {
+                    val reasoningAllJudgeBean = ReasoningAllJudgeBean()
+                    reasoningAllJudgeBean.oM_M_X = cursor.getFloat(cursor.getColumnIndex("OM_M_X"))
+                    reasoningAllJudgeBean.oM_M_D = cursor.getFloat(cursor.getColumnIndex("OM_M_D"))
+                    reasoningAllJudgeBean.oM_C_D = cursor.getFloat(cursor.getColumnIndex("OM_C_D"))
+                    reasoningAllJudgeBean.oM_P_D = cursor.getFloat(cursor.getColumnIndex("OM_P_D"))
+                    reasoningAllJudgeBean.oM_L_D = cursor.getFloat(cursor.getColumnIndex("OM_L_D"))
+                    reasoningAllJudgeBean.oC_M_D = cursor.getFloat(cursor.getColumnIndex("OC_M_D"))
+                    reasoningAllJudgeBean.oC_C_D = cursor.getFloat(cursor.getColumnIndex("OC_C_D"))
+                    reasoningAllJudgeBean.oC_P_D = cursor.getFloat(cursor.getColumnIndex("OC_P_D"))
+                    reasoningAllJudgeBean.oC_L_D = cursor.getFloat(cursor.getColumnIndex("OC_L_D"))
+                    reasoningAllJudgeBean.oO_M_D = cursor.getFloat(cursor.getColumnIndex("OO_M_D"))
+                    reasoningAllJudgeBean.oO_C_D = cursor.getFloat(cursor.getColumnIndex("OO_C_D"))
+                    reasoningAllJudgeBean.oO_P_D = cursor.getFloat(cursor.getColumnIndex("OO_P_D"))
+                    reasoningAllJudgeBean.oO_L_D = cursor.getFloat(cursor.getColumnIndex("OO_L_D"))
+                    reasoningAllJudgeBean.oL_M_D = cursor.getFloat(cursor.getColumnIndex("OL_M_D"))
+                    reasoningAllJudgeBean.oL_C_D = cursor.getFloat(cursor.getColumnIndex("OL_C_D"))
+                    reasoningAllJudgeBean.oL_P_D = cursor.getFloat(cursor.getColumnIndex("OL_P_D"))
+                    reasoningAllJudgeBean.oL_L_D = cursor.getFloat(cursor.getColumnIndex("OL_L_D"))
+                    reasoningAllJudgeBean.oM_C_X = cursor.getFloat(cursor.getColumnIndex("OM_C_X"))
+                    reasoningAllJudgeBean.oM_P_X = cursor.getFloat(cursor.getColumnIndex("OM_P_X"))
+                    reasoningAllJudgeBean.oM_L_X = cursor.getFloat(cursor.getColumnIndex("OM_L_X"))
+                    reasoningAllJudgeBean.oC_M_X = cursor.getFloat(cursor.getColumnIndex("OC_M_X"))
+                    reasoningAllJudgeBean.oC_C_X = cursor.getFloat(cursor.getColumnIndex("OC_C_X"))
+                    reasoningAllJudgeBean.oC_P_X = cursor.getFloat(cursor.getColumnIndex("OC_P_X"))
+                    reasoningAllJudgeBean.oC_L_X = cursor.getFloat(cursor.getColumnIndex("OC_L_X"))
+                    reasoningAllJudgeBean.oO_M_X = cursor.getFloat(cursor.getColumnIndex("OO_M_X"))
+                    reasoningAllJudgeBean.oO_C_X = cursor.getFloat(cursor.getColumnIndex("OO_C_X"))
+                    reasoningAllJudgeBean.oO_P_X = cursor.getFloat(cursor.getColumnIndex("OO_P_X"))
+                    reasoningAllJudgeBean.oO_L_X = cursor.getFloat(cursor.getColumnIndex("OO_L_X"))
+                    reasoningAllJudgeBean.oL_M_X = cursor.getFloat(cursor.getColumnIndex("OL_M_X"))
+                    reasoningAllJudgeBean.oL_C_X = cursor.getFloat(cursor.getColumnIndex("OL_C_X"))
+                    reasoningAllJudgeBean.oL_P_X = cursor.getFloat(cursor.getColumnIndex("OL_P_X"))
+                    reasoningAllJudgeBean.oL_L_X = cursor.getFloat(cursor.getColumnIndex("OL_L_X"))
+                    reasoningAllJudgeBean.f36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
+                    reasoningAllJudgeBean.f30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
+                    reasoningAllJudgeBean.f25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
+                    reasoningAllJudgeBean.f20_T = cursor.getInt(cursor.getColumnIndex("F20_T"))
+                    reasoningAllJudgeBean.f15_T = cursor.getInt(cursor.getColumnIndex("F15_T"))
+                    reasoningAllJudgeBean.f10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
+                    reasoningAllJudgeBean.f05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
+                    reasoningAllJudgeBean.f03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
+                    reasoningAllJudgeBean.count = cursor.getInt(cursor.getColumnIndex("COUNT"))
+                    reasoningAllJudgeBean.d_T = cursor.getInt(cursor.getColumnIndex("D_T"))
+                    LogUtil.d("reasoningAllJudgeBean-->\n${GsonHelper.toJson(reasoningAllJudgeBean)}")
+                    list.add(reasoningAllJudgeBean)
+                    cursor.moveToNext()
+                }
+                cursor.close()
+            }
+
+        }
+        return list
+    }
+
+
+
 
 
 }
