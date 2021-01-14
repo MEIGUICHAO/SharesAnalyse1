@@ -200,6 +200,7 @@ class NewApiActivity : AppCompatActivity() {
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
             DBUtils.dropTable("All_Reasoning_50")
+            DBUtils.dropTable("All_Reasoning_30")
             viewModel.reasoningAll()
         }
         DataSettingUtils.setActivity(this)
@@ -216,6 +217,11 @@ class NewApiActivity : AppCompatActivity() {
         viewModel.revAllJudgeResult()
     }
 
+     fun setBtnReasoningAll(info: String) {
+         btnReasoningAll.post {
+             btnReasoningAll.setText(info)
+        }
+    }
      fun setBtnRevAllTb(info: String) {
          btnRevAllTb.post {
              btnRevAllTb.setText(info)

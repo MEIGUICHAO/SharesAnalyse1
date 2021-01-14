@@ -230,6 +230,6 @@ public class ReasoningRevBean {
 
 
     public String insertAllTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F10_T,F03_T) VALUES (" + toAllString()+")";
+        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T) VALUES (" + toAllString()+")";
     }
 }

@@ -1726,8 +1726,8 @@ object DBUtils {
                     reasoningAllJudgeBean.f03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
                     reasoningAllJudgeBean.count = cursor.getInt(cursor.getColumnIndex("COUNT"))
                     reasoningAllJudgeBean.d_T = cursor.getInt(cursor.getColumnIndex("D_T"))
-                    LogUtil.d("reasoningAllJudgeBean-->\n${GsonHelper.toJson(reasoningAllJudgeBean)}")
                     list.add(reasoningAllJudgeBean)
+                    LogUtil.d("$tbName $D_T,size:${list.size},reasoningAllJudgeBean-->\n${GsonHelper.toJson(reasoningAllJudgeBean)}")
                     cursor.moveToNext()
                 }
                 cursor.close()

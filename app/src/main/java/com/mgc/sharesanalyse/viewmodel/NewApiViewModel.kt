@@ -3736,19 +3736,21 @@ class NewApiViewModel : BaseViewModel() {
             if (mCHDDList.size > 77) {
                 for (i in 72..mCHDDList.size - 1) {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
-                        if (mCHDDList[i].date == "20200721" || mCHDDList[i].date == "20200729") {
-                            insertAllReasoning(
-                                false,
-                                foreachLimitList,
-                                i,
-                                mCHDDList,
-                                code
-                            )
-                        }
+//                        if (mCHDDList[i].date == "20200727"||mCHDDList[i].date == "20200728") {
+//                        }
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
                     }
                 }
             }
         }
+
+        (mActivity as NewApiActivity).setBtnReasoningAll("all_finish!!")
     }
 
     private fun insertAllReasoning(
@@ -3759,9 +3761,12 @@ class NewApiViewModel : BaseViewModel() {
         code: String
     ) {
 
-        var needContinueAll: Boolean
         var fitlerType = 10086
-        val allReasoningBean = ReasoningRevBean()
+        val allReasoning50Bean = ReasoningRevBean()
+        val allReasoning30Bean = ReasoningRevBean()
+        var continue50 = true
+        var continue30 = true
+        (mActivity as NewApiActivity).setBtnReasoningAll("all_$code _ date-->${mCHDDList[0].date}")
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
             LogUtil.d("date-->${targetBeanList[0].date}")
@@ -3769,13 +3774,21 @@ class NewApiViewModel : BaseViewModel() {
             val OM = oldBeanList.getRevBeansOM()
             val M = targetBeanList.getRevBeansOM()
             val allOM_M = ((OM - M) / OM) * 100
-            needContinueAll = DataSettingUtils.filterAllReasoning(false,allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoningBean)
-            if (!needContinueAll) {
+            val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
+            continue50 = pair.first
+            continue30 = pair.second
+            if (!continue50 && !continue30) {
                 break
             }
-            if (x == 0 && needContinueAll) {
-                setReasoningRevBeanBasicInfo(allReasoningBean, code, mCHDDList, i, fitlerType)
-                DBUtils.insertReasoningAllTB(allReasoningBean,false)
+            if (x == 0) {
+                if (continue50) {
+                    setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
+                }
+                if (continue30) {
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                }
             }
         }
     }

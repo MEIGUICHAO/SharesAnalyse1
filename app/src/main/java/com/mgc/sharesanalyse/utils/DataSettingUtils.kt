@@ -3120,29 +3120,29 @@ object DataSettingUtils {
     }
 
     fun filterAllReasoning(
-        is50: Boolean,
         allOmM: Float,
         dayType: Int,
         targetBeanList: ArrayList<CodeHDDBean>,
         oldBeanList: ArrayList<CodeHDDBean>,
-        allReasoningBean: ReasoningRevBean
-    ): Boolean {
+        allReasoning50Bean: ReasoningRevBean,
+        allReasoning30Bean: ReasoningRevBean,
+        continue50: Boolean,
+        continue30: Boolean
+    ): Pair<Boolean, Boolean> {
 
         oldBeanList.sortAscByDate()
         targetBeanList.sortAscByDate()
         val OC = oldBeanList[0].p_MA_J.aacp
-        LogUtil.d("OC-->$OC,date-->${oldBeanList[0].date}")
         val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
-        LogUtil.d("OO-->$OO,date-->${oldBeanList[oldBeanList.size - 1].date}")
         val C = targetBeanList[0].p_MA_J.aacp
         val O = targetBeanList[targetBeanList.size - 1].p_MA_J.aaop
-        LogUtil.d("O-->$OO,date-->${targetBeanList[targetBeanList.size - 1].date}")
-        val targetDate = targetBeanList[0].date
+//        val targetDate = targetBeanList[0].date
         val OM = oldBeanList.getRevBeansOM()
         val OL = oldBeanList.getRevBeansOL()
         val M = targetBeanList.getRevBeansOM()
         val L = targetBeanList.getRevBeansOL()
-        var needContinue = true
+        var need50Continue = continue50
+        var need30Continue = continue30
 
         val OM_M = ((OM - M) / OM * 100).toKeep2()
         val OM_C = ((OM - C) / OM * 100).toKeep2()
@@ -3165,37 +3165,111 @@ object DataSettingUtils {
         val OP_L = ((OO - L) / OO * 100).toKeep2()
 
 
-        val juedeBeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(allOmM,is50,dayType+1,allReasoningBean)
-
-        if (juedeBeanList.size > 0) {
-            juedeBeanList.forEach {
-                needContinue = (OM_M >= it.oM_M_X && OM_M <= it.oM_M_D)&&(OM_C >= it.oM_C_X && OM_C <= it.oM_C_D)&&(OM_P >= it.oM_P_X && OM_P <= it.oM_P_D)&&(OM_L >= it.oM_L_X && OM_L <= it.oM_L_D)&&
-                        (OL_M >= it.oL_M_X && OL_M <= it.oL_M_D)&&(OL_C >= it.oL_C_X && OL_C <= it.oL_C_D)&&(OL_P >= it.oL_P_X && OL_P <= it.oL_P_D)&&(OL_L >= it.oL_L_X && OL_L <= it.oL_L_D)&&
-                        (OC_M >= it.oC_M_X && OC_M <= it.oC_M_D)&&(OC_C >= it.oC_C_X && OC_C <= it.oC_C_D)&&(OC_P >= it.oC_P_X && OC_P <= it.oC_P_D)&&(OC_L >= it.oC_L_X && OC_L <= it.oC_L_D)&&
-                        (OP_M >= it.oO_M_X && OP_M <= it.oO_M_D)&&(OP_C >= it.oO_C_X && OP_C <= it.oO_C_D)&&(OP_P >= it.oO_P_X && OP_P <= it.oO_P_D)&&(OP_L >= it.oO_L_X && OP_L <= it.oO_L_D)
-                LogUtil.d("1--->${(OM_M >= it.oM_M_X && OM_M <= it.oM_M_D)&&(OM_C >= it.oM_C_X && OM_C <= it.oM_C_D)&&(OM_P >= it.oM_P_X && OM_P <= it.oM_P_D)&&(OM_L >= it.oM_L_X && OM_L <= it.oM_L_D)}")
-                LogUtil.d("2--->${(OL_M >= it.oL_M_X && OL_M <= it.oL_M_D)&&(OL_C >= it.oL_C_X && OL_C <= it.oL_C_D)&&(OL_P >= it.oL_P_X && OL_P <= it.oL_P_D)&&(OL_L >= it.oL_L_X && OL_L <= it.oL_L_D)}")
-                LogUtil.d("3--->${(OC_M >= it.oC_M_X && OC_M <= it.oC_M_D)&&(OC_C >= it.oC_C_X && OC_C <= it.oC_C_D)&&(OC_P >= it.oC_P_X && OC_P <= it.oC_P_D)&&(OC_L >= it.oC_L_X && OC_L <= it.oC_L_D)}")
-                LogUtil.d("OC_P-->$OC_P")
-                LogUtil.d("3--->${"${OC_M >= it.oC_M_X && OC_M <= it.oC_M_D },${OC_C >= it.oC_C_X && OC_C <= it.oC_C_D},${OC_P >= it.oC_P_X && OC_P <= it.oC_P_D},${OC_L >= it.oC_L_X && OC_L <= it.oC_L_D}"}")
-                LogUtil.d("4--->${(OP_M >= it.oO_M_X && OP_M <= it.oO_M_D)&&(OP_C >= it.oO_C_X && OP_C <= it.oO_C_D)&&(OP_P >= it.oO_P_X && OP_P <= it.oO_P_D)&&(OP_L >= it.oO_L_X && OP_L <= it.oO_L_D)}")
-
-                if (needContinue) {
-                    allReasoningBean.f36_T = it.f36_T
-                    allReasoningBean.f30_T = it.f30_T
-                    allReasoningBean.f25_T = it.f25_T
-                    allReasoningBean.f20_T = it.f20_T
-                    allReasoningBean.f15_T = it.f15_T
-                    allReasoningBean.f10_T = it.f10_T
-                    allReasoningBean.f05_T = it.f05_T
-                    allReasoningBean.f03_T = it.f03_T
-                    LogUtil.d("date-->${targetDate}\n${GsonHelper.toJson(allReasoningBean)}")
-                }
-            }
+        if (need50Continue) {
+            val juede50BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(allOmM,true,dayType+1,allReasoning50Bean)
+            need50Continue = getNeedContinue(
+                juede50BeanList,
+                need50Continue,
+                OM_M,
+                OM_C,
+                OM_P,
+                OM_L,
+                OL_M,
+                OL_C,
+                OL_P,
+                OL_L,
+                OC_M,
+                OC_C,
+                OC_P,
+                OC_L,
+                OP_M,
+                OP_C,
+                OP_P,
+                OP_L,
+                allReasoning50Bean
+            )
+        }
+        if (need30Continue) {
+            val juede30BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(allOmM,false,dayType+1,allReasoning30Bean)
+            need30Continue = getNeedContinue(
+                juede30BeanList,
+                need30Continue,
+                OM_M,
+                OM_C,
+                OM_P,
+                OM_L,
+                OL_M,
+                OL_C,
+                OL_P,
+                OL_L,
+                OC_M,
+                OC_C,
+                OC_P,
+                OC_L,
+                OP_M,
+                OP_C,
+                OP_P,
+                OP_L,
+                allReasoning30Bean
+            )
         }
 
-        return needContinue
+        return Pair(need50Continue,need30Continue)
 
 
+    }
+
+    private fun getNeedContinue(
+        juede50BeanList: ArrayList<ReasoningAllJudgeBean>,
+        need50Continue: Boolean,
+        OM_M: Float,
+        OM_C: Float,
+        OM_P: Float,
+        OM_L: Float,
+        OL_M: Float,
+        OL_C: Float,
+        OL_P: Float,
+        OL_L: Float,
+        OC_M: Float,
+        OC_C: Float,
+        OC_P: Float,
+        OC_L: Float,
+        OP_M: Float,
+        OP_C: Float,
+        OP_P: Float,
+        OP_L: Float,
+        allReasoning50Bean: ReasoningRevBean
+    ): Boolean {
+        var need50Continue1 = need50Continue
+        if (juede50BeanList.size > 0) {
+            juede50BeanList.forEach {
+                need50Continue1 =
+                    (OM_M >= it.oM_M_X && OM_M <= it.oM_M_D) && (OM_C >= it.oM_C_X && OM_C <= it.oM_C_D) && (OM_P >= it.oM_P_X && OM_P <= it.oM_P_D) && (OM_L >= it.oM_L_X && OM_L <= it.oM_L_D) &&
+                            (OL_M >= it.oL_M_X && OL_M <= it.oL_M_D) && (OL_C >= it.oL_C_X && OL_C <= it.oL_C_D) && (OL_P >= it.oL_P_X && OL_P <= it.oL_P_D) && (OL_L >= it.oL_L_X && OL_L <= it.oL_L_D) &&
+                            (OC_M >= it.oC_M_X && OC_M <= it.oC_M_D) && (OC_C >= it.oC_C_X && OC_C <= it.oC_C_D) && (OC_P >= it.oC_P_X && OC_P <= it.oC_P_D) && (OC_L >= it.oC_L_X && OC_L <= it.oC_L_D) &&
+                            (OP_M >= it.oO_M_X && OP_M <= it.oO_M_D) && (OP_C >= it.oO_C_X && OP_C <= it.oO_C_D) && (OP_P >= it.oO_P_X && OP_P <= it.oO_P_D) && (OP_L >= it.oO_L_X && OP_L <= it.oO_L_D)
+//                    LogUtil.d("1--->${(OM_M >= it.oM_M_X && OM_M <= it.oM_M_D)&&(OM_C >= it.oM_C_X && OM_C <= it.oM_C_D)&&(OM_P >= it.oM_P_X && OM_P <= it.oM_P_D)&&(OM_L >= it.oM_L_X && OM_L <= it.oM_L_D)}")
+//                    LogUtil.d("2--->${(OL_M >= it.oL_M_X && OL_M <= it.oL_M_D)&&(OL_C >= it.oL_C_X && OL_C <= it.oL_C_D)&&(OL_P >= it.oL_P_X && OL_P <= it.oL_P_D)&&(OL_L >= it.oL_L_X && OL_L <= it.oL_L_D)}")
+//                    LogUtil.d("3--->${(OC_M >= it.oC_M_X && OC_M <= it.oC_M_D)&&(OC_C >= it.oC_C_X && OC_C <= it.oC_C_D)&&(OC_P >= it.oC_P_X && OC_P <= it.oC_P_D)&&(OC_L >= it.oC_L_X && OC_L <= it.oC_L_D)}")
+////                    LogUtil.d("OC_P-->$OC_P")
+//                    LogUtil.d("3--->${"${OC_M >= it.oC_M_X && OC_M <= it.oC_M_D },${OC_C >= it.oC_C_X && OC_C <= it.oC_C_D},${OC_P >= it.oC_P_X && OC_P <= it.oC_P_D},${OC_L >= it.oC_L_X && OC_L <= it.oC_L_D}"}")
+//                    LogUtil.d("4--->${(OP_M >= it.oO_M_X && OP_M <= it.oO_M_D)&&(OP_C >= it.oO_C_X && OP_C <= it.oO_C_D)&&(OP_P >= it.oO_P_X && OP_P <= it.oO_P_D)&&(OP_L >= it.oO_L_X && OP_L <= it.oO_L_D)}")
+
+                if (need50Continue1) {
+                    allReasoning50Bean.f36_T = it.f36_T
+                    allReasoning50Bean.f30_T = it.f30_T
+                    allReasoning50Bean.f25_T = it.f25_T
+                    allReasoning50Bean.f20_T = it.f20_T
+                    allReasoning50Bean.f15_T = it.f15_T
+                    allReasoning50Bean.f10_T = it.f10_T
+                    allReasoning50Bean.f05_T = it.f05_T
+                    allReasoning50Bean.f03_T = it.f03_T
+                }
+            }
+        } else {
+            need50Continue1 = false
+//            LogUtil.d("juede50BeanList-->$need50Continue1")
+        }
+        return need50Continue1
     }
 }
