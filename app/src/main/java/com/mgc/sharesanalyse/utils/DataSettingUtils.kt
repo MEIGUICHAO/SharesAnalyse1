@@ -17,1475 +17,1479 @@ object DataSettingUtils {
         dFilter: P50FilterBBKJRangeBean.DFilter,
         pair: Pair<String, String>
     ): P50FilterBBKJRangeBean.DFilter {
-        val spliteArray  =tbname.split("_R_")[0].split("_")
-        val day = spliteArray[spliteArray.size-1].toInt()
+        val spliteArray = tbname.split("_R_")[0].split("_")
+        val day = spliteArray[spliteArray.size - 1].toInt()
 //        LogUtil.d("day:$day,indexType:$indexType,min:${pair.first},max:${pair.second}")
         when (indexType) {
-            "OM_M"->{
+            "OM_M" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_M = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_M = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_M = pair.second.toFloat()
                     }
                 }
             }
-            "OM_C"->{
+            "OM_C" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_C = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_C = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_C = pair.second.toFloat()
                     }
                 }
             }
-            "OM_P"->{
+            "OM_P" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_P = pair.second.toFloat()
                     }
                 }
             }
-            "OM_L"->{
+            "OM_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_L = pair.second.toFloat()
                     }
                 }
             }
-            "OC_M"->{
+            "OC_M" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_M = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_M = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_M = pair.second.toFloat()
                     }
                 }
             }
-            "OC_C"->{
+            "OC_C" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_C = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_C = pair.second.toFloat()
                     }
-                }}
-            "OC_P"->{
+                }
+            }
+            "OC_P" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_P = pair.second.toFloat()
                     }
                 }
             }
-            "OC_L"->{
+            "OC_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_L = pair.second.toFloat()
                     }
                 }
             }
-            "OO_M"->{
+            "OO_M" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oO_M = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oO_M = pair.second.toFloat()
                     }
-                }}
-            "OO_C"->{
+                }
+            }
+            "OO_C" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oO_C = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oO_C = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oO_C = pair.second.toFloat()
                     }
                 }
             }
-            "OO_P"->{
+            "OO_P" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oO_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oO_P = pair.second.toFloat()
                     }
-                }}
-            "OO_L"->{
+                }
+            }
+            "OO_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oO_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oO_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oO_L = pair.second.toFloat()
                     }
                 }
             }
-            "OL_M"->{
+            "OL_M" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oL_M = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oL_M = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oL_M = pair.second.toFloat()
                     }
                 }
             }
-            "OL_C"->{
+            "OL_C" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oL_C = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oL_C = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oL_C = pair.second.toFloat()
                     }
                 }
             }
-            "OL_P"->{
+            "OL_P" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oL_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oL_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oL_P = pair.second.toFloat()
                     }
                 }
             }
-            "OL_L"->{
+            "OL_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oL_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oL_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oL_L = pair.second.toFloat()
                     }
                 }
             }
-            "OM_OC"->{
+            "OM_OC" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_OC = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_OC = pair.second.toFloat()
                     }
                 }
             }
-            "OM_OP"->{
+            "OM_OP" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_OP = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_OP = pair.second.toFloat()
                     }
                 }
             }
-            "OM_OL"->{
+            "OM_OL" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oM_OL = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oM_OL = pair.second.toFloat()
                     }
                 }
             }
-            "OC_OP"->{
+            "OC_OP" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_OP = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_OP = pair.second.toFloat()
                     }
                 }
             }
-            "OC_OL"->{
+            "OC_OL" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oC_OL = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oC_OL = pair.second.toFloat()
                     }
                 }
             }
-            "OP_OL"->{
+            "OP_OL" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.oP_OL = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.oP_OL = pair.second.toFloat()
                     }
                 }
             }
-            "M_C"->{
+            "M_C" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.m_C = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.m_C = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.m_C = pair.second.toFloat()
                     }
                 }
             }
-            "M_P"->{
+            "M_P" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.m_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.m_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.m_P = pair.second.toFloat()
                     }
                 }
             }
-            "M_L"->{
+            "M_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.m_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.m_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.m_L = pair.second.toFloat()
                     }
                 }
             }
-            "C_P"->{
+            "C_P" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.c_P = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.c_P = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.c_P = pair.second.toFloat()
                     }
                 }
             }
-            "C_L"->{
+            "C_L" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.c_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.c_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.c_L = pair.second.toFloat()
                     }
                 }
             }
-            "P_L"->{
+            "P_L" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d03Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d05Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d10Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d15Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d20Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d25Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d30Bean.maxBean.p_L = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36Bean.minBean.p_L = pair.first.toFloat()
                         dFilter.d36Bean.maxBean.p_L = pair.second.toFloat()
                     }
                 }
             }
-            "S_A_TR"->{
+            "S_A_TR" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.s_A_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.s_A_TR = pair.second.toFloat()
                     }
                 }
             }
-            "S_R_TR"->{
+            "S_R_TR" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.s_R_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.s_R_TR = pair.second.toFloat()
                     }
                 }
             }
-            "S_B_TR"->{
+            "S_B_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.s_B_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.s_B_TR = pair.second.toFloat()
                     }
                 }
             }
-            "S_C_TR"->{
+            "S_C_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.s_C_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.s_C_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_A_TR"->{
+            "K_A_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_A_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_A_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_R_TR"->{
+            "K_R_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_R_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_R_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_B_TR"->{
+            "K_B_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_B_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_B_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_C_TR"->{
+            "K_C_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_C_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_C_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_SL_A_TR"->{
+            "K_SL_A_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_SL_A_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_SL_A_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_SL_R_TR"->{
+            "K_SL_R_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_SL_R_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_SL_R_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_SL_B_TR"->{
+            "K_SL_B_TR" -> {
 
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_SL_B_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_SL_B_TR = pair.second.toFloat()
                     }
                 }
             }
-            "K_SL_C_TR"->{
+            "K_SL_C_TR" -> {
                 when (day) {
-                    3->{
+                    3 -> {
                         dFilter.d03TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d03TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    5->{
+                    5 -> {
                         dFilter.d05TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d05TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    10->{
+                    10 -> {
                         dFilter.d10TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d10TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    15->{
+                    15 -> {
                         dFilter.d15TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d15TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    20->{
+                    20 -> {
                         dFilter.d20TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d20TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    25->{
+                    25 -> {
                         dFilter.d25TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d25TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    30->{
+                    30 -> {
                         dFilter.d30TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d30TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                    36->{
+                    36 -> {
                         dFilter.d36TRBean.minBean.k_SL_C_TR = pair.first.toFloat()
                         dFilter.d36TRBean.maxBean.k_SL_C_TR = pair.second.toFloat()
                     }
-                }}
+                }
+            }
         }
         return dFilter
 
@@ -1497,36 +1501,60 @@ object DataSettingUtils {
         p50FilterBBKjRangeBean: P50FilterBBKJRangeBean
     ) {
         when (rangeMin) {
-            -70->{
-                p50FilterBBKjRangeBean.r_N70_N60 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -70 -> {
+                p50FilterBBKjRangeBean.r_N70_N60 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N70_N60-->${GsonHelper.toJson(mDFilter)}")
             }
-            -50->{
-                p50FilterBBKjRangeBean.r_N50_N40 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -50 -> {
+                p50FilterBBKjRangeBean.r_N50_N40 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N50_N40-->${GsonHelper.toJson(mDFilter)}")
             }
-            -40->{
-                p50FilterBBKjRangeBean.r_N40_N30 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -40 -> {
+                p50FilterBBKjRangeBean.r_N40_N30 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N40_N30-->${GsonHelper.toJson(mDFilter)}")
             }
-            -30->{
-                p50FilterBBKjRangeBean.r_N30_N20 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -30 -> {
+                p50FilterBBKjRangeBean.r_N30_N20 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N30_N20-->${GsonHelper.toJson(mDFilter)}")
             }
-            -20->{
-                p50FilterBBKjRangeBean.r_N20_N10 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -20 -> {
+                p50FilterBBKjRangeBean.r_N20_N10 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N20_N10-->${GsonHelper.toJson(mDFilter)}")
             }
-            -10->{
-                p50FilterBBKjRangeBean.r_N10_0 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            -10 -> {
+                p50FilterBBKjRangeBean.r_N10_0 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_N10_0-->${GsonHelper.toJson(mDFilter)}")
             }
-            0->{
-                p50FilterBBKjRangeBean.r_0_10 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            0 -> {
+                p50FilterBBKjRangeBean.r_0_10 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_0_10-->${GsonHelper.toJson(mDFilter)}")
             }
-            10->{
-                p50FilterBBKjRangeBean.r_10_20 = GsonHelper.parse(GsonHelper.toJson(mDFilter),P50FilterBBKJRangeBean.DFilter::class.java)
+            10 -> {
+                p50FilterBBKjRangeBean.r_10_20 = GsonHelper.parse(
+                    GsonHelper.toJson(mDFilter),
+                    P50FilterBBKJRangeBean.DFilter::class.java
+                )
                 LogUtil.d("r_10_20-->${GsonHelper.toJson(mDFilter)}")
             }
 
@@ -1608,7 +1636,6 @@ object DataSettingUtils {
         val OO = oldBeanList[oldBeanList.size - 1].p_MA_J.aacp
 
 
-
 //        LogUtil.d("------targetBeanList----------")
 //        targetBeanList.forEach {
 //            LogUtil.d("${it.date}---cp:${it.cp}---op:${it.op}")
@@ -1625,10 +1652,11 @@ object DataSettingUtils {
         var needContinue = true
 
         when (x) {
-            35->{
-                if ((originOM_M >= -70 && originOM_M <= -60)||(originOM_M >= -50 && originOM_M <= -40)||(originOM_M >= -40 && originOM_M <= -30)
-                    ||(originOM_M >= -30 && originOM_M <= -20)||(originOM_M >= -20 && originOM_M <= -10)||(originOM_M >= -10 && originOM_M <= 0)
-                    || (originOM_M >= 0 && originOM_M <= 10)||(originOM_M >= 10 && originOM_M <= 20)) {
+            35 -> {
+                if ((originOM_M >= -70 && originOM_M <= -60) || (originOM_M >= -50 && originOM_M <= -40) || (originOM_M >= -40 && originOM_M <= -30)
+                    || (originOM_M >= -30 && originOM_M <= -20) || (originOM_M >= -20 && originOM_M <= -10) || (originOM_M >= -10 && originOM_M <= 0)
+                    || (originOM_M >= 0 && originOM_M <= 10) || (originOM_M >= 10 && originOM_M <= 20)
+                ) {
                     mDFilter.d36Bean = P50FilterBBKJRangeBean.MaxMinBean()
                     needContinue = judeParameterAndGetResult(
                         mCodeList,
@@ -1651,7 +1679,7 @@ object DataSettingUtils {
                 }
 
             }
-            29->{
+            29 -> {
                 mDFilter.d30Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1671,7 +1699,7 @@ object DataSettingUtils {
                 )
 
             }
-            24->{
+            24 -> {
                 mDFilter.d25Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1691,7 +1719,7 @@ object DataSettingUtils {
                 )
 
             }
-            19->{
+            19 -> {
                 mDFilter.d20Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1711,7 +1739,7 @@ object DataSettingUtils {
                 )
 
             }
-            14->{
+            14 -> {
                 mDFilter.d15Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1731,7 +1759,7 @@ object DataSettingUtils {
                 )
 
             }
-            9->{
+            9 -> {
                 mDFilter.d10Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1751,7 +1779,7 @@ object DataSettingUtils {
                 )
 
             }
-            4->{
+            4 -> {
                 mDFilter.d05Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1771,7 +1799,7 @@ object DataSettingUtils {
                 )
 
             }
-            2->{
+            2 -> {
                 mDFilter.d03Bean = P50FilterBBKJRangeBean.MaxMinBean()
                 needContinue = judeParameterAndGetResult(
                     mCodeList,
@@ -1816,127 +1844,127 @@ object DataSettingUtils {
         val bean = kotlin.run {
 //            arrayOf(3,5,10,15,20,25,30,36)
             when (fitlerType) {
-                -70->{
+                -70 -> {
                     p50FilterBBKJRangeBean.r_N70_N60?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                -50->{
-                    p50FilterBBKJRangeBean.r_N50_N40?.let{
+                -50 -> {
+                    p50FilterBBKJRangeBean.r_N50_N40?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                -40->{
-                    p50FilterBBKJRangeBean.r_N40_N30?.let{
+                -40 -> {
+                    p50FilterBBKJRangeBean.r_N40_N30?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                -30->{
-                    p50FilterBBKJRangeBean.r_N30_N20?.let{
+                -30 -> {
+                    p50FilterBBKJRangeBean.r_N30_N20?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                -20->{
-                    p50FilterBBKJRangeBean.r_N20_N10?.let{
+                -20 -> {
+                    p50FilterBBKJRangeBean.r_N20_N10?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                -10->{
-                    p50FilterBBKJRangeBean.r_N10_0?.let{
+                -10 -> {
+                    p50FilterBBKJRangeBean.r_N10_0?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                0->{
-                    p50FilterBBKJRangeBean.r_0_10?.let{
+                0 -> {
+                    p50FilterBBKJRangeBean.r_0_10?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                10->{
-                    p50FilterBBKJRangeBean.r_10_20?.let{
+                10 -> {
+                    p50FilterBBKJRangeBean.r_10_20?.let {
                         when (day) {
-                            35->it.d36Bean
-                            29->it.d30Bean
-                            24->it.d25Bean
-                            19->it.d20Bean
-                            14->it.d15Bean
-                            9->it.d10Bean
-                            4->it.d05Bean
-                            2->it.d03Bean
-                            else->null
+                            35 -> it.d36Bean
+                            29 -> it.d30Bean
+                            24 -> it.d25Bean
+                            19 -> it.d20Bean
+                            14 -> it.d15Bean
+                            9 -> it.d10Bean
+                            4 -> it.d05Bean
+                            2 -> it.d03Bean
+                            else -> null
                         }
                     }
                 }
-                else->{
+                else -> {
                     null
                 }
             }
@@ -2071,7 +2099,7 @@ object DataSettingUtils {
 //        val mTrBean = TR_K_SLL_Bean()
 //        setTRDatas(mTrBean,0,mCodeList.size-1,mCodeList)
 
-        if (null==bean){
+        if (null == bean) {
             return false
         }
         val maxBean = bean.maxBean
@@ -2113,7 +2141,7 @@ object DataSettingUtils {
 
         val mMaxBean = BaseFilterKJBBRangeBean()
         if (judeFilterParameter(
-                        mCodeList[0],
+                mCodeList[0],
                 fitlerType,
                 day,
                 OM_M,
@@ -2163,47 +2191,48 @@ object DataSettingUtils {
     ): Boolean {
         val trMaxBean = trBean.maxBean
         val trMinBean = trBean.minBean
-        val mBoolean =  mTrBean.k_A_TR>=trMinBean.k_A_TR&&mTrBean.k_A_TR<=trMaxBean.k_A_TR&&mTrBean.k_R_TR>=trMinBean.k_R_TR&&mTrBean.k_R_TR<=trMaxBean.k_R_TR&&mTrBean.k_B_TR>=trMinBean.k_B_TR&&mTrBean.k_B_TR<=trMaxBean.k_B_TR&&
-        mTrBean.s_A_TR>=trMinBean.s_A_TR&&mTrBean.s_A_TR<=trMaxBean.s_A_TR&&mTrBean.s_R_TR>=trMinBean.s_R_TR&&mTrBean.s_R_TR<=trMaxBean.s_R_TR&&mTrBean.s_B_TR>=trMinBean.s_B_TR&&mTrBean.s_B_TR<=trMaxBean.s_B_TR&&
-        mTrBean.k_SL_A_TR>=trMinBean.k_SL_A_TR&&mTrBean.k_SL_A_TR<=trMaxBean.k_SL_A_TR&&mTrBean.k_SL_R_TR>=trMinBean.k_SL_R_TR&&mTrBean.k_SL_R_TR<=trMaxBean.k_SL_R_TR&&mTrBean.k_SL_B_TR>=trMinBean.k_SL_B_TR&&mTrBean.k_SL_B_TR<=trMaxBean.k_SL_B_TR
+        val mBoolean =
+            mTrBean.k_A_TR >= trMinBean.k_A_TR && mTrBean.k_A_TR <= trMaxBean.k_A_TR && mTrBean.k_R_TR >= trMinBean.k_R_TR && mTrBean.k_R_TR <= trMaxBean.k_R_TR && mTrBean.k_B_TR >= trMinBean.k_B_TR && mTrBean.k_B_TR <= trMaxBean.k_B_TR &&
+                    mTrBean.s_A_TR >= trMinBean.s_A_TR && mTrBean.s_A_TR <= trMaxBean.s_A_TR && mTrBean.s_R_TR >= trMinBean.s_R_TR && mTrBean.s_R_TR <= trMaxBean.s_R_TR && mTrBean.s_B_TR >= trMinBean.s_B_TR && mTrBean.s_B_TR <= trMaxBean.s_B_TR &&
+                    mTrBean.k_SL_A_TR >= trMinBean.k_SL_A_TR && mTrBean.k_SL_A_TR <= trMaxBean.k_SL_A_TR && mTrBean.k_SL_R_TR >= trMinBean.k_SL_R_TR && mTrBean.k_SL_R_TR <= trMaxBean.k_SL_R_TR && mTrBean.k_SL_B_TR >= trMinBean.k_SL_B_TR && mTrBean.k_SL_B_TR <= trMaxBean.k_SL_B_TR
         LogUtil.d("$mBoolean")
         return mBoolean
     }
 
     private fun judeFilterParameter(
-            codeHDDBean: CodeHDDBean,
-            fitlerType: Int,
-            day: Int,
-            OM_M: Float,
-            minBean: BaseFilterKJBBRangeBean,
-            maxBean: BaseFilterKJBBRangeBean,
-            OM_C: Float,
-            OM_P: Float,
-            OM_L: Float,
-            OL_M: Float,
-            OL_C: Float,
-            OL_P: Float,
-            OL_L: Float,
-            OC_M: Float,
-            OC_C: Float,
-            OC_P: Float,
-            OC_L: Float,
-            OP_M: Float,
-            OP_C: Float,
-            OP_P: Float,
-            OP_L: Float,
-            OM_OC: Float,
-            OM_OP: Float,
-            OM_OL: Float,
-            OC_OP: Float,
-            OC_OL: Float,
-            OP_OL: Float,
-            M_C: Float,
-            M_P: Float,
-            M_L: Float,
-            C_P: Float,
-            C_L: Float,
-            P_L: Float
+        codeHDDBean: CodeHDDBean,
+        fitlerType: Int,
+        day: Int,
+        OM_M: Float,
+        minBean: BaseFilterKJBBRangeBean,
+        maxBean: BaseFilterKJBBRangeBean,
+        OM_C: Float,
+        OM_P: Float,
+        OM_L: Float,
+        OL_M: Float,
+        OL_C: Float,
+        OL_P: Float,
+        OL_L: Float,
+        OC_M: Float,
+        OC_C: Float,
+        OC_P: Float,
+        OC_L: Float,
+        OP_M: Float,
+        OP_C: Float,
+        OP_P: Float,
+        OP_L: Float,
+        OM_OC: Float,
+        OM_OP: Float,
+        OM_OL: Float,
+        OC_OP: Float,
+        OC_OL: Float,
+        OP_OL: Float,
+        M_C: Float,
+        M_P: Float,
+        M_L: Float,
+        C_P: Float,
+        C_L: Float,
+        P_L: Float
     ): Boolean {
         LogUtil.d("judeFilterParameter")
 //        LogUtil.d("OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M):${OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M}")
@@ -2222,51 +2251,63 @@ object DataSettingUtils {
 //        LogUtil.d("(OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C):${OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C}")
 //        LogUtil.d("(OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P):${OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P}")
 //        LogUtil.d("(OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L):${OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L}")
-        var beginBoolean =  (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
-                (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
-                (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
-                (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L)
-                &&
-                (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
-                (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
+        var beginBoolean =
+            (OM_M >= minBean.oM_M && OM_M <= maxBean.oM_M) && (OM_C >= minBean.oM_C && OM_C <= maxBean.oM_C) && (OM_P >= minBean.oM_P && OM_P <= maxBean.oM_P) && (OM_L >= minBean.oM_L && OM_L <= maxBean.oM_L) &&
+                    (OL_M >= minBean.oL_M && OL_M <= maxBean.oL_M) && (OL_C >= minBean.oL_C && OL_C <= maxBean.oL_C) && (OL_P >= minBean.oL_P && OL_P <= maxBean.oL_P) && (OL_L >= minBean.oL_L && OL_L <= maxBean.oL_L) &&
+                    (OC_M >= minBean.oC_M && OC_M <= maxBean.oC_M) && (OC_C >= minBean.oC_C && OC_C <= maxBean.oC_C) && (OC_P >= minBean.oC_P && OC_P <= maxBean.oC_P) && (OC_L >= minBean.oC_L && OC_L <= maxBean.oC_L) &&
+                    (OP_M >= minBean.oO_M && OP_M <= maxBean.oO_M) && (OP_C >= minBean.oO_C && OP_C <= maxBean.oO_C) && (OP_P >= minBean.oO_P && OP_P <= maxBean.oO_P) && (OP_L >= minBean.oO_L && OP_L <= maxBean.oO_L)
+                    &&
+                    (OM_OC >= minBean.oM_OC && OM_OC <= maxBean.oM_OC) && (OM_OP >= minBean.oM_OP && OM_OP <= maxBean.oM_OP) && (OM_OL >= minBean.oM_OL && OM_OL <= maxBean.oM_OL) && (OC_OP >= minBean.oC_OP && OC_OP <= maxBean.oC_OP) && (OC_OL >= minBean.oC_OL && OC_OL <= maxBean.oC_OL) && (OP_OL >= minBean.oP_OL && OP_OL <= maxBean.oP_OL) &&
+                    (M_C >= minBean.m_C && M_C <= maxBean.m_C) && (M_P >= minBean.m_P && M_P <= maxBean.m_P) && (M_L >= minBean.m_L && M_L <= maxBean.m_L) && (C_P >= minBean.c_P && C_P <= maxBean.c_P) && (C_L >= minBean.c_L && C_L <= maxBean.c_L) && (P_L >= minBean.p_L && P_L <= maxBean.p_L)
         mActivity.setReasoningProgress("${codeHDDBean.name}-->${codeHDDBean.date}-->beginBoolean:${beginBoolean}")
         if (!beginBoolean) {
             LogUtil.d("${codeHDDBean.name}-->fitlerType:$fitlerType,day:$day,beginBoolean:$beginBoolean")
             return beginBoolean
         } else {
             when (fitlerType) {
-                -30->{
+                -30 -> {
                     when (day) {
-                        4->{
-                            beginBoolean = OM_P<6&&OL_C>-20&&OM_OC<6
+                        4 -> {
+                            beginBoolean = OM_P < 6 && OL_C > -20 && OM_OC < 6
                         }
-                        9->{
+                        9 -> {
                             LogUtil.d("9---> $OC_M>-23,$OC_C>-16,$OP_M>-25,$OP_C>-28,$OP_P>-10,$OP_L>-5,$OP_M>-32,$OL_C>-25,$OL_C>-25,$OL_P>-16,$OL_L>-8,$C_P<15")
-                            beginBoolean = OC_M>-23&&OC_C>-16&&OP_M>-25&&OP_C>-28&&OP_P>-10&&OP_L>-5&&OP_M>-32&&OL_C>-25&&OL_C>-25&&OL_P>-16&&OL_L>-8&&C_P<15
+                            beginBoolean =
+                                OC_M > -23 && OC_C > -16 && OP_M > -25 && OP_C > -28 && OP_P > -10 && OP_L > -5 && OP_M > -32 && OL_C > -25 && OL_C > -25 && OL_P > -16 && OL_L > -8 && C_P < 15
                         }
-                        14->{
-                            beginBoolean = OM_M>-17&&OM_C>-15&&OC_M>-30&&OC_C>-20&&OP_M>-28&&OP_C>-20&&OL_M>-35&&OL_C>-30&&M_P<23&&M_L<26&&C_P<18&&C_L<20
+                        14 -> {
+                            beginBoolean =
+                                OM_M > -17 && OM_C > -15 && OC_M > -30 && OC_C > -20 && OP_M > -28 && OP_C > -20 && OL_M > -35 && OL_C > -30 && M_P < 23 && M_L < 26 && C_P < 18 && C_L < 20
                         }
-                        19->{
-                            beginBoolean = OM_M>-17&&OC_M>-30&&OC_C>-20&&OL_M>-42&&OL_C>-35&&M_P<22&&M_L<25&&C_P<17&&C_L<20
+                        19 -> {
+                            beginBoolean =
+                                OM_M > -17 && OC_M > -30 && OC_C > -20 && OL_M > -42 && OL_C > -35 && M_P < 22 && M_L < 25 && C_P < 17 && C_L < 20
                         }
-                        24->{
-                            beginBoolean = OC_M>-30&&OC_C>-25&&OP_M>-40&&OP_C>-30&&OL_M>-48&&M_L<28&&C_P<20&&C_L<20
+                        24 -> {
+                            beginBoolean =
+                                OC_M > -30 && OC_C > -25 && OP_M > -40 && OP_C > -30 && OL_M > -48 && M_L < 28 && C_P < 20 && C_L < 20
                         }
-                        29->{
-                            beginBoolean = OP_M>-44&&OP_C>-33&&M_L<28&&C_L<22
+                        29 -> {
+                            beginBoolean = OP_M > -44 && OP_C > -33 && M_L < 28 && C_L < 22
                         }
-                        35->{
+                        35 -> {
 //                            LogUtil.d("35--->$OC_M>-40,$OP_M>-50,$OP_C>-40,$OL_M>-51,$OL_C>-50,$M_L<30")
-                            beginBoolean = OC_M>-40&&OP_M>-50&&OP_C>-40&&OL_M>-51&&OL_C>-50&&M_L<30
+                            beginBoolean =
+                                OC_M > -40 && OP_M > -50 && OP_C > -40 && OL_M > -51 && OL_C > -50 && M_L < 30
                         }
                     }
                 }
 
-                else->{
+                else -> {
                     if (day < 35) {
-                        val tbName = "${Datas.BB_FIL_COPY_}A_RTB_50_${day+1}_R_${Math.abs(fitlerType)}_${Math.abs(fitlerType+10)}"
-                        val tbDerbyName = "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day+1}_R_${Math.abs(fitlerType)}_${Math.abs(fitlerType+10)}"
+                        val tbName =
+                            "${Datas.BB_FIL_COPY_}A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
+                                fitlerType + 10
+                            )}"
+                        val tbDerbyName =
+                            "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
+                                fitlerType + 10
+                            )}"
 
                         beginBoolean = stepByStepJudge(
                             tbName,
@@ -2490,10 +2531,11 @@ object DataSettingUtils {
                     }
                 }
 //                LogUtil.d("($OM_M >= $minOM_M && $OM_M <= $maxOM_M) && ($OM_C >= $minOM_C && $OM_C <= $maxOM_C) && ($OM_P >= $minOM_P && $OM_P <= $maxOM_P) && ($OM_L >= $minOM_L && $OM_L <= $maxOM_L)")
-                firstStepBoolean = (OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L) &&
-                        (OL_M >= minOL_M && OL_M <= maxOL_M) && (OL_C >= minOL_C && OL_C <= maxOL_C) && (OL_P >= minOL_P && OL_P <= maxOL_P) && (OL_L >= minOL_L && OL_L <= maxOL_L) &&
-                        (OC_M >= minOC_M && OC_M <= maxOC_M) && (OC_C >= minOC_C && OC_C <= maxOC_C) && (OC_P >= minOC_P && OC_P <= maxOC_P) && (OC_L >= minOC_L && OC_L <= maxOC_L) &&
-                        (OP_M >= minOO_M && OP_M <= maxOO_M) && (OP_C >= minOO_C && OP_C <= maxOO_C) && (OP_P >= minOO_P && OP_P <= maxOO_P) && (OP_L >= minOO_L && OP_L <= maxOO_L)
+                firstStepBoolean =
+                    (OM_M >= minOM_M && OM_M <= maxOM_M) && (OM_C >= minOM_C && OM_C <= maxOM_C) && (OM_P >= minOM_P && OM_P <= maxOM_P) && (OM_L >= minOM_L && OM_L <= maxOM_L) &&
+                            (OL_M >= minOL_M && OL_M <= maxOL_M) && (OL_C >= minOL_C && OL_C <= maxOL_C) && (OL_P >= minOL_P && OL_P <= maxOL_P) && (OL_L >= minOL_L && OL_L <= maxOL_L) &&
+                            (OC_M >= minOC_M && OC_M <= maxOC_M) && (OC_C >= minOC_C && OC_C <= maxOC_C) && (OC_P >= minOC_P && OC_P <= maxOC_P) && (OC_L >= minOC_L && OC_L <= maxOC_L) &&
+                            (OP_M >= minOO_M && OP_M <= maxOO_M) && (OP_C >= minOO_C && OP_C <= maxOO_C) && (OP_P >= minOO_P && OP_P <= maxOO_P) && (OP_L >= minOO_L && OP_L <= maxOO_L)
                 break
             }
         }
@@ -2630,7 +2672,7 @@ object DataSettingUtils {
         return beginBoolean1
     }
 
-    fun getRangeMaxMin(tbName: String,dbName:String): Pair<Int, Int> {
+    fun getRangeMaxMin(tbName: String, dbName: String): Pair<Int, Int> {
         val pair =
             DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", dbName)
         val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
@@ -2695,7 +2737,11 @@ object DataSettingUtils {
         mMaxBean.p_L = ((O - L) / O * 100).toKeep2()
     }
 
-    fun setFilterP50ResultType(originOM_M:Float,mDFilter: P50FilterBBKJRangeBean.DFilter,mP50Bean: P50FilterBBKJRangeBean) {
+    fun setFilterP50ResultType(
+        originOM_M: Float,
+        mDFilter: P50FilterBBKJRangeBean.DFilter,
+        mP50Bean: P50FilterBBKJRangeBean
+    ) {
         if (originOM_M >= -70 && originOM_M <= -60) {
             mP50Bean.r_N70_N60 = mDFilter
         } else if (originOM_M >= -50 && originOM_M <= -40) {
@@ -2715,7 +2761,7 @@ object DataSettingUtils {
         }
     }
 
-    fun getFilterP50ResultType(originOM_M:Float): Int {
+    fun getFilterP50ResultType(originOM_M: Float): Int {
         var type = -10086
         if (originOM_M >= -70 && originOM_M <= -60) {
             type = -70
@@ -2736,6 +2782,7 @@ object DataSettingUtils {
         }
         return type
     }
+
     fun setTRDatas(
         trKSllBean: TR_K_SLL_Bean,
         targetBeanBegin: Int,
@@ -2849,8 +2896,8 @@ object DataSettingUtils {
 
     fun getReasoningAllJudgeBean(
         list: ArrayList<BaseReverseImp>,
-        date: Int,
-        i: Int
+        derbyList: ArrayList<BaseReverseImp>,
+        date: Int
     ): ReasoningAllJudgeBean {
         val reasoningAllJudgeBean = ReasoningAllJudgeBean()
 
@@ -2886,6 +2933,111 @@ object DataSettingUtils {
         var minOL_C = 10086.toFloat()
         var minOL_P = 10086.toFloat()
         var minOL_L = 10086.toFloat()
+
+
+        var maxOM_OC = -10086.toFloat()
+        var maxOM_OP = -10086.toFloat()
+        var maxOM_OL = -10086.toFloat()
+        var maxOC_OP = -10086.toFloat()
+        var maxOC_OL = -10086.toFloat()
+        var maxOP_OL = -10086.toFloat()
+        var maxM_C = -10086.toFloat()
+        var maxM_P = -10086.toFloat()
+        var maxM_L = -10086.toFloat()
+        var maxC_P = -10086.toFloat()
+        var maxC_L = -10086.toFloat()
+        var maxP_L = -10086.toFloat()
+        var minOM_OC = 10086.toFloat()
+        var minOM_OP = 10086.toFloat()
+        var minOM_OL = 10086.toFloat()
+        var minOC_OP = 10086.toFloat()
+        var minOC_OL = 10086.toFloat()
+        var minOP_OL = 10086.toFloat()
+        var minM_C = 10086.toFloat()
+        var minM_P = 10086.toFloat()
+        var minM_L = 10086.toFloat()
+        var minC_P = 10086.toFloat()
+        var minC_L = 10086.toFloat()
+        var minP_L = 10086.toFloat()
+        derbyList.forEach {
+            if (it is ReverseKJsonBean) {
+                if (maxOM_OC < it.oM_OC) {
+                    maxOM_OC = it.oM_OC
+                }
+                if (maxOM_OP < it.oM_OP) {
+                    maxOM_OP = it.oM_OP
+                }
+                if (maxOM_OL < it.oM_OL) {
+                    maxOM_OL = it.oM_OL
+                }
+                if (maxOC_OP < it.oC_OP) {
+                    maxOC_OP = it.oC_OP
+                }
+                if (maxOC_OL < it.oC_OL) {
+                    maxOC_OL = it.oC_OL
+                }
+                if (maxOP_OL< it.oP_OL) {
+                    maxOP_OL = it.oP_OL
+                }
+                if (maxM_C < it.m_C) {
+                    maxM_C = it.m_C
+                }
+                if (maxM_P < it.m_P) {
+                    maxM_P = it.m_P
+                }
+                if (maxM_L < it.m_L) {
+                    maxM_L = it.m_L
+                }
+                if (maxC_P < it.c_P) {
+                    maxC_P = it.c_P
+                }
+                if (maxC_L < it.c_L) {
+                    maxC_L = it.c_L
+                }
+                if (maxP_L< it.p_L) {
+                    maxP_L = it.p_L
+                }
+
+
+                if (minOM_OC > it.oM_OC) {
+                    minOM_OC = it.oM_OC
+                }
+                if (minOM_OP > it.oM_OP) {
+                    minOM_OP = it.oM_OP
+                }
+                if (minOM_OL > it.oM_OL) {
+                    minOM_OL = it.oM_OL
+                }
+                if (minOC_OP > it.oC_OP) {
+                    minOC_OP = it.oC_OP
+                }
+                if (minOC_OL > it.oC_OL) {
+                    minOC_OL = it.oC_OL
+                }
+                if (minOP_OL> it.oP_OL) {
+                    minOP_OL = it.oP_OL
+                }
+                if (minM_C > it.m_C) {
+                    minM_C = it.m_C
+                }
+                if (minM_P > it.m_P) {
+                    minM_P = it.m_P
+                }
+                if (minM_L > it.m_L) {
+                    minM_L = it.m_L
+                }
+                if (minC_P > it.c_P) {
+                    minC_P = it.c_P
+                }
+                if (minC_L > it.c_L) {
+                    minC_L = it.c_L
+                }
+                if (minP_L> it.p_L) {
+                    minP_L = it.p_L
+                }
+            }
+        }
+
         list.forEach {
             if (it is ReverseKJsonBean) {
                 if (maxOM_M < it.oM_M) {
@@ -3024,6 +3176,31 @@ object DataSettingUtils {
         reasoningAllJudgeBean.oL_C_X = minOL_C
         reasoningAllJudgeBean.oL_P_X = minOL_P
         reasoningAllJudgeBean.oL_L_X = minOL_L
+        reasoningAllJudgeBean.oM_OC_D = maxOM_OC
+        reasoningAllJudgeBean.oM_OP_D = maxOM_OP
+        reasoningAllJudgeBean.oM_OL_D = maxOM_OL
+        reasoningAllJudgeBean.oC_OP_D = maxOC_OP
+        reasoningAllJudgeBean.oC_OL_D = maxOC_OL
+        reasoningAllJudgeBean.oP_OL_D = maxOP_OL
+        reasoningAllJudgeBean.m_C_D = maxM_C
+        reasoningAllJudgeBean.m_P_D = maxM_P
+        reasoningAllJudgeBean.m_L_D = maxM_L
+        reasoningAllJudgeBean.c_P_D = maxC_P
+        reasoningAllJudgeBean.c_L_D = maxC_L
+        reasoningAllJudgeBean.p_L_D = maxP_L
+
+        reasoningAllJudgeBean.oM_OC_X= minOM_OC
+        reasoningAllJudgeBean.oM_OP_X= minOM_OP
+        reasoningAllJudgeBean.oM_OL_X= minOM_OL
+        reasoningAllJudgeBean.oC_OP_X= minOC_OP
+        reasoningAllJudgeBean.oC_OL_X= minOC_OL
+        reasoningAllJudgeBean.oP_OL_X= minOP_OL
+        reasoningAllJudgeBean.m_C_X= minM_C
+        reasoningAllJudgeBean.m_P_X= minM_P
+        reasoningAllJudgeBean.m_L_X= minM_L
+        reasoningAllJudgeBean.c_P_X= minC_P
+        reasoningAllJudgeBean.c_L_X= minC_L
+        reasoningAllJudgeBean.p_L_X= minP_L
         return reasoningAllJudgeBean
     }
 
@@ -3038,8 +3215,9 @@ object DataSettingUtils {
     ) {
 
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
+        val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
-        val countLimit = if (list.size>=4) 4 else 2
+        val countLimit = if (list.size >= 4) 4 else 2
         val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true)
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             nextTbName,
@@ -3053,7 +3231,7 @@ object DataSettingUtils {
                 nextContinue--
                 continue
             }
-            var dlist = getDlist(nextTbName, addstr, n,nextContinue)
+            var dlist = getDlist(nextTbName, addstr, n, nextContinue)
             if (null == dlist) {
                 continue
             }
@@ -3061,17 +3239,19 @@ object DataSettingUtils {
                 nextContinue++
                 dlist = getDlist(nextTbName, addstr, n, nextContinue)
             }
-            while ((list.size-dlist!!.size==1)) {
+            while ((list.size - dlist!!.size == 1)) {
                 nextContinue++
                 dlist = getDlist(nextTbName, addstr, n, nextContinue)
             }
-            if ( dlist.size > 1) {
+            if (dlist.size > 1) {
+
+                val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
                 val reasoningAllJudgeBean =
-                    getReasoningAllJudgeBean(dlist, date, n)
-                for (a in 7-dateRangeIndex until  iList.size) {
+                    getReasoningAllJudgeBean(dlist, derbyList, date)
+                for (a in 7 - dateRangeIndex until iList.size) {
                     iList[a] = 0
                 }
-                iList[7-dateRangeIndex] = n
+                iList[7 - dateRangeIndex] = n
                 reasoningAllJudgeBean.f36_T = iList[0]
                 reasoningAllJudgeBean.f30_T = iList[1]
                 reasoningAllJudgeBean.f25_T = iList[2]
@@ -3081,19 +3261,19 @@ object DataSettingUtils {
                 reasoningAllJudgeBean.f05_T = iList[6]
                 reasoningAllJudgeBean.f03_T = iList[7]
                 var istr = ""
-                val idaylist = arrayListOf("36","30","25","20","15","10","5","3")
+                val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
                 for (q in 0 until iList.size) {
-                    istr = istr+ "F_T_${idaylist[q]}-->${iList[q]};"
+                    istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
                 }
-                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
+                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
                 DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 if ((dateRangeIndex) > 0) {
                     revAllReasoning30(
                         pt,
                         dayList,
-                        dateRangeIndex-1,
+                        dateRangeIndex - 1,
                         dlist,
-                        dayList[dateRangeIndex-1],
+                        dayList[dateRangeIndex - 1],
                         insertTB,
                         iList
                     )
@@ -3165,8 +3345,27 @@ object DataSettingUtils {
         val OP_L = ((OO - L) / OO * 100).toKeep2()
 
 
+        val OM_OC = ((OM - OC) / OM * 100).toKeep2()
+        val OM_OP = ((OM - OO) / OM * 100).toKeep2()
+        val OM_OL = ((OM - OL) / OM * 100).toKeep2()
+        val OC_OP = ((OC - OO) / OC * 100).toKeep2()
+        val OC_OL = ((OC - OL) / OC * 100).toKeep2()
+        val OP_OL = ((OO - OL) / OO * 100).toKeep2()
+
+        val M_C = ((M - C) / M * 100).toKeep2()
+        val M_P = ((M - O) / M * 100).toKeep2()
+        val M_L = ((M - L) / M * 100).toKeep2()
+        val C_P = ((C - O) / C * 100).toKeep2()
+        val C_L = ((C - L) / C * 100).toKeep2()
+        val P_L = ((O - L) / O * 100).toKeep2()
+
         if (need50Continue) {
-            val juede50BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(allOmM,true,dayType+1,allReasoning50Bean)
+            val juede50BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(
+                allOmM,
+                true,
+                dayType + 1,
+                allReasoning50Bean
+            )
             need50Continue = getNeedContinue(
                 juede50BeanList,
                 need50Continue,
@@ -3188,9 +3387,34 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning50Bean
             )
+            if (need50Continue) {
+                need50Continue = getDerbyNeedContinue(
+                    juede50BeanList,
+                    need50Continue,
+                    OM_OC,
+                    OM_OP,
+                    OM_OL,
+                    OC_OP,
+                    OC_OL,
+                    OP_OL,
+                    M_C,
+                    M_P,
+                    M_L,
+                    C_P,
+                    C_L,
+                    P_L
+                )
+
+//                LogUtil.d("getDerbyNeedContinue-->$need50Continue")
+            }
         }
         if (need30Continue) {
-            val juede30BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(allOmM,false,dayType+1,allReasoning30Bean)
+            val juede30BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(
+                allOmM,
+                false,
+                dayType + 1,
+                allReasoning30Bean
+            )
             need30Continue = getNeedContinue(
                 juede30BeanList,
                 need30Continue,
@@ -3212,9 +3436,28 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning30Bean
             )
+            if (need30Continue) {
+                need30Continue = getDerbyNeedContinue(
+                    juede30BeanList,
+                    need30Continue,
+                    OM_OC,
+                    OM_OP,
+                    OM_OL,
+                    OC_OP,
+                    OC_OL,
+                    OP_OL,
+                    M_C,
+                    M_P,
+                    M_L,
+                    C_P,
+                    C_L,
+                    P_L
+                )
+//                LogUtil.d("getDerbyNeedContinue-->$need30Continue")
+            }
         }
 
-        return Pair(need50Continue,need30Continue)
+        return Pair(need50Continue, need30Continue)
 
 
     }
@@ -3269,6 +3512,49 @@ object DataSettingUtils {
         } else {
             need50Continue1 = false
 //            LogUtil.d("juede50BeanList-->$need50Continue1")
+        }
+        return need50Continue1
+    }
+
+    private fun getDerbyNeedContinue(
+        juede50BeanList: ArrayList<ReasoningAllJudgeBean>,
+        need50Continue: Boolean,
+        OM_OC: Float,
+        OM_OP: Float,
+        OM_OL: Float,
+        OC_OP: Float,
+        OC_OL: Float,
+        OP_OL: Float,
+        M_C: Float,
+        M_P: Float,
+        M_L: Float,
+        C_P: Float,
+        C_L: Float,
+        P_L: Float
+    ): Boolean {
+        var need50Continue1 = need50Continue
+        if (juede50BeanList.size > 0) {
+            juede50BeanList.forEach {
+                need50Continue1 =
+                    (OM_OC >= it.oM_OC_X && OM_OC <= it.oM_OC_D) && (OM_OP >= it.oM_OP_X && OM_OP <= it.oM_OP_D) && (OM_OL >= it.oM_OL_X && OM_OL <= it.oM_OL_D) && (OC_OP >= it.oC_OP_X && OC_OP <= it.oC_OP_D) &&
+                            (OC_OL >= it.oC_OL_X && OC_OL <= it.oC_OL_D) && (OP_OL >= it.oP_OL_X && OP_OL <= it.oP_OL_D) &&
+                            (M_C >= it.m_C_X && M_C  <= it.m_C_D) && (M_P >= it.m_P_X && M_P <= it.m_P_D) && (M_L >= it.m_L_X && M_L <= it.m_L_D) && (C_P >= it.c_P_X && C_P <= it.c_P_D) &&
+                            (C_L >= it.c_L_X && C_L <= it.c_L_D) && (P_L >= it.p_L_X && P_L <= it.p_L_D)
+//                LogUtil.d("1-->${(OM_OC >= it.oM_OC_X && OM_OC <= it.oM_OC_D)},$OM_OC,${it.oM_OC_X},${it.oM_OC_D}")
+//                LogUtil.d("2-->${(OM_OP >= it.oM_OP_X && OM_OP <= it.oM_OP_D)}")
+//                LogUtil.d("3-->${(OM_OL >= it.oM_OL_X && OM_OL <= it.oM_OL_D)}")
+//                LogUtil.d("4-->${(OC_OP >= it.oC_OP_X && OC_OP <= it.oC_OP_D)}")
+//                LogUtil.d("5-->${(OC_OL >= it.oC_OL_X && OC_OL <= it.oC_OL_D)}")
+//                LogUtil.d("6-->${(OP_OL >= it.oP_OL_X && OP_OL <= it.oP_OL_D)}")
+//                LogUtil.d("7-->${(M_C >= it.m_C_X && M_C  <= it.m_C_D) }")
+//                LogUtil.d("8-->${(M_P >= it.m_P_X && M_P <= it.m_P_D)}")
+//                LogUtil.d("9-->${(M_L >= it.m_L_X && M_L <= it.m_L_D)}")
+//                LogUtil.d("10-->${(C_P >= it.c_P_X && C_P <= it.c_P_D) }")
+//                LogUtil.d("11-->${(C_L >= it.c_L_X && C_L <= it.c_L_D)}")
+//                LogUtil.d("12-->${(P_L >= it.p_L_X && P_L <= it.p_L_D)}")
+            }
+        } else {
+            need50Continue1 = false
         }
         return need50Continue1
     }

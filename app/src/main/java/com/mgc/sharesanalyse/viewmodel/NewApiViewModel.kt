@@ -3677,6 +3677,7 @@ class NewApiViewModel : BaseViewModel() {
 
             LogUtil.d("revAllJudgeResult")
             val tbName = "A_RTB_${pt}_36"
+            val tbDerbyName = "Derby_A_RTB_${pt}_36"
             (mActivity as NewApiActivity).setBtnRevAllTb(tbName)
             val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
                 tbName,
@@ -3699,7 +3700,8 @@ class NewApiViewModel : BaseViewModel() {
 //                }
                 if (null != list && list.size > 1) {
                     LogUtil.d("revAllJudgeResult")
-                    val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list, date, i)
+                    val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
+                    val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list,derbyList, date)
                     reasoningAllJudgeBean.f36_T = i
                     val insertTB = "All_${pt}"
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean,insertTB)

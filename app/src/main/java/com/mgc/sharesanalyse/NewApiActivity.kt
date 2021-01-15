@@ -188,11 +188,11 @@ class NewApiActivity : AppCompatActivity() {
         btnResoning.setOnClickListener {
             App.getSinglePool().execute{
 
-//                DBUtils.switchDBName(Datas.REV_RESONING_DB)
+                DBUtils.switchDBName(Datas.REV_RESONING_DB)
 //                DBUtils.dropTable("All_Reasoning_50")
 //                DBUtils.dropTable("All_Reasoning_30")
 //                DBUtils.dropTable("Reasoning")
-                setBtnResoning("Resoning_Working")
+//                setBtnResoning("Resoning_Working")
                 viewModel.reasoningResult(false)
             }
         }

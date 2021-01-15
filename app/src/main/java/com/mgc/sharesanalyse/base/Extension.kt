@@ -266,3 +266,13 @@ fun ReasoningRevBean.getF_TSql(dT: Int): String {
     }
     return sql
 }
+
+fun ArrayList<BaseReverseImp>.getAllJudgeDerbyList(tbDerbyName: String): ArrayList<BaseReverseImp> {
+    val mDerbyCodeList = this.getCodeList()
+    val derbyAddstr = mDerbyCodeList.getCodeArrayAndLimitSQL(false)
+    val derbyList = DBUtils.getFilterAllByDerbyTbName(
+        Datas.REVERSE_KJ_DB + "2020",
+        "SELECT * FROM $tbDerbyName WHERE $derbyAddstr", null
+    )
+    return derbyList!!
+}
