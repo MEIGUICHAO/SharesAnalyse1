@@ -3733,6 +3733,8 @@ class NewApiViewModel : BaseViewModel() {
         val foreachLimitList = getReasoningForeachLimitList()
         codelist.forEach {code->
             val mCHDDList = getCHDDCodeAllList(mList, code)
+            (mActivity as NewApiActivity).setBtnReasoningAll("all_$code")
+
             if (mCHDDList.size > 77) {
                 for (i in 72..mCHDDList.size - 1) {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
@@ -3766,7 +3768,6 @@ class NewApiViewModel : BaseViewModel() {
         val allReasoning30Bean = ReasoningRevBean()
         var continue50 = true
         var continue30 = true
-        (mActivity as NewApiActivity).setBtnReasoningAll("all_$code _ date-->${mCHDDList[0].date}")
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
             LogUtil.d("date-->${targetBeanList[0].date}")
@@ -3806,19 +3807,24 @@ class NewApiViewModel : BaseViewModel() {
         var needContinue: Boolean
         var originOM_M = -10086.toFloat()
         var fitlerType = 10086
+        val allReasoning50Bean = ReasoningRevBean()
+        val allReasoning30Bean = ReasoningRevBean()
+        var continue50 = true
+        var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
             val oldBeanList = getOldBeanList(i, foreachLimitList, x, mCHDDList)
+            val OM = oldBeanList.getRevBeansOM()
+            val M = targetBeanList.getRevBeansOM()
             if (originOM_M == -10086.toFloat()) {
-                val OM = oldBeanList.getRevBeansOM()
-                val M = targetBeanList.getRevBeansOM()
                 originOM_M = ((OM - M) / OM) * 100
                 fitlerType = DataSettingUtils.getFilterP50ResultType(originOM_M)
             }
-            //TODO debug
-            //                        if (fitlerType != -20) {
-            //                            break
-            //                        }
+
+            val allOM_M = ((OM - M) / OM) * 100
+            val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
+            continue50 = pair.first
+            continue30 = pair.second
             needContinue = DataSettingUtils.filterP50Result(
                 fitlerType,
                 originOM_M,
@@ -3828,25 +3834,35 @@ class NewApiViewModel : BaseViewModel() {
                 targetBeanList,
                 oldBeanList
             )
-            if (!needContinue) {
+            if (!needContinue && !continue50 && !continue30) {
                 break
             }
-            if (x == 0 && needContinue) {
-                DataSettingUtils.setFilterP50ResultType(originOM_M, mDFilter, mP50Bean)
-                val reasoningRevBean = ReasoningRevBean()
-                setReasoningRevBeanBasicInfo(reasoningRevBean, code, mCHDDList, i, fitlerType)
-                reasoningRevBean.fitlertype = fitlerType.toString()
-                reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
-                (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
-                val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
-                if (!DneedInsert && !isLive) {
-                    LogUtil.d("===insertTBByFilterType===")
-                    mP50Bean.insertTBByFilterType(
-                        code,
-                        mCHDDList[i].date,
-                        getReasoningTBList(),
-                        reasoningRevBean.p
-                    )
+            if (x == 0) {
+                if (needContinue) {
+                    DataSettingUtils.setFilterP50ResultType(originOM_M, mDFilter, mP50Bean)
+                    val reasoningRevBean = ReasoningRevBean()
+                    setReasoningRevBeanBasicInfo(reasoningRevBean, code, mCHDDList, i, fitlerType)
+                    reasoningRevBean.fitlertype = fitlerType.toString()
+                    reasoningRevBean.json = GsonHelper.toJson(mP50Bean)
+                    (mActivity as NewApiActivity).setBtnResoning("code:${code},date:${mCHDDList[i].date}")
+                    val DneedInsert = DBUtils.insertReasoningRevTB(reasoningRevBean)
+                    if (!DneedInsert && !isLive) {
+                        LogUtil.d("===insertTBByFilterType===")
+                        mP50Bean.insertTBByFilterType(
+                            code,
+                            mCHDDList[i].date,
+                            getReasoningTBList(),
+                            reasoningRevBean.p
+                        )
+                    }
+                }
+                if (continue50) {
+                    setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
+                }
+                if (continue30) {
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
                 }
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
