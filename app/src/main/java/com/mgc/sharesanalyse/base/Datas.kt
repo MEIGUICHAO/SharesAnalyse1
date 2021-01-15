@@ -54,8 +54,8 @@ object Datas {
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
-//    val DEBUG_Code = listOf("000411")
-    val DEBUG_Code = listOf("000411","000612","601216","300582")
+    val DEBUG_Code = listOf("000415")
+//    val DEBUG_Code = listOf("000411","000612","601216","300582")
 //    val DEBUG_Code = listOf("300247")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")

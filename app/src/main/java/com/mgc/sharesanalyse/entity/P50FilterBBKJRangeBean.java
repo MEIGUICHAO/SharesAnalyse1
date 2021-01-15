@@ -1,6 +1,7 @@
 package com.mgc.sharesanalyse.entity;
 
 import com.mgc.sharesanalyse.utils.DBUtils;
+import com.mgc.sharesanalyse.utils.LogUtil;
 
 import java.util.ArrayList;
 
@@ -302,6 +303,7 @@ public class P50FilterBBKJRangeBean {
     private void getCreateFilterTypeTB(String tbName, float p, String code, String date, BaseFilterKJBBRangeBean dFilter) {
         String create = "CREATE TABLE IF NOT EXISTS " + tbName + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE TEXT,D TEXT,P INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER,OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER);";
         DBUtils.INSTANCE.getDb().execSQL(create);
+        LogUtil.d("tbName:"+tbName);
         String insertSlq = "INSERT INTO " + tbName + "(CODE,D,P,OM_M ,OM_C ,OM_P ,OM_L ,OC_M ,OC_C ,OC_P ,OC_L ,OO_M ,OO_C ,OO_P ,OO_L ,OL_M ,OL_C ,OL_P ,OL_L ) VALUES ('" + code + "','" + date + "'," + p + "," + dFilter.toString() + ");";
         DBUtils.INSTANCE.getDb().execSQL(insertSlq);
     }

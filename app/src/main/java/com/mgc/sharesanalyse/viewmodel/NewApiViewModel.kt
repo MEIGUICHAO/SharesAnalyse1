@@ -3804,7 +3804,7 @@ class NewApiViewModel : BaseViewModel() {
     ) {
         val mP50Bean = P50FilterBBKJRangeBean()
         val mDFilter = P50FilterBBKJRangeBean.DFilter()
-        var needContinue: Boolean
+        var needContinue = true
         var originOM_M = -10086.toFloat()
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
@@ -3822,18 +3822,21 @@ class NewApiViewModel : BaseViewModel() {
             }
 
             val allOM_M = ((OM - M) / OM) * 100
+            if (needContinue) {
+                needContinue = DataSettingUtils.filterP50Result(
+                    fitlerType,
+                    originOM_M,
+                    mDFilter,
+                    p50FilterBBKJRangeBean!!,
+                    foreachLimitList[x][0],
+                    targetBeanList,
+                    oldBeanList
+                )
+            }
+
             val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
             continue50 = pair.first
             continue30 = pair.second
-            needContinue = DataSettingUtils.filterP50Result(
-                fitlerType,
-                originOM_M,
-                mDFilter,
-                p50FilterBBKJRangeBean!!,
-                foreachLimitList[x][0],
-                targetBeanList,
-                oldBeanList
-            )
             if (!needContinue && !continue50 && !continue30) {
                 break
             }
@@ -3857,10 +3860,12 @@ class NewApiViewModel : BaseViewModel() {
                     }
                 }
                 if (continue50) {
+                    (mActivity as NewApiActivity).setBtnReasoningAll("all_50_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
+                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
                 }
