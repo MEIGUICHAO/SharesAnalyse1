@@ -3791,8 +3791,11 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    if (continue30) {
+                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                    }
                 }
             }
         }
@@ -3841,6 +3844,21 @@ class NewApiViewModel : BaseViewModel() {
             val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
             continue50 = pair.first
             continue30 = pair.second
+
+//            if (continue30) {
+//                when (allReasoning30Bean.f36_T) {
+//                    -30,-20,-10,0,10->{
+//                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
+//                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
+//                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
+//                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
+//                        ) {
+//                            continue30 = false
+//                        }
+//
+//                    }
+//                }
+//            }
             if (!needContinue && !continue50 && !continue30) {
                 break
             }
@@ -3870,14 +3888,129 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
-                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
-                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    if (continue30) {
+                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                    }
                 }
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
         }
+    }
+
+    var addJudge_30Str = ""
+    var addJudge_20Str = ""
+    var addJudge_10Str = ""
+    var addJudge0Str = ""
+    var addJudge10Str = ""
+    private fun addContinue30(
+        allReasoning30Bean: ReasoningRevBean,
+        continue30: Boolean
+    ): Boolean {
+        var continue301 = continue30
+        if (allReasoning30Bean.p <= 10) {
+            when (allReasoning30Bean.f36_T) {
+                -30 -> {
+                    if (!addJudge_30Str.equals(getAddjudgeStr(allReasoning30Bean,addJudge_30Str))) {
+                        addJudge_30Str = getAddjudgeStr(allReasoning30Bean,addJudge_30Str)
+                        FileLogUtil.d("${parentBasePath}addJudgeStr_30", addJudge_30Str)
+                        LogUtil.d("-30-->$addJudge_30Str")
+                    }
+                }
+                -20 -> {
+                    if (!addJudge_20Str.equals(getAddjudgeStr(allReasoning30Bean,addJudge_20Str))) {
+                        addJudge_20Str = getAddjudgeStr(allReasoning30Bean, addJudge_20Str)
+                        FileLogUtil.d("${parentBasePath}addJudgeStr_20", addJudge_20Str)
+                        LogUtil.d("-20-->$addJudge_20Str")
+                    }
+                }
+                -10 -> {
+                    if (!addJudge_10Str.equals(getAddjudgeStr(allReasoning30Bean,addJudge_10Str))) {
+                        addJudge_10Str = getAddjudgeStr(allReasoning30Bean, addJudge_10Str)
+                        FileLogUtil.d("${parentBasePath}addJudgeStr_10", addJudge_10Str)
+                        LogUtil.d("-10-->$addJudge_10Str")
+                    }
+                }
+                0 -> {
+                    if (!addJudge0Str.equals(getAddjudgeStr(allReasoning30Bean,addJudge0Str))) {
+                        addJudge0Str = getAddjudgeStr(allReasoning30Bean, addJudge0Str)
+                        FileLogUtil.d("${parentBasePath}addJudgeStr0", addJudge0Str)
+                        LogUtil.d("0-->$addJudge0Str")
+                    }
+                }
+                10 -> {
+                    if (!addJudge10Str.equals(getAddjudgeStr(allReasoning30Bean,addJudge10Str))) {
+                        addJudge10Str = getAddjudgeStr(allReasoning30Bean, addJudge10Str)
+                        FileLogUtil.d("${parentBasePath}addJudgeStr10", addJudge10Str)
+                        LogUtil.d("10-->$addJudge10Str")
+                    }
+                }
+            }
+        }
+//        when (allReasoning30Bean.f36_T) {
+//
+//            -30 -> {
+//                if (allReasoning30Bean.f30_T == -30 && allReasoning30Bean.f25_T == -30 && allReasoning30Bean.f20_T == -30 && allReasoning30Bean.f15_T == -20 && allReasoning30Bean.f10_T == -10) {
+//                    continue301 = false
+//                }
+//
+//            }
+//            -20 -> {
+//                if ((allReasoning30Bean.f30_T == -20 || allReasoning30Bean.f30_T == -10) && (allReasoning30Bean.f25_T == -20) && (allReasoning30Bean.f20_T == -20) &&
+//                    (allReasoning30Bean.f15_T == -40 || allReasoning30Bean.f15_T == -20 || allReasoning30Bean.f15_T == -10) && (allReasoning30Bean.f10_T == -40 || allReasoning30Bean.f10_T == -30 || allReasoning30Bean.f10_T == -20 || allReasoning30Bean.f10_T == -10) &&
+//                    (allReasoning30Bean.f05_T == -10 || allReasoning30Bean.f05_T == -20 || allReasoning30Bean.f05_T == -10|| allReasoning30Bean.f05_T == 0)
+//                ) {
+//                    continue301 = false
+//                }
+//            }
+//            -10 -> {
+//                if ((allReasoning30Bean.f30_T == -10 || allReasoning30Bean.f30_T == 0) && (allReasoning30Bean.f25_T == -10) && (allReasoning30Bean.f20_T == -10) &&
+//                    (allReasoning30Bean.f15_T == -20 || allReasoning30Bean.f15_T == -10 || allReasoning30Bean.f15_T == 0) && (allReasoning30Bean.f10_T == -40 || allReasoning30Bean.f10_T == -30 || allReasoning30Bean.f10_T == -20 || allReasoning30Bean.f10_T == -10 || allReasoning30Bean.f10_T == 0) &&
+//                    (allReasoning30Bean.f05_T == -40 || allReasoning30Bean.f05_T == -30 || allReasoning30Bean.f05_T == -20 || allReasoning30Bean.f05_T == -10 || allReasoning30Bean.f05_T == 0)
+//                ) {
+//                    continue301 = false
+//                }
+//            }
+//            0 -> {
+//                if ((allReasoning30Bean.f30_T == 0 || allReasoning30Bean.f30_T == -10) && (allReasoning30Bean.f25_T == -10 || allReasoning30Bean.f25_T == 0) && (allReasoning30Bean.f20_T == -10 || allReasoning30Bean.f20_T == 0)
+//                    && (allReasoning30Bean.f15_T == -20 || allReasoning30Bean.f15_T == -10 || allReasoning30Bean.f15_T == 0) && (allReasoning30Bean.f10_T == -20 || allReasoning30Bean.f10_T == -10 || allReasoning30Bean.f10_T == 0) &&
+//                    (allReasoning30Bean.f05_T == -20 || allReasoning30Bean.f05_T == -10 || allReasoning30Bean.f05_T == 0)
+//                ) {
+//                    continue301 = false
+//                }
+//            }
+//            10 -> {
+//                if ((allReasoning30Bean.f30_T == 0 || allReasoning30Bean.f30_T == -10) && (allReasoning30Bean.f25_T == -10) && (allReasoning30Bean.f20_T == -10)
+//                    && (allReasoning30Bean.f15_T == -20 || allReasoning30Bean.f15_T == -10 || allReasoning30Bean.f15_T == 0) &&
+//                    (allReasoning30Bean.f10_T == -40 || allReasoning30Bean.f10_T == -30 || allReasoning30Bean.f10_T == -20 || allReasoning30Bean.f10_T == -10 || allReasoning30Bean.f10_T == 0) &&
+//                    (allReasoning30Bean.f05_T == -40 || allReasoning30Bean.f05_T == -30 || allReasoning30Bean.f05_T == -20 || allReasoning30Bean.f05_T == -10 || allReasoning30Bean.f05_T == 0)
+//                ) {
+//                    continue301 = false
+//                }
+//
+//            }
+//        }
+        return continue301
+    }
+
+    private fun getAddjudgeStr(
+        allReasoning30Bean: ReasoningRevBean,
+        addjudgestr: String
+    ): String {
+        val tempStr =
+            "(allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
+                    "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
+                    "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
+                    "allReasoning30Bean.f03_T==${allReasoning30Bean.f03_T})"
+
+        var result = addjudgestr
+        if (!result.contains(tempStr)) {
+            result  = if (addjudgestr.isEmpty()) tempStr else "$addjudgestr||$tempStr"
+        }
+        return result
     }
 
     private fun setReasoningRevBeanBasicInfo(
