@@ -3785,14 +3785,7 @@ class NewApiViewModel : BaseViewModel() {
             if (continue30) {
                 when (allReasoning30Bean.f36_T) {
                     -30,-20,-10,0,10->{
-                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
-                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
-                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
-                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
-                        ) {
-                            continue30 = false
-                        }
-
+                        continue30 = false
                     }
                 }
             }
@@ -3862,14 +3855,7 @@ class NewApiViewModel : BaseViewModel() {
             if (continue30) {
                 when (allReasoning30Bean.f36_T) {
                     -30,-20,-10,0,10->{
-                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
-                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
-                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
-                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
-                        ) {
-                            continue30 = false
-                        }
-
+                        continue30 = false
                     }
                 }
             }
