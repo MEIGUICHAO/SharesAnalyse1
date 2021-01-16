@@ -1633,12 +1633,12 @@ object DBUtils {
         return isExit
     }
 
-    fun getReasoningResult(): ArrayList<ReasoningRevBean> {
+    fun getReasoningResult(tbName: String): ArrayList<ReasoningRevBean> {
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
-        if (tabbleIsExist("Reasoning")) {
+        if (tabbleIsExist(tbName)) {
             val cursor =
-                    db.rawQuery(" SELECT * FROM Reasoning", null)
+                    db.rawQuery(" SELECT * FROM $tbName", null)
             if (null != cursor && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast) {
                     val bean = ReasoningRevBean()
@@ -1650,7 +1650,7 @@ object DBUtils {
                     val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
                     val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
                     val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
-                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+//                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                     bean.code = CODE
                     bean.n = N
                     bean.d = D
@@ -1659,7 +1659,7 @@ object DBUtils {
                     bean.mp = MP
                     bean.after_O_P = AFTER_O_P
                     bean.after_C_P = AFTER_C_P
-                    bean.fitlertype = FITLERTYPE
+//                    bean.fitlertype = FITLERTYPE
                     list.add(bean)
                     cursor.moveToNext()
                 }

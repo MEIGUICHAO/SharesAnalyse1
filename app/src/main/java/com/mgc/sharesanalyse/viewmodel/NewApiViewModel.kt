@@ -3755,6 +3755,8 @@ class NewApiViewModel : BaseViewModel() {
         }
 
         (mActivity as NewApiActivity).setBtnReasoningAll("all_finish!!")
+//        (mActivity as NewApiActivity).setBtnGetAll30("all_finish!!")
+//        (mActivity as NewApiActivity).setBtnGetAll50("all_finish!!")
     }
 
     private fun insertAllReasoning(
@@ -3863,11 +3865,13 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 if (continue50) {
                     (mActivity as NewApiActivity).setBtnReasoningAll("all_50_code:${code},date:${mCHDDList[i].date}")
+                    (mActivity as NewApiActivity).setBtnGetAll50("all_50_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
                     (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
                 }

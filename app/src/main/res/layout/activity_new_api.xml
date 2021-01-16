@@ -111,13 +111,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnGetResoningResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:text="GetResoningResult" />
 
         <TextView
             android:text="-------------------------"
@@ -133,10 +126,32 @@
             android:text="rev_all_tb" />
         <Button
             android:id="@+id/btnReasoningAll"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="reasoning_all" />
+
+        <Button
+            android:id="@+id/btnGetResoningResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="GetResoningResult" />
+
+        <Button
+            android:id="@+id/btnGetAll30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetAll30" />
+        <Button
+            android:id="@+id/btnGetAll50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetAll50" />
 
 
     </LinearLayout>

@@ -52,7 +52,7 @@ class NewApiActivity : AppCompatActivity() {
     private fun unzipForeach(zipList: ArrayList<String>, index: Int) {
         val path = "/data/data/" + getPackageName() + "/databases"
         GlobalScope.launch(Dispatchers.IO) {
-            ZipUtils.UnZipFolder(this@NewApiActivity,zipList[index],path)
+            ZipUtils.UnZipFolder(this@NewApiActivity, zipList[index], path)
         }
     }
 
@@ -108,7 +108,7 @@ class NewApiActivity : AppCompatActivity() {
             var list = DaoUtilsStore.getInstance().allCodeGDBeanDaoUtils.queryAll()
             list.forEach {
                 if (Datas.DEBUG) {
-                    Datas.DEBUG_Code.forEach { code->
+                    Datas.DEBUG_Code.forEach { code ->
                         if (it.code.contains(code)) {
                             viewModel.detailCodeList.add(it.code)
                         }
@@ -139,8 +139,8 @@ class NewApiActivity : AppCompatActivity() {
                     ysdts = ysdts - 24 * 60 * 60 * 1000
                 }
                 lastDealDay = DateUtils.format(
-                        ysdts,
-                        FormatterEnum.YYYYMMDD
+                    ysdts,
+                    FormatterEnum.YYYYMMDD
                 )
 //                DBUtils.switchDBName("688126".toCodeHDD(lastDealDay, FormatterEnum.YYYYMMDD))
 //                DBUtils.queryCodeHDDIsExsitByDate()
@@ -148,7 +148,7 @@ class NewApiActivity : AppCompatActivity() {
 //                DBUtils.dropTable(viewModel.getCurrentHQTableName())
                 clickCurrentHQ()
             } else {
-                Toast.makeText(this,"时间未到",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "时间未到", Toast.LENGTH_SHORT).show()
             }
         }
         btnBwcList.setOnClickListener {
@@ -160,33 +160,33 @@ class NewApiActivity : AppCompatActivity() {
             }
         }
         btnReverse.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 viewModel.reverseResult()
             }
         }
         btnGapResult.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 viewModel.foreachGapResult()
             }
         }
         btnRevFilter.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 viewModel.filterRev()
             }
         }
         btnCopyFilterTBResult.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
 //                DBUtils.queryDeleteTBByDBAndLimit("AA_FILTER_60_30_36",Datas.REV_FILTERDB+"2020")
                 viewModel.getOtherResultByFilterTb("AA_FILTER_50_36")
             }
         }
         btnLogBBRangeFile.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
                 viewModel.logBBRangeFile()
             }
         }
         btnResoning.setOnClickListener {
-            App.getSinglePool().execute{
+            App.getSinglePool().execute {
 
                 DBUtils.switchDBName(Datas.REV_RESONING_DB)
 //                DBUtils.dropTable("All_Reasoning_50")
@@ -197,7 +197,19 @@ class NewApiActivity : AppCompatActivity() {
             }
         }
         btnGetResoningResult.setOnClickListener {
-            startActivity(Intent(this,ReasoningActivity::class.java))
+            val intent = Intent(this, ReasoningActivity::class.java)
+            intent.putExtra("TYPE", 1)
+            startActivity(intent)
+        }
+        btnGetAll30.setOnClickListener {
+            val intent = Intent(this, ReasoningActivity::class.java)
+            intent.putExtra("TYPE", 2)
+            startActivity(intent)
+        }
+        btnGetAll50.setOnClickListener {
+            val intent = Intent(this, ReasoningActivity::class.java)
+            intent.putExtra("TYPE", 3)
+            startActivity(intent)
         }
         btnRevAllTb.setOnClickListener {
             revAllJudgeResult()
@@ -214,27 +226,40 @@ class NewApiActivity : AppCompatActivity() {
 
 
     fun revAllJudgeResult() {
-        LogUtil.d("revAllJudgeResult")
-        DBUtils.switchDBName(Datas.REV_RESONING_DB)
-        DBUtils.dropTable("All_30")
-        DBUtils.dropTable("All_50")
+//        LogUtil.d("revAllJudgeResult")
+//        DBUtils.switchDBName(Datas.REV_RESONING_DB)
+//        DBUtils.dropTable("All_30")
+//        DBUtils.dropTable("All_50")
 
         LogUtil.d("revAllJudgeResult")
         viewModel.revAllJudgeResult()
     }
 
-     fun setBtnReasoningAll(info: String) {
-         btnReasoningAll.post {
-             btnReasoningAll.setText(info)
-        }
-    }
-     fun setBtnRevAllTb(info: String) {
-         btnRevAllTb.post {
-             btnRevAllTb.setText(info)
+    fun setBtnReasoningAll(info: String) {
+        btnReasoningAll.post {
+            btnReasoningAll.setText(info)
         }
     }
 
-     fun setReasoningProgress(info: String) {
+    fun setBtnGetAll30(info: String) {
+        btnGetAll30.post {
+            btnGetAll30.setText(info)
+        }
+    }
+
+    fun setBtnGetAll50(info: String) {
+        btnGetAll50.post {
+            btnGetAll50.setText(info)
+        }
+    }
+
+    fun setBtnRevAllTb(info: String) {
+        btnRevAllTb.post {
+            btnRevAllTb.setText(info)
+        }
+    }
+
+    fun setReasoningProgress(info: String) {
         tvReasoning.post {
             tvReasoning.setText(info)
         }
@@ -253,6 +278,7 @@ class NewApiActivity : AppCompatActivity() {
             btnLogBBRangeFile.setText(info)
         }
     }
+
     fun setBtnCopyFilterTBResult(info: String) {
         btnCopyFilterTBResult.post {
             btnCopyFilterTBResult.setText(info)
@@ -289,6 +315,7 @@ class NewApiActivity : AppCompatActivity() {
             btnRequestDealDetail.setText(info)
         }
     }
+
     fun setBtnHHQInfo(info: String) {
         btnRequestHisHq.post {
             btnRequestHisHq.setText(info)
@@ -352,7 +379,7 @@ class NewApiActivity : AppCompatActivity() {
     private fun getCurrentHq() {
         val code = viewModel.codeNameList[progressIndex].split("####")[0].replace("sz", "")
             .replace("sh", "")
-        viewModel.getCurrentHq(code,lastDealDay)
+        viewModel.getCurrentHq(code, lastDealDay)
     }
 
 
@@ -391,7 +418,8 @@ class NewApiActivity : AppCompatActivity() {
                         viewModel.REQUEST_HIS_HQ -> {
 
                             try {
-                                val hisHqBean = GsonHelper.parseArray(it.json, HisHqBean::class.java)
+                                val hisHqBean =
+                                    GsonHelper.parseArray(it.json, HisHqBean::class.java)
 //                                var sumStr = ""
 //                                if (null != hisHqBean[0].stat) {
 //                                    sumStr =
@@ -404,9 +432,9 @@ class NewApiActivity : AppCompatActivity() {
 //                                }
 
                                 if (isCurrentHq) {
-                                    setBtnCurHQInfo("Curhq_"+hisHqBean[0].code)
+                                    setBtnCurHQInfo("Curhq_" + hisHqBean[0].code)
                                 } else {
-                                    setBtnHHQInfo("hhq_"+hisHqBean[0].code.replace("cn_", ""))
+                                    setBtnHHQInfo("hhq_" + hisHqBean[0].code.replace("cn_", ""))
                                 }
                                 hHqGoNext()
 //                                viewModel.getHisHqAnalyseResult(

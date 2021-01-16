@@ -11,7 +11,13 @@ class ReasoningActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_reasoning_result)
-        val list = DBUtils.getReasoningResult()
+        val type = intent.getIntExtra("TYPE",1)
+        val tb = when (type) {
+            1->"Reasoning"
+            2->"All_Reasoning_30"
+            else->"All_Reasoning_50"
+        }
+        val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
         var result = ""
         list.forEach {
