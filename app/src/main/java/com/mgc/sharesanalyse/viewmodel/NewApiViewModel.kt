@@ -3782,6 +3782,20 @@ class NewApiViewModel : BaseViewModel() {
             val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
             continue50 = pair.first
             continue30 = pair.second
+            if (continue30) {
+                when (allReasoning30Bean.f36_T) {
+                    -30,-20,-10,0,10->{
+                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
+                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
+                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
+                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
+                        ) {
+                            continue30 = false
+                        }
+
+                    }
+                }
+            }
             if (!continue50 && !continue30) {
                 break
             }
@@ -3791,11 +3805,11 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    continue30 = addContinue30(allReasoning30Bean, continue30)
-                    if (continue30) {
-                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                    }
+//                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+//                    if (continue30) {
+//                    }
                 }
             }
         }
@@ -3845,20 +3859,20 @@ class NewApiViewModel : BaseViewModel() {
             continue50 = pair.first
             continue30 = pair.second
 
-//            if (continue30) {
-//                when (allReasoning30Bean.f36_T) {
-//                    -30,-20,-10,0,10->{
-//                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
-//                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
-//                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
-//                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
-//                        ) {
-//                            continue30 = false
-//                        }
-//
-//                    }
-//                }
-//            }
+            if (continue30) {
+                when (allReasoning30Bean.f36_T) {
+                    -30,-20,-10,0,10->{
+                        if ((allReasoning30Bean.f30_T==0||allReasoning30Bean.f30_T==-10)&&(allReasoning30Bean.f25_T==-10)&&(allReasoning30Bean.f20_T==-10)
+                            &&(allReasoning30Bean.f15_T==-20||allReasoning30Bean.f15_T==-10||allReasoning30Bean.f15_T==0)&&
+                            (allReasoning30Bean.f10_T==-40||allReasoning30Bean.f10_T==-30||allReasoning30Bean.f10_T==-20||allReasoning30Bean.f10_T==-10||allReasoning30Bean.f10_T==0)&&
+                            (allReasoning30Bean.f05_T==-40||allReasoning30Bean.f05_T==-30||allReasoning30Bean.f05_T==-20||allReasoning30Bean.f05_T==-10||allReasoning30Bean.f05_T==0)
+                        ) {
+                            continue30 = false
+                        }
+
+                    }
+                }
+            }
             if (!needContinue && !continue50 && !continue30) {
                 break
             }
@@ -3888,13 +3902,13 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    continue30 = addContinue30(allReasoning30Bean, continue30)
-                    if (continue30) {
-                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
-                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
-                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                    }
+//                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+//                    if (continue30) {
+//                    }
                 }
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
