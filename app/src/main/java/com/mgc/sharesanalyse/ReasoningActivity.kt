@@ -20,8 +20,12 @@ class ReasoningActivity : AppCompatActivity() {
         val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
         var result = ""
+        var index = 0
         list.forEach {
-            result = result+ "n-->${it.n},code-->${it.code},d-->${it.d}\n"
+            if (index < 60) {
+                result = result + "n-->${it.n},code-->${it.code},d-->${it.d}\n"
+                index++
+            }
         }
         tvResult.setText(result)
     }
