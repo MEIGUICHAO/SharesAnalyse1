@@ -23,7 +23,7 @@ class ReasoningActivity : AppCompatActivity() {
         var index = 0
         list.forEach {
             if (index < 60) {
-                result = result + "n-->${it.n},code-->${it.code},d-->${it.d}\n"
+                result = result + "n-->${it.n},code-->${it.code},d-->${it.d},36_T-->${it.f36_T}\n"
                 index++
             }
         }
