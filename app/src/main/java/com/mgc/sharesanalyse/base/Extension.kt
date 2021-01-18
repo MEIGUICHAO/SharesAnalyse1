@@ -271,7 +271,7 @@ fun ArrayList<BaseReverseImp>.getAllJudgeDerbyList(tbDerbyName: String): ArrayLi
     val mDerbyCodeList = this.getCodeList()
     val derbyAddstr = mDerbyCodeList.getCodeArrayAndLimitSQL(false)
     val derbyList = DBUtils.getFilterAllByDerbyTbName(
-        Datas.REVERSE_KJ_DB + "2020",
+        Datas.REVERSE_KJ_DB,
         "SELECT * FROM $tbDerbyName WHERE $derbyAddstr", null
     )
     return derbyList!!

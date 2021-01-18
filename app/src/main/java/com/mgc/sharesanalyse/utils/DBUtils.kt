@@ -995,16 +995,11 @@ object DBUtils {
         date: String
     ) {
         switchDBName(
-            Datas.REVERSE_KJ_DB + DateUtils.changeFormatter(
-                DateUtils.parse(
-                    date,
-                    FormatterEnum.YYYYMMDD
-                ), FormatterEnum.YYYY
-            )
+            Datas.REVERSE_KJ_DB
         )
         LogUtil.d("insertReverseKJTable!!")
         createReverseKJTable(tbName, reverseBean)
-        if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(),date.replace(DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYYY),""))) {
+        if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(),date)) {
             var insertSqlStr = ""
             insertSqlStr = reverseBean.insertTB(tbName)
             if (reverseBean is ReverseKJsonBean) {
@@ -1104,7 +1099,7 @@ object DBUtils {
             tbName = Datas.REV_CODE_TR + code
         }
         createRevCodeTable(tbName, reverseBean,code)
-        if (!queryDataIsExsitInRevCodeTB(tbName, date.replace(DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYYY),""),kotlin.run {
+        if (!queryDataIsExsitInRevCodeTB(tbName, date,kotlin.run {
                 if (reverseBean is ReverseKJsonBean) {
                     reverseBean.d_T
                 } else if(reverseBean is TR_K_SLL_Bean) {

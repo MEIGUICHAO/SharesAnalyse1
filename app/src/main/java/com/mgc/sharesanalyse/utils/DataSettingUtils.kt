@@ -3222,7 +3222,7 @@ object DataSettingUtils {
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             nextTbName,
             mNextCodeList,
-            Datas.REVERSE_KJ_DB + "2020"
+            Datas.REVERSE_KJ_DB
         )
         var nextContinue = 0
         for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
@@ -3289,7 +3289,7 @@ object DataSettingUtils {
         nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
         val dlist = DBUtils.getFilterAllByTbName(
-            Datas.REVERSE_KJ_DB + "2020",
+            Datas.REVERSE_KJ_DB,
             "SELECT * FROM $nextTbName WHERE OM_M >=? AND OM_M<? $addstr",
             arrayOf(
                 n.toString(),

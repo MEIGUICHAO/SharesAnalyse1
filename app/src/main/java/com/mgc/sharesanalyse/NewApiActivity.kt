@@ -216,7 +216,7 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-//            DBUtils.dropTable("All_Reasoning_50")
+            DBUtils.dropTable("All_Reasoning_50")
             DBUtils.dropTable("All_Reasoning_30")
             viewModel.reasoningAll()
         }
@@ -226,10 +226,9 @@ class NewApiActivity : AppCompatActivity() {
 
     fun revAllJudgeResult() {
 //        LogUtil.d("revAllJudgeResult")
-//        DBUtils.switchDBName(Datas.REV_RESONING_DB)
-//        DBUtils.dropTable("All_30")
-//        DBUtils.dropTable("All_50")
-
+        DBUtils.switchDBName(Datas.REV_RESONING_DB)
+        DBUtils.dropTable("All_30")
+        DBUtils.dropTable("All_50")
         LogUtil.d("revAllJudgeResult")
         viewModel.revAllJudgeResult()
     }

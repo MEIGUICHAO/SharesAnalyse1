@@ -1194,6 +1194,10 @@ class NewApiViewModel : BaseViewModel() {
             codeNameList,
             curYearTS
         )
+
+        //TODO 重新
+        (mActivity as NewApiActivity).revAllJudgeResult()
+
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 
     }
@@ -1203,6 +1207,9 @@ class NewApiViewModel : BaseViewModel() {
         codelist.forEach { code ->
             mList.forEach {
                 val date = "20${it}01"
+//                if (date.toInt() >= 20201201) {
+//                }
+                LogUtil.d("reverseResult-->$it")
                 (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
                 getReverseChddBeans(code, date)
             }
@@ -1637,6 +1644,7 @@ class NewApiViewModel : BaseViewModel() {
                             )
                             (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
                             reasoningResult(true, code)
+                            getReverseChddBeans(code, date)
                         } else {
                             (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}_skip")
                         }
@@ -2558,8 +2566,11 @@ class NewApiViewModel : BaseViewModel() {
             FormatterEnum.YYMM
         ).toInt() - 1
 
+        LogUtil.d("date:$date,month-->$month")
         if (month == yearlimit) {
             month = yearlimit - 100 + 12
+
+            LogUtil.d("month:$month")
             dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
         } else {
             dbName = code.toCodeHDD(month.toString(), FormatterEnum.YYMM)
@@ -2574,13 +2585,20 @@ class NewApiViewModel : BaseViewModel() {
     ){
         var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
         var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
+//        if (!dbName.equals("SZ_CHDD_2101")) {
+//            return
+//        }
         var mCHDDList = ArrayList<CodeHDDBean>()
-        LogUtil.d("dbName:$dbName tb:${"DD_${code.toInt()}"}----size:${chddDDBeanList?.size}")
+        LogUtil.d("dbName:$dbName ,date:$date,tb:${"DD_${code.toInt()}"}----size:${chddDDBeanList?.size}")
         chddDDBeanList?.let {
             for (i in 0 until it.size) {
                 mCHDDList.add(0, it[i])
                 if (i == 0) {
+                    LogUtil.d("date:${mCHDDList[0].date}")
                     getLastTwoMonthList(it, i, code, mCHDDList)
+//                    mCHDDList.forEach {
+//                        LogUtil.d(it.date)
+//                    }
                 }
                 val requestBean = it[i]
                 val targetBeanList = ArrayList<CodeHDDBean>()
@@ -2679,19 +2697,9 @@ class NewApiViewModel : BaseViewModel() {
         val reverseKJSLLBean = ReverseKJSLLBean()
         reverseKJSLLBean.code = code.toInt()
         reverseKJSLLBean.n = targetBean.name
-        reverseKJSLLBean.d_D = requestBean.date.replace(
-            DateUtils.changeFromDefaultFormatter(
-                requestBean.date,
-                FormatterEnum.YYYY
-            ), ""
-        )
+        reverseKJSLLBean.d_D = requestBean.date
         try {
-            reverseKJSLLBean.date = DateUtils.changeFormatter(
-                DateUtils.parse(
-                    targetBean.date,
-                    FormatterEnum.YYYYMMDD
-                ), FormatterEnum.MMDD
-            )
+            reverseKJSLLBean.date = targetBean.date
         } catch (e: java.lang.Exception) {
             reverseKJSLLBean.date = targetBean.date
         }
@@ -2844,10 +2852,43 @@ class NewApiViewModel : BaseViewModel() {
         mCHDDList: ArrayList<CodeHDDBean>
     ) {
         getLastMonthList(it, i, code, mCHDDList)
+        val limit = (DateUtils.formatToDay(FormatterEnum.YYYY)+"0100").toInt()
+        val dateLong = DateUtils.parse(it[i].date,FormatterEnum.YYYYMMDD)
+        val dd = DateUtils.format(dateLong,FormatterEnum.DD)
+        it[i].date.toInt()
         for (index in 1..4) {
-            getLastMonthChddList((it[i].date.toInt() - 100 * index).toString(), code)?.let {
-                for (i in (it.size - 1) downTo 0) {
-                    mCHDDList.add(it[i])
+            var curForeachDate = it[i].date.toInt() - 100 * index
+            if (curForeachDate < limit) {
+
+
+                val curYear = DateUtils.formatToDay(FormatterEnum.YYYY)
+                val lastYear = (curYear.toInt() -1)
+                val dateChange = when (curForeachDate) {
+                    ("${curYear}00$dd".toInt())-> "${lastYear}12$dd"
+                    ("${lastYear}99$dd".toInt())-> "${lastYear}11$dd"
+                    ("${lastYear}98$dd".toInt())-> "${lastYear}10$dd"
+                    ("${lastYear}97$dd".toInt())-> "${lastYear}09$dd"
+                    else -> curForeachDate.toString()
+
+                }
+//                val dateChange = when (curForeachDate) {
+//                    ("202100$dd".toInt())-> "202012$dd"
+//                    ("202099$dd".toInt())-> "202011$dd"
+//                    ("202098$dd".toInt())-> "202010$dd"
+//                    ("202097$dd".toInt())-> "202009$dd"
+//                    else -> curForeachDate
+//
+//                }
+                getLastMonthChddList((dateChange).toString(), code)?.let {
+                    for (i in (it.size - 1) downTo 0) {
+                        mCHDDList.add(it[i])
+                    }
+                }
+            } else {
+                getLastMonthChddList((it[i].date.toInt() - 100 * index).toString(), code)?.let {
+                    for (i in (it.size - 1) downTo 0) {
+                        mCHDDList.add(it[i])
+                    }
                 }
             }
         }
@@ -2896,12 +2937,7 @@ class NewApiViewModel : BaseViewModel() {
         }
         reverseKJsonBean.ao = AO
         reverseKJsonBean.n = targetBean.name
-        reverseKJsonBean.d_D = requestBean.date.replace(
-            DateUtils.changeFromDefaultFormatter(
-                requestBean.date,
-                FormatterEnum.YYYY
-            ), ""
-        )
+        reverseKJsonBean.d_D = requestBean.date
         return reverseKJsonBean
     }
 
@@ -2921,12 +2957,7 @@ class NewApiViewModel : BaseViewModel() {
         ma: Int
     ) {
         reverseKJsonBean.code = code.toInt()
-        reverseKJsonBean.date = targetBean.date.replace(
-            DateUtils.changeFromDefaultFormatter(
-                targetBean.date,
-                FormatterEnum.YYYY
-            ), ""
-        )
+        reverseKJsonBean.date = targetBean.date
         reverseKJsonBean.curP = ((requestBean.cp - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OM * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OM * 100).toKeep2()
@@ -3251,7 +3282,7 @@ class NewApiViewModel : BaseViewModel() {
     }
     var countLimit = 600
     fun filterRev() {
-        DBUtils.switchDBName(Datas.REVERSE_KJ_DB +"2020")
+        DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
         val smallerMap = HashMap<String,String>()
         val biggerMap = HashMap<String,String>()
         val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
@@ -3338,7 +3369,7 @@ class NewApiViewModel : BaseViewModel() {
         smallerMap: HashMap<String, String>,
         mCountList: ArrayList<BaseReverseImp>
     ): Boolean {
-        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType,Datas.REVERSE_KJ_DB +"2020")
+        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType,Datas.REVERSE_KJ_DB)
         val minValue = (maxMinPari.first.toFloat() / 1).toInt()
         val maxValue = (maxMinPari.second.toFloat() / 1).toInt()
         var rateResult = 0
@@ -3427,7 +3458,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (it is ReverseKJsonBean) {
                         mTBList.forEach {tbName->
                             (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName+"_"+it.code)
-                            DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REVERSE_KJ_DB + 2020,it.code,it.date,kotlin.run {
+                            DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REVERSE_KJ_DB ,it.code,it.date,kotlin.run {
                                 if (tbName.contains("TR")) {
                                     3
                                 } else if (tbName.contains(Datas.Derby)) {
@@ -3681,14 +3712,14 @@ class NewApiViewModel : BaseViewModel() {
             (mActivity as NewApiActivity).setBtnRevAllTb(tbName)
             val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
                 tbName,
-                Datas.REVERSE_KJ_DB + "2020"
+                Datas.REVERSE_KJ_DB
             )
             LogUtil.d("revAllJudgeResult")
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
                 var date = 36
                 LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size-1
-                val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB + "2020",
+                val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                     arrayOf(
                         i.toString(),
@@ -3725,7 +3756,7 @@ class NewApiViewModel : BaseViewModel() {
 
         }
 
-
+        (mActivity as NewApiActivity).setBtnRevAllTb("Finish")
     }
 
 
@@ -3770,7 +3801,7 @@ class NewApiViewModel : BaseViewModel() {
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
         val allReasoning30Bean = ReasoningRevBean()
-        var continue50 = false
+        var continue50 = true
         var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
