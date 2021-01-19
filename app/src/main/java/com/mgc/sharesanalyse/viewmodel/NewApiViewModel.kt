@@ -3715,21 +3715,42 @@ class NewApiViewModel : BaseViewModel() {
                 Datas.REVERSE_KJ_DB
             )
             LogUtil.d("revAllJudgeResult")
+            var nextContinue = 0
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
+                if (nextContinue > 0) {
+                    nextContinue--
+                    continue
+                }
                 var date = 36
                 LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size-1
-                val list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
+
+                var list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                     arrayOf(
                         i.toString(),
                         (i + Datas.FILTER_PROGRESS).toString()
                     )
                 )
+
+                if (null == list) {
+                    continue
+                }
+
+                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= rangeMax) {
+                    nextContinue++
+                    list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
+                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                        arrayOf(
+                            i.toString(),
+                            ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
+                        )
+                    )
+                }
 //                list?.forEach {
 //                    LogUtil.d("$tbName code:$it")
 //                }
-                if (null != list && list.size > 1) {
+                if (list.size > 1) {
                     LogUtil.d("revAllJudgeResult")
                     val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
                     val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list,derbyList, date)
@@ -3823,13 +3844,7 @@ class NewApiViewModel : BaseViewModel() {
 //                    }
 //                }
 //            }
-            if (continue30) {
-                when (allReasoning30Bean.f36_T) {
-                    -20,-10,0,10->{
-                        continue30 = false
-                    }
-                }
-            }
+            continue30 = getContinue30ByF36TFilter(continue30, allReasoning30Bean)
             if (!continue50 && !continue30) {
                 break
             }
@@ -3839,12 +3854,13 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    continue30 = addContinue30(allReasoning30Bean, continue30)
-                    if (continue30) {
-                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                    }
+
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+//                    continue30 = addContinue30(allReasoning30Bean, continue30)
 //                    if (continue30) {
+//                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+//                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
 //                    }
                 }
             }
@@ -3895,13 +3911,7 @@ class NewApiViewModel : BaseViewModel() {
             continue50 = pair.first
             continue30 = pair.second
 
-            if (continue30) {
-                when (allReasoning30Bean.f36_T) {
-                    -20,-10,0,10->{
-                        continue30 = false
-                    }
-                }
-            }
+            continue30 = getContinue30ByF36TFilter(continue30, allReasoning30Bean)
             if (!needContinue && !continue50 && !continue30) {
                 break
             }
@@ -3931,19 +3941,37 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
                 }
                 if (continue30) {
-                    continue30 = addContinue30(allReasoning30Bean, continue30)
-                    if (continue30) {
-                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
-                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
-                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                    }
+
+                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+//                    continue30 = addContinue30(allReasoning30Bean, continue30)
 //                    if (continue30) {
+//                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+//                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+//                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+//                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
 //                    }
                 }
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
         }
+    }
+
+    private fun getContinue30ByF36TFilter(
+        continue30: Boolean,
+        allReasoning30Bean: ReasoningRevBean
+    ): Boolean {
+        var continue301 = continue30
+        if (continue301) {
+            when (allReasoning30Bean.f36_T) {
+                -20, -10, 0, 10 -> {
+                    continue301 = false
+                }
+            }
+        }
+        return continue301
     }
 
     var addJudge_30Str = ""

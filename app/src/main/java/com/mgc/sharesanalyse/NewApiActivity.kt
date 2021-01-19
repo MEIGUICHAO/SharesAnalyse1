@@ -74,6 +74,7 @@ class NewApiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_api)
+        DataSettingUtils.setActivity(this)
         DaoManager.setDbName(Datas.dataNamesDefault)
         viewModel = ViewModelProvider(this).get(NewApiViewModel::class.java)
         viewModelObserve()
@@ -218,9 +219,10 @@ class NewApiActivity : AppCompatActivity() {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
             DBUtils.dropTable("All_Reasoning_50")
             DBUtils.dropTable("All_Reasoning_30")
-            viewModel.reasoningAll()
+            App.getSinglePool().execute {
+                viewModel.reasoningAll()
+            }
         }
-        DataSettingUtils.setActivity(this)
     }
 
 

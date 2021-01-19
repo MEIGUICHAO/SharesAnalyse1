@@ -119,14 +119,12 @@
             android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btnRevAllTb"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="rev_all_tb" />
         <Button
             android:id="@+id/btnReasoningAll"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
