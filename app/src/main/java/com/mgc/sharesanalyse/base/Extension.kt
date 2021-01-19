@@ -106,6 +106,14 @@ fun ArrayList<Float>.sortFloatDateDesc() {
     })
 }
 
+fun ArrayList<String>.sortIntSlilitDesc() {
+    Collections.sort(this, object : Comparator<String> {
+        override fun compare(p0: String, p1: String): Int {
+            return p1.split("###")[1].compareTo( p0.split("###")[1])
+        }
+    })
+}
+
 fun ArrayList<Float>.sortFloatAsc() {
     Collections.sort(this, object : Comparator<Float> {
         override fun compare(p0: Float, p1: Float): Int {

@@ -1,10 +1,13 @@
 package com.mgc.sharesanalyse.viewmodel
 
+import android.annotation.SuppressLint
 import android.database.Cursor
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import androidx.annotation.RequiresApi
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
@@ -99,7 +102,7 @@ class NewApiViewModel : BaseViewModel() {
                             if (!(mActivity as NewApiActivity).isCurrentHq) {
                                 getHisHq(code)
                             } else {
-                                getCurrentHq(code,(mActivity as NewApiActivity).lastDealDay)
+                                getCurrentHq(code, (mActivity as NewApiActivity).lastDealDay)
                             }
                         }
 
@@ -472,8 +475,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun getCurrentHq(
-            code: String,
-            lastDealDay: String
+        code: String,
+        lastDealDay: String
     ) {
         var bean =
             DBUtils.queryHHqBeanByCode(getCurrentHQTableName(), code)
@@ -536,7 +539,7 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
-    private fun requestCurrentHq(isinsertInTx: Boolean ,code: String) {
+    private fun requestCurrentHq(isinsertInTx: Boolean, code: String) {
 
         launch({
             val result: Deferred<String> = RetrofitManager.reqApi.getWyStockData(code.toWYCode())
@@ -578,23 +581,35 @@ class NewApiViewModel : BaseViewModel() {
         loadState.value = LoadState.Success(REQUEST_HIS_HQ, json)
 
     }
+
     private fun updateInTxCurHQInfo(
         json: String,
         code: String
     ) {
         LogUtil.d("updateInTxHisPriceInfo:$code")
         val bean = PricesHisGDBean()
-        val mJson = json.replace("_ntes_quote_callback({\"${code.toWYCode()}\":","").replace(" });","")
+        val mJson =
+            json.replace("_ntes_quote_callback({\"${code.toWYCode()}\":", "").replace(" });", "")
         LogUtil.d("updateInTxHisPriceInfo:$json")
         LogUtil.d("updateInTxHisPriceInfo:$mJson")
 //        停牌
 //        _ntes_quote_callback({"1000670": {"time": "2020/04/26 08:00:02", "code": "1000670", "name": "*ST\u76c8\u65b9", "update": "2020/04/26 08:00:02"} });
-        val mwybean = GsonHelper.parse(mJson,WYHQBean::class.java)
+        val mwybean = GsonHelper.parse(mJson, WYHQBean::class.java)
         LogUtil.d("updateInTxHisPriceInfo:$code")
         val hhbean = HisHqBean()
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
-        val MutableList = mutableListOf<String>(mwybean.time.split(" ")[0].replace("/","-"),mwybean.open.toString(),mwybean.price.toString(),mwybean.updown.toString(),(mwybean.percent.toFloat()*100).toKeep2().toString(),
-        mwybean.low.toString(),mwybean.high.toString(),(mwybean.volume/1000000).toFloat().toKeep2().toString(),(mwybean.turnover/10000).toFloat().toKeep2().toString(),0.toString())
+        val MutableList = mutableListOf<String>(
+            mwybean.time.split(" ")[0].replace("/", "-"),
+            mwybean.open.toString(),
+            mwybean.price.toString(),
+            mwybean.updown.toString(),
+            (mwybean.percent.toFloat() * 100).toKeep2().toString(),
+            mwybean.low.toString(),
+            mwybean.high.toString(),
+            (mwybean.volume / 1000000).toFloat().toKeep2().toString(),
+            (mwybean.turnover / 10000).toFloat().toKeep2().toString(),
+            0.toString()
+        )
         hhbean.hq = arrayListOf(MutableList)
         hhbean.code = code
         LogUtil.d("updateInTxHisPriceInfo:$code")
@@ -1616,7 +1631,7 @@ class NewApiViewModel : BaseViewModel() {
                 } catch (e: Exception) {
                     return@let
                 }
-                for (ddidnex in hisHqBean[0].hq.size-1 downTo 0) {
+                for (ddidnex in hisHqBean[0].hq.size - 1 downTo 0) {
                     //        for (ddidnex in 0 until 4) {
                     val date = getHisHqDay(hisHqBean[0].hq[ddidnex]).replace("-", "")
                     if (date.isEmpty() || date1.isEmpty()) {
@@ -1636,11 +1651,11 @@ class NewApiViewModel : BaseViewModel() {
                     if (!date1.isEmpty()) {
                         if (date.toInt() > date1.toInt()) {
                             insertOrUpdateCodeHDD(
-                                    hisHqBean[0].hq,
-                                    ddidnex,
-                                    code,
-                                    namelist[codeidnex],
-                                    date
+                                hisHqBean[0].hq,
+                                ddidnex,
+                                code,
+                                namelist[codeidnex],
+                                date
                             )
                             (mActivity as NewApiActivity).setBtnSumDDInfo("CODE_DD_${date}_${code}")
                             reasoningResult(true, code)
@@ -2582,7 +2597,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun getReverseChddBeans(
         code: String,
         date: String
-    ){
+    ) {
         var dbName = code.toCodeHDD(date, FormatterEnum.YYYYMMDD)
         var chddDDBeanList = DBUtils.queryCHDDByTableName("DD_${code.toCompleteCode()}", dbName)
 //        if (!dbName.equals("SZ_CHDD_2101")) {
@@ -2732,8 +2747,6 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-
-
     private fun insertRevBean(
         targetBeanBegin: Int,
         targetBeanEnd: Int,
@@ -2852,9 +2865,9 @@ class NewApiViewModel : BaseViewModel() {
         mCHDDList: ArrayList<CodeHDDBean>
     ) {
         getLastMonthList(it, i, code, mCHDDList)
-        val limit = (DateUtils.formatToDay(FormatterEnum.YYYY)+"0100").toInt()
-        val dateLong = DateUtils.parse(it[i].date,FormatterEnum.YYYYMMDD)
-        val dd = DateUtils.format(dateLong,FormatterEnum.DD)
+        val limit = (DateUtils.formatToDay(FormatterEnum.YYYY) + "0100").toInt()
+        val dateLong = DateUtils.parse(it[i].date, FormatterEnum.YYYYMMDD)
+        val dd = DateUtils.format(dateLong, FormatterEnum.DD)
         it[i].date.toInt()
         for (index in 1..4) {
             var curForeachDate = it[i].date.toInt() - 100 * index
@@ -2862,12 +2875,12 @@ class NewApiViewModel : BaseViewModel() {
 
 
                 val curYear = DateUtils.formatToDay(FormatterEnum.YYYY)
-                val lastYear = (curYear.toInt() -1)
+                val lastYear = (curYear.toInt() - 1)
                 val dateChange = when (curForeachDate) {
-                    ("${curYear}00$dd".toInt())-> "${lastYear}12$dd"
-                    ("${lastYear}99$dd".toInt())-> "${lastYear}11$dd"
-                    ("${lastYear}98$dd".toInt())-> "${lastYear}10$dd"
-                    ("${lastYear}97$dd".toInt())-> "${lastYear}09$dd"
+                    ("${curYear}00$dd".toInt()) -> "${lastYear}12$dd"
+                    ("${lastYear}99$dd".toInt()) -> "${lastYear}11$dd"
+                    ("${lastYear}98$dd".toInt()) -> "${lastYear}10$dd"
+                    ("${lastYear}97$dd".toInt()) -> "${lastYear}09$dd"
                     else -> curForeachDate.toString()
 
                 }
@@ -3250,7 +3263,7 @@ class NewApiViewModel : BaseViewModel() {
 //                        ddList.add(name)
 //                    }
                 }
-                if (name.contains("HHQ")&&!currentHq) {
+                if (name.contains("HHQ") && !currentHq) {
                     hhqList.add(name)
                 } else if (name.contains("CurHQ") && currentHq) {
                     LogUtil.d("CurHQ name-->$name")
@@ -3280,17 +3293,48 @@ class NewApiViewModel : BaseViewModel() {
         return Pair(ddList, hhqList)
 
     }
+
     var countLimit = 600
     fun filterRev() {
         DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
-        val smallerMap = HashMap<String,String>()
-        val biggerMap = HashMap<String,String>()
-        val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
-        val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
+        val smallerMap = HashMap<String, String>()
+        val biggerMap = HashMap<String, String>()
+        val indexNameList = arrayListOf(
+            "OM_M",
+            "OM_C",
+            "OM_P",
+            "OM_L",
+            "OC_M",
+            "OC_C",
+            "OC_P",
+            "OC_L",
+            "OO_M",
+            "OO_C",
+            "OO_P",
+            "OO_L",
+            "OL_M",
+            "OL_C",
+            "OL_P",
+            "OL_L"
+        )
+        val indexDerbyNameList = arrayListOf(
+            "OM_OC",
+            "OM_OP",
+            "OM_OL",
+            "OC_OP",
+            "OC_OL",
+            "OP_OL",
+            "M_C",
+            "M_P",
+            "M_L",
+            "C_P",
+            "C_L",
+            "P_L"
+        )
         //        val indexNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
 //        val mTBList = getAllRevTBNameList()
         val mTBList = arrayListOf(Datas.REVERSE_TB_P50_36)
-        mTBList.forEach {tbName->
+        mTBList.forEach { tbName ->
             smallerMap.clear()
             biggerMap.clear()
             var inedexList = indexNameList
@@ -3317,7 +3361,8 @@ class NewApiViewModel : BaseViewModel() {
                             biggerMap,
                             smallerMap,
                             mCountList
-                        ))
+                        )
+                    )
                         LogUtil.d("filterRev======fiterRevResult:${it.equals(indexNameList[indexNameList.size - 1])} countList:${mCountList.size} countLimit:${countLimit}")
                     if (it.equals(indexNameList[indexNameList.size - 1])) {
                         DBUtils.copyFilterTB2NewTB(newTBName, mCountList, 1)
@@ -3327,7 +3372,6 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
-
 
 
     }
@@ -3369,7 +3413,8 @@ class NewApiViewModel : BaseViewModel() {
         smallerMap: HashMap<String, String>,
         mCountList: ArrayList<BaseReverseImp>
     ): Boolean {
-        val maxMinPari = DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType,Datas.REVERSE_KJ_DB)
+        val maxMinPari =
+            DBUtils.selectMaxMinValueByTbAndColumn(tbName, indexType, Datas.REVERSE_KJ_DB)
         val minValue = (maxMinPari.first.toFloat() / 1).toInt()
         val maxValue = (maxMinPari.second.toFloat() / 1).toInt()
         var rateResult = 0
@@ -3397,7 +3442,8 @@ class NewApiViewModel : BaseViewModel() {
                         smallerResult = i
                         mCountList.clear()
                         mCountList.addAll(it)
-                        result = "maxValue------>$y,minValue----->$i,count----->${it.size},mCountList.size:${mCountList.size}  countLimit:$countLimit"
+                        result =
+                            "maxValue------>$y,minValue----->$i,count----->${it.size},mCountList.size:${mCountList.size}  countLimit:$countLimit"
                     }
                 }
             }
@@ -3426,18 +3472,28 @@ class NewApiViewModel : BaseViewModel() {
 
     fun getOtherResultByFilterTb(tbName: String) {
         if (tbName.contains(Datas.AA_FILTER_)) {
-            val pair = DBUtils.selectMaxMinValueByTbAndColumn(tbName,"OM_M",Datas.REV_FILTERDB+"2020")
-            var rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 -Datas.FILTER_PROGRESS
+            val pair =
+                DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", Datas.REV_FILTERDB + "2020")
+            var rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
             var rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
             val rangeList = ArrayList<String>()
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
-                val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
-                    arrayOf(i.toString(),(i+Datas.FILTER_PROGRESS).toString()))
+                val list = DBUtils.getAAFilterAllByTbName(
+                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                    arrayOf(i.toString(), (i + Datas.FILTER_PROGRESS).toString())
+                )
                 LogUtil.d("==========$i=======${i + Datas.FILTER_PROGRESS}")
                 list?.forEach {
                     if (it is ReverseKJsonBean) {
                         LogUtil.d(it.n)
-                        val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REV_FILTERDB+"2020",it.code,it.date,1,tbName,"_R_${Math.abs(i)}_${Math.abs(i+Datas.FILTER_PROGRESS)}")
+                        val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(
+                            Datas.REV_FILTERDB + "2020",
+                            it.code,
+                            it.date,
+                            1,
+                            tbName,
+                            "_R_${Math.abs(i)}_${Math.abs(i + Datas.FILTER_PROGRESS)}"
+                        )
                         LogUtil.d(name)
                         if (!rangeList.contains(name)) {
                             rangeList.add(name)
@@ -3446,9 +3502,9 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
 
-            rangeList.forEach {rangename->
+            rangeList.forEach { rangename ->
                 val range = rangename.split("_R_")[1]
-                val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $rangename",null)
+                val list = DBUtils.getAAFilterAllByTbName("SELECT * FROM $rangename", null)
                 val mTBList = getAllRevTBNameList()
                 val trList = getAllRevTRTBNameList()
                 trList.forEach {
@@ -3456,17 +3512,24 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 list?.forEach {
                     if (it is ReverseKJsonBean) {
-                        mTBList.forEach {tbName->
-                            (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName+"_"+it.code)
-                            DBUtils.createOtherBBTBDataByOriginCodeAndDate(Datas.REVERSE_KJ_DB ,it.code,it.date,kotlin.run {
-                                if (tbName.contains("TR")) {
-                                    3
-                                } else if (tbName.contains(Datas.Derby)) {
-                                    2
-                                } else {
-                                    1
-                                }
-                            },tbName,"_R_$range")
+                        mTBList.forEach { tbName ->
+                            (mActivity as NewApiActivity).setBtnCopyFilterTBResult(tbName + "_" + it.code)
+                            DBUtils.createOtherBBTBDataByOriginCodeAndDate(
+                                Datas.REVERSE_KJ_DB,
+                                it.code,
+                                it.date,
+                                kotlin.run {
+                                    if (tbName.contains("TR")) {
+                                        3
+                                    } else if (tbName.contains(Datas.Derby)) {
+                                        2
+                                    } else {
+                                        1
+                                    }
+                                },
+                                tbName,
+                                "_R_$range"
+                            )
                         }
 
                     }
@@ -3477,7 +3540,7 @@ class NewApiViewModel : BaseViewModel() {
 
     }
 
-    private fun getAllRevTRTBNameList():ArrayList<String> {
+    private fun getAllRevTRTBNameList(): ArrayList<String> {
         return arrayListOf(
             Datas.REV_TR_TB_P30_11,
             Datas.REV_TR_TB_P50_11,
@@ -3503,28 +3566,71 @@ class NewApiViewModel : BaseViewModel() {
     fun logBBRangeFile() {
         val list = DBUtils.getAllCopyBBTBNameList()
 
-        val indexNameList = arrayListOf("OM_M","OM_C","OM_P","OM_L","OC_M","OC_C","OC_P","OC_L","OO_M","OO_C","OO_P","OO_L","OL_M","OL_C","OL_P","OL_L")
-        val indexDerbyNameList = arrayListOf("OM_OC","OM_OP","OM_OL","OC_OP","OC_OL","OP_OL","M_C","M_P","M_L","C_P","C_L","P_L")
-        val indextrNameList = arrayListOf("S_A_TR","S_R_TR","S_B_TR","S_C_TR","K_A_TR","K_R_TR","K_B_TR","K_C_TR","K_SL_A_TR","K_SL_R_TR","K_SL_B_TR","K_SL_C_TR")
+        val indexNameList = arrayListOf(
+            "OM_M",
+            "OM_C",
+            "OM_P",
+            "OM_L",
+            "OC_M",
+            "OC_C",
+            "OC_P",
+            "OC_L",
+            "OO_M",
+            "OO_C",
+            "OO_P",
+            "OO_L",
+            "OL_M",
+            "OL_C",
+            "OL_P",
+            "OL_L"
+        )
+        val indexDerbyNameList = arrayListOf(
+            "OM_OC",
+            "OM_OP",
+            "OM_OL",
+            "OC_OP",
+            "OC_OL",
+            "OP_OL",
+            "M_C",
+            "M_P",
+            "M_L",
+            "C_P",
+            "C_L",
+            "P_L"
+        )
+        val indextrNameList = arrayListOf(
+            "S_A_TR",
+            "S_R_TR",
+            "S_B_TR",
+            "S_C_TR",
+            "K_A_TR",
+            "K_R_TR",
+            "K_B_TR",
+            "K_C_TR",
+            "K_SL_A_TR",
+            "K_SL_R_TR",
+            "K_SL_B_TR",
+            "K_SL_C_TR"
+        )
         val date = DateUtils.formatToDay(FormatterEnum.YYYYMMDD)
         val p50FilterBBKjRangeBean = P50FilterBBKJRangeBean()
         var mDFilter = P50FilterBBKJRangeBean.DFilter()
         DataSettingUtils.setP50BeanInit(mDFilter)
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("copy_finish")
         list.forEach {
-            val count = DBUtils.queryTBCountByTBAndDB(it,Datas.REV_FILTERDB+"2020")
+            val count = DBUtils.queryTBCountByTBAndDB(it, Datas.REV_FILTERDB + "2020")
             if (count >= 5) {
                 val filename = "${parentBasePath}$count _bb_range$date"
                 (mActivity as NewApiActivity).setBtnLogBBRangeFile(it)
                 val endStr = it.split("_R_")[1]
                 val rangeArray = endStr.split("_")
                 var rangeMin = rangeArray[0].toInt()
-                if ((rangeArray[0].toInt() - rangeArray[1].toInt())>0) {
+                if ((rangeArray[0].toInt() - rangeArray[1].toInt()) > 0) {
                     rangeMin = -rangeArray[0].toInt()
                 }
 
-                val mFileName =  filename + "_R_" + endStr
-                FileLogUtil.d(mFileName,"------------------------$it")
+                val mFileName = filename + "_R_" + endStr
+                FileLogUtil.d(mFileName, "------------------------$it")
                 mDFilter.count = count
                 kotlin.run {
                     if (it.contains(Datas.Derby)) {
@@ -3534,25 +3640,30 @@ class NewApiViewModel : BaseViewModel() {
                     } else {
                         indexNameList
                     }
-                }.forEach { indexStr->
-                    val pair = DBUtils.selectMaxMinValueByTbAndColumn(it,indexStr,Datas.REV_FILTERDB+"2020")
-                    FileLogUtil.d(mFileName,"${indexStr}->min:${pair.first},max:${pair.second}")
-                    mDFilter = DataSettingUtils.setP50FilterMaxMinValue(indexStr,it,mDFilter,pair)
-                    if (indexStr.equals("OM_M")||indexStr.equals("OM_C")) {
+                }.forEach { indexStr ->
+                    val pair = DBUtils.selectMaxMinValueByTbAndColumn(
+                        it,
+                        indexStr,
+                        Datas.REV_FILTERDB + "2020"
+                    )
+                    FileLogUtil.d(mFileName, "${indexStr}->min:${pair.first},max:${pair.second}")
+                    mDFilter =
+                        DataSettingUtils.setP50FilterMaxMinValue(indexStr, it, mDFilter, pair)
+                    if (indexStr.equals("OM_M") || indexStr.equals("OM_C")) {
                         LogUtil.d("$indexStr mDFilter-->${GsonHelper.toJson(mDFilter)}")
                     }
                 }
-                DataSettingUtils.setFilterBeanType(rangeMin,mDFilter,p50FilterBBKjRangeBean)
+                DataSettingUtils.setFilterBeanType(rangeMin, mDFilter, p50FilterBBKjRangeBean)
             }
 
         }
         val json = DBUtils.insertFilterResultJson(p50FilterBBKjRangeBean)
 
-        FileLogUtil.d("${parentBasePath}rangeJson$date",json)
+        FileLogUtil.d("${parentBasePath}rangeJson$date", json)
         (mActivity as NewApiActivity).setBtnLogBBRangeFile("FINISH")
     }
 
-    fun reasoningResult(isLive:Boolean,mCode:String = "") {
+    fun reasoningResult(isLive: Boolean, mCode: String = "") {
         LogUtil.d("reasoningResult-->$mCode")
         val (mList, codelist) = getCHDDDateListAndCodeList()
         val (foreachLimitList, p50FilterBBKJRangeBean) = getReasoningForeachLimitListAndP50Bean()
@@ -3599,12 +3710,12 @@ class NewApiViewModel : BaseViewModel() {
                 for (i in 72..mCHDDList.size - 1) {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
                         insertReasoning(
-                                isLive,
-                                foreachLimitList,
-                                i,
-                                mCHDDList,
-                                p50FilterBBKJRangeBean,
-                                code
+                            isLive,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            p50FilterBBKJRangeBean,
+                            code
                         )
                     }
                 }
@@ -3612,7 +3723,7 @@ class NewApiViewModel : BaseViewModel() {
             } else {
                 LogUtil.d("liveDay-->${mCHDDList[mCHDDList.size - 1].date},code--->$code")
                 insertReasoning(
-                        isLive,
+                    isLive,
                     foreachLimitList,
                     mCHDDList.size - 1,
                     mCHDDList,
@@ -3684,12 +3795,12 @@ class NewApiViewModel : BaseViewModel() {
         "R_0_10",
         "R_10_20"
     )
-    val dayArray = arrayOf("D36_","D30_","D25_","D20_","D15_","D10_","D05_","D03_")
+    val dayArray = arrayOf("D36_", "D30_", "D25_", "D20_", "D15_", "D10_", "D05_", "D03_")
     val mtbList = ArrayList<String>()
     fun getReasoningTBList(): ArrayList<String> {
         if (mtbList.size < 1) {
-            rangeArray.forEach { range->
-                dayArray.forEach { day->
+            rangeArray.forEach { range ->
+                dayArray.forEach { day ->
                     mtbList.add("$day$range")
                 }
 
@@ -3701,10 +3812,10 @@ class NewApiViewModel : BaseViewModel() {
     fun revAllJudgeResult() {
 
         LogUtil.d("revAllJudgeResult")
-        val dayList = arrayOf(3,5,10,15,20,25,30,36)
-        val ptList = arrayOf(50,30)
+        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
+        val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
-        ptList.forEach { pt->
+        ptList.forEach { pt ->
 
             LogUtil.d("revAllJudgeResult")
             val tbName = "A_RTB_${pt}_36"
@@ -3723,9 +3834,10 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 var date = 36
                 LogUtil.d("revAllJudgeResult")
-                var dateRangeIndex = dayList.size-1
+                var dateRangeIndex = dayList.size - 1
 
-                var list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
+                var list = DBUtils.getFilterAllByTbName(
+                    Datas.REVERSE_KJ_DB,
                     "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                     arrayOf(
                         i.toString(),
@@ -3739,7 +3851,8 @@ class NewApiViewModel : BaseViewModel() {
 
                 while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= rangeMax) {
                     nextContinue++
-                    list = DBUtils.getFilterAllByTbName(Datas.REVERSE_KJ_DB ,
+                    list = DBUtils.getFilterAllByTbName(
+                        Datas.REVERSE_KJ_DB,
                         "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
                         arrayOf(
                             i.toString(),
@@ -3753,11 +3866,12 @@ class NewApiViewModel : BaseViewModel() {
                 if (list.size > 1) {
                     LogUtil.d("revAllJudgeResult")
                     val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
-                    val reasoningAllJudgeBean = DataSettingUtils.getReasoningAllJudgeBean(list,derbyList, date)
+                    val reasoningAllJudgeBean =
+                        DataSettingUtils.getReasoningAllJudgeBean(list, derbyList, date)
                     reasoningAllJudgeBean.f36_T = i
                     val insertTB = "All_${pt}"
-                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean,insertTB)
-                    dateRangeIndex = dayList.size-2
+                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+                    dateRangeIndex = dayList.size - 2
                     date = dayList[dateRangeIndex]
                     LogUtil.d("nextTbName!!!-->($i,${(i + Datas.FILTER_PROGRESS)})")
                     if (dateRangeIndex > 0) {
@@ -3768,7 +3882,7 @@ class NewApiViewModel : BaseViewModel() {
                             list,
                             dayList[dateRangeIndex],
                             insertTB,
-                            arrayListOf(i,0,0,0,0,0,0,0)
+                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0)
                         )
                     }
 
@@ -3781,11 +3895,10 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-
     fun reasoningAll() {
         val (mList, codelist) = getCHDDDateListAndCodeList()
         val foreachLimitList = getReasoningForeachLimitList()
-        codelist.forEach {code->
+        codelist.forEach { code ->
             val mCHDDList = getCHDDCodeAllList(mList, code)
             (mActivity as NewApiActivity).setBtnReasoningAll("all_$code")
 
@@ -3831,7 +3944,16 @@ class NewApiViewModel : BaseViewModel() {
             val OM = oldBeanList.getRevBeansOM()
             val M = targetBeanList.getRevBeansOM()
             val allOM_M = ((OM - M) / OM) * 100
-            val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
+            val pair = DataSettingUtils.filterAllReasoning(
+                allOM_M,
+                foreachLimitList[x][0],
+                targetBeanList,
+                oldBeanList,
+                allReasoning50Bean,
+                allReasoning30Bean,
+                continue50,
+                continue30
+            )
             continue50 = pair.first
             continue30 = pair.second
 //            if (continue30) {
@@ -3851,13 +3973,13 @@ class NewApiViewModel : BaseViewModel() {
             if (x == 0) {
                 if (continue50) {
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
+                    DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
                 }
                 if (continue30) {
 
                     setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-//                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+                    continue30 = addContinue30(allReasoning30Bean, continue30)
 //                    if (continue30) {
 //                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
 //                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
@@ -3907,7 +4029,16 @@ class NewApiViewModel : BaseViewModel() {
                 )
             }
 
-            val pair = DataSettingUtils.filterAllReasoning(allOM_M,foreachLimitList[x][0],targetBeanList,oldBeanList,allReasoning50Bean,allReasoning30Bean,continue50,continue30)
+            val pair = DataSettingUtils.filterAllReasoning(
+                allOM_M,
+                foreachLimitList[x][0],
+                targetBeanList,
+                oldBeanList,
+                allReasoning50Bean,
+                allReasoning30Bean,
+                continue50,
+                continue30
+            )
             continue50 = pair.first
             continue30 = pair.second
 
@@ -3938,14 +4069,14 @@ class NewApiViewModel : BaseViewModel() {
                     (mActivity as NewApiActivity).setBtnReasoningAll("all_50_code:${code},date:${mCHDDList[i].date}")
                     (mActivity as NewApiActivity).setBtnGetAll50("all_50_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning50Bean,true)
+                    DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
                 }
                 if (continue30) {
 
                     (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
                     (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
 //                    continue30 = addContinue30(allReasoning30Bean, continue30)
 //                    if (continue30) {
 //                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
@@ -3964,13 +4095,13 @@ class NewApiViewModel : BaseViewModel() {
         allReasoning30Bean: ReasoningRevBean
     ): Boolean {
         var continue301 = continue30
-        if (continue301) {
-            when (allReasoning30Bean.f36_T) {
-                -20, -10, 0, 10 -> {
-                    continue301 = false
-                }
-            }
-        }
+//        if (continue301) {
+//            when (allReasoning30Bean.f36_T) {
+//                -20, -10, 0, 10 -> {
+//                    continue301 = false
+//                }
+//            }
+//        }
         return continue301
     }
 
@@ -3979,106 +4110,95 @@ class NewApiViewModel : BaseViewModel() {
     var addJudge_10Str = ""
     var addJudge0Str = ""
     var addJudge10Str = ""
-    private fun addContinue30(
-        allReasoning30Bean: ReasoningRevBean,
-        continue30: Boolean
-    ): Boolean {
-        var continue301 = continue30
-//        if (allReasoning30Bean.p <= 10 && allReasoning30Bean.p != 0.toFloat()) {
-//            when (allReasoning30Bean.f36_T) {
-//                -30 -> {
-//                    if (!addJudge_30Str.equals(
-//                            getAddjudgeStr(
-//                                allReasoning30Bean,
-//                                addJudge_30Str
-//                            )
-//                        )
-//                    ) {
-//                        addJudge_30Str = getAddjudgeStr(allReasoning30Bean, addJudge_30Str)
-//                        FileLogUtil.d("${parentBasePath}addJudgeStr_30", addJudge_30Str)
-//                        LogUtil.d("-30-->$addJudge_30Str")
-//                    }
-//                }
-//                -20 -> {
-//                    if (!addJudge_20Str.equals(
-//                            getAddjudgeStr(
-//                                allReasoning30Bean,
-//                                addJudge_20Str
-//                            )
-//                        )
-//                    ) {
-//                        addJudge_20Str = getAddjudgeStr(allReasoning30Bean, addJudge_20Str)
-//                        FileLogUtil.d("${parentBasePath}addJudgeStr_20", addJudge_20Str)
-//                        LogUtil.d("-20-->$addJudge_20Str")
-//                    }
-//                }
-//                -10 -> {
-//                    if (!addJudge_10Str.equals(
-//                            getAddjudgeStr(
-//                                allReasoning30Bean,
-//                                addJudge_10Str
-//                            )
-//                        )
-//                    ) {
-//                        addJudge_10Str = getAddjudgeStr(allReasoning30Bean, addJudge_10Str)
-//                        FileLogUtil.d("${parentBasePath}addJudgeStr_10", addJudge_10Str)
-//                        LogUtil.d("-10-->$addJudge_10Str")
-//                    }
-//                }
-//                0 -> {
-//                    if (!addJudge0Str.equals(getAddjudgeStr(allReasoning30Bean, addJudge0Str))) {
-//                        addJudge0Str = getAddjudgeStr(allReasoning30Bean, addJudge0Str)
-//                        FileLogUtil.d("${parentBasePath}addJudgeStr0", addJudge0Str)
-//                        LogUtil.d("0-->$addJudge0Str")
-//                    }
-//                }
-//                10 -> {
-//                    if (!addJudge10Str.equals(getAddjudgeStr(allReasoning30Bean, addJudge10Str))) {
-//                        addJudge10Str = getAddjudgeStr(allReasoning30Bean, addJudge10Str)
-//                        FileLogUtil.d("${parentBasePath}addJudgeStr10", addJudge10Str)
-//                        LogUtil.d("10-->$addJudge10Str")
-//                    }
-//                }
-//            }
-//        }
-        when (allReasoning30Bean.f36_T) {
+    val continue30KuiMap = HashMap<String, Int>()
+    val continue30Map = HashMap<String, Int>()
 
-            -30 -> {
-                if ((allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-60&&allReasoning30Bean.f20_T==-70&&allReasoning30Bean.f15_T==-80&&allReasoning30Bean.f10_T==-90&&allReasoning30Bean.f05_T==-70&&allReasoning30Bean.f03_T==-40)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-60&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-50&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==0)||
-                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-30)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-30)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-50&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-40)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-30)||
-                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-40)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-20)||
-                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)) {
-                    continue301 = false
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("NewApi")
+    fun sortContinue30Map() {
+        val list = ArrayList<String>()
+        continue30KuiMap.forEach { (key, value) ->
+            list.add("${key}###${value}")
+        }
+
+        list.sortIntSlilitDesc()
+
+        list.forEach {
+            val key = it.split("###")[0]
+            LogUtil.d("${key}-->${continue30KuiMap[key]}")
+            LogUtil.d("${key}-->${continue30Map[key]}")
+            FileLogUtil.d("${parentBasePath}continue30map", "---------------------------------------")
+            FileLogUtil.d("${parentBasePath}continue30map", "${continue30KuiMap[key]}-->${key}")
+            FileLogUtil.d("${parentBasePath}continue30map", "${continue30Map[key]}-->${key}")
+        }
+    }
+
+        private fun addContinue30(
+            allReasoning30Bean: ReasoningRevBean,
+            continue30: Boolean
+        ): Boolean {
+            var continue301 = continue30
+            when (allReasoning30Bean.f36_T) {
+//        FileLogUtil.d("${parentBasePath}addJudgeStr_30", addJudge_30Str)
+                -30, -20, -10, 0, 10 -> {
+                    val continue30Str = getAddjudgeStr(allReasoning30Bean)
+                    if (allReasoning30Bean.p <= 0 && allReasoning30Bean.p != 0.toFloat()) {
+                        if (null == continue30KuiMap.get(continue30Str)) {
+                            continue30KuiMap.put(continue30Str, 1)
+                        } else {
+                            continue30KuiMap.put(
+                                continue30Str,
+                                continue30KuiMap.get(continue30Str)!! + 1
+                            )
+                        }
+                    } else if (allReasoning30Bean.p > 0) {
+                        if (null == continue30Map.get(continue30Str)) {
+                            continue30Map.put(continue30Str, 1)
+                        } else {
+                            continue30Map.put(continue30Str, continue30Map.get(continue30Str)!! + 1)
+                        }
+                    }
+
                 }
-
             }
+//        when (allReasoning30Bean.f36_T) {
+//
+//            -30 -> {
+//                if ((allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-60&&allReasoning30Bean.f20_T==-70&&allReasoning30Bean.f15_T==-80&&allReasoning30Bean.f10_T==-90&&allReasoning30Bean.f05_T==-70&&allReasoning30Bean.f03_T==-40)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-60&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-50&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==0)||
+//                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-30)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-30)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-50&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-40)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-30)||
+//                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-40)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-20)||
+//                    (allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)) {
+//                    continue301 = false
+//                }
+//
+//            }
 //            -20 -> {
 //                if ((allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)||(allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-40&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-40)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-50&&allReasoning30Bean.f25_T==-60&&allReasoning30Bean.f20_T==-40&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-50&&allReasoning30Bean.f03_T==-30)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-30&&allReasoning30Bean.f15_T==-30&&allReasoning30Bean.f10_T==-30&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-30)||(allReasoning30Bean.f30_T==-30&&allReasoning30Bean.f25_T==-40&&allReasoning30Bean.f20_T==-50&&allReasoning30Bean.f15_T==-50&&allReasoning30Bean.f10_T==-50&&allReasoning30Bean.f05_T==-50&&allReasoning30Bean.f03_T==-40)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-30&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-30&&allReasoning30Bean.f03_T==-20)||(allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)) {
 //                    continue301 = false
@@ -4100,65 +4220,65 @@ class NewApiViewModel : BaseViewModel() {
 //                }
 //
 //            }
+//        }
+            return continue301
         }
-        return continue301
-    }
 
-    private fun getAddjudgeStr(
-        allReasoning30Bean: ReasoningRevBean,
-        addjudgestr: String
-    ): String {
-        val tempStr =
-            "(allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
-                    "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
-                    "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
-                    "allReasoning30Bean.f03_T==${allReasoning30Bean.f03_T})"
-
-        var result = addjudgestr
-        if (!result.contains(tempStr)) {
-            result  = if (addjudgestr.isEmpty()) tempStr else "$addjudgestr||$tempStr"
+        private fun getAddjudgeStr(
+            allReasoning30Bean: ReasoningRevBean
+        ): String {
+            val tempStr =
+                "(allReasoning30Bean.f36_T==${allReasoning30Bean.f36_T}&&allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
+                        "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
+                        "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
+                        "allReasoning30Bean.f03_T==${allReasoning30Bean.f03_T})"
+//
+//        var result = addjudgestr
+//        if (!result.contains(tempStr)) {
+//            result  = if (addjudgestr.isEmpty()) tempStr else "$addjudgestr||$tempStr"
+//        }
+//        return result
+            return tempStr
         }
-        return result
-    }
 
-    private fun setReasoningRevBeanBasicInfo(
-        reasoningRevBean: ReasoningRevBean,
-        code: String,
-        mCHDDList: ArrayList<CodeHDDBean>,
-        i: Int,
-        fitlerType: Int
-    ) {
-        reasoningRevBean.code = code.toInt()
-        reasoningRevBean.n = mCHDDList[i].name
-        reasoningRevBean.d = mCHDDList[i].date
-        if (i + 5 < mCHDDList.size) {
-            val pList = ArrayList<Float>()
-            for (m in (i + 1)..(i + 5)) {
-                pList.add(
-                    (BigDecimalUtils.safeDiv(
-                        (mCHDDList[m].cp - mCHDDList[i].cp),
-                        mCHDDList[i].cp
-                    ) * 100).toKeep2()
-                )
+        private fun setReasoningRevBeanBasicInfo(
+            reasoningRevBean: ReasoningRevBean,
+            code: String,
+            mCHDDList: ArrayList<CodeHDDBean>,
+            i: Int,
+            fitlerType: Int
+        ) {
+            reasoningRevBean.code = code.toInt()
+            reasoningRevBean.n = mCHDDList[i].name
+            reasoningRevBean.d = mCHDDList[i].date
+            if (i + 5 < mCHDDList.size) {
+                val pList = ArrayList<Float>()
+                for (m in (i + 1)..(i + 5)) {
+                    pList.add(
+                        (BigDecimalUtils.safeDiv(
+                            (mCHDDList[m].cp - mCHDDList[i].cp),
+                            mCHDDList[i].cp
+                        ) * 100).toKeep2()
+                    )
+                }
+                reasoningRevBean.p = pList[4]
+                reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
+                    (mCHDDList[i + 1].op - mCHDDList[i].cp),
+                    mCHDDList[i].cp
+                ) * 100).toKeep2()
+                reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
+                    (mCHDDList[i + 1].cp - mCHDDList[i].cp),
+                    mCHDDList[i].cp
+                ) * 100).toKeep2()
+                pList.sortFloatAsc()
+                reasoningRevBean.lp = pList[0]
+                reasoningRevBean.mp = pList[4]
+
+                LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
+
+                reasoningRevBean.d_D = mCHDDList[i + 5].date
             }
-            reasoningRevBean.p = pList[4]
-            reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
-                (mCHDDList[i + 1].op - mCHDDList[i].cp),
-                mCHDDList[i].cp
-            ) * 100).toKeep2()
-            reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
-                (mCHDDList[i + 1].cp - mCHDDList[i].cp),
-                mCHDDList[i].cp
-            ) * 100).toKeep2()
-            pList.sortFloatAsc()
-            reasoningRevBean.lp = pList[0]
-            reasoningRevBean.mp = pList[4]
-
-            LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
-
-            reasoningRevBean.d_D = mCHDDList[i + 5].date
         }
-    }
 
 //        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];
 //        String[] dayArray = ["36","30","25","20","15","10","5","3"];
@@ -4174,5 +4294,4 @@ class NewApiViewModel : BaseViewModel() {
 //    }
 
 
-
-}
+    }
