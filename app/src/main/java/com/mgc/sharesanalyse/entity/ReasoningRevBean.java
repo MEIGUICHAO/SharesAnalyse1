@@ -18,6 +18,52 @@ public class ReasoningRevBean {
     private int F10_T;
     private int F05_T;
     private int F03_T;
+    private int MA_1;
+    private int MA_3;
+    private int MA_5;
+    private String AO;
+
+    public String getAO() {
+        return AO;
+    }
+
+    public void setAO(String AO) {
+        this.AO = AO;
+    }
+
+    public int getMA_1() {
+        return MA_1;
+    }
+
+    public void setMA_1(int MA_1) {
+        this.MA_1 = MA_1;
+    }
+
+    public int getMA_3() {
+        return MA_3;
+    }
+
+    public void setMA_3(int MA_3) {
+        this.MA_3 = MA_3;
+    }
+
+    public int getMA_5() {
+        return MA_5;
+    }
+
+    public void setMA_5(int MA_5) {
+        this.MA_5 = MA_5;
+    }
+
+    public int getMA_10() {
+        return MA_10;
+    }
+
+    public void setMA_10(int MA_10) {
+        this.MA_10 = MA_10;
+    }
+
+    private int MA_10;
 
     public int getF36_T() {
         return F36_T;

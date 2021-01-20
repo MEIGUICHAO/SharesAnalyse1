@@ -1,13 +1,10 @@
 package com.mgc.sharesanalyse.viewmodel
 
-import android.annotation.SuppressLint
 import android.database.Cursor
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
-import androidx.annotation.RequiresApi
 import com.galanz.rxretrofit.network.RetrofitManager
 import com.mgc.sharesanalyse.NewApiActivity
 import com.mgc.sharesanalyse.base.*
@@ -2790,26 +2787,7 @@ class NewApiViewModel : BaseViewModel() {
         val L = targetBeanList.getRevBeansOL()
         oldBeanList.sortAscByDate()
         targetBeanList.sortAscByDate()
-        val maList = ArrayList<String>()
-        val MA05 = "1_${mCHDDList[targetBeanEnd].p_MA_J.d05}"
-        val MA10 = "2_${mCHDDList[targetBeanEnd].p_MA_J.d10}"
-        val MA15 = "3_${mCHDDList[targetBeanEnd].p_MA_J.d15}"
-        val MA20 = "4_${mCHDDList[targetBeanEnd].p_MA_J.d20}"
-        val MA30 = "5_${mCHDDList[targetBeanEnd].p_MA_J.d30}"
-        val MA60 = "6_${mCHDDList[targetBeanEnd].p_MA_J.d60}"
-        val MA72 = "7_${mCHDDList[targetBeanEnd].p_MA_J.d72}"
-        val OP = "8_${mCHDDList[targetBeanEnd].p_MA_J.aaop}"
-        val CP = "9_${mCHDDList[targetBeanEnd].p_MA_J.aacp}"
-        maList.add(MA05)
-        maList.add(MA10)
-        maList.add(MA15)
-        maList.add(MA20)
-        maList.add(MA30)
-        maList.add(MA60)
-        maList.add(MA72)
-        maList.add(OP)
-        maList.add(CP)
-        val ma = maList.getMADesc()
+        val ma = getMAValueByIndexDay(mCHDDList, targetBeanEnd)
         setReverseBeanData(
             reverseKJsonBean,
             code,
@@ -2855,6 +2833,50 @@ class NewApiViewModel : BaseViewModel() {
             )
 
         }
+    }
+
+    private fun getMAValueByIndexDay(
+        mCHDDList: ArrayList<CodeHDDBean>,
+        targetBeanEnd: Int
+    ): Int {
+        val maList = ArrayList<String>()
+        val MA05 = "1_${mCHDDList[targetBeanEnd].p_MA_J.d05}"
+        val MA10 = "2_${mCHDDList[targetBeanEnd].p_MA_J.d10}"
+        val MA15 = "3_${mCHDDList[targetBeanEnd].p_MA_J.d15}"
+        val MA20 = "4_${mCHDDList[targetBeanEnd].p_MA_J.d20}"
+        val MA30 = "5_${mCHDDList[targetBeanEnd].p_MA_J.d30}"
+        val MA60 = "6_${mCHDDList[targetBeanEnd].p_MA_J.d60}"
+        val MA72 = "7_${mCHDDList[targetBeanEnd].p_MA_J.d72}"
+        val OP = "8_${mCHDDList[targetBeanEnd].p_MA_J.aaop}"
+        val CP = "9_${mCHDDList[targetBeanEnd].p_MA_J.aacp}"
+        maList.add(MA05)
+        maList.add(MA10)
+        maList.add(MA15)
+        maList.add(MA20)
+        maList.add(MA30)
+        maList.add(MA60)
+        maList.add(MA72)
+        maList.add(OP)
+        maList.add(CP)
+        val ma = maList.getMADesc()
+        return ma
+    }
+
+    private fun getSimpleMAValueByIndexDay(
+        mCHDDList: ArrayList<CodeHDDBean>,
+        targetBeanEnd: Int
+    ): Int {
+        val maList = ArrayList<String>()
+        val MA05 = "1_${mCHDDList[targetBeanEnd].p_MA_J.d05}"
+        val MA20 = "4_${mCHDDList[targetBeanEnd].p_MA_J.d20}"
+        val OP = "8_${mCHDDList[targetBeanEnd].p_MA_J.aaop}"
+        val CP = "9_${mCHDDList[targetBeanEnd].p_MA_J.aacp}"
+        maList.add(MA05)
+        maList.add(MA20)
+        maList.add(OP)
+        maList.add(CP)
+        val ma = maList.getMADesc()
+        return ma
     }
 
 
@@ -2928,30 +2950,40 @@ class NewApiViewModel : BaseViewModel() {
     ): ReverseKJsonBean {
         val reverseKJsonBean = ReverseKJsonBean()
         var AO = ""
-        if (afterBean.op >= targetBean.p_MA_J.amp) {
-            AO = AO + "1"
-        } else {
-            AO = AO + "0"
-        }
-        if (afterBean.op >= targetBean.p_MA_J.aacp) {
-            AO = AO + "1"
-        } else {
-            AO = AO + "0"
-        }
-        if (afterBean.op >= targetBean.p_MA_J.aaop) {
-            AO = AO + "1"
-        } else {
-            AO = AO + "0"
-        }
-        if (afterBean.op >= targetBean.p_MA_J.alp) {
-            AO = AO + "1"
-        } else {
-            AO = AO + "0"
-        }
+        AO = getAO(afterBean, targetBean, AO)
         reverseKJsonBean.ao = AO
         reverseKJsonBean.n = targetBean.name
         reverseKJsonBean.d_D = requestBean.date
         return reverseKJsonBean
+    }
+
+    private fun getAO(
+        afterBean: CodeHDDBean,
+        targetBean: CodeHDDBean,
+        AO: String
+    ): String {
+        var AO1 = AO
+        if (afterBean.op >= targetBean.p_MA_J.amp) {
+            AO1 = AO1 + "1"
+        } else {
+            AO1 = AO1 + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.aacp) {
+            AO1 = AO1 + "1"
+        } else {
+            AO1 = AO1 + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.aaop) {
+            AO1 = AO1 + "1"
+        } else {
+            AO1 = AO1 + "0"
+        }
+        if (afterBean.op >= targetBean.p_MA_J.alp) {
+            AO1 = AO1 + "1"
+        } else {
+            AO1 = AO1 + "0"
+        }
+        return AO1
     }
 
     private fun setReverseBeanData(
@@ -3935,7 +3967,7 @@ class NewApiViewModel : BaseViewModel() {
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
         val allReasoning30Bean = ReasoningRevBean()
-        var continue50 = true
+        var continue50 = false
         var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
@@ -3977,15 +4009,15 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 if (continue30) {
 
-//                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-//                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-//                    getAddContinue30Str(allReasoning30Bean)
-                    continue30 = addContinue30(allReasoning30Bean,continue30)
-                    if (continue30) {
-                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                        getAddContinue30Str(allReasoning30Bean)
-                    }
+                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+                    getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
+//                    continue30 = addContinue30(allReasoning30Bean,continue30)
+//                    if (continue30) {
+//                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+//                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+//                        getAddContinue30Str(allReasoning30Bean)
+//                    }
                 }
             }
         }
@@ -4154,14 +4186,24 @@ class NewApiViewModel : BaseViewModel() {
             return continue301
         }
         private fun getAddContinue30Str(
-            allReasoning30Bean: ReasoningRevBean
+            allReasoning30Bean: ReasoningRevBean,
+            mCHDDList: java.util.ArrayList<CodeHDDBean>,
+            i: Int
         ) {
 
             when (allReasoning30Bean.f36_T) {
 //        FileLogUtil.d("${parentBasePath}addJudgeStr_30", addJudge_30Str)
                 -30, -20, -10, 0, 10 -> {
+                    allReasoning30Bean.mA_1 = getSimpleMAValueByIndexDay(mCHDDList,i)
+                    if (i + 1 < mCHDDList.size) {
+                        allReasoning30Bean.ao = getAO(mCHDDList[i+1],mCHDDList[i],"")
+                    }
+//                    allReasoning30Bean.mA_3 = getMAValueByIndexDay(mCHDDList,i-3)
+//                    allReasoning30Bean.mA_5 = getMAValueByIndexDay(mCHDDList,i-5)
+//                    allReasoning30Bean.mA_10 = getMAValueByIndexDay(mCHDDList,i-10)
+                    LogUtil.d("ma1-->${mCHDDList[i].date},ma3-->${mCHDDList[i-3].date},ma5-->${mCHDDList[i-5].date},ma10-->${mCHDDList[i-10].date}")
                     val continue30Str = getAddjudgeStr(allReasoning30Bean)
-                    if (allReasoning30Bean.p <= 0 && allReasoning30Bean.p != 0.toFloat()) {
+                    if (allReasoning30Bean.p < 0 ) {
                         if (null == continue30KuiMap.get(continue30Str)) {
                             continue30KuiMap.put(continue30Str, 1)
                         } else {
@@ -4186,6 +4228,7 @@ class NewApiViewModel : BaseViewModel() {
             allReasoning30Bean: ReasoningRevBean
         ): String {
             val tempStr =
+                "${allReasoning30Bean.ao}&&${allReasoning30Bean.mA_1}&&"+
                 "(allReasoning30Bean.f36_T==${allReasoning30Bean.f36_T}&&allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
                         "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
                         "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
