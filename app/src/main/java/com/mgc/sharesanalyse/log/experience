@@ -1,20 +1,103 @@
-1、peramount large suddenly e.g compare to lastperamount gt 10 times
-2、compare to history peramount larger
-3、perstock much gt buy1 e.g 1000 times，100 time
-4、peramount gt 100 million、50 million、20 million、10 million
 
-
-
-
-    private String tenTimesSizeStr;
-    private String ge100mSizeStr;
-    private String ge50mSizeStr;
-    private String ge20mSizeStr;
-    private String ge10mSizeStr;
-    private String ge5mSizeStr;
-    private String gt1000TimesSizeStr;
-    private String gt100TimesSizeStr;
-    private String PPGtCurSizeStr;
-    private String CurGtPPSizeStr;
-(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)||(allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
-    (allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+92-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+106-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+90-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+74-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+9-->(allReasoning30Bean.f36_T==10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)
+23-->(allReasoning30Bean.f36_T==10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+9-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+11-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+7-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+7-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+6-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+9-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+5-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+12-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+4-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+16-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+4-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+16-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+4-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+9-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+331-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+350-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+3-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+11-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+3-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+5-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+3-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)
+2-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+3-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+11-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+3-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+8-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+28-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+47-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+2-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+8-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+194-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+210-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+19-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+27-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+18-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+31-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+14-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+24-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+123-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+84-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+12-->(allReasoning30Bean.f36_T==10&&allReasoning30Bean.f30_T==10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+16-->(allReasoning30Bean.f36_T==10&&allReasoning30Bean.f30_T==10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+12-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+16-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+10-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+20-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+3-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+6-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-40&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)
+12-->(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==0)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+5-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+6-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)
+8-->(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-30)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+8-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-20)
+---------------------------------------
+1-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-20)
+6-->(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-40&&allReasoning30Bean.f05_T==-40&&allReasoning30Bean.f03_T==-20)
