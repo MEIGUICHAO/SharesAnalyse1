@@ -4009,15 +4009,21 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 if (continue30) {
 
-                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
-//                    continue30 = addContinue30(allReasoning30Bean,continue30)
-//                    if (continue30) {
-//                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-//                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-//                        getAddContinue30Str(allReasoning30Bean)
-//                    }
+//                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+//                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+//                    getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
+                    /*--------------------------------------------------------------*/
+                    when (allReasoning30Bean.f36_T) {
+                        -30, -20, -10, 0, 10 ->{
+                            setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
+                            continue30 = addContinue30(allReasoning30Bean,continue30)
+                        } else -> continue30 = false
+                    }
+                    if (continue30) {
+                        setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
+                        DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
+                        getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
+                    }
                 }
             }
         }
@@ -4146,22 +4152,38 @@ class NewApiViewModel : BaseViewModel() {
     var addJudge10Str = ""
     val continue30KuiMap = HashMap<String, Int>()
     val continue30Map = HashMap<String, Int>()
+    val continue30AOMap = HashMap<String, Int>()
+    val continue30MA1Map = HashMap<String, Int>()
+    val continue30AOMA1Map = HashMap<String, Int>()
 
     fun sortContinue30Map() {
         val list = ArrayList<String>()
+        val yingList = ArrayList<String>()
         continue30KuiMap.forEach { (key, value) ->
             list.add("${key}###${value}")
         }
+        continue30Map.forEach { (key, value) ->
+            yingList.add("${key}###${value}")
+        }
 
         list.sortIntSlilitDesc()
+        yingList.sortIntSlilitDesc()
         val pathTime = DateUtils.formatToDay(FormatterEnum.YYYYMMDD__HH_MM)
         list.forEach {
             val key = it.split("###")[0]
             LogUtil.d("${key}-->${continue30KuiMap[key]}")
             LogUtil.d("${key}-->${continue30Map[key]}")
-            FileLogUtil.d("${parentBasePath}continue30map${pathTime}", "---------------------------------------")
-            FileLogUtil.d("${parentBasePath}continue30map${pathTime}", "${continue30KuiMap[key]}-->${key}")
-            FileLogUtil.d("${parentBasePath}continue30map${pathTime}", "${continue30Map[key]}-->${key}")
+            FileLogUtil.d("${parentBasePath}kui_continue30map${pathTime}", "---------------------------------------")
+            FileLogUtil.d("${parentBasePath}kui_continue30map${pathTime}", "${continue30KuiMap[key]}-->${key}")
+            FileLogUtil.d("${parentBasePath}kui_continue30map${pathTime}", "${continue30Map[key]}-->${key}")
+        }
+        yingList.forEach {
+            val key = it.split("###")[0]
+            LogUtil.d("${key}-->${continue30KuiMap[key]}")
+            LogUtil.d("${key}-->${continue30Map[key]}")
+            FileLogUtil.d("${parentBasePath}ying_continue30map${pathTime}", "---------------------------------------")
+            FileLogUtil.d("${parentBasePath}ying_continue30map${pathTime}", "${continue30Map[key]}-->${key}")
+            FileLogUtil.d("${parentBasePath}ying_continue30map${pathTime}", "${continue30KuiMap[key]}-->${key}")
         }
     }
 
@@ -4170,17 +4192,28 @@ class NewApiViewModel : BaseViewModel() {
             continue30: Boolean
         ): Boolean {
             var continue301 = continue30
-            when (getAddjudgeStr(allReasoning30Bean)) {
-                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)",
-                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)",
-                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
-                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)"
-                -> continue301 = false
+            when ("${allReasoning30Bean.mA_1}&&${allReasoning30Bean.mA_5}") {
+//            when (getAddjudgeStr(allReasoning30Bean)) {
+                "8914&&9814",//117
+                "9814&&9814",//156
+                "9814&&8914",
+                "9814&&9184",
+                "4198&&4189",
+                "4189&&4189",
+                "8914&&9184",
+                "4189&&4198",
+                "8914&&8914"
+//                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)",
+//                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)",
+//                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
+//                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)"
+                -> continue301 = true
+                else -> continue301 = false
 
             }
             return continue301
@@ -4194,14 +4227,8 @@ class NewApiViewModel : BaseViewModel() {
             when (allReasoning30Bean.f36_T) {
 //        FileLogUtil.d("${parentBasePath}addJudgeStr_30", addJudge_30Str)
                 -30, -20, -10, 0, 10 -> {
-                    allReasoning30Bean.mA_1 = getSimpleMAValueByIndexDay(mCHDDList,i)
-                    if (i + 1 < mCHDDList.size) {
-                        allReasoning30Bean.ao = getAO(mCHDDList[i+1],mCHDDList[i],"")
-                    }
-//                    allReasoning30Bean.mA_3 = getMAValueByIndexDay(mCHDDList,i-3)
-//                    allReasoning30Bean.mA_5 = getMAValueByIndexDay(mCHDDList,i-5)
-//                    allReasoning30Bean.mA_10 = getMAValueByIndexDay(mCHDDList,i-10)
-                    LogUtil.d("ma1-->${mCHDDList[i].date},ma3-->${mCHDDList[i-3].date},ma5-->${mCHDDList[i-5].date},ma10-->${mCHDDList[i-10].date}")
+                    setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
+                    allReasoning30Bean.mA_10 = getSimpleMAValueByIndexDay(mCHDDList, i - 5)
                     val continue30Str = getAddjudgeStr(allReasoning30Bean)
                     if (allReasoning30Bean.p < 0 ) {
                         if (null == continue30KuiMap.get(continue30Str)) {
@@ -4224,15 +4251,30 @@ class NewApiViewModel : BaseViewModel() {
             }
         }
 
-        private fun getAddjudgeStr(
+    private fun setAllReasoningBeanJudgeData(
+        allReasoning30Bean: ReasoningRevBean,
+        mCHDDList: java.util.ArrayList<CodeHDDBean>,
+        i: Int
+    ) {
+        allReasoning30Bean.mA_1 = getSimpleMAValueByIndexDay(mCHDDList, i)
+        //                    if (i + 1 < mCHDDList.size) {
+        //                        allReasoning30Bean.ao = getAO(mCHDDList[i+1],mCHDDList[i],"")
+        //                    }
+        //                    allReasoning30Bean.mA_3 = getMAValueByIndexDay(mCHDDList,i-3)
+        allReasoning30Bean.mA_5 = getSimpleMAValueByIndexDay(mCHDDList, i - 1)
+//        allReasoning30Bean.mA_10 = getSimpleMAValueByIndexDay(mCHDDList, i - 5)
+    }
+
+    private fun getAddjudgeStr(
             allReasoning30Bean: ReasoningRevBean
         ): String {
             val tempStr =
-                "${allReasoning30Bean.ao}&&${allReasoning30Bean.mA_1}&&"+
-                "(allReasoning30Bean.f36_T==${allReasoning30Bean.f36_T}&&allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
-                        "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
-                        "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
-                        "allReasoning30Bean.f03_T==${allReasoning30Bean.f03_T})"
+                "${allReasoning30Bean.mA_1}&&${allReasoning30Bean.mA_5}&&${allReasoning30Bean.mA_10}"
+//                        "&&"+
+//                "(allReasoning30Bean.f36_T==${allReasoning30Bean.f36_T}&&allReasoning30Bean.f30_T==${allReasoning30Bean.f30_T}&&allReasoning30Bean.f25_T==${allReasoning30Bean.f25_T}&&" +
+//                        "allReasoning30Bean.f20_T==${allReasoning30Bean.f20_T}&&allReasoning30Bean.f15_T==${allReasoning30Bean.f15_T}&&" +
+//                        "allReasoning30Bean.f10_T==${allReasoning30Bean.f10_T}&&allReasoning30Bean.f05_T==${allReasoning30Bean.f05_T}&&" +
+//                        "allReasoning30Bean.f03_T==${allReasoning30Bean.f03_T})"
 //
 //        var result = addjudgestr
 //        if (!result.contains(tempStr)) {
