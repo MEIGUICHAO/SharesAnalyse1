@@ -4194,15 +4194,15 @@ class NewApiViewModel : BaseViewModel() {
             var continue301 = continue30
             when ("${allReasoning30Bean.mA_1}&&${allReasoning30Bean.mA_5}") {
 //            when (getAddjudgeStr(allReasoning30Bean)) {
-                "8914&&9814",//117
-                "9814&&9814",//156
-                "9814&&8914",
-                "9814&&9184",
-                "4198&&4189",
-                "4189&&4189",
-                "8914&&9184",
-                "4189&&4198",
-                "8914&&8914"
+//                "8914&&9814",//117
+//                "9814&&9814",//156
+//                "9814&&8914",
+//                "9814&&9184",
+//                "4198&&4189",
+//                "4189&&4189",
+//                "8914&&9184",
+//                "4189&&4198",
+//                "8914&&8914"
 //                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-20&&allReasoning30Bean.f03_T==-10)",
 //                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==0&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-10)",
 //                "(allReasoning30Bean.f36_T==0&&allReasoning30Bean.f30_T==0&&allReasoning30Bean.f25_T==0&&allReasoning30Bean.f20_T==0&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
@@ -4212,6 +4212,40 @@ class NewApiViewModel : BaseViewModel() {
 //                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==0&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==0)",
 //                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
 //                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)"
+                "1894&&8194",
+                "8194&&9184",
+                "9814&&9841",
+                "1984&&1894",
+                "9184&&1984",
+                "1498&&1849",
+                "9814&&8194",
+                "9184&&1948",
+                "8914&&9148",
+                "1894&&8914",
+                "9841&&9418",
+                "4918&&4189",
+                "1489&&1489",
+                "4189&&1498",
+                "8941&&9841",
+                "1498&&8149",
+                "9184&&9184",
+                "4819&&4918",
+                "4981&&4918",
+                "8149&&1948",
+                "9814&&8941",
+                "1498&&1489",
+                "1948&&1849",
+                "8194&&8914",
+                "9184&&1894",
+                "9184&&8194",
+                "9481&&4891",
+                "8149&&8914",
+                "9148&&1489",
+                "1984&&8194",
+                "9418&&4189",
+                "9148&&1849",
+                "9418&&4198",
+                "1849&&8914"
                 -> continue301 = true
                 else -> continue301 = false
 
