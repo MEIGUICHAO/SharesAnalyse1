@@ -3967,7 +3967,7 @@ class NewApiViewModel : BaseViewModel() {
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
         val allReasoning30Bean = ReasoningRevBean()
-        var continue50 = false
+        var continue50 = true
         var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
@@ -4017,12 +4017,15 @@ class NewApiViewModel : BaseViewModel() {
                         -30, -20, -10, 0, 10 ->{
                             setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
                             continue30 = addContinue30(allReasoning30Bean,continue30)
-                        } else -> continue30 = false
+                        }
+                        /*--------------------------------------------------------------*/
+//                        else -> continue30 = false
                     }
+
                     if (continue30) {
                         setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
                         DBUtils.insertReasoningAllTB(allReasoning30Bean,false)
-                        getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
+//                        getAddContinue30Str(allReasoning30Bean,mCHDDList,i)
                     }
                 }
             }
@@ -4192,7 +4195,51 @@ class NewApiViewModel : BaseViewModel() {
             continue30: Boolean
         ): Boolean {
             var continue301 = continue30
+
             when ("${allReasoning30Bean.mA_1}&&${allReasoning30Bean.mA_5}") {
+                "8914&&9814","9814&&9814","9814&&8914","9814&&9184","4198&&4189","4189&&4189","8914&&9184","4189&&4198","8914&&8914"
+                ->
+                    when (getAddjudgeStr(allReasoning30Bean)) {
+                        "4189&&4198&&4918",
+                        "4189&&4189&&1498",
+                        "4189&&4189&&1489",
+                        "4189&&4198&&1894",
+                        "8914&&8914&&1894",
+                        "9814&&9184&&9814",
+                        "8914&&9814&&8194",
+                        "8914&&9814&&9418",
+                        "9814&&9814&&1984",
+                        "8914&&9814&&8914",
+                        "9814&&8914&&8149",
+                        "4189&&4189&&8419",
+                        "4189&&4189&&4981",
+                        "8914&&9814&&1498",
+                        "9814&&9814&&4189",
+                        "8914&&8914&&1948",
+                        "8914&&9814&&8419",
+                        "4198&&4189&&8194",
+                        "8914&&8914&&9841",
+                        "9814&&8914&&1498",
+                        "8914&&8914&&9184",
+                        "9814&&9814&&1948",
+                        "9814&&8914&&8941",
+                        "4189&&4189&&4198",
+                        "8914&&9814&&8941",
+                        "9814&&9814&&8419",
+                        "8914&&9814&&4198",
+                        "9814&&9184&&9184",
+                        "4189&&4189&&4891",
+                        "4198&&4189&&1849",
+                        "4189&&4198&&4981",
+                        "9814&&9814&&1489",
+                        "8914&&8914&&9418",
+                        "9814&&8914&&4981"->{
+                            continue301 = true
+                        } else-> {
+                        continue301 = false
+                    }
+                }
+
 //            when (getAddjudgeStr(allReasoning30Bean)) {
 //                "8914&&9814",//117
 //                "9814&&9814",//156
@@ -4213,39 +4260,32 @@ class NewApiViewModel : BaseViewModel() {
 //                "(allReasoning30Bean.f36_T==-10&&allReasoning30Bean.f30_T==-10&&allReasoning30Bean.f25_T==-10&&allReasoning30Bean.f20_T==-10&&allReasoning30Bean.f15_T==-10&&allReasoning30Bean.f10_T==-10&&allReasoning30Bean.f05_T==0&&allReasoning30Bean.f03_T==-10)",
 //                "(allReasoning30Bean.f36_T==-20&&allReasoning30Bean.f30_T==-20&&allReasoning30Bean.f25_T==-20&&allReasoning30Bean.f20_T==-20&&allReasoning30Bean.f15_T==-20&&allReasoning30Bean.f10_T==-20&&allReasoning30Bean.f05_T==-10&&allReasoning30Bean.f03_T==-20)"
                 "1894&&8194",
-                "8194&&9184",
                 "9814&&9841",
-                "1984&&1894",
                 "9184&&1984",
-                "1498&&1849",
-                "9814&&8194",
-                "9184&&1948",
-                "8914&&9148",
                 "1894&&8914",
                 "9841&&9418",
                 "4918&&4189",
-                "1489&&1489",
-                "4189&&1498",
-                "8941&&9841",
-                "1498&&8149",
-                "9184&&9184",
+                "4189&&4819",
                 "4819&&4918",
                 "4981&&4918",
-                "8149&&1948",
                 "9814&&8941",
                 "1498&&1489",
-                "1948&&1849",
-                "8194&&8914",
-                "9184&&1894",
-                "9184&&8194",
-                "9481&&4891",
                 "8149&&8914",
                 "9148&&1489",
                 "1984&&8194",
                 "9418&&4189",
                 "9148&&1849",
+                "1849&&1984",
                 "9418&&4198",
-                "1849&&8914"
+                "1849&&8914",
+                "9814&&1948",
+                "8194&&1894",
+                "9814&&9418",
+                "4918&&1498",
+                "1489&&1894",
+                "9148&&8914",
+                "9481&&9481",
+                "4981&&4198"
                 -> continue301 = true
                 else -> continue301 = false
 
@@ -4296,7 +4336,7 @@ class NewApiViewModel : BaseViewModel() {
         //                    }
         //                    allReasoning30Bean.mA_3 = getMAValueByIndexDay(mCHDDList,i-3)
         allReasoning30Bean.mA_5 = getSimpleMAValueByIndexDay(mCHDDList, i - 1)
-//        allReasoning30Bean.mA_10 = getSimpleMAValueByIndexDay(mCHDDList, i - 5)
+        allReasoning30Bean.mA_10 = getSimpleMAValueByIndexDay(mCHDDList, i - 5)
     }
 
     private fun getAddjudgeStr(
