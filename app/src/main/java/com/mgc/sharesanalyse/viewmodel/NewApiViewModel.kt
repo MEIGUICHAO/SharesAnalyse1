@@ -4113,6 +4113,7 @@ class NewApiViewModel : BaseViewModel() {
 //                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
 //                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
 //                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+                    setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
                     continue30 = addContinue30(allReasoning30Bean, continue30)
                     if (continue30) {
                         (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
