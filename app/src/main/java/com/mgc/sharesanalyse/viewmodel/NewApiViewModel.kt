@@ -3999,14 +3999,7 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 if (continue30) {
 
-                    when (allReasoning30Bean.f36_T) {
-                        -30, -20, -10, 0, 10 -> {
-                            setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
-                            continue30 = addContinue30(allReasoning30Bean, continue30)
-                        }
-                        /*--------------------------------------------------------------*/
-//                        else -> continue30 = false
-                    }
+                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 
                     if (continue30) {
                         setReasoningRevBeanBasicInfo(
@@ -4113,8 +4106,7 @@ class NewApiViewModel : BaseViewModel() {
 //                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
 //                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
 //                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
-                    continue30 = addContinue30(allReasoning30Bean, continue30)
+                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
                     if (continue30) {
                         (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
                         (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
@@ -4131,6 +4123,24 @@ class NewApiViewModel : BaseViewModel() {
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
         }
+    }
+
+    private fun f36AddictionJudge(
+        allReasoning30Bean: ReasoningRevBean,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        i: Int,
+        continue30: Boolean
+    ): Boolean {
+        var continue301 = continue30
+        when (allReasoning30Bean.f36_T) {
+            -30, -20, -10, 0, 10 -> {
+                setAllReasoningBeanJudgeData(allReasoning30Bean, mCHDDList, i)
+                continue301 = addContinue30(allReasoning30Bean, continue301)
+            }
+            /*--------------------------------------------------------------*/
+    //                        else -> continue30 = false
+        }
+        return continue301
     }
 
     private fun getContinue30ByF36TFilter(
