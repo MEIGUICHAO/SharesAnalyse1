@@ -43,6 +43,15 @@ fun List<DealDetailTableBean>.sortDDBeanDescByAllsize() {
     })
 }
 
+fun List<ReasoningRevBean>.sortReasoningRevBeanByP() {
+    Collections.sort(this, object : Comparator<ReasoningRevBean> {
+        override fun compare(p0: ReasoningRevBean, p1: ReasoningRevBean): Int {
+            return p1.p.compareTo(p0.p)
+        }
+    })
+
+}
+
 
 fun ArrayList<String>.getWeekDayS(time: Long, requestSize: Int) {
     var pair = DateUtils.isWeekDay(time)

@@ -23,7 +23,18 @@ class ReasoningActivity : AppCompatActivity() {
         var index = 0
         list.forEach {
             if (index < 60) {
-                result = result + "n-->${it.n},code-->${it.code},d-->${it.d},36_T-->${it.f36_T}\n"
+                result = result + "${it.n},c-->${it.code},d-->${it.d},36_T-->${it.f36_T}\n"
+                if (type == 2 || type == 3) {
+                    val filterList = DBUtils.getReasoningAllJudgeResult(tb,it)
+                    var fuCount = 0
+                    filterList.forEach {
+                        if (it.p < 0) {
+                            fuCount++
+                        }
+                    }
+                    result = result + "mp->${filterList[0].p},lp->${filterList[filterList.size-1].p},furate->${fuCount}/${filterList.size}\n"
+                    result = result + "------------------------\n"
+                }
                 index++
             }
         }
