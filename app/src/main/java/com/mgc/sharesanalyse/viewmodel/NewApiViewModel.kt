@@ -3988,7 +3988,6 @@ class NewApiViewModel : BaseViewModel() {
             )
             continue50 = pair.first
             continue30 = pair.second
-            continue30 = getContinue30ByF36TFilter(continue30, allReasoning30Bean)
             if (!continue50 && !continue30) {
                 break
             }
@@ -4071,7 +4070,6 @@ class NewApiViewModel : BaseViewModel() {
             continue50 = pair.first
             continue30 = pair.second
 
-            continue30 = getContinue30ByF36TFilter(continue30, allReasoning30Bean)
             if (!needContinue && !continue50 && !continue30) {
                 break
             }
@@ -4143,20 +4141,7 @@ class NewApiViewModel : BaseViewModel() {
         return continue301
     }
 
-    private fun getContinue30ByF36TFilter(
-        continue30: Boolean,
-        allReasoning30Bean: ReasoningRevBean
-    ): Boolean {
-        var continue301 = continue30
-//        if (continue301) {
-//            when (allReasoning30Bean.f36_T) {
-//                -20, -10, 0, 10 -> {
-//                    continue301 = false
-//                }
-//            }
-//        }
-        return continue301
-    }
+
 
     var addJudge_30Str = ""
     var addJudge_20Str = ""
