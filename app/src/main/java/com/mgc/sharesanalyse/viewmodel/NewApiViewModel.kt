@@ -2891,6 +2891,7 @@ class NewApiViewModel : BaseViewModel() {
         val dateLong = DateUtils.parse(it[i].date, FormatterEnum.YYYYMMDD)
         val dd = DateUtils.format(dateLong, FormatterEnum.DD)
         it[i].date.toInt()
+        LogUtil.d("=======================================================")
         for (index in 1..4) {
             var curForeachDate = it[i].date.toInt() - 100 * index
             if (curForeachDate < limit) {
@@ -2905,6 +2906,9 @@ class NewApiViewModel : BaseViewModel() {
                     ("${lastYear}97$dd".toInt()) -> "${lastYear}09$dd"
                     else -> curForeachDate.toString()
 
+                }
+                if ("${curYear}0401".toInt() > it[i].date.toInt() && it[i].date.toInt() > "${curYear}0101".toInt()) {
+                    LogUtil.d("dateChange-->$dateChange,date-->${it[i].date}")
                 }
 //                val dateChange = when (curForeachDate) {
 //                    ("202100$dd".toInt())-> "202012$dd"
@@ -2927,6 +2931,7 @@ class NewApiViewModel : BaseViewModel() {
                 }
             }
         }
+        LogUtil.d("=======================================================")
     }
 
     private fun getLastMonthList(
@@ -3977,7 +3982,7 @@ class NewApiViewModel : BaseViewModel() {
             val M = targetBeanList.getRevBeansOM()
             val allOM_M = ((OM - M) / OM) * 100
             val pair = DataSettingUtils.filterAllReasoning(
-                allOM_M,
+                allOM_M.toKeep2(),
                 foreachLimitList[x][0],
                 targetBeanList,
                 oldBeanList,
@@ -4058,7 +4063,7 @@ class NewApiViewModel : BaseViewModel() {
             }
 
             val pair = DataSettingUtils.filterAllReasoning(
-                allOM_M,
+                allOM_M.toKeep2(),
                 foreachLimitList[x][0],
                 targetBeanList,
                 oldBeanList,
