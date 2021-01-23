@@ -26,13 +26,20 @@ class ReasoningActivity : AppCompatActivity() {
                 result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
                 if (type == 2 || type == 3) {
                     val filterList = DBUtils.getReasoningAllJudgeResult(tb,it)
+                    val requestP = when(type){
+                        2-> 30.toFloat()
+                        else->50.toFloat()
+                    }
                     var fuCount = 0
+                    var rCount = 0
                     filterList.forEach {
                         if (it.p < 0) {
                             fuCount++
+                        } else if (it.p>=requestP) {
+                            rCount++
                         }
                     }
-                    result = result + "mp->${filterList[0].p},lp->${filterList[filterList.size-1].p},furate->${fuCount}/${filterList.size}\n"
+                    result = result + "mp->${filterList[0].p},lp->${filterList[filterList.size-1].p},fuR->${fuCount}/${filterList.size},requestR->${rCount}/${filterList.size}\n"
                     result = result + "------------------------\n"
                 }
                 index++

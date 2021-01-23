@@ -293,3 +293,36 @@ fun ArrayList<BaseReverseImp>.getAllJudgeDerbyList(tbDerbyName: String): ArrayLi
     )
     return derbyList!!
 }
+
+fun Float.toGetReasoningJudgeDFloat(): Float {
+    var value = this
+    var limit = 0.toFloat()
+    if (this > 0.toFloat()) {
+        limit = ((this/10).toInt()*10+10).toFloat()
+
+    } else {
+         limit = ((this/10).toInt()*10).toFloat()
+    }
+    if (value + 1 >= limit) {
+        value = limit
+    } else {
+        value = value + 1
+    }
+    return value
+}
+
+fun Float.toGetReasoningJudgeXFloat(): Float {
+    var value = this
+    var limit = 0.toFloat()
+    if (this > 0.toFloat()) {
+        limit = ((this/10).toInt()*10).toFloat()
+    } else {
+        limit = ((this/10).toInt()*10-10).toFloat()
+    }
+    if (value - 1 <= limit) {
+        value = limit
+    } else {
+        value = value -1
+    }
+    return value
+}
