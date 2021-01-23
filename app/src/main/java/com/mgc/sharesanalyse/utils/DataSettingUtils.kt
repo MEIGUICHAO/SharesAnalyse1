@@ -3176,6 +3176,7 @@ object DataSettingUtils {
         reasoningAllJudgeBean.oL_C_X = minOL_C
         reasoningAllJudgeBean.oL_P_X = minOL_P
         reasoningAllJudgeBean.oL_L_X = minOL_L
+
         reasoningAllJudgeBean.oM_OC_D = maxOM_OC
         reasoningAllJudgeBean.oM_OP_D = maxOM_OP
         reasoningAllJudgeBean.oM_OL_D = maxOM_OL

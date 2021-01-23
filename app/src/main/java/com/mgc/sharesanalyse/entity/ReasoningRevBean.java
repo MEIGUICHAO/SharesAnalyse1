@@ -254,7 +254,11 @@ public class ReasoningRevBean {
                 ", " + F15_T  +
                 ", " + F10_T  +
                 ", " + F05_T  +
-                ", " + F03_T
+                ", " + F03_T +
+                ", " + MA_1 +
+                ", " + MA_3 +
+                ", " + MA_5 +
+                ", " + MA_10
                 ;
     }
 
@@ -270,12 +274,12 @@ public class ReasoningRevBean {
 
     public String createAllTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER" +
-                ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER);";
+                ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER,MA1 INTEGER,MA3 INTEGER,MA5 INTEGER,MA10 INTEGER);";
     }
 
 
 
     public String insertAllTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T) VALUES (" + toAllString()+")";
+        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T,MA1 ,MA3 ,MA5 ,MA10 ) VALUES (" + toAllString()+")";
     }
 }

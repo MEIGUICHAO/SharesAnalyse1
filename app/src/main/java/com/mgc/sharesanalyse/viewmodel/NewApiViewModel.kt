@@ -4431,6 +4431,7 @@ class NewApiViewModel : BaseViewModel() {
 
             reasoningRevBean.d_D = mCHDDList[i + 5].date
         }
+        setAllReasoningBeanJudgeData(reasoningRevBean, mCHDDList, i)
     }
 
 //        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];

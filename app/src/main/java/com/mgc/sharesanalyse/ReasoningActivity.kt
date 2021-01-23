@@ -23,7 +23,7 @@ class ReasoningActivity : AppCompatActivity() {
         var index = 0
         list.forEach {
             if (index < 60) {
-                result = result + "${it.n},c-->${it.code},d-->${it.d},36_T-->${it.f36_T}\n"
+                result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
                 if (type == 2 || type == 3) {
                     val filterList = DBUtils.getReasoningAllJudgeResult(tb,it)
                     var fuCount = 0
