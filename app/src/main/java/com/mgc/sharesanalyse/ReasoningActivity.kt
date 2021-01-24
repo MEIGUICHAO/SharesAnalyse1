@@ -9,6 +9,7 @@ import com.mgc.sharesanalyse.base.ViewHolder
 import com.mgc.sharesanalyse.base.sortDescReasoningByDate
 import com.mgc.sharesanalyse.entity.ReasoningRevBean
 import com.mgc.sharesanalyse.utils.DBUtils
+import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.android.synthetic.main.act_reasoning_result.*
 
 class ReasoningActivity : AppCompatActivity() {
@@ -26,10 +27,28 @@ class ReasoningActivity : AppCompatActivity() {
         val cliMap = SparseArray<ReasoningRevBean>()
         val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
+        val removeList = ArrayList<ReasoningRevBean>()
+        if (type == 2) {
+            for (i in 0 until if (list.size>200) 200 else list.size){
+                val initList = DBUtils.getReasoningInitAllJudgeResult(tb,list[i])
+                val (fuCount, rCount) = getFuRRCount(initList, 30.toFloat())
+                if (rCount * 3 <= initList.size) {
+                    removeList.add(list[i])
+                }
+            }
+            LogUtil.d("list.size->${list.size},${list[0].d}")
+            LogUtil.d("removeList.size->${list.size}")
+            removeList.forEach {
+                list.remove(it)
+            }
+            LogUtil.d("list.size->${list.size}")
+        }
+
         for (i in 0 until list.size) {
             dataMap.put(i, null)
             cliMap.put(i, list[i])
         }
+
         val adapter = object : RecyclerAdapter<String>(this, R.layout.item_tv, dataMap) {
             override fun convert(vh: ViewHolder, t: String?, pos: Int) {
                 if (null == dataMap[pos]) {

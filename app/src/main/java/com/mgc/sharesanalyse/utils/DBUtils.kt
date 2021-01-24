@@ -1801,6 +1801,22 @@ object DBUtils {
         return list
     }
 
+    fun getReasoningInitAllJudgeResult(
+        tbName: String,
+        bean: ReasoningRevBean
+    ): ArrayList<ReasoningRevBean> {
+
+        switchDBName(Datas.REV_RESONING_DB)
+        val list = ArrayList<ReasoningRevBean>()
+        if (tabbleIsExist(tbName)) {
+            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} "
+
+            getReasoningPList(tbName, querySQL, list)
+        }
+        list.sortReasoningRevBeanByP()
+        return list
+    }
+
     fun getReasoningAllJudgeResult(
         tbName: String,
         bean: ReasoningRevBean
