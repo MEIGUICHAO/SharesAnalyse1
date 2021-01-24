@@ -1653,6 +1653,10 @@ object DBUtils {
                     val F10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
                     val F05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
                     val F03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
+                    val MA1 = cursor.getInt(cursor.getColumnIndex("MA1"))
+                    val MA3 = cursor.getInt(cursor.getColumnIndex("MA3"))
+                    val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
+                    val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
 //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                     bean.code = CODE
                     bean.n = N
@@ -1670,6 +1674,10 @@ object DBUtils {
                     bean.f10_T = F10_T
                     bean.f05_T = F05_T
                     bean.f03_T = F03_T
+                    bean.mA_1 = MA1
+                    bean.mA_3 = MA3
+                    bean.mA_5 = MA5
+                    bean.mA_10 = MA10
 //                    bean.fitlertype = FITLERTYPE
                     list.add(bean)
                     cursor.moveToNext()
@@ -1796,27 +1804,45 @@ object DBUtils {
     fun getReasoningAllJudgeResult(
         tbName: String,
         bean: ReasoningRevBean
-    ): ArrayList<ReasoningRevBean> {
+    ): Triple<ArrayList<ReasoningRevBean>, ArrayList<ReasoningRevBean>, ArrayList<ReasoningRevBean>> {
 
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
+        val list1 = ArrayList<ReasoningRevBean>()
+        val list2 = ArrayList<ReasoningRevBean>()
         if (tabbleIsExist(tbName)) {
             val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} "
-            val cursor =
-                db.rawQuery(" SELECT * FROM $tbName WHERE $querySQL", null)
-            if (null != cursor && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast) {
-                    val bean = ReasoningRevBean()
-                    val P = cursor.getFloat(cursor.getColumnIndex("P"))
-                    bean.p = P
-                    list.add(bean)
-                    cursor.moveToNext()
-                }
-                cursor.close()
-            }
+            val query1SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} " +
+                    " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3} "
+            val query2SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} " +
+                    " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3}  AND  MA5 = ${bean.mA_5} "
+            getReasoningPList(tbName, querySQL, list)
+            getReasoningPList(tbName, query1SQL, list1)
+            getReasoningPList(tbName, query2SQL, list2)
         }
         list.sortReasoningRevBeanByP()
-        return list
+        list1.sortReasoningRevBeanByP()
+        list2.sortReasoningRevBeanByP()
+        return Triple(list,list1,list2)
+    }
+
+    private fun getReasoningPList(
+        tbName: String,
+        querySQL: String,
+        list: ArrayList<ReasoningRevBean>
+    ) {
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName WHERE $querySQL", null)
+        if (null != cursor && cursor.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+                val revBean = ReasoningRevBean()
+                val P = cursor.getFloat(cursor.getColumnIndex("P"))
+                revBean.p = P
+                list.add(revBean)
+                cursor.moveToNext()
+            }
+            cursor.close()
+        }
     }
 
 
