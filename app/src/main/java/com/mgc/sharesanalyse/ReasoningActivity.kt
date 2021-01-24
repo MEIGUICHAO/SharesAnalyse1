@@ -32,7 +32,7 @@ class ReasoningActivity : AppCompatActivity() {
             for (i in 0 until if (list.size>200) 200 else list.size){
                 val initList = DBUtils.getReasoningInitAllJudgeResult(tb,list[i])
                 val (fuCount, rCount) = getFuRRCount(initList, 30.toFloat())
-                if (rCount * 3 <= initList.size) {
+                if (type30Judge(fuCount,rCount, initList)) {
                     removeList.add(list[i])
                 }
             }
@@ -80,7 +80,7 @@ class ReasoningActivity : AppCompatActivity() {
             val (fuCount, rCount) = getFuRRCount(filterList, requestP)
             var needContinue = true
             result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
-            if (type == 2 && rCount * 3 <= filterList.size) {
+            if (type == 2 && type30Judge(fuCount,rCount, filterList)) {
                 needContinue = false
             }
             if (needContinue) {
@@ -99,6 +99,12 @@ class ReasoningActivity : AppCompatActivity() {
         result = result + "------------------------------------------------\n"
         return result
     }
+
+    private fun type30Judge(
+        fuCount: Int,
+        rCount: Int,
+        filterList: ArrayList<ReasoningRevBean>
+    ) = rCount * 3 <= filterList.size && fuCount > 0
 
     private fun getResultStr(
         result: String,
