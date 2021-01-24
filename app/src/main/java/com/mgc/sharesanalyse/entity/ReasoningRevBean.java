@@ -1,6 +1,8 @@
 package com.mgc.sharesanalyse.entity;
 
-public class ReasoningRevBean {
+import java.io.Serializable;
+
+public class ReasoningRevBean implements Serializable {
     private int CODE;
     private String N;
     private String D;
