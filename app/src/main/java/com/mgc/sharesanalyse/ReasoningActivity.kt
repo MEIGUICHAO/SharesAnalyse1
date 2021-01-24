@@ -63,10 +63,11 @@ class ReasoningActivity : AppCompatActivity() {
                 }
                 vh.setOnClickListener(R.id.tvResult,object:View.OnClickListener{
                     override fun onClick(v: View?) {
-                        if (null != cliMap[pos]) {
-                            val intent = Intent(this@ReasoningActivity,ReasoningDetailActivity::class.java)
-                            intent.putExtra("BEAN",cliMap[pos])
-                            intent.putExtra("TB",tb)
+                        if (null != cliMap[pos] && type != 1) {
+                            val intent =
+                                Intent(this@ReasoningActivity, ReasoningDetailActivity::class.java)
+                            intent.putExtra("BEAN", cliMap[pos])
+                            intent.putExtra("TB", tb)
                             startActivity(intent)
                         }
                     }
