@@ -1,8 +1,11 @@
 package com.mgc.sharesanalyse
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.set
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mgc.sharesanalyse.base.RecyclerAdapter
 import com.mgc.sharesanalyse.base.ViewHolder
@@ -13,6 +16,7 @@ import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.android.synthetic.main.act_reasoning_result.*
 
 class ReasoningActivity : AppCompatActivity() {
+    val cliMap = SparseArray<ReasoningRevBean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +28,6 @@ class ReasoningActivity : AppCompatActivity() {
             else -> "All_Reasoning_50"
         }
         val dataMap = SparseArray<String>()
-        val cliMap = SparseArray<ReasoningRevBean>()
         val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
         val removeList = ArrayList<ReasoningRevBean>()
@@ -52,12 +55,23 @@ class ReasoningActivity : AppCompatActivity() {
         val adapter = object : RecyclerAdapter<String>(this, R.layout.item_tv, dataMap) {
             override fun convert(vh: ViewHolder, t: String?, pos: Int) {
                 if (null == dataMap[pos]) {
-                    val result = getShowResult(type, tb, cliMap[pos])
+                    val result = getShowResult(type, tb, cliMap[pos],pos)
                     dataMap.put(pos, result)
                     vh.setText(R.id.tvResult, result)
                 } else {
                     vh.setText(R.id.tvResult, t)
                 }
+                vh.setOnClickListener(R.id.tvResult,object:View.OnClickListener{
+                    override fun onClick(v: View?) {
+                        if (null != cliMap[pos]) {
+                            val intent = Intent(this@ReasoningActivity,ReasoningDetailActivity::class.java)
+                            intent.putExtra("BEAN",cliMap[pos])
+                            intent.putExtra("TB",tb)
+                            startActivity(intent)
+                        }
+                    }
+
+                })
             }
 
         }
@@ -68,7 +82,8 @@ class ReasoningActivity : AppCompatActivity() {
     private fun getShowResult(
         type: Int,
         tb: String,
-        it: ReasoningRevBean
+        it: ReasoningRevBean,
+        pos: Int
     ): String {
         var result = ""
         if (type == 2 || type == 3) {
@@ -80,13 +95,15 @@ class ReasoningActivity : AppCompatActivity() {
             val (fuCount, rCount) = getFuRRCount(filterList, requestP)
             var needContinue = true
             result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
-            if (type == 2 && type30Judge(fuCount,rCount, filterList)) {
+            if (type == 2 && type30Judge(fuCount, rCount, filterList)) {
                 needContinue = false
+                cliMap.put(pos,null)
             }
             if (needContinue) {
                 val (fu1Count, r1Count) = getFuRRCount(fList2, requestP)
-                if (type == 3 && fu1Count > 0 && fList2.size < 3) {
+                if (type == 3 && fuCount * 2 >= filterList.size && fu1Count > 0) {
                     needContinue = false
+                    cliMap.put(pos, null)
                 }
                 if (needContinue) {
                     val (fu2Count, r2Count) = getFuRRCount(fList3, requestP)
@@ -95,6 +112,8 @@ class ReasoningActivity : AppCompatActivity() {
                     result = getResultStr(result, fList3, fu2Count, r2Count)
                 }
             }
+        } else {
+            result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
         }
         result = result + "------------------------------------------------\n"
         return result

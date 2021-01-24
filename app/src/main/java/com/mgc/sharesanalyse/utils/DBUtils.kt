@@ -1645,18 +1645,33 @@ object DBUtils {
                     val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
                     val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
                     val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
-                    val F36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
-                    val F30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
-                    val F25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
-                    val F20_T = cursor.getInt(cursor.getColumnIndex("F20_T"))
-                    val F15_T = cursor.getInt(cursor.getColumnIndex("F15_T"))
-                    val F10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
-                    val F05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
-                    val F03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
-                    val MA1 = cursor.getInt(cursor.getColumnIndex("MA1"))
-                    val MA3 = cursor.getInt(cursor.getColumnIndex("MA3"))
-                    val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
-                    val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
+                    if (!tbName.equals("Reasoning")) {
+                        val F36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
+                        val F30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
+                        val F25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
+                        val F20_T = cursor.getInt(cursor.getColumnIndex("F20_T"))
+                        val F15_T = cursor.getInt(cursor.getColumnIndex("F15_T"))
+                        val F10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
+                        val F05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
+                        val F03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
+                        val MA1 = cursor.getInt(cursor.getColumnIndex("MA1"))
+                        val MA3 = cursor.getInt(cursor.getColumnIndex("MA3"))
+                        val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
+                        val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
+
+                        bean.f36_T = F36_T
+                        bean.f30_T = F30_T
+                        bean.f25_T = F25_T
+                        bean.f20_T = F20_T
+                        bean.f15_T = F15_T
+                        bean.f10_T = F10_T
+                        bean.f05_T = F05_T
+                        bean.f03_T = F03_T
+                        bean.mA_1 = MA1
+                        bean.mA_3 = MA3
+                        bean.mA_5 = MA5
+                        bean.mA_10 = MA10
+                    }
 //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                     bean.code = CODE
                     bean.n = N
@@ -1666,18 +1681,6 @@ object DBUtils {
                     bean.mp = MP
                     bean.after_O_P = AFTER_O_P
                     bean.after_C_P = AFTER_C_P
-                    bean.f36_T = F36_T
-                    bean.f30_T = F30_T
-                    bean.f25_T = F25_T
-                    bean.f20_T = F20_T
-                    bean.f15_T = F15_T
-                    bean.f10_T = F10_T
-                    bean.f05_T = F05_T
-                    bean.f03_T = F03_T
-                    bean.mA_1 = MA1
-                    bean.mA_3 = MA3
-                    bean.mA_5 = MA5
-                    bean.mA_10 = MA10
 //                    bean.fitlertype = FITLERTYPE
                     list.add(bean)
                     cursor.moveToNext()
@@ -1827,10 +1830,13 @@ object DBUtils {
         val list1 = ArrayList<ReasoningRevBean>()
         val list2 = ArrayList<ReasoningRevBean>()
         if (tabbleIsExist(tbName)) {
-            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} "
-            val query1SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} " +
+            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                    "AND  F03_T = ${bean.f03_T} "
+            val query1SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                    "AND  F03_T = ${bean.f03_T} " +
                     " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3} "
-            val query2SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} " +
+            val query2SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                    "AND  F03_T = ${bean.f03_T} " +
                     " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3}  AND  MA5 = ${bean.mA_5} "
             getReasoningPList(tbName, querySQL, list)
             getReasoningPList(tbName, query1SQL, list1)
@@ -1851,10 +1857,54 @@ object DBUtils {
             db.rawQuery(" SELECT * FROM $tbName WHERE $querySQL", null)
         if (null != cursor && cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
-                val revBean = ReasoningRevBean()
+
+                val bean = ReasoningRevBean()
+                val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
+                val D = cursor.getString(cursor.getColumnIndex("D"))
+                val N = cursor.getString(cursor.getColumnIndex("N"))
+                val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
                 val P = cursor.getFloat(cursor.getColumnIndex("P"))
-                revBean.p = P
-                list.add(revBean)
+                val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
+                val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
+                val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
+                if (!tbName.equals("Reasoning")) {
+                    val F36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
+                    val F30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
+                    val F25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
+                    val F20_T = cursor.getInt(cursor.getColumnIndex("F20_T"))
+                    val F15_T = cursor.getInt(cursor.getColumnIndex("F15_T"))
+                    val F10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
+                    val F05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
+                    val F03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
+                    val MA1 = cursor.getInt(cursor.getColumnIndex("MA1"))
+                    val MA3 = cursor.getInt(cursor.getColumnIndex("MA3"))
+                    val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
+                    val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
+
+                    bean.f36_T = F36_T
+                    bean.f30_T = F30_T
+                    bean.f25_T = F25_T
+                    bean.f20_T = F20_T
+                    bean.f15_T = F15_T
+                    bean.f10_T = F10_T
+                    bean.f05_T = F05_T
+                    bean.f03_T = F03_T
+                    bean.mA_1 = MA1
+                    bean.mA_3 = MA3
+                    bean.mA_5 = MA5
+                    bean.mA_10 = MA10
+                }
+//                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+                bean.code = CODE
+                bean.n = N
+                bean.d = D
+                bean.d_D = D_D
+                bean.p = P
+                bean.mp = MP
+                bean.after_O_P = AFTER_O_P
+                bean.after_C_P = AFTER_C_P
+//                    bean.fitlertype = FITLERTYPE
+                list.add(bean)
                 cursor.moveToNext()
             }
             cursor.close()

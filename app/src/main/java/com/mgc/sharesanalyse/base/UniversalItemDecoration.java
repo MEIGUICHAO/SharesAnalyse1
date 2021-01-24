@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.view.View;
 
 
@@ -110,6 +111,8 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
 
         private Paint mPaint;
         public int decorationColor = Color.BLACK;
+        public int textColor = Color.BLACK;
+        public String text = "";
 
         public ColorDecoration() {
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -117,7 +120,7 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
         }
 
         public void drawText(String text) {
-
+            this.text = text;
         }
 
         @Override
@@ -125,6 +128,10 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
 
             mPaint.setColor(decorationColor);
             c.drawRect(leftZ, topZ, rightZ, bottomZ, mPaint);
+            if (!TextUtils.isEmpty(text)) {
+                mPaint.setColor(textColor);
+                c.drawText(text,(leftZ+rightZ)/2,(topZ+bottomZ)/2,mPaint);
+            }
         }
 
     }

@@ -85,18 +85,21 @@
             android:id="@+id/btnRevFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:text="RevFilter" />
         <Button
             android:id="@+id/btnCopyFilterTBResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:text="CopyFilterTBResult" />
         <Button
             android:id="@+id/btnLogBBRangeFile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:text="LogBBRangeFile" />
         <Button
@@ -122,12 +125,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="rev_all_tb" />
         <Button
             android:id="@+id/btnReasoningAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:text="reasoning_all" />
 
         <Button
