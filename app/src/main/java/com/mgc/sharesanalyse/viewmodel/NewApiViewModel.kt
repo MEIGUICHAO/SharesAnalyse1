@@ -3972,7 +3972,7 @@ class NewApiViewModel : BaseViewModel() {
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
         val allReasoning30Bean = ReasoningRevBean()
-        var continue50 = true
+        var continue50 = false
         var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)
@@ -4001,22 +4001,31 @@ class NewApiViewModel : BaseViewModel() {
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
                 }
+
                 if (continue30) {
 
-                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
-
-                    if (continue30) {
-                        setReasoningRevBeanBasicInfo(
-                            allReasoning30Bean,
-                            code,
-                            mCHDDList,
-                            i,
-                            fitlerType
-                        )
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                        /*--------------------------------------------------------------*/
-//                        getAddContinue30Str(allReasoning30Bean, mCHDDList, i)
-                    }
+                    setReasoningRevBeanBasicInfo(
+                        allReasoning30Bean,
+                        code,
+                        mCHDDList,
+                        i,
+                        fitlerType
+                    )
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+                    /*--------------------------------------------------------------*/
+//                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
+//                    if (continue30) {
+//                        setReasoningRevBeanBasicInfo(
+//                            allReasoning30Bean,
+//                            code,
+//                            mCHDDList,
+//                            i,
+//                            fitlerType
+//                        )
+//                        DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+//                        /*--------------------------------------------------------------*/
+////                        getAddContinue30Str(allReasoning30Bean, mCHDDList, i)
+//                    }
                 }
             }
         }
@@ -4105,23 +4114,30 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 if (continue30) {
 
-//                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
-//                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
-//                    setReasoningRevBeanBasicInfo(allReasoning30Bean, code, mCHDDList, i, fitlerType)
-//                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
-                    if (continue30) {
-                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
-                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
-                        setReasoningRevBeanBasicInfo(
-                            allReasoning30Bean,
-                            code,
-                            mCHDDList,
-                            i,
-                            fitlerType
-                        )
-                        DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    }
+                    (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+                    (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+                    setReasoningRevBeanBasicInfo(
+                        allReasoning30Bean,
+                        code,
+                        mCHDDList,
+                        i,
+                        fitlerType
+                    )
+                    DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+
+//                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
+//                    if (continue30) {
+//                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
+//                        (mActivity as NewApiActivity).setBtnGetAll30("all_30_code:${code},date:${mCHDDList[i].date}")
+//                        setReasoningRevBeanBasicInfo(
+//                            allReasoning30Bean,
+//                            code,
+//                            mCHDDList,
+//                            i,
+//                            fitlerType
+//                        )
+//                        DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+//                    }
                 }
             }
             //                        logStr = logStr+"-${foreachLimitList[x][3]}-beinBegin:${mCHDDList[beinBegin].date},beinEnd:${mCHDDList[beinEnd].date},endBegin:${mCHDDList[endBegin].date},endEnd:${mCHDDList[endEnd].date},targetBeanList:${targetBeanList.size},oldBeanList:${oldBeanList.size}\n"
@@ -4404,6 +4420,17 @@ class NewApiViewModel : BaseViewModel() {
         reasoningRevBean.code = code.toInt()
         reasoningRevBean.n = mCHDDList[i].name
         reasoningRevBean.d = mCHDDList[i].date
+        setReasoningPMpLpCpOpDdInfo(i, mCHDDList, reasoningRevBean, code, fitlerType)
+        setAllReasoningBeanJudgeData(reasoningRevBean, mCHDDList, i)
+    }
+
+    private fun setReasoningPMpLpCpOpDdInfo(
+        i: Int,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        reasoningRevBean: ReasoningRevBean,
+        code: String,
+        fitlerType: Int
+    ) {
         if (i + 5 < mCHDDList.size) {
             val pList = ArrayList<Float>()
             for (m in (i + 1)..(i + 5)) {
@@ -4431,7 +4458,6 @@ class NewApiViewModel : BaseViewModel() {
 
             reasoningRevBean.d_D = mCHDDList[i + 5].date
         }
-        setAllReasoningBeanJudgeData(reasoningRevBean, mCHDDList, i)
     }
 
 //        String[] rangeArray = ["R_N70_N60","R_N50_N40","R_N40_N30","R_N30_N20","R_N20_N10","R_N10_0","R_0_10","R_10_20"];
@@ -4446,6 +4472,37 @@ class NewApiViewModel : BaseViewModel() {
 //            }
 //        }
 //    }
+
+    fun updateReasoningTB() {
+//        2 -> "All_Reasoning_30"
+//        else -> "All_Reasoning_50"
+        val tb30 = "All_Reasoning_30"
+        val tb50 = "All_Reasoning_50"
+        val r30List = DBUtils.getNullDDFromReasoningTB(tb30)
+        val r50List = DBUtils.getNullDDFromReasoningTB(tb50)
+        val (mList, codelist) = getCHDDDateListAndCodeList()
+        r30List.forEach {
+            val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
+            for (i in mCHDDList.size - 10..mCHDDList.size-1) {
+                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i-5].date}--${mCHDDList[i].date}")
+                if (mCHDDList[i-5].date==it.d){
+                    setReasoningPMpLpCpOpDdInfo(i-5,mCHDDList,it,it.code.toString(),30)
+                    DBUtils.updateReasoning(tb30,it)
+                }
+            }
+        }
+        r50List.forEach {
+            val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
+            for (i in mCHDDList.size - 10..mCHDDList.size - 1) {
+                if (mCHDDList[i-5].date==it.d){
+                    setReasoningPMpLpCpOpDdInfo(i,mCHDDList,it,it.code.toString(),50)
+                    DBUtils.updateReasoning(tb50,it)
+                    LogUtil.d("update_50")
+                }
+            }
+        }
+    }
+
 
 
 }

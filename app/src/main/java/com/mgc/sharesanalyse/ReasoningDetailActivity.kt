@@ -43,7 +43,10 @@ class ReasoningDetailActivity : AppCompatActivity() {
             if (i < filterList.size) {
                 endStr = "\n${list[i].mA_1}&&${list[i].mA_3}&&${list[i].mA_5}\n------------"
             }
-            dataMap.put(i, "${addStr}${list[i].n},c-->${list[i].code},d-->${list[i].d},p-->${list[i].p}${endStr}")
+            dataMap.put(i, "${addStr}${list[i].n},c-->${list[i].code},d-->${list[i].d},p-->${list[i].p}" +
+                    "\n lp-->${list[i].lp},mp-->${list[i].mp}" +
+                    "\n ao-->${list[i].after_O_P},ac-->${list[i].after_C_P}" +
+                    "${endStr}")
         }
 
         val adapter = object : RecyclerAdapter<String>(this, R.layout.item_tv, dataMap) {

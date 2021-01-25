@@ -31,8 +31,9 @@ class ReasoningActivity : AppCompatActivity() {
         val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
         val removeList = ArrayList<ReasoningRevBean>()
+        val countLimit = 600
         if (type == 2) {
-            for (i in 0 until if (list.size>200) 200 else list.size){
+            for (i in 0 until if (list.size>countLimit) countLimit else list.size){
                 val initList = DBUtils.getReasoningInitAllJudgeResult(tb,list[i])
                 val (fuCount, rCount) = getFuRRCount(initList, 30.toFloat())
                 if (type30Judge(fuCount,rCount, initList)) {

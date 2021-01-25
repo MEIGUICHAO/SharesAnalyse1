@@ -195,6 +195,7 @@ class NewApiActivity : AppCompatActivity() {
 //                DBUtils.dropTable("Reasoning")
 //                setBtnResoning("Resoning_Working")
                 viewModel.reasoningResult(false)
+                viewModel.updateReasoningTB()
             }
         }
         btnGetResoningResult.setOnClickListener {
@@ -219,11 +220,11 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-            DBUtils.dropTable("All_Reasoning_50")
-            DBUtils.dropTable("All_Reasoning_30")
+//            DBUtils.dropTable("All_Reasoning_50")
+//            DBUtils.dropTable("All_Reasoning_30")
             App.getSinglePool().execute {
                 viewModel.reasoningAll()
-                viewModel.sortContinue30Map()
+//                viewModel.sortContinue30Map()
             }
         }
     }

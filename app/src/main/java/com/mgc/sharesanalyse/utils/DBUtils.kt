@@ -1634,59 +1634,7 @@ object DBUtils {
         if (tabbleIsExist(tbName)) {
             val cursor =
                     db.rawQuery(" SELECT * FROM $tbName", null)
-            if (null != cursor && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast) {
-                    val bean = ReasoningRevBean()
-                    val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
-                    val D = cursor.getString(cursor.getColumnIndex("D"))
-                    val N = cursor.getString(cursor.getColumnIndex("N"))
-                    val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
-                    val P = cursor.getFloat(cursor.getColumnIndex("P"))
-                    val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
-                    val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
-                    val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
-                    if (!tbName.equals("Reasoning")) {
-                        val F36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
-                        val F30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
-                        val F25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
-                        val F20_T = cursor.getInt(cursor.getColumnIndex("F20_T"))
-                        val F15_T = cursor.getInt(cursor.getColumnIndex("F15_T"))
-                        val F10_T = cursor.getInt(cursor.getColumnIndex("F10_T"))
-                        val F05_T = cursor.getInt(cursor.getColumnIndex("F05_T"))
-                        val F03_T = cursor.getInt(cursor.getColumnIndex("F03_T"))
-                        val MA1 = cursor.getInt(cursor.getColumnIndex("MA1"))
-                        val MA3 = cursor.getInt(cursor.getColumnIndex("MA3"))
-                        val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
-                        val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
-
-                        bean.f36_T = F36_T
-                        bean.f30_T = F30_T
-                        bean.f25_T = F25_T
-                        bean.f20_T = F20_T
-                        bean.f15_T = F15_T
-                        bean.f10_T = F10_T
-                        bean.f05_T = F05_T
-                        bean.f03_T = F03_T
-                        bean.mA_1 = MA1
-                        bean.mA_3 = MA3
-                        bean.mA_5 = MA5
-                        bean.mA_10 = MA10
-                    }
-//                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
-                    bean.code = CODE
-                    bean.n = N
-                    bean.d = D
-                    bean.d_D = D_D
-                    bean.p = P
-                    bean.mp = MP
-                    bean.after_O_P = AFTER_O_P
-                    bean.after_C_P = AFTER_C_P
-//                    bean.fitlertype = FITLERTYPE
-                    list.add(bean)
-                    cursor.moveToNext()
-                }
-                cursor.close()
-            }
+            getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
         }
         return list
 
@@ -1855,6 +1803,14 @@ object DBUtils {
     ) {
         val cursor =
             db.rawQuery(" SELECT * FROM $tbName WHERE $querySQL", null)
+        getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+    }
+
+    private fun getReasoningRevBeanByCusorAndTb(
+        cursor: Cursor?,
+        tbName: String,
+        list: ArrayList<ReasoningRevBean>
+    ) {
         if (null != cursor && cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
 
@@ -1865,6 +1821,7 @@ object DBUtils {
                 val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
                 val P = cursor.getFloat(cursor.getColumnIndex("P"))
                 val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
+                val LP = cursor.getFloat(cursor.getColumnIndex("LP"))
                 val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
                 val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
                 if (!tbName.equals("Reasoning")) {
@@ -1894,16 +1851,17 @@ object DBUtils {
                     bean.mA_5 = MA5
                     bean.mA_10 = MA10
                 }
-//                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+    //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                 bean.code = CODE
                 bean.n = N
                 bean.d = D
                 bean.d_D = D_D
                 bean.p = P
                 bean.mp = MP
+                bean.lp = LP
                 bean.after_O_P = AFTER_O_P
                 bean.after_C_P = AFTER_C_P
-//                    bean.fitlertype = FITLERTYPE
+    //                    bean.fitlertype = FITLERTYPE
                 list.add(bean)
                 cursor.moveToNext()
             }
@@ -1911,5 +1869,21 @@ object DBUtils {
         }
     }
 
+    fun getNullDDFromReasoningTB(tbName:String): ArrayList<ReasoningRevBean> {
+        switchDBName(Datas.REV_RESONING_DB)
+
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName WHERE D_D ='null'", null)
+
+        val list = ArrayList<ReasoningRevBean>()
+        getReasoningRevBeanByCusorAndTb(cursor,tbName,list)
+        return list
+    }
+
+    fun updateReasoning(tbName:String,bean:ReasoningRevBean) {
+        val sql = "UPDATE $tbName SET D_D = '${bean.d_D}',MP = ${bean.mp},P = ${bean.p} ,LP = ${bean.lp} ,AFTER_O_P = ${bean.after_O_P} ,AFTER_C_P = ${bean.after_C_P} WHERE CODE=${bean.code} AND D = '${bean.d}'"
+        LogUtil.d("$sql")
+//        db.execSQL(sql)
+    }
 
 }
