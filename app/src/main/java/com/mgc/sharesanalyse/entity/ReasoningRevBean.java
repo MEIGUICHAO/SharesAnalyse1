@@ -20,6 +20,32 @@ public class ReasoningRevBean implements Serializable {
     private int F10_T;
     private int F05_T;
     private int F03_T;
+    private int L36;
+    private int L30;
+    private int L25;
+    private int L20;
+    private int L15;
+    private int L10;
+    private int L05;
+    private int L03;
+
+    private int C36;
+    private int C30;
+    private int C25;
+    private int C20;
+    private int C15;
+    private int C10;
+    private int C05;
+    private int C03;
+
+    private int O36;
+    private int O30;
+    private int O25;
+    private int O20;
+    private int O15;
+    private int O10;
+    private int O05;
+    private int O03;
     private int MA_1;
     private int MA_3;
     private int MA_5;
@@ -176,6 +202,198 @@ public class ReasoningRevBean implements Serializable {
     private String JSON;
 
 
+    public int getL36() {
+        return L36;
+    }
+
+    public void setL36(int l36) {
+        L36 = l36;
+    }
+
+    public int getL30() {
+        return L30;
+    }
+
+    public void setL30(int l30) {
+        L30 = l30;
+    }
+
+    public int getL25() {
+        return L25;
+    }
+
+    public void setL25(int l25) {
+        L25 = l25;
+    }
+
+    public int getL20() {
+        return L20;
+    }
+
+    public void setL20(int l20) {
+        L20 = l20;
+    }
+
+    public int getL15() {
+        return L15;
+    }
+
+    public void setL15(int l15) {
+        L15 = l15;
+    }
+
+    public int getL10() {
+        return L10;
+    }
+
+    public void setL10(int l10) {
+        L10 = l10;
+    }
+
+    public int getL05() {
+        return L05;
+    }
+
+    public void setL05(int l05) {
+        L05 = l05;
+    }
+
+    public int getL03() {
+        return L03;
+    }
+
+    public void setL03(int l03) {
+        L03 = l03;
+    }
+
+    public int getC36() {
+        return C36;
+    }
+
+    public void setC36(int c36) {
+        C36 = c36;
+    }
+
+    public int getC30() {
+        return C30;
+    }
+
+    public void setC30(int c30) {
+        C30 = c30;
+    }
+
+    public int getC25() {
+        return C25;
+    }
+
+    public void setC25(int c25) {
+        C25 = c25;
+    }
+
+    public int getC20() {
+        return C20;
+    }
+
+    public void setC20(int c20) {
+        C20 = c20;
+    }
+
+    public int getC15() {
+        return C15;
+    }
+
+    public void setC15(int c15) {
+        C15 = c15;
+    }
+
+    public int getC10() {
+        return C10;
+    }
+
+    public void setC10(int c10) {
+        C10 = c10;
+    }
+
+    public int getC05() {
+        return C05;
+    }
+
+    public void setC05(int c05) {
+        C05 = c05;
+    }
+
+    public int getC03() {
+        return C03;
+    }
+
+    public void setC03(int c03) {
+        C03 = c03;
+    }
+
+    public int getO36() {
+        return O36;
+    }
+
+    public void setO36(int o36) {
+        O36 = o36;
+    }
+
+    public int getO30() {
+        return O30;
+    }
+
+    public void setO30(int o30) {
+        O30 = o30;
+    }
+
+    public int getO25() {
+        return O25;
+    }
+
+    public void setO25(int o25) {
+        O25 = o25;
+    }
+
+    public int getO20() {
+        return O20;
+    }
+
+    public void setO20(int o20) {
+        O20 = o20;
+    }
+
+    public int getO15() {
+        return O15;
+    }
+
+    public void setO15(int o15) {
+        O15 = o15;
+    }
+
+    public int getO10() {
+        return O10;
+    }
+
+    public void setO10(int o10) {
+        O10 = o10;
+    }
+
+    public int getO05() {
+        return O05;
+    }
+
+    public void setO05(int o05) {
+        O05 = o05;
+    }
+
+    public int getO03() {
+        return O03;
+    }
+
+    public void setO03(int o03) {
+        O03 = o03;
+    }
+
     public int getCODE() {
         return CODE;
     }
@@ -260,7 +478,31 @@ public class ReasoningRevBean implements Serializable {
                 ", " + MA_1 +
                 ", " + MA_3 +
                 ", " + MA_5 +
-                ", " + MA_10
+                ", " + MA_10 +
+                ", " + L36 +
+                ", " + L30 +
+                ", " + L25 +
+                ", " + L20 +
+                ", " + L15 +
+                ", " + L10 +
+                ", " + L05 +
+                ", " + L03 +
+                ", " + C36 +
+                ", " + C30 +
+                ", " + C25 +
+                ", " + C20 +
+                ", " + C15 +
+                ", " + C10 +
+                ", " + C05 +
+                ", " + C03 +
+                ", " + O36 +
+                ", " + O30 +
+                ", " + O25 +
+                ", " + O20 +
+                ", " + O15 +
+                ", " + O10 +
+                ", " + O05 +
+                ", " + O03
                 ;
     }
 
@@ -276,12 +518,20 @@ public class ReasoningRevBean implements Serializable {
 
     public String createAllTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER" +
-                ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER,MA1 INTEGER,MA3 INTEGER,MA5 INTEGER,MA10 INTEGER);";
+                ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER,MA1 INTEGER,MA3 INTEGER,MA5 INTEGER,MA10 INTEGER" +
+                ",L36 INTEGER,L30 INTEGER,L25 INTEGER,L20 INTEGER,L15 INTEGER,L10 INTEGER,L05 INTEGER,L03 INTEGER"+
+                ",C36 INTEGER,C30 INTEGER,C25 INTEGER,C20 INTEGER,C15 INTEGER,C10 INTEGER,C05 INTEGER,C03 INTEGER"+
+                ",O36 INTEGER,O30 INTEGER,O25 INTEGER,O20 INTEGER,O15 INTEGER,O10 INTEGER,O05 INTEGER,O03 INTEGER"+
+                ");";
     }
 
 
 
     public String insertAllTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T,MA1 ,MA3 ,MA5 ,MA10 ) VALUES (" + toAllString()+")";
+        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T,MA1 ,MA3 ,MA5 ,MA10" +
+                ",L36 ,L30 ,L25 ,L20 ,L15 ,L10 ,L05 ,L03 "+
+                ",C36 ,C30 ,C25 ,C20 ,C15 ,C10 ,C05 ,C03 "+
+                ",O36 ,O30 ,O25 ,O20 ,O15 ,O10 ,O05 ,O03 "+
+                " ) VALUES (" + toAllString()+")";
     }
 }

@@ -3368,6 +3368,7 @@ object DataSettingUtils {
                 allReasoning50Bean
             )
             need50Continue = getNeedContinue(
+                dayType + 1,
                 juede50BeanList,
                 need50Continue,
                 OM_M,
@@ -3417,6 +3418,7 @@ object DataSettingUtils {
                 allReasoning30Bean
             )
             need30Continue = getNeedContinue(
+                dayType + 1,
                 juede30BeanList,
                 need30Continue,
                 OM_M,
@@ -3464,6 +3466,7 @@ object DataSettingUtils {
     }
 
     private fun getNeedContinue(
+        dayType: Int,
         juede50BeanList: ArrayList<ReasoningAllJudgeBean>,
         need50Continue: Boolean,
         OM_M: Float,
@@ -3508,6 +3511,48 @@ object DataSettingUtils {
                     allReasoning50Bean.f10_T = it.f10_T
                     allReasoning50Bean.f05_T = it.f05_T
                     allReasoning50Bean.f03_T = it.f03_T
+                    when (dayType) {
+                        36->{
+                            allReasoning50Bean.l36 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c36 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o36 = it.oO_P_X.toGetSimpleX()
+                        }
+                        30->{
+                            allReasoning50Bean.l30 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c30 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o30 = it.oO_P_X.toGetSimpleX()
+                        }
+                        25->{
+                            allReasoning50Bean.l25 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c25 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o25 = it.oO_P_X.toGetSimpleX()
+                        }
+                        20->{
+                            allReasoning50Bean.l20 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c20 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o20 = it.oO_P_X.toGetSimpleX()
+                        }
+                        15->{
+                            allReasoning50Bean.l15 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c15 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o15 = it.oO_P_X.toGetSimpleX()
+                        }
+                        10->{
+                            allReasoning50Bean.l10 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c10 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o10 = it.oO_P_X.toGetSimpleX()
+                        }
+                        5->{
+                            allReasoning50Bean.l05 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c05 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o05 = it.oO_P_X.toGetSimpleX()
+                        }
+                        else ->{
+                            allReasoning50Bean.l03 = it.oL_L_X.toGetSimpleX()
+                            allReasoning50Bean.c03 = it.oC_C_X.toGetSimpleX()
+                            allReasoning50Bean.o03 = it.oO_P_X.toGetSimpleX()
+                        }
+                    }
                 }
             }
         } else {

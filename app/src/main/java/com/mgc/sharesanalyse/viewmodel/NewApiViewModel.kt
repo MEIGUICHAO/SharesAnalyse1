@@ -3972,7 +3972,7 @@ class NewApiViewModel : BaseViewModel() {
         var fitlerType = 10086
         val allReasoning50Bean = ReasoningRevBean()
         val allReasoning30Bean = ReasoningRevBean()
-        var continue50 = false
+        var continue50 = true
         var continue30 = true
         for (x in foreachLimitList.size - 1 downTo 0) {
             val targetBeanList = getTargetBeanList(i, foreachLimitList, x, mCHDDList)

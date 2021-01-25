@@ -326,3 +326,7 @@ fun Float.toGetReasoningJudgeXFloat(): Float {
     }
     return value
 }
+
+fun Float.toGetSimpleX(): Int {
+    return ((this/10).toInt()*10)
+}
