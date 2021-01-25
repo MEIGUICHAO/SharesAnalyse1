@@ -1759,8 +1759,10 @@ object DBUtils {
 
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
+
+        val endJudgeStr =getJudgeEndStr(bean)
         if (tabbleIsExist(tbName)) {
-            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T} "
+            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T}  ${endJudgeStr}"
 
             getReasoningPList(tbName, querySQL, list)
         }
@@ -1777,14 +1779,15 @@ object DBUtils {
         val list = ArrayList<ReasoningRevBean>()
         val list1 = ArrayList<ReasoningRevBean>()
         val list2 = ArrayList<ReasoningRevBean>()
+        val endJudgeStr =getJudgeEndStr(bean)
         if (tabbleIsExist(tbName)) {
             val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} "
+                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}"
             val query1SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} " +
+                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
                     " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3} "
             val query2SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} " +
+                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
                     " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3}  AND  MA5 = ${bean.mA_5} "
             getReasoningPList(tbName, querySQL, list)
             getReasoningPList(tbName, query1SQL, list1)
@@ -1794,6 +1797,12 @@ object DBUtils {
         list1.sortReasoningRevBeanByP()
         list2.sortReasoningRevBeanByP()
         return Triple(list,list1,list2)
+    }
+
+    private fun getJudgeEndStr(bean: ReasoningRevBean): String {
+        return " AND L36 = ${bean.l36} AND L30 = ${bean.l30} AND L25 = ${bean.l25} AND L20 = ${bean.l20} AND L15 = ${bean.l15} AND L10 = ${bean.l10}  AND L05 = ${bean.l05} AND L03 = ${bean.l03}" +
+                    " AND O36 = ${bean.o36} AND O30 = ${bean.o30} AND O25 = ${bean.o25} AND O20 = ${bean.o20} AND O15 = ${bean.o15} AND O10 = ${bean.o10}  AND O05 = ${bean.o05} AND O03 = ${bean.o03}" +
+        " AND C36 = ${bean.c36} AND C30 = ${bean.c30} AND C25 = ${bean.c25} AND C20 = ${bean.c20} AND C15 = ${bean.c15} AND C10 = ${bean.c10}  AND C05 = ${bean.c05} AND C03 = ${bean.c03}"
     }
 
     private fun getReasoningPList(

@@ -220,8 +220,8 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-            DBUtils.dropTable("All_Reasoning_50")
-            DBUtils.dropTable("All_Reasoning_30")
+//            DBUtils.dropTable("All_Reasoning_50")
+//            DBUtils.dropTable("All_Reasoning_30")
             App.getSinglePool().execute {
                 viewModel.reasoningAll()
 //                viewModel.sortContinue30Map()
