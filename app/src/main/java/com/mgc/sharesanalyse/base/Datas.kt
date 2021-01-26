@@ -123,5 +123,8 @@ object Datas {
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
+    const val reasoning_debug = true
+    const val reasoning_debug_begin_day = 20210101
+    val reasoning_debug_end_str = if (reasoning_debug) "AND DATE < $reasoning_debug_begin_day" else ""
 
 }

@@ -1185,8 +1185,8 @@ object DBUtils {
         val reverseBean = ReverseKJsonBean()
         reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
         reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
-        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
-        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.d_D = cursor.getInt(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getInt(cursor.getColumnIndex("DATE"))
         reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
         reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
         reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
@@ -1209,8 +1209,8 @@ object DBUtils {
         val reverseBean = ReverseKJsonBean()
         reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
         reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
-        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
-        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.d_D = cursor.getInt(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getInt(cursor.getColumnIndex("DATE"))
         reverseBean.ao = cursor.getString(cursor.getColumnIndex("AO"))
         reverseBean.curP = cursor.getFloat(cursor.getColumnIndex("CurP"))
         reverseBean.ma = cursor.getInt(cursor.getColumnIndex("MA"))
@@ -1241,8 +1241,8 @@ object DBUtils {
         val reverseBean = TR_K_SLL_Bean()
         reverseBean.setCODE(cursor.getInt(cursor.getColumnIndex("CODE")))
         reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
-        reverseBean.d_D = cursor.getString(cursor.getColumnIndex("D_D"))
-        reverseBean.date = cursor.getString(cursor.getColumnIndex("DATE"))
+        reverseBean.d_D = cursor.getInt(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getInt(cursor.getColumnIndex("DATE"))
         reverseBean.s_A_TR = cursor.getFloat(cursor.getColumnIndex("S_A_TR"))
         reverseBean.s_R_TR = cursor.getFloat(cursor.getColumnIndex("S_R_TR"))
         reverseBean.s_B_TR = cursor.getFloat(cursor.getColumnIndex("S_B_TR"))
@@ -1324,7 +1324,7 @@ object DBUtils {
             createRevFilterTable(newTBName, countList[0],type)
             countList.forEach {
                 if (it is ReverseKJsonBean) {
-                    if (!queryDataIsExsitByCodeAndDate(newTBName, it.code.toString(),it.date)){
+                    if (!queryDataIsExsitByCodeAndDate(newTBName, it.code.toString(),it.date.toString())){
                         var insertSqlStr = ""
                         when (type) {
                             1->{

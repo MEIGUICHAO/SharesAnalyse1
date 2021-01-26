@@ -2,9 +2,9 @@ package com.mgc.sharesanalyse.entity;
 
 public class ReverseKJsonBean implements BaseReverseImp {
     private int code;
-    private String date;
+    private int date;
     private String N;
-    private String D_D;
+    private int D_D;
     private String P_T;
     private String D_T;
 
@@ -17,11 +17,11 @@ public class ReverseKJsonBean implements BaseReverseImp {
     }
 
 
-    public String getD_D() {
+    public int getD_D() {
         return D_D;
     }
 
-    public void setD_D(String d_D) {
+    public void setD_D(int d_D) {
         D_D = d_D;
     }
 
@@ -104,11 +104,11 @@ public class ReverseKJsonBean implements BaseReverseImp {
         this.code = code;
     }
 
-    public String getDate() {
+    public int getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 
@@ -416,8 +416,8 @@ public class ReverseKJsonBean implements BaseReverseImp {
     public String toDerbyString() {
         return code +
                 ", '" + N + '\'' +
-                ", '" + D_D + '\'' +
-                ", '" + date + '\'' +
+                ", " + D_D  +
+                ", " + date  +
                 ", '" + AO + '\'' +
                 ", " + CurP +
                 ", " + MA +
@@ -439,8 +439,8 @@ public class ReverseKJsonBean implements BaseReverseImp {
         return "'" +D_T + '\'' +
                 ", '" + P_T + '\'' +
                 ", '" + N + '\'' +
-                ", '" + D_D + '\'' +
-                ", '" + date + '\'' +
+                ", " + D_D  +
+                ", " + date +
                 ", '" + AO + '\'' +
                 ", " + CurP +
                 ", " + MA +
@@ -460,7 +460,7 @@ public class ReverseKJsonBean implements BaseReverseImp {
 
 
     public String createRevCodeTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,N TEXT,D_D TEXT,DATE INTEGER,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
                 ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER);";
     }
 
@@ -477,13 +477,13 @@ public class ReverseKJsonBean implements BaseReverseImp {
     }
 
     public String createRevCodeDerbyTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,D_D INTEGER,DATE INTEGER,AO TEXT,CurP INTEGER, P_T TEXT, D_T TEXT,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
                 ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
 
     @Override
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D INTEGER,DATE INTEGER,AO TEXT,CurP INTEGER,MA INTEGER,OM_M INTEGER,OM_C INTEGER,OM_P INTEGER,OM_L INTEGER,OC_M INTEGER,OC_C INTEGER" +
                 ",OC_P INTEGER,OC_L INTEGER,OO_M INTEGER,OO_C INTEGER,OO_P INTEGER,OO_L INTEGER,OL_M INTEGER,OL_C INTEGER,OL_P INTEGER,OL_L INTEGER,GS INTEGER);";
     }
 
@@ -500,7 +500,7 @@ public class ReverseKJsonBean implements BaseReverseImp {
     }
 
     public String createDerbyTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT,AO TEXT,CurP INTEGER,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D INTEGER,DATE INTEGER,AO TEXT,CurP INTEGER,MA INTEGER,OM_OC INTEGER,OM_OP INTEGER,OM_OL INTEGER,OC_OP INTEGER" +
                 ",OC_OL INTEGER,OP_OL INTEGER,M_C INTEGER,M_P INTEGER,M_L INTEGER,C_P INTEGER,C_L INTEGER,P_L INTEGER);";
     }
 

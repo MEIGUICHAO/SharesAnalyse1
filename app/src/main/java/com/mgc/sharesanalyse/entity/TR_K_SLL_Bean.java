@@ -3,8 +3,8 @@ package com.mgc.sharesanalyse.entity;
 public class TR_K_SLL_Bean implements BaseReverseImp {
     private int CODE;
     private String N;
-    private String D_D;
-    private String DATE;
+    private int D_D;
+    private int DATE;
     private float S_A_TR;
     private float S_R_TR;
     private float S_B_TR;
@@ -53,19 +53,19 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
         N = n;
     }
 
-    public String getD_D() {
+    public int getD_D() {
         return D_D;
     }
 
-    public void setD_D(String d_D) {
+    public void setD_D(int d_D) {
         D_D = d_D;
     }
 
-    public String getDATE() {
+    public int getDATE() {
         return DATE;
     }
 
-    public void setDATE(String DATE) {
+    public void setDATE(int DATE) {
         this.DATE = DATE;
     }
 
@@ -168,7 +168,7 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
 
     @Override
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT," +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D INTEGER,DATE INTEGER," +
                 "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER," +
                 "K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER," +
                 "K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
@@ -183,7 +183,7 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
     }
 
     public String createRevCodeTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,P_T TEXT,D_T TEXT,D_D TEXT,DATE TEXT," +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, N TEXT,P_T TEXT,D_T TEXT,D_D INTEGER,DATE INTEGER," +
                 "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER," +
                 "K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER," +
                 "K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
@@ -202,8 +202,8 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
         return
                 "" + CODE +
                 ", '" + N + '\'' +
-                ", '" + D_D + '\'' +
-                ", '" + DATE + '\'' +
+                ", " + D_D  +
+                ", " + DATE   +
                 ", " + S_A_TR +
                 ", " + S_R_TR +
                 ", " + S_B_TR +
@@ -223,8 +223,8 @@ public class TR_K_SLL_Bean implements BaseReverseImp {
         return "'" +D_T + '\'' +
                 ", '" + P_T + '\'' +
                 ", '" + N + '\'' +
-                ", '" + D_D + '\'' +
-                ", '" + DATE + '\'' +
+                ", " + D_D  +
+                ", " + DATE  +
                 ", " + S_A_TR +
                 ", " + S_R_TR +
                 ", " + S_B_TR +

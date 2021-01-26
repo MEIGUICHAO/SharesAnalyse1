@@ -2962,7 +2962,7 @@ class NewApiViewModel : BaseViewModel() {
         AO = getAO(afterBean, targetBean, AO)
         reverseKJsonBean.ao = AO
         reverseKJsonBean.n = targetBean.name
-        reverseKJsonBean.d_D = requestBean.date
+        reverseKJsonBean.d_D = requestBean.date.toInt()
         return reverseKJsonBean
     }
 
@@ -3011,7 +3011,7 @@ class NewApiViewModel : BaseViewModel() {
         ma: Int
     ) {
         reverseKJsonBean.code = code.toInt()
-        reverseKJsonBean.date = targetBean.date
+        reverseKJsonBean.date = targetBean.date.toInt()
         reverseKJsonBean.curP = ((requestBean.cp - targetBean.cp) / targetBean.cp * 100).toKeep2()
         reverseKJsonBean.oM_M = ((OM - M) / OM * 100).toKeep2()
         reverseKJsonBean.oM_C = ((OM - C) / OM * 100).toKeep2()
@@ -3530,7 +3530,7 @@ class NewApiViewModel : BaseViewModel() {
                         val name = DBUtils.createOtherBBTBDataByOriginCodeAndDate(
                             Datas.REV_FILTERDB + "2020",
                             it.code,
-                            it.date,
+                            it.date.toString(),
                             1,
                             tbName,
                             "_R_${Math.abs(i)}_${Math.abs(i + Datas.FILTER_PROGRESS)}"
@@ -3558,7 +3558,7 @@ class NewApiViewModel : BaseViewModel() {
                             DBUtils.createOtherBBTBDataByOriginCodeAndDate(
                                 Datas.REVERSE_KJ_DB,
                                 it.code,
-                                it.date,
+                                it.date.toString(),
                                 kotlin.run {
                                     if (tbName.contains("TR")) {
                                         3
@@ -3880,7 +3880,7 @@ class NewApiViewModel : BaseViewModel() {
 
                 var list = DBUtils.getFilterAllByTbName(
                     Datas.REVERSE_KJ_DB,
-                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr}",
+                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                     arrayOf(
                         i.toString(),
                         (i + Datas.FILTER_PROGRESS).toString()
@@ -3949,6 +3949,9 @@ class NewApiViewModel : BaseViewModel() {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
 //                        if (mCHDDList[i].date == "20210113"||mCHDDList[i].date == "20210114") {
 //                        }
+                        if (Datas.reasoning_debug && mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day) {
+                            continue
+                        }
                         insertAllReasoning(
                             false,
                             foreachLimitList,

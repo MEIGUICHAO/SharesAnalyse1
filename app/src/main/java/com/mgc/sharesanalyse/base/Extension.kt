@@ -302,14 +302,14 @@ fun Float.toGetReasoningJudgeDFloat(): Float {
     } else {
         (this / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS
     }
-    if (value + 1 >= limit) {
-        value = limit.toFloat()
-    } else {
-        value = value + 1
-    }
+//    if (value + 1 >= limit) {
+//        value = limit.toFloat()
+//    } else {
+//        value = value + 1
+//    }
 
 
-    return value
+    return limit.toFloat()
 }
 
 fun Float.toGetReasoningJudgeXFloat(): Float {
@@ -320,12 +320,12 @@ fun Float.toGetReasoningJudgeXFloat(): Float {
     } else {
         limit = ((this/Datas.FILTER_PROGRESS).toInt()*Datas.FILTER_PROGRESS - if ((this % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS).toFloat()
     }
-    if (value - 1 <= limit) {
-        value = limit
-    } else {
-        value = value -1
-    }
-    return value
+//    if (value - 1 <= limit) {
+//        value = limit
+//    } else {
+//        value = value -1
+//    }
+    return limit
 }
 
 //fun Float.toGetReasoningJudgeXFloat(): Float {
