@@ -1847,6 +1847,59 @@ object DBUtils {
                     val MA5 = cursor.getInt(cursor.getColumnIndex("MA5"))
                     val MA10 = cursor.getInt(cursor.getColumnIndex("MA10"))
 
+                    val L36 = cursor.getInt(cursor.getColumnIndex("L36"))
+                    val L30 = cursor.getInt(cursor.getColumnIndex("L30"))
+                    val L25 = cursor.getInt(cursor.getColumnIndex("L25"))
+                    val L20 = cursor.getInt(cursor.getColumnIndex("L20"))
+                    val L15 = cursor.getInt(cursor.getColumnIndex("L15"))
+                    val L10 = cursor.getInt(cursor.getColumnIndex("L10"))
+                    val L05 = cursor.getInt(cursor.getColumnIndex("L05"))
+                    val L03 = cursor.getInt(cursor.getColumnIndex("L03"))
+                    bean.l36 = L36
+                    bean.l30 = L30
+                    bean.l25 = L25
+                    bean.l20 = L20
+                    bean.l15 = L15
+                    bean.l10 = L10
+                    bean.l05 = L05
+                    bean.l03 = L03
+
+
+                    val O36 = cursor.getInt(cursor.getColumnIndex("O36"))
+                    val O30 = cursor.getInt(cursor.getColumnIndex("O30"))
+                    val O25 = cursor.getInt(cursor.getColumnIndex("O25"))
+                    val O20 = cursor.getInt(cursor.getColumnIndex("O20"))
+                    val O15 = cursor.getInt(cursor.getColumnIndex("O15"))
+                    val O10 = cursor.getInt(cursor.getColumnIndex("O10"))
+                    val O05 = cursor.getInt(cursor.getColumnIndex("O05"))
+                    val O03 = cursor.getInt(cursor.getColumnIndex("O03"))
+                    bean.o36 = O36
+                    bean.o30 = O30
+                    bean.o25 = O25
+                    bean.o20 = O20
+                    bean.o15 = O15
+                    bean.o10 = O10
+                    bean.o05 = O05
+                    bean.o03 = O03
+
+
+                    val C36 = cursor.getInt(cursor.getColumnIndex("C36"))
+                    val C30 = cursor.getInt(cursor.getColumnIndex("C30"))
+                    val C25 = cursor.getInt(cursor.getColumnIndex("C25"))
+                    val C20 = cursor.getInt(cursor.getColumnIndex("C20"))
+                    val C15 = cursor.getInt(cursor.getColumnIndex("C15"))
+                    val C10 = cursor.getInt(cursor.getColumnIndex("C10"))
+                    val C05 = cursor.getInt(cursor.getColumnIndex("C05"))
+                    val C03 = cursor.getInt(cursor.getColumnIndex("C03"))
+                    bean.c36 = C36
+                    bean.c30 = C30
+                    bean.c25 = C25
+                    bean.c20 = C20
+                    bean.c15 = C15
+                    bean.c10 = C10
+                    bean.c05 = C05
+                    bean.c03 = C03
+
                     bean.f36_T = F36_T
                     bean.f30_T = F30_T
                     bean.f25_T = F25_T
@@ -1892,7 +1945,7 @@ object DBUtils {
     fun updateReasoning(tbName:String,bean:ReasoningRevBean) {
         val sql = "UPDATE $tbName SET D_D = '${bean.d_D}',MP = ${bean.mp},P = ${bean.p} ,LP = ${bean.lp} ,AFTER_O_P = ${bean.after_O_P} ,AFTER_C_P = ${bean.after_C_P} WHERE CODE=${bean.code} AND D = '${bean.d}'"
         LogUtil.d("$sql")
-//        db.execSQL(sql)
+        db.execSQL(sql)
     }
 
 }

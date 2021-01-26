@@ -1208,7 +1208,11 @@ class NewApiViewModel : BaseViewModel() {
         )
 
         //TODO 重新
-        (mActivity as NewApiActivity).revAllJudgeResult()
+        if (!Datas.DEBUG) {
+            (mActivity as NewApiActivity).revAllJudgeResult()
+        }
+        updateReasoningTB()
+
 
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
 

@@ -195,7 +195,6 @@ class NewApiActivity : AppCompatActivity() {
 //                DBUtils.dropTable("Reasoning")
 //                setBtnResoning("Resoning_Working")
                 viewModel.reasoningResult(false)
-                viewModel.updateReasoningTB()
             }
         }
         btnGetResoningResult.setOnClickListener {
