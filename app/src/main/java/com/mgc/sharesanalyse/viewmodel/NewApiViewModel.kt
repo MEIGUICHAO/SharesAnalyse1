@@ -4492,6 +4492,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (mCHDDList[i-5].date==it.d){
                     setReasoningPMpLpCpOpDdInfo(i-5,mCHDDList,it,it.code.toString(),30)
                     DBUtils.updateReasoning(tb30,it)
+                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i-5].date}")
                 }
             }
         }
@@ -4502,9 +4503,13 @@ class NewApiViewModel : BaseViewModel() {
                     setReasoningPMpLpCpOpDdInfo(i,mCHDDList,it,it.code.toString(),50)
                     DBUtils.updateReasoning(tb50,it)
                     LogUtil.d("update_50")
+                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i-5].date}")
                 }
             }
         }
+
+        (mActivity as NewApiActivity).setBtnResoning("updateReasoning_Finish")
+
     }
 
 
