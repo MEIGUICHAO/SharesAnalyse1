@@ -1379,6 +1379,7 @@ object DBUtils {
 
     fun getFilterAllByTbName(dbName: String, sqlStr:String,selection:Array<String?>?): ArrayList<BaseReverseImp>? {
         switchDBName(dbName)
+        LogUtil.d("$sqlStr")
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
             db.rawQuery(sqlStr, selection)

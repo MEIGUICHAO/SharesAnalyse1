@@ -3895,7 +3895,7 @@ class NewApiViewModel : BaseViewModel() {
                     nextContinue++
                     list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr}",
+                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                         arrayOf(
                             i.toString(),
                             ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
@@ -3949,7 +3949,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
 //                        if (mCHDDList[i].date == "20210113"||mCHDDList[i].date == "20210114") {
 //                        }
-                        if (Datas.reasoning_debug && mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day) {
+                        if (Datas.reasoning_debug &&( mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day || mCHDDList[i].date.toInt() > Datas.reasoning_debug_end_day)) {
                             continue
                         }
                         insertAllReasoning(

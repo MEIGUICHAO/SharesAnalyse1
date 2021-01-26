@@ -3230,7 +3230,8 @@ object DataSettingUtils {
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
-        val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr
+        val addstr =
+            mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
         val countLimit = if (list.size >= 4) 4 else 2
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             nextTbName,
