@@ -57,7 +57,7 @@ object Datas {
 
 //    val DEBUG_Code = listOf("002096","002370","002943","300641","300906","601015")
 //    val DEBUG_Code = listOf("000816","002797","300491","600983","603698")//all_reaoning_50
-    val DEBUG_Code = listOf("688005")
+    val DEBUG_Code = listOf("000020","603533")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")
 
@@ -117,10 +117,11 @@ object Datas {
     const val AA_FILTER_ = "AA_FILTER_"
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
-    const val FILTER_PROGRESS = 10
+    const val FILTER_PROGRESS = 5
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601
-//    const val HHQDayCount = 6
+    const val REASONING_DEBUG_CODE = 11
+    val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
 
 }

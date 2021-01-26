@@ -125,14 +125,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:visibility="gone"
             android:text="rev_all_tb" />
         <Button
             android:id="@+id/btnReasoningAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:visibility="gone"
             android:text="reasoning_all" />
 
         <Button

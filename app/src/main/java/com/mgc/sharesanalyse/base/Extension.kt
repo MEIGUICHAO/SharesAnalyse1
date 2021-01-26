@@ -296,18 +296,19 @@ fun ArrayList<BaseReverseImp>.getAllJudgeDerbyList(tbDerbyName: String): ArrayLi
 
 fun Float.toGetReasoningJudgeDFloat(): Float {
     var value = this
-    var limit = 0.toFloat()
-    if (this > 0.toFloat()) {
-        limit = ((this/10).toInt()*10+10).toFloat()
 
+    val limit = if (this > 0.toFloat()) {
+        (this / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS + if ((this % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS
     } else {
-         limit = ((this/10).toInt()*10).toFloat()
+        (this / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS
     }
     if (value + 1 >= limit) {
-        value = limit
+        value = limit.toFloat()
     } else {
         value = value + 1
     }
+
+
     return value
 }
 
@@ -315,9 +316,9 @@ fun Float.toGetReasoningJudgeXFloat(): Float {
     var value = this
     var limit = 0.toFloat()
     if (this > 0.toFloat()) {
-        limit = ((this/10).toInt()*10).toFloat()
+        limit = ((this/Datas.FILTER_PROGRESS).toInt()*Datas.FILTER_PROGRESS).toFloat()
     } else {
-        limit = ((this/10).toInt()*10-10).toFloat()
+        limit = ((this/Datas.FILTER_PROGRESS).toInt()*Datas.FILTER_PROGRESS - if ((this % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS).toFloat()
     }
     if (value - 1 <= limit) {
         value = limit
@@ -327,6 +328,31 @@ fun Float.toGetReasoningJudgeXFloat(): Float {
     return value
 }
 
+//fun Float.toGetReasoningJudgeXFloat(): Float {
+//    var value = this
+//
+//    val limit =if (this > 0) {
+//        (this / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS
+//    } else {
+//        (this / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS - if ((this % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS
+//    }
+//
+//    if (value - 1 <= limit) {
+//        value = limit.toFloat()
+//    } else {
+//        value = value -1
+//    }
+//    return value
+//}
+
 fun Float.toGetSimpleX(): Int {
-    return ((this/10).toInt()*10)
+    return ((this/Datas.FILTER_PROGRESS).toInt()*Datas.FILTER_PROGRESS)
+}
+
+fun List<String>.toReasoningCodeList(): String {
+    var result = ""
+    this.forEach {
+        result =  if (result.isEmpty())" CODE = ${it.toInt()}" else  "$result OR CODE = ${it.toInt()}"
+    }
+    return result
 }

@@ -8,6 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
+import com.mgc.sharesanalyse.base.toGetReasoningJudgeDFloat
+import com.mgc.sharesanalyse.base.toGetReasoningJudgeXFloat
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
 import com.mgc.sharesanalyse.entity.SinaDealDatailBean
@@ -213,14 +215,22 @@ class NewApiActivity : AppCompatActivity() {
             startActivity(intent)
         }
         btnRevAllTb.setOnClickListener {
+
+//            val (rangeMax26,rangeMin26)= DataSettingUtils.getMMByValue(Pair("-13.84","-13.84"))
+//            val (rangeMax24,rangeMin24)= DataSettingUtils.getMMByValue(Pair("-11.72","-11.28"))
+//            val rangeMax26 = (-13.84).toFloat().toGetReasoningJudgeDFloat()
+//            val rangeMin26 = (-11.28).toFloat().toGetReasoningJudgeDFloat()
+//            val rangeMax24 = (-13.84).toFloat().toGetReasoningJudgeXFloat()
+//            val rangeMin24 = (-11.72).toFloat().toGetReasoningJudgeXFloat()
+//            LogUtil.d("!!$rangeMax26,$rangeMin26==$rangeMax24,$rangeMin24")
             App.getSinglePool().execute {
                 revAllJudgeResult()
             }
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-//            DBUtils.dropTable("All_Reasoning_50")
-//            DBUtils.dropTable("All_Reasoning_30")
+            DBUtils.dropTable("All_Reasoning_50")
+            DBUtils.dropTable("All_Reasoning_30")
             App.getSinglePool().execute {
                 viewModel.reasoningAll()
 //                viewModel.sortContinue30Map()

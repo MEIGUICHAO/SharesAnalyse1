@@ -3856,6 +3856,7 @@ class NewApiViewModel : BaseViewModel() {
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
         val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
+        LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
         ptList.forEach { pt ->
 
             LogUtil.d("revAllJudgeResult")
@@ -3879,7 +3880,7 @@ class NewApiViewModel : BaseViewModel() {
 
                 var list = DBUtils.getFilterAllByTbName(
                     Datas.REVERSE_KJ_DB,
-                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr}",
                     arrayOf(
                         i.toString(),
                         (i + Datas.FILTER_PROGRESS).toString()
@@ -3894,7 +3895,7 @@ class NewApiViewModel : BaseViewModel() {
                     nextContinue++
                     list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<?",
+                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr}",
                         arrayOf(
                             i.toString(),
                             ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
@@ -3946,7 +3947,7 @@ class NewApiViewModel : BaseViewModel() {
             if (mCHDDList.size > 77) {
                 for (i in 72..mCHDDList.size - 1) {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
-//                        if (mCHDDList[i].date == "20200727"||mCHDDList[i].date == "20200728") {
+//                        if (mCHDDList[i].date == "20210113"||mCHDDList[i].date == "20210114") {
 //                        }
                         insertAllReasoning(
                             false,

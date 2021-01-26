@@ -2675,8 +2675,7 @@ object DataSettingUtils {
     fun getRangeMaxMin(tbName: String, dbName: String): Pair<Int, Int> {
         val pair =
             DBUtils.selectMaxMinValueByTbAndColumn(tbName, "OM_M", dbName)
-        val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
-        val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        val (rangeMax, rangeMin) = getMMByValue(pair)
         return Pair(rangeMax, rangeMin)
     }
 
@@ -2687,8 +2686,21 @@ object DataSettingUtils {
     ): Pair<Int, Int> {
         val pair =
             DBUtils.selectMaxMinValueByTbAndColumnByCodeList(codeList, tbName, "OM_M", dbName)
-        val rangeMax = (pair.second.toFloat() / 10).toInt() * 10 + 10 - Datas.FILTER_PROGRESS
-        val rangeMin = (pair.first.toFloat() / 10).toInt() * 10 - 10
+        val (rangeMax, rangeMin) = getMMByValue(pair)
+        return Pair(rangeMax, rangeMin)
+    }
+
+    fun getMMByValue(pair: Pair<String, String>): Pair<Int, Int> {
+        val rangeMax = if (pair.second.toFloat() > 0) {
+            (pair.second.toFloat() / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS + if ((pair.second.toFloat() % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS
+        } else {
+            (pair.second.toFloat() / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS
+        }
+        val rangeMin =if (pair.first.toFloat() > 0) {
+            (pair.first.toFloat() / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS
+        } else {
+            (pair.first.toFloat() / Datas.FILTER_PROGRESS).toInt() * Datas.FILTER_PROGRESS - if ((pair.first.toFloat() % Datas.FILTER_PROGRESS.toFloat()) == 0.toFloat()) 0  else Datas.FILTER_PROGRESS
+        }
         return Pair(rangeMax, rangeMin)
     }
 
@@ -3218,7 +3230,7 @@ object DataSettingUtils {
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
-        val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true)
+        val addstr = mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr
         val countLimit = if (list.size >= 4) 4 else 2
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             nextTbName,
