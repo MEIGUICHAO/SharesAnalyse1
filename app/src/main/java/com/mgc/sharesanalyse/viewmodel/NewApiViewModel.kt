@@ -2626,63 +2626,108 @@ class NewApiViewModel : BaseViewModel() {
 
                     //20避免新股一字板
                     if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
-                        insertRevBean(
-                            5,
-                            5,
-                            targetBeanList,
-                            mCHDDList,
-                            6,
-                            6,
-                            afterBean,
-                            targetBean,
-                            requestBean,
-                            code,
-                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
-                            ""
-                        )
-                        val foreachLimitList = getForeachLimitList()
-                        val foreachTBNAmeList = arrayListOf(
-                            arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
-                            arrayOf(Datas.REVERSE_TB_P50_55, Datas.REVERSE_TB_P30_55),
-                            arrayOf(Datas.REVERSE_TB_P50_10, Datas.REVERSE_TB_P30_10),
-                            arrayOf(Datas.REVERSE_TB_P50_15, Datas.REVERSE_TB_P30_15),
-                            arrayOf(Datas.REVERSE_TB_P50_20, Datas.REVERSE_TB_P30_20),
-                            arrayOf(Datas.REVERSE_TB_P50_25, Datas.REVERSE_TB_P30_25),
-                            arrayOf(Datas.REVERSE_TB_P50_30, Datas.REVERSE_TB_P30_30),
-                            arrayOf(Datas.REVERSE_TB_P50_36, Datas.REVERSE_TB_P30_36)
-                        )
-                        val foreachREVTRTBNAmeList = arrayListOf(
-                            arrayOf(Datas.REV_TR_TB_P50_33, Datas.REV_TR_TB_P30_33),
-                            arrayOf(Datas.REV_TR_TB_P50_55, Datas.REV_TR_TB_P30_55),
-                            arrayOf(Datas.REV_TR_TB_P50_10, Datas.REV_TR_TB_P30_10),
-                            arrayOf(Datas.REV_TR_TB_P50_15, Datas.REV_TR_TB_P30_15),
-                            arrayOf(Datas.REV_TR_TB_P50_20, Datas.REV_TR_TB_P30_20),
-                            arrayOf(Datas.REV_TR_TB_P50_25, Datas.REV_TR_TB_P30_25),
-                            arrayOf(Datas.REV_TR_TB_P50_30, Datas.REV_TR_TB_P30_30),
-                            arrayOf(Datas.REV_TR_TB_P50_36, Datas.REV_TR_TB_P30_36)
-                        )
-                        insertReverseKJSLL(code, targetBean, requestBean)
+                        if (mCHDDList.size > 70) {
+                            val revKJOCOOBean = ReverseKJsonBean()
+                            val originOC = mCHDDList[0].cp
+                            val originOO = mCHDDList[0].op
+                            revKJOCOOBean.code = code.toInt()
+                            revKJOCOOBean.n = targetBean.name
+                            revKJOCOOBean.date = targetBean.date.toInt()
+                            revKJOCOOBean.d_D = requestBean.date.toInt()
+                            revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList[3].cp, originOC)
+                            revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList[5].cp, originOC)
+                            revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList[10].cp, originOC)
+                            revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList[15].cp, originOC)
+                            revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList[20].cp, originOC)
+                            revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList[25].cp, originOC)
+                            revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList[30].cp, originOC)
+                            revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList[35].cp, originOC)
+                            revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList[40].cp, originOC)
+                            revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList[45].cp, originOC)
+                            revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList[50].cp, originOC)
+                            revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList[55].cp, originOC)
+                            revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList[60].cp, originOC)
+                            revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList[65].cp, originOC)
+                            revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList[70].cp, originOC)
 
-                        for (i in 0 until foreachLimitList.size) {
-                            if (mCHDDList.size > foreachLimitList[i][0]) {
-                                insertRevBean(
-                                    foreachLimitList[i][1],
-                                    foreachLimitList[i][2],
-                                    targetBeanList,
-                                    mCHDDList,
-                                    foreachLimitList[i][3],
-                                    foreachLimitList[i][4],
-                                    afterBean,
-                                    targetBean,
-                                    requestBean,
-                                    code,
-                                    if (ROP >= 1.5 * TOP) foreachTBNAmeList[i][0] else foreachTBNAmeList[i][1],
-                                    if (ROP >= 1.5 * TOP) foreachREVTRTBNAmeList[i][0] else foreachREVTRTBNAmeList[i][1]
-                                )
-                            } else {
-                                break
-                            }
+
+                            revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList[3].op, originOO)
+                            revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList[5].op, originOO)
+                            revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList[10].op, originOO)
+                            revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList[15].op, originOO)
+                            revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList[20].op, originOO)
+                            revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList[25].op, originOO)
+                            revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList[30].op, originOO)
+                            revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList[35].op, originOO)
+                            revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList[40].op, originOO)
+                            revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList[45].op, originOO)
+                            revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList[50].op, originOO)
+                            revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList[55].op, originOO)
+                            revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[60].op, originOO)
+                            revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[65].op, originOO)
+                            revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[70].op, originOO)
+                            DBUtils.insertOCOOBean(revKJOCOOBean,if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30)
                         }
+
+                        //TODO OCOO测试暂时注释 begin
+//                        insertRevBean(
+//                            5,
+//                            5,
+//                            targetBeanList,
+//                            mCHDDList,
+//                            6,
+//                            6,
+//                            afterBean,
+//                            targetBean,
+//                            requestBean,
+//                            code,
+//                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
+//                            ""
+//                        )
+//                        val foreachLimitList = getForeachLimitList()
+//                        val foreachTBNAmeList = arrayListOf(
+//                            arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
+//                            arrayOf(Datas.REVERSE_TB_P50_55, Datas.REVERSE_TB_P30_55),
+//                            arrayOf(Datas.REVERSE_TB_P50_10, Datas.REVERSE_TB_P30_10),
+//                            arrayOf(Datas.REVERSE_TB_P50_15, Datas.REVERSE_TB_P30_15),
+//                            arrayOf(Datas.REVERSE_TB_P50_20, Datas.REVERSE_TB_P30_20),
+//                            arrayOf(Datas.REVERSE_TB_P50_25, Datas.REVERSE_TB_P30_25),
+//                            arrayOf(Datas.REVERSE_TB_P50_30, Datas.REVERSE_TB_P30_30),
+//                            arrayOf(Datas.REVERSE_TB_P50_36, Datas.REVERSE_TB_P30_36)
+//                        )
+//                        val foreachREVTRTBNAmeList = arrayListOf(
+//                            arrayOf(Datas.REV_TR_TB_P50_33, Datas.REV_TR_TB_P30_33),
+//                            arrayOf(Datas.REV_TR_TB_P50_55, Datas.REV_TR_TB_P30_55),
+//                            arrayOf(Datas.REV_TR_TB_P50_10, Datas.REV_TR_TB_P30_10),
+//                            arrayOf(Datas.REV_TR_TB_P50_15, Datas.REV_TR_TB_P30_15),
+//                            arrayOf(Datas.REV_TR_TB_P50_20, Datas.REV_TR_TB_P30_20),
+//                            arrayOf(Datas.REV_TR_TB_P50_25, Datas.REV_TR_TB_P30_25),
+//                            arrayOf(Datas.REV_TR_TB_P50_30, Datas.REV_TR_TB_P30_30),
+//                            arrayOf(Datas.REV_TR_TB_P50_36, Datas.REV_TR_TB_P30_36)
+//                        )
+//                        insertReverseKJSLL(code, targetBean, requestBean)
+//
+//                        for (i in 0 until foreachLimitList.size) {
+//                            if (mCHDDList.size > foreachLimitList[i][0]) {
+//                                insertRevBean(
+//                                    foreachLimitList[i][1],
+//                                    foreachLimitList[i][2],
+//                                    targetBeanList,
+//                                    mCHDDList,
+//                                    foreachLimitList[i][3],
+//                                    foreachLimitList[i][4],
+//                                    afterBean,
+//                                    targetBean,
+//                                    requestBean,
+//                                    code,
+//                                    if (ROP >= 1.5 * TOP) foreachTBNAmeList[i][0] else foreachTBNAmeList[i][1],
+//                                    if (ROP >= 1.5 * TOP) foreachREVTRTBNAmeList[i][0] else foreachREVTRTBNAmeList[i][1]
+//                                )
+//                            } else {
+//                                break
+//                            }
+//                        }
+                        //TODO OCOO测试暂时注释 end
                     }
                 }
             }
@@ -2690,6 +2735,11 @@ class NewApiViewModel : BaseViewModel() {
 
         }
     }
+
+    private fun getOCOOPercent(
+        OValue: Float,
+        origin: Float
+    ) = (( OValue- origin) / origin * 100).toKeep2()
 
     private fun getForeachLimitList(): ArrayList<Array<Int>> {
         val foreachLimitList = arrayListOf(

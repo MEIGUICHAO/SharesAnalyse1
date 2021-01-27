@@ -1950,4 +1950,15 @@ object DBUtils {
         db.execSQL(sql)
     }
 
+    fun insertOCOOBean(revKJOCOOBean: ReverseKJsonBean, tbName: String) {
+        switchDBName(Datas.REVERSE_KJ_DB)
+        if (!tabbleIsExist(tbName)) {
+            val createSQL = revKJOCOOBean.createOCOOTB(tbName)
+            db.execSQL(createSQL)
+        }
+        val insertSql = revKJOCOOBean.insertOCOOTB(tbName)
+        LogUtil.d("$insertSql")
+        db.execSQL(insertSql)
+    }
+
 }

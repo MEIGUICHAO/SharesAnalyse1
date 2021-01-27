@@ -127,5 +127,7 @@ object Datas {
     const val reasoning_debug_begin_day = 20210101
     const val reasoning_debug_end_day = 20210115
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
+    const val REV_OC_OO_30 = "AA_REV_OC_OO_30"
+    const val REV_OC_OO_50 = "AA_REV_OC_OO_50"
 
 }
