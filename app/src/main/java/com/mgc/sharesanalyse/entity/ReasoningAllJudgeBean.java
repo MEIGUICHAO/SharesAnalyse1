@@ -698,4 +698,878 @@ public class ReasoningAllJudgeBean {
     public void setP_L_X(float p_L_X) {
         P_L_X = p_L_X;
     }
+
+
+    public String insertOCOOTB(String tbName) {
+        return "INSERT INTO " + tbName + "(COUNT," +
+                "OC3_D ,OC5_D ,OC10_D ,OC15_D ,OC20_D ,OC25_D ,OC30_D ,OC35_D ,OC40_D ,OC45_D ,OC50_D ,OC55_D ,OC60_D ,OC65_D ,OC70_D ," +
+                "OC3_X ,OC5_X ,OC10_X ,OC15_X ,OC20_X ,OC25_X ,OC30_X ,OC35_X ,OC40_X ,OC45_X ,OC50_X ,OC55_X ,OC60_X ,OC65_X ,OC70_X ," +
+                "OO3_D ,OO5_D ,OO10_D ,OO15_D ,OO20_D ,OO25_D ,OO30_D ,OO35_D ,OO40_D ,OO45_D ,OO50_D ,OO55_D ,OO60_D ,OO65_D ,OO70_D ,"+
+                "OO3_X ,OO5_X ,OO10_X ,OO15_X ,OO20_X ,OO25_X ,OO30_X ,OO35_X ,OO40_X ,OO45_X ,OO50_X ,OO55_X ,OO60_X ,OO65_X ,OO70_X ," +
+                "S_A_TR_D ,S_R_TR_D ,S_B_TR_D ,S_C_TR_D ,K_A_TR_D ,K_R_TR_D ,K_B_TR_D ,K_C_TR_D ,K_SL_A_TR_D ,K_SL_R_TR_D ,K_SL_B_TR_D ,K_SL_C_TR_D ," +
+                "S_A_TR_X ,S_R_TR_X ,S_B_TR_X ,S_C_TR_X ,K_A_TR_X ,K_R_TR_X ,K_B_TR_X ,K_C_TR_X ,K_SL_A_TR_X ,K_SL_R_TR_X ,K_SL_B_TR_X ,K_SL_C_TR_X " +
+                " ) VALUES (" + toOCOOString()+");";
+    }
+
+    private String toOCOOString() {
+        return COUNT +"," +
+                OC3_D +"," +
+                OC5_D +"," +
+                OC10_D +"," +
+                OC15_D +"," +
+                OC20_D +"," +
+                OC25_D +"," +
+                OC30_D +"," +
+                OC35_D +"," +
+                OC40_D +"," +
+                OC45_D +"," +
+                OC50_D +"," +
+                OC55_D +"," +
+                OC60_D +"," +
+                OC65_D +"," +
+                OC70_D +"," +
+                OC3_X +"," +
+                OC5_X +"," +
+                OC10_X +"," +
+                OC15_X +"," +
+                OC20_X +"," +
+                OC25_X +"," +
+                OC30_X +"," +
+                OC35_X +"," +
+                OC40_X +"," +
+                OC45_X +"," +
+                OC50_X +"," +
+                OC55_X +"," +
+                OC60_X +"," +
+                OC65_X +"," +
+                OC70_X +"," +
+                OO3_D +"," +
+                OO5_D +"," +
+                OO10_D +"," +
+                OO15_D +"," +
+                OO20_D +"," +
+                OO25_D +"," +
+                OO30_D +"," +
+                OO35_D +"," +
+                OO40_D +"," +
+                OO45_D +"," +
+                OO50_D +"," +
+                OO55_D +"," +
+                OO60_D +"," +
+                OO65_D +"," +
+                OO70_D +"," +
+                OO3_X +"," +
+                OO5_X +"," +
+                OO10_X +"," +
+                OO15_X +"," +
+                OO20_X +"," +
+                OO25_X +"," +
+                OO30_X +"," +
+                OO35_X +"," +
+                OO40_X +"," +
+                OO45_X +"," +
+                OO50_X +"," +
+                OO55_X +"," +
+                OO60_X +"," +
+                OO65_X +"," +
+                OO70_X +"," +
+                S_A_TR_D +"," +
+                S_R_TR_D +"," +
+                S_B_TR_D +"," +
+                S_C_TR_D +"," +
+                K_A_TR_D +"," +
+                K_R_TR_D +"," +
+                K_B_TR_D +"," +
+                K_C_TR_D +"," +
+                K_SL_A_TR_D +"," +
+                K_SL_R_TR_D +"," +
+                K_SL_B_TR_D +"," +
+                K_SL_C_TR_D +"," +
+                S_A_TR_X +"," +
+                S_R_TR_X +"," +
+                S_B_TR_X +"," +
+                S_C_TR_X +"," +
+                K_A_TR_X +"," +
+                K_R_TR_X +"," +
+                K_B_TR_X +"," +
+                K_C_TR_X +"," +
+                K_SL_A_TR_X +"," +
+                K_SL_R_TR_X +"," +
+                K_SL_B_TR_X +"," +
+                K_SL_C_TR_X ;
+    }
+
+
+    public String createOCOOTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,COUNT INTEGER," +
+                "OC3_D INTEGER,OC5_D INTEGER,OC10_D INTEGER,OC15_D INTEGER,OC20_D INTEGER,OC25_D INTEGER,OC30_D INTEGER,OC35_D INTEGER,OC40_D INTEGER,OC45_D INTEGER,OC50_D INTEGER,OC55_D INTEGER,OC60_D INTEGER,OC65_D INTEGER,OC70_D INTEGER," +
+                "OC3_X INTEGER,OC5_X INTEGER,OC10_X INTEGER,OC15_X INTEGER,OC20_X INTEGER,OC25_X INTEGER,OC30_X INTEGER,OC35_X INTEGER,OC40_X INTEGER,OC45_X INTEGER,OC50_X INTEGER,OC55_X INTEGER,OC60_X INTEGER,OC65_X INTEGER,OC70_X INTEGER," +
+                "OO3_D INTEGER,OO5_D INTEGER,OO10_D INTEGER,OO15_D INTEGER,OO20_D INTEGER,OO25_D INTEGER,OO30_D INTEGER,OO35_D INTEGER,OO40_D INTEGER,OO45_D INTEGER,OO50_D INTEGER,OO55_D INTEGER,OO60_D INTEGER,OO65_D INTEGER,OO70_D INTEGER,"+
+                "OO3_X INTEGER,OO5_X INTEGER,OO10_X INTEGER,OO15_X INTEGER,OO20_X INTEGER,OO25_X INTEGER,OO30_X INTEGER,OO35_X INTEGER,OO40_X INTEGER,OO45_X INTEGER,OO50_X INTEGER,OO55_X INTEGER,OO60_X INTEGER,OO65_X INTEGER,OO70_X INTEGER," +
+                "S_A_TR_D INTEGER,S_R_TR_D INTEGER,S_B_TR_D INTEGER,S_C_TR_D INTEGER,K_A_TR_D INTEGER,K_R_TR_D INTEGER,K_B_TR_D INTEGER,K_C_TR_D INTEGER,K_SL_A_TR_D INTEGER,K_SL_R_TR_D INTEGER,K_SL_B_TR_D INTEGER,K_SL_C_TR_D INTEGER," +
+                "S_A_TR_X INTEGER,S_R_TR_X INTEGER,S_B_TR_X INTEGER,S_C_TR_X INTEGER,K_A_TR_X INTEGER,K_R_TR_X INTEGER,K_B_TR_X INTEGER,K_C_TR_X INTEGER,K_SL_A_TR_X INTEGER,K_SL_R_TR_X INTEGER,K_SL_B_TR_X INTEGER,K_SL_C_TR_X INTEGER" +
+                ");";
+    }
+
+    private float OC3_D;
+    private float OC5_D;
+    private float OC10_D;
+    private float OC15_D;
+    private float OC20_D;
+    private float OC25_D;
+    private float OC30_D;
+    private float OC35_D;
+    private float OC40_D;
+    private float OC45_D;
+    private float OC50_D;
+    private float OC55_D;
+    private float OC60_D;
+    private float OC65_D;
+    private float OC70_D;
+
+    private float OO3_D;
+    private float OO5_D;
+    private float OO10_D;
+    private float OO15_D;
+    private float OO20_D;
+    private float OO25_D;
+    private float OO30_D;
+    private float OO35_D;
+    private float OO40_D;
+    private float OO45_D;
+    private float OO50_D;
+    private float OO55_D;
+    private float OO60_D;
+    private float OO65_D;
+    private float OO70_D;
+    private float OC3_X;
+    private float OC5_X;
+    private float OC10_X;
+    private float OC15_X;
+    private float OC20_X;
+    private float OC25_X;
+    private float OC30_X;
+    private float OC35_X;
+    private float OC40_X;
+    private float OC45_X;
+    private float OC50_X;
+    private float OC55_X;
+    private float OC60_X;
+    private float OC65_X;
+    private float OC70_X;
+
+    private float OO3_X;
+    private float OO5_X;
+    private float OO10_X;
+    private float OO15_X;
+    private float OO20_X;
+    private float OO25_X;
+    private float OO30_X;
+    private float OO35_X;
+    private float OO40_X;
+    private float OO45_X;
+    private float OO50_X;
+    private float OO55_X;
+    private float OO60_X;
+    private float OO65_X;
+    private float OO70_X;
+
+    private float S_A_TR_D;
+    private float S_R_TR_D;
+    private float S_B_TR_D;
+    private float S_C_TR_D;
+    private float K_A_TR_D;
+    private float K_R_TR_D;
+    private float K_B_TR_D;
+    private float K_C_TR_D;
+    private float K_SL_A_TR_D;
+    private float K_SL_R_TR_D;
+    private float K_SL_B_TR_D;
+    private float K_SL_C_TR_D;
+
+    private float S_A_TR_X;
+    private float S_R_TR_X;
+    private float S_B_TR_X;
+    private float S_C_TR_X;
+    private float K_A_TR_X;
+    private float K_R_TR_X;
+    private float K_B_TR_X;
+    private float K_C_TR_X;
+    private float K_SL_A_TR_X;
+
+    public float getOC3_D() {
+        return OC3_D;
+    }
+
+    public void setOC3_D(float OC3_D) {
+        this.OC3_D = OC3_D;
+    }
+
+    public float getOC5_D() {
+        return OC5_D;
+    }
+
+    public void setOC5_D(float OC5_D) {
+        this.OC5_D = OC5_D;
+    }
+
+    public float getOC10_D() {
+        return OC10_D;
+    }
+
+    public void setOC10_D(float OC10_D) {
+        this.OC10_D = OC10_D;
+    }
+
+    public float getOC15_D() {
+        return OC15_D;
+    }
+
+    public void setOC15_D(float OC15_D) {
+        this.OC15_D = OC15_D;
+    }
+
+    public float getOC20_D() {
+        return OC20_D;
+    }
+
+    public void setOC20_D(float OC20_D) {
+        this.OC20_D = OC20_D;
+    }
+
+    public float getOC25_D() {
+        return OC25_D;
+    }
+
+    public void setOC25_D(float OC25_D) {
+        this.OC25_D = OC25_D;
+    }
+
+    public float getOC30_D() {
+        return OC30_D;
+    }
+
+    public void setOC30_D(float OC30_D) {
+        this.OC30_D = OC30_D;
+    }
+
+    public float getOC35_D() {
+        return OC35_D;
+    }
+
+    public void setOC35_D(float OC35_D) {
+        this.OC35_D = OC35_D;
+    }
+
+    public float getOC40_D() {
+        return OC40_D;
+    }
+
+    public void setOC40_D(float OC40_D) {
+        this.OC40_D = OC40_D;
+    }
+
+    public float getOC45_D() {
+        return OC45_D;
+    }
+
+    public void setOC45_D(float OC45_D) {
+        this.OC45_D = OC45_D;
+    }
+
+    public float getOC50_D() {
+        return OC50_D;
+    }
+
+    public void setOC50_D(float OC50_D) {
+        this.OC50_D = OC50_D;
+    }
+
+    public float getOC55_D() {
+        return OC55_D;
+    }
+
+    public void setOC55_D(float OC55_D) {
+        this.OC55_D = OC55_D;
+    }
+
+    public float getOC60_D() {
+        return OC60_D;
+    }
+
+    public void setOC60_D(float OC60_D) {
+        this.OC60_D = OC60_D;
+    }
+
+    public float getOC65_D() {
+        return OC65_D;
+    }
+
+    public void setOC65_D(float OC65_D) {
+        this.OC65_D = OC65_D;
+    }
+
+    public float getOC70_D() {
+        return OC70_D;
+    }
+
+    public void setOC70_D(float OC70_D) {
+        this.OC70_D = OC70_D;
+    }
+
+    public float getOO3_D() {
+        return OO3_D;
+    }
+
+    public void setOO3_D(float OO3_D) {
+        this.OO3_D = OO3_D;
+    }
+
+    public float getOO5_D() {
+        return OO5_D;
+    }
+
+    public void setOO5_D(float OO5_D) {
+        this.OO5_D = OO5_D;
+    }
+
+    public float getOO10_D() {
+        return OO10_D;
+    }
+
+    public void setOO10_D(float OO10_D) {
+        this.OO10_D = OO10_D;
+    }
+
+    public float getOO15_D() {
+        return OO15_D;
+    }
+
+    public void setOO15_D(float OO15_D) {
+        this.OO15_D = OO15_D;
+    }
+
+    public float getOO20_D() {
+        return OO20_D;
+    }
+
+    public void setOO20_D(float OO20_D) {
+        this.OO20_D = OO20_D;
+    }
+
+    public float getOO25_D() {
+        return OO25_D;
+    }
+
+    public void setOO25_D(float OO25_D) {
+        this.OO25_D = OO25_D;
+    }
+
+    public float getOO30_D() {
+        return OO30_D;
+    }
+
+    public void setOO30_D(float OO30_D) {
+        this.OO30_D = OO30_D;
+    }
+
+    public float getOO35_D() {
+        return OO35_D;
+    }
+
+    public void setOO35_D(float OO35_D) {
+        this.OO35_D = OO35_D;
+    }
+
+    public float getOO40_D() {
+        return OO40_D;
+    }
+
+    public void setOO40_D(float OO40_D) {
+        this.OO40_D = OO40_D;
+    }
+
+    public float getOO45_D() {
+        return OO45_D;
+    }
+
+    public void setOO45_D(float OO45_D) {
+        this.OO45_D = OO45_D;
+    }
+
+    public float getOO50_D() {
+        return OO50_D;
+    }
+
+    public void setOO50_D(float OO50_D) {
+        this.OO50_D = OO50_D;
+    }
+
+    public float getOO55_D() {
+        return OO55_D;
+    }
+
+    public void setOO55_D(float OO55_D) {
+        this.OO55_D = OO55_D;
+    }
+
+    public float getOO60_D() {
+        return OO60_D;
+    }
+
+    public void setOO60_D(float OO60_D) {
+        this.OO60_D = OO60_D;
+    }
+
+    public float getOO65_D() {
+        return OO65_D;
+    }
+
+    public void setOO65_D(float OO65_D) {
+        this.OO65_D = OO65_D;
+    }
+
+    public float getOO70_D() {
+        return OO70_D;
+    }
+
+    public void setOO70_D(float OO70_D) {
+        this.OO70_D = OO70_D;
+    }
+
+    public float getOC3_X() {
+        return OC3_X;
+    }
+
+    public void setOC3_X(float OC3_X) {
+        this.OC3_X = OC3_X;
+    }
+
+    public float getOC5_X() {
+        return OC5_X;
+    }
+
+    public void setOC5_X(float OC5_X) {
+        this.OC5_X = OC5_X;
+    }
+
+    public float getOC10_X() {
+        return OC10_X;
+    }
+
+    public void setOC10_X(float OC10_X) {
+        this.OC10_X = OC10_X;
+    }
+
+    public float getOC15_X() {
+        return OC15_X;
+    }
+
+    public void setOC15_X(float OC15_X) {
+        this.OC15_X = OC15_X;
+    }
+
+    public float getOC20_X() {
+        return OC20_X;
+    }
+
+    public void setOC20_X(float OC20_X) {
+        this.OC20_X = OC20_X;
+    }
+
+    public float getOC25_X() {
+        return OC25_X;
+    }
+
+    public void setOC25_X(float OC25_X) {
+        this.OC25_X = OC25_X;
+    }
+
+    public float getOC30_X() {
+        return OC30_X;
+    }
+
+    public void setOC30_X(float OC30_X) {
+        this.OC30_X = OC30_X;
+    }
+
+    public float getOC35_X() {
+        return OC35_X;
+    }
+
+    public void setOC35_X(float OC35_X) {
+        this.OC35_X = OC35_X;
+    }
+
+    public float getOC40_X() {
+        return OC40_X;
+    }
+
+    public void setOC40_X(float OC40_X) {
+        this.OC40_X = OC40_X;
+    }
+
+    public float getOC45_X() {
+        return OC45_X;
+    }
+
+    public void setOC45_X(float OC45_X) {
+        this.OC45_X = OC45_X;
+    }
+
+    public float getOC50_X() {
+        return OC50_X;
+    }
+
+    public void setOC50_X(float OC50_X) {
+        this.OC50_X = OC50_X;
+    }
+
+    public float getOC55_X() {
+        return OC55_X;
+    }
+
+    public void setOC55_X(float OC55_X) {
+        this.OC55_X = OC55_X;
+    }
+
+    public float getOC60_X() {
+        return OC60_X;
+    }
+
+    public void setOC60_X(float OC60_X) {
+        this.OC60_X = OC60_X;
+    }
+
+    public float getOC65_X() {
+        return OC65_X;
+    }
+
+    public void setOC65_X(float OC65_X) {
+        this.OC65_X = OC65_X;
+    }
+
+    public float getOC70_X() {
+        return OC70_X;
+    }
+
+    public void setOC70_X(float OC70_X) {
+        this.OC70_X = OC70_X;
+    }
+
+    public float getOO3_X() {
+        return OO3_X;
+    }
+
+    public void setOO3_X(float OO3_X) {
+        this.OO3_X = OO3_X;
+    }
+
+    public float getOO5_X() {
+        return OO5_X;
+    }
+
+    public void setOO5_X(float OO5_X) {
+        this.OO5_X = OO5_X;
+    }
+
+    public float getOO10_X() {
+        return OO10_X;
+    }
+
+    public void setOO10_X(float OO10_X) {
+        this.OO10_X = OO10_X;
+    }
+
+    public float getOO15_X() {
+        return OO15_X;
+    }
+
+    public void setOO15_X(float OO15_X) {
+        this.OO15_X = OO15_X;
+    }
+
+    public float getOO20_X() {
+        return OO20_X;
+    }
+
+    public void setOO20_X(float OO20_X) {
+        this.OO20_X = OO20_X;
+    }
+
+    public float getOO25_X() {
+        return OO25_X;
+    }
+
+    public void setOO25_X(float OO25_X) {
+        this.OO25_X = OO25_X;
+    }
+
+    public float getOO30_X() {
+        return OO30_X;
+    }
+
+    public void setOO30_X(float OO30_X) {
+        this.OO30_X = OO30_X;
+    }
+
+    public float getOO35_X() {
+        return OO35_X;
+    }
+
+    public void setOO35_X(float OO35_X) {
+        this.OO35_X = OO35_X;
+    }
+
+    public float getOO40_X() {
+        return OO40_X;
+    }
+
+    public void setOO40_X(float OO40_X) {
+        this.OO40_X = OO40_X;
+    }
+
+    public float getOO45_X() {
+        return OO45_X;
+    }
+
+    public void setOO45_X(float OO45_X) {
+        this.OO45_X = OO45_X;
+    }
+
+    public float getOO50_X() {
+        return OO50_X;
+    }
+
+    public void setOO50_X(float OO50_X) {
+        this.OO50_X = OO50_X;
+    }
+
+    public float getOO55_X() {
+        return OO55_X;
+    }
+
+    public void setOO55_X(float OO55_X) {
+        this.OO55_X = OO55_X;
+    }
+
+    public float getOO60_X() {
+        return OO60_X;
+    }
+
+    public void setOO60_X(float OO60_X) {
+        this.OO60_X = OO60_X;
+    }
+
+    public float getOO65_X() {
+        return OO65_X;
+    }
+
+    public void setOO65_X(float OO65_X) {
+        this.OO65_X = OO65_X;
+    }
+
+    public float getOO70_X() {
+        return OO70_X;
+    }
+
+    public void setOO70_X(float OO70_X) {
+        this.OO70_X = OO70_X;
+    }
+
+    public float getS_A_TR_D() {
+        return S_A_TR_D;
+    }
+
+    public void setS_A_TR_D(float s_A_TR_D) {
+        S_A_TR_D = s_A_TR_D;
+    }
+
+    public float getS_R_TR_D() {
+        return S_R_TR_D;
+    }
+
+    public void setS_R_TR_D(float s_R_TR_D) {
+        S_R_TR_D = s_R_TR_D;
+    }
+
+    public float getS_B_TR_D() {
+        return S_B_TR_D;
+    }
+
+    public void setS_B_TR_D(float s_B_TR_D) {
+        S_B_TR_D = s_B_TR_D;
+    }
+
+    public float getS_C_TR_D() {
+        return S_C_TR_D;
+    }
+
+    public void setS_C_TR_D(float s_C_TR_D) {
+        S_C_TR_D = s_C_TR_D;
+    }
+
+    public float getK_A_TR_D() {
+        return K_A_TR_D;
+    }
+
+    public void setK_A_TR_D(float k_A_TR_D) {
+        K_A_TR_D = k_A_TR_D;
+    }
+
+    public float getK_R_TR_D() {
+        return K_R_TR_D;
+    }
+
+    public void setK_R_TR_D(float k_R_TR_D) {
+        K_R_TR_D = k_R_TR_D;
+    }
+
+    public float getK_B_TR_D() {
+        return K_B_TR_D;
+    }
+
+    public void setK_B_TR_D(float k_B_TR_D) {
+        K_B_TR_D = k_B_TR_D;
+    }
+
+    public float getK_C_TR_D() {
+        return K_C_TR_D;
+    }
+
+    public void setK_C_TR_D(float k_C_TR_D) {
+        K_C_TR_D = k_C_TR_D;
+    }
+
+    public float getK_SL_A_TR_D() {
+        return K_SL_A_TR_D;
+    }
+
+    public void setK_SL_A_TR_D(float k_SL_A_TR_D) {
+        K_SL_A_TR_D = k_SL_A_TR_D;
+    }
+
+    public float getK_SL_R_TR_D() {
+        return K_SL_R_TR_D;
+    }
+
+    public void setK_SL_R_TR_D(float k_SL_R_TR_D) {
+        K_SL_R_TR_D = k_SL_R_TR_D;
+    }
+
+    public float getK_SL_B_TR_D() {
+        return K_SL_B_TR_D;
+    }
+
+    public void setK_SL_B_TR_D(float k_SL_B_TR_D) {
+        K_SL_B_TR_D = k_SL_B_TR_D;
+    }
+
+    public float getK_SL_C_TR_D() {
+        return K_SL_C_TR_D;
+    }
+
+    public void setK_SL_C_TR_D(float k_SL_C_TR_D) {
+        K_SL_C_TR_D = k_SL_C_TR_D;
+    }
+
+    public float getS_A_TR_X() {
+        return S_A_TR_X;
+    }
+
+    public void setS_A_TR_X(float s_A_TR_X) {
+        S_A_TR_X = s_A_TR_X;
+    }
+
+    public float getS_R_TR_X() {
+        return S_R_TR_X;
+    }
+
+    public void setS_R_TR_X(float s_R_TR_X) {
+        S_R_TR_X = s_R_TR_X;
+    }
+
+    public float getS_B_TR_X() {
+        return S_B_TR_X;
+    }
+
+    public void setS_B_TR_X(float s_B_TR_X) {
+        S_B_TR_X = s_B_TR_X;
+    }
+
+    public float getS_C_TR_X() {
+        return S_C_TR_X;
+    }
+
+    public void setS_C_TR_X(float s_C_TR_X) {
+        S_C_TR_X = s_C_TR_X;
+    }
+
+    public float getK_A_TR_X() {
+        return K_A_TR_X;
+    }
+
+    public void setK_A_TR_X(float k_A_TR_X) {
+        K_A_TR_X = k_A_TR_X;
+    }
+
+    public float getK_R_TR_X() {
+        return K_R_TR_X;
+    }
+
+    public void setK_R_TR_X(float k_R_TR_X) {
+        K_R_TR_X = k_R_TR_X;
+    }
+
+    public float getK_B_TR_X() {
+        return K_B_TR_X;
+    }
+
+    public void setK_B_TR_X(float k_B_TR_X) {
+        K_B_TR_X = k_B_TR_X;
+    }
+
+    public float getK_C_TR_X() {
+        return K_C_TR_X;
+    }
+
+    public void setK_C_TR_X(float k_C_TR_X) {
+        K_C_TR_X = k_C_TR_X;
+    }
+
+    public float getK_SL_A_TR_X() {
+        return K_SL_A_TR_X;
+    }
+
+    public void setK_SL_A_TR_X(float k_SL_A_TR_X) {
+        K_SL_A_TR_X = k_SL_A_TR_X;
+    }
+
+    public float getK_SL_R_TR_X() {
+        return K_SL_R_TR_X;
+    }
+
+    public void setK_SL_R_TR_X(float k_SL_R_TR_X) {
+        K_SL_R_TR_X = k_SL_R_TR_X;
+    }
+
+    public float getK_SL_B_TR_X() {
+        return K_SL_B_TR_X;
+    }
+
+    public void setK_SL_B_TR_X(float k_SL_B_TR_X) {
+        K_SL_B_TR_X = k_SL_B_TR_X;
+    }
+
+    public float getK_SL_C_TR_X() {
+        return K_SL_C_TR_X;
+    }
+
+    public void setK_SL_C_TR_X(float k_SL_C_TR_X) {
+        K_SL_C_TR_X = k_SL_C_TR_X;
+    }
+
+    private float K_SL_R_TR_X;
+    private float K_SL_B_TR_X;
+    private float K_SL_C_TR_X;
 }

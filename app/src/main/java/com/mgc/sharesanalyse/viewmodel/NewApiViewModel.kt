@@ -2666,7 +2666,10 @@ class NewApiViewModel : BaseViewModel() {
                             revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[60].op, originOO)
                             revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[65].op, originOO)
                             revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[70].op, originOO)
-                            DBUtils.insertOCOOBean(revKJOCOOBean,if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30)
+                            DBUtils.insertOCOOBean(
+                                revKJOCOOBean,
+                                if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30
+                            )
                         }
 
                         //TODO OCOO测试暂时注释 begin
@@ -2739,7 +2742,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun getOCOOPercent(
         OValue: Float,
         origin: Float
-    ) = (( OValue- origin) / origin * 100).toKeep2()
+    ) = ((OValue - origin) / origin * 100).toKeep2()
 
     private fun getForeachLimitList(): ArrayList<Array<Int>> {
         val foreachLimitList = arrayListOf(
@@ -3900,6 +3903,70 @@ class NewApiViewModel : BaseViewModel() {
         return mtbList
     }
 
+    fun revOCOOJudgeResult() {
+        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+        val tbList = arrayOf(Datas.REV_OC_OO_30, Datas.REV_OC_OO_50)
+
+        (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
+        tbList.forEach {
+            val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMinByColumm(
+                it,
+                Datas.REVERSE_KJ_DB,
+                "OC70",true
+            )
+//            FILTER_OC_OO_PROGRESS
+
+            for (i in rangeMin..rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
+
+
+                val list = DBUtils.getFilterAllByTbName(
+                    Datas.REVERSE_KJ_DB,
+                    "SELECT * FROM $it WHERE OC70 >=? AND OC70<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                    arrayOf(
+                        i.toString(),
+                        (i + Datas.FILTER_OC_OO_PROGRESS).toString()
+                    ), true
+                )
+
+                if (null == list) {
+                    continue
+                }
+
+                (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_$i--$rangeMax")
+
+                if (list.size > 0) {
+                    val insertTB =
+                        if (it.contains("30")) Datas.ALL_Reaoning_OC_OO_30 else Datas.ALL_Reaoning_OC_OO_50
+                    if (list.size == 1) {
+                        val reasoningAllJudgeBean =
+                            DataSettingUtils.getReasoningOCOOJudgeBean(
+                                list,
+                                i,
+                                i + Datas.FILTER_OC_OO_PROGRESS
+                            )
+                        DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
+                    } else {
+                        val dateRangeIndex = dayList.size - 2
+                        val date = dayList[dateRangeIndex]
+                        if (dateRangeIndex > 0) {
+                            DataSettingUtils.revOCOOlReasoning(
+                                dayList,
+                                dateRangeIndex,
+                                list,
+                                date,
+                                it,
+                                insertTB
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+
+        (mActivity as NewApiActivity).setBtnRevAllTb("OCOO_Finish")
+    }
+
     fun revAllJudgeResult() {
 
         LogUtil.d("revAllJudgeResult")
@@ -3999,7 +4066,7 @@ class NewApiViewModel : BaseViewModel() {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
 //                        if (mCHDDList[i].date == "20210113"||mCHDDList[i].date == "20210114") {
 //                        }
-                        if (Datas.reasoning_debug &&( mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day || mCHDDList[i].date.toInt() > Datas.reasoning_debug_end_day)) {
+                        if (Datas.reasoning_debug && (mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day || mCHDDList[i].date.toInt() > Datas.reasoning_debug_end_day)) {
                             continue
                         }
                         insertAllReasoning(
@@ -4215,11 +4282,10 @@ class NewApiViewModel : BaseViewModel() {
                 continue301 = addContinue30(allReasoning30Bean, continue301)
             }
             /*--------------------------------------------------------------*/
-    //                        else -> continue30 = false
+            //                        else -> continue30 = false
         }
         return continue301
     }
-
 
 
     var addJudge_30Str = ""
@@ -4357,7 +4423,7 @@ class NewApiViewModel : BaseViewModel() {
                             "8914&&9814&&9841&&1894",
                             "9814&&9814&&9481&&4198",
                             "9814&&8914&&8914&&8194",
-                            "8914&&9814&&8914&&1894"-> {
+                            "8914&&9814&&8914&&1894" -> {
                                 continue301 = true
                             }
                             else -> {
@@ -4541,23 +4607,23 @@ class NewApiViewModel : BaseViewModel() {
         val (mList, codelist) = getCHDDDateListAndCodeList()
         r30List.forEach {
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 10..mCHDDList.size-1) {
-                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i-5].date}--${mCHDDList[i].date}")
-                if (mCHDDList[i-5].date==it.d){
-                    setReasoningPMpLpCpOpDdInfo(i-5,mCHDDList,it,it.code.toString(),30)
-                    DBUtils.updateReasoning(tb30,it)
-                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i-5].date}")
+            for (i in mCHDDList.size - 10..mCHDDList.size - 1) {
+                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - 5].date}--${mCHDDList[i].date}")
+                if (mCHDDList[i - 5].date == it.d) {
+                    setReasoningPMpLpCpOpDdInfo(i - 5, mCHDDList, it, it.code.toString(), 30)
+                    DBUtils.updateReasoning(tb30, it)
+                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i - 5].date}")
                 }
             }
         }
         r50List.forEach {
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 10..mCHDDList.size - 1) {
-                if (mCHDDList[i-5].date==it.d){
-                    setReasoningPMpLpCpOpDdInfo(i,mCHDDList,it,it.code.toString(),50)
-                    DBUtils.updateReasoning(tb50,it)
+                if (mCHDDList[i - 5].date == it.d) {
+                    setReasoningPMpLpCpOpDdInfo(i, mCHDDList, it, it.code.toString(), 50)
+                    DBUtils.updateReasoning(tb50, it)
                     LogUtil.d("update_50")
-                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i-5].date}")
+                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i - 5].date}")
                 }
             }
         }
@@ -4565,7 +4631,6 @@ class NewApiViewModel : BaseViewModel() {
         (mActivity as NewApiActivity).setBtnResoning("updateReasoning_Finish")
 
     }
-
 
 
 }

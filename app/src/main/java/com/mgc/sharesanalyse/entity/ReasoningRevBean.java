@@ -534,4 +534,58 @@ public class ReasoningRevBean implements Serializable {
                 ",O36 ,O30 ,O25 ,O20 ,O15 ,O10 ,O05 ,O03 "+
                 " ) VALUES (" + toAllString()+")";
     }
+
+
+    public String createOCOOTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER," +
+                "OC3 INTEGER,OC5 INTEGER,OC10 INTEGER,OC15 INTEGER,OC20 INTEGER,OC25 INTEGER,OC30 INTEGER,OC35 INTEGER,OC40 INTEGER,OC45 INTEGER,OC50 INTEGER,OC55 INTEGER,OC60 INTEGER,OC65 INTEGER,OC70 INTEGER," +
+                "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER,"+
+                "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER,K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER,K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
+    }
+
+
+    private float OC3;
+    private float OC5;
+    private float OC10;
+    private float OC15;
+    private float OC20;
+    private float OC25;
+    private float OC30;
+    private float OC35;
+    private float OC40;
+    private float OC45;
+    private float OC50;
+    private float OC55;
+    private float OC60;
+    private float OC65;
+    private float OC70;
+
+    private float OO3;
+    private float OO5;
+    private float OO10;
+    private float OO15;
+    private float OO20;
+    private float OO25;
+    private float OO30;
+    private float OO35;
+    private float OO40;
+    private float OO45;
+    private float OO50;
+    private float OO55;
+    private float OO60;
+    private float OO65;
+    private float OO70;
+
+    private float S_A_TR;
+    private float S_R_TR;
+    private float S_B_TR;
+    private float S_C_TR;
+    private float K_A_TR;
+    private float K_R_TR;
+    private float K_B_TR;
+    private float K_C_TR;
+    private float K_SL_A_TR;
+    private float K_SL_R_TR;
+    private float K_SL_B_TR;
+    private float K_SL_C_TR;
 }

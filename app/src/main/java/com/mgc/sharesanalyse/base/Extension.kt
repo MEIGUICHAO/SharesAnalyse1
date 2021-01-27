@@ -284,6 +284,7 @@ fun ReasoningRevBean.getF_TSql(dT: Int): String {
     return sql
 }
 
+
 fun ArrayList<BaseReverseImp>.getAllJudgeDerbyList(tbDerbyName: String): ArrayList<BaseReverseImp> {
     val mDerbyCodeList = this.getCodeList()
     val derbyAddstr = mDerbyCodeList.getCodeArrayAndLimitSQL(false)

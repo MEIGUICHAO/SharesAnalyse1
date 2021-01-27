@@ -118,6 +118,7 @@ object Datas {
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
     const val FILTER_PROGRESS = 5
+    const val FILTER_OC_OO_PROGRESS = 10
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601
@@ -129,5 +130,7 @@ object Datas {
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
     const val REV_OC_OO_30 = "AA_REV_OC_OO_30"
     const val REV_OC_OO_50 = "AA_REV_OC_OO_50"
+    const val ALL_Reaoning_OC_OO_30 = "All_Reaoning_OC_OO_30"
+    const val ALL_Reaoning_OC_OO_50 = "All_Reaoning_OC_OO_50"
 
 }

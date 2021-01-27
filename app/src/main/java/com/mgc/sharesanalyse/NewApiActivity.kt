@@ -242,10 +242,14 @@ class NewApiActivity : AppCompatActivity() {
     fun revAllJudgeResult() {
 //        LogUtil.d("revAllJudgeResult")
         DBUtils.switchDBName(Datas.REV_RESONING_DB)
-        DBUtils.dropTable("All_30")
-        DBUtils.dropTable("All_50")
-        LogUtil.d("revAllJudgeResult")
-        viewModel.revAllJudgeResult()
+//        DBUtils.dropTable("All_30")
+//        DBUtils.dropTable("All_50")
+//        LogUtil.d("revAllJudgeResult")
+//        viewModel.revAllJudgeResult()
+
+        DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
+        DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
+        viewModel.revOCOOJudgeResult()
     }
 
     fun setBtnReasoningAll(info: String) {

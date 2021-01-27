@@ -1289,8 +1289,6 @@ object DBUtils {
         dbName: String
     ): Pair<String, String> {
         switchDBName(dbName)
-        var minValue = ""
-        var maxValue = ""
         val addSql =  codeList.getCodeArrayAndLimitSQL(false)
 
 
@@ -1300,7 +1298,7 @@ object DBUtils {
         val ommList = ArrayList<Float>()
         if (null != cursor && cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
-                ommList.add(cursor.getFloat(cursor.getColumnIndex("OM_M")))
+                ommList.add(cursor.getFloat(cursor.getColumnIndex(column)))
                 cursor.moveToNext()
             }
         }
@@ -1377,7 +1375,7 @@ object DBUtils {
         return list
     }
 
-    fun getFilterAllByTbName(dbName: String, sqlStr:String,selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+    fun getFilterAllByTbName(dbName: String, sqlStr:String,selection:Array<String?>?,isOCOO:Boolean = false): ArrayList<BaseReverseImp>? {
         switchDBName(dbName)
         LogUtil.d("$sqlStr")
         var list: ArrayList<BaseReverseImp>? = null
@@ -1387,8 +1385,13 @@ object DBUtils {
             list = ArrayList()
             it.moveToFirst()
             while (!it.isAfterLast) {
-                val bean = getRevKJBeanByCursor(it)
-                list!!.add(bean)
+                if (isOCOO) {
+                    val bean = getRevKJOCOOBeanByCursor(it)
+                    list!!.add(bean)
+                } else {
+                    val bean = getRevKJBeanByCursor(it)
+                    list!!.add(bean)
+                }
                 it.moveToNext()
             }
             it.close()
@@ -1414,6 +1417,45 @@ object DBUtils {
         return list
     }
 
+    private fun getRevKJOCOOBeanByCursor(cursor: Cursor): ReverseKJsonBean {
+        val reverseBean = ReverseKJsonBean()
+        reverseBean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+        reverseBean.n = cursor.getString(cursor.getColumnIndex("N"))
+        reverseBean.d_D = cursor.getInt(cursor.getColumnIndex("D_D"))
+        reverseBean.date = cursor.getInt(cursor.getColumnIndex("DATE"))
+        reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
+        reverseBean.oO5 = cursor.getFloat(cursor.getColumnIndex("OO5"))
+        reverseBean.oO10 = cursor.getFloat(cursor.getColumnIndex("OO10"))
+        reverseBean.oO15 = cursor.getFloat(cursor.getColumnIndex("OO15"))
+        reverseBean.oO20 = cursor.getFloat(cursor.getColumnIndex("OO20"))
+        reverseBean.oO25 = cursor.getFloat(cursor.getColumnIndex("OO25"))
+        reverseBean.oO30 = cursor.getFloat(cursor.getColumnIndex("OO30"))
+        reverseBean.oO35 = cursor.getFloat(cursor.getColumnIndex("OO35"))
+        reverseBean.oO40 = cursor.getFloat(cursor.getColumnIndex("OO40"))
+        reverseBean.oO45 = cursor.getFloat(cursor.getColumnIndex("OO45"))
+        reverseBean.oO50 = cursor.getFloat(cursor.getColumnIndex("OO50"))
+        reverseBean.oO55 = cursor.getFloat(cursor.getColumnIndex("OO55"))
+        reverseBean.oO60 = cursor.getFloat(cursor.getColumnIndex("OO60"))
+        reverseBean.oO65 = cursor.getFloat(cursor.getColumnIndex("OO65"))
+        reverseBean.oO70 = cursor.getFloat(cursor.getColumnIndex("OO70"))
+
+        reverseBean.oC3 = cursor.getFloat(cursor.getColumnIndex("OC3"))
+        reverseBean.oC5 = cursor.getFloat(cursor.getColumnIndex("OC5"))
+        reverseBean.oC10 = cursor.getFloat(cursor.getColumnIndex("OC10"))
+        reverseBean.oC15 = cursor.getFloat(cursor.getColumnIndex("OC15"))
+        reverseBean.oC20 = cursor.getFloat(cursor.getColumnIndex("OC20"))
+        reverseBean.oC25 = cursor.getFloat(cursor.getColumnIndex("OC25"))
+        reverseBean.oC30 = cursor.getFloat(cursor.getColumnIndex("OC30"))
+        reverseBean.oC35 = cursor.getFloat(cursor.getColumnIndex("OC35"))
+        reverseBean.oC40 = cursor.getFloat(cursor.getColumnIndex("OC40"))
+        reverseBean.oC45 = cursor.getFloat(cursor.getColumnIndex("OC45"))
+        reverseBean.oC50 = cursor.getFloat(cursor.getColumnIndex("OC50"))
+        reverseBean.oC55 = cursor.getFloat(cursor.getColumnIndex("OC55"))
+        reverseBean.oC60 = cursor.getFloat(cursor.getColumnIndex("OC60"))
+        reverseBean.oC65 = cursor.getFloat(cursor.getColumnIndex("OC65"))
+        reverseBean.oC70 = cursor.getFloat(cursor.getColumnIndex("OC70"))
+        return reverseBean
+    }
 
     @SuppressLint("Recycle")
     fun getDerbyAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
@@ -1639,6 +1681,21 @@ object DBUtils {
         }
         return list
 
+    }
+
+    fun insertOCOOJudgeTB(
+        reasoningAllJudgeBean: ReasoningAllJudgeBean,
+        insertTB: String
+    ) {
+        switchDBName(Datas.REV_RESONING_DB)
+        if (!tabbleIsExist(insertTB)) {
+            val createSQL = reasoningAllJudgeBean.createOCOOTB(insertTB)
+            db.execSQL(createSQL)
+        }
+        if (tabbleIsExist(insertTB)) {
+            val insertSQL = reasoningAllJudgeBean.insertOCOOTB(insertTB)
+            db.execSQL(insertSQL)
+        }
     }
 
     fun insertAllJudgeTB(
