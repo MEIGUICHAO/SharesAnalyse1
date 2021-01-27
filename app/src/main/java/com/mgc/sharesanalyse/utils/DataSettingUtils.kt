@@ -3328,31 +3328,41 @@ object DataSettingUtils {
             mNextCodeList,
             Datas.REVERSE_KJ_DB
         )
-        for (n in nextMin..nextMax step Datas.FILTER_OC_OO_PROGRESS) {
 
-            val dlist = getOCOODlist(tbName, addstr, column,n)
+        var nextContinue = 0
+        val countLimit = if (list.size >= 4) 4 else 2
+        for (n in nextMin..nextMax step Datas.FILTER_OC_OO_PROGRESS) {
+            if (nextContinue > 0) {
+                nextContinue--
+                continue
+            }
+            var dlist = getOCOODlist(tbName, addstr, column,n,nextContinue)
             if (null == dlist) {
                 continue
             }
+
+            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_OC_OO_PROGRESS) <= nextMax) {
+                nextContinue++
+                dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
+            }
+//            while ((list.size - dlist!!.size == 1)) {
+//                nextContinue++
+//                dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
+//            }
             if (dlist.size > 0) {
-                if (dlist.size == 1) {
+                if (dateRangeIndex == 0) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                } else {
-                    if (dateRangeIndex == 0) {
-                        val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
-                        DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                    }
-                    if ((dateRangeIndex) > 0) {
-                        revOCOOlReasoning(
-                            dayList,
-                            dateRangeIndex - 1,
-                            dlist,
-                            dayList[dateRangeIndex - 1],
-                            tbName,
-                            insertTB
-                        )
-                    }
+                }
+                if ((dateRangeIndex) > 0) {
+                    revOCOOlReasoning(
+                        dayList,
+                        dateRangeIndex - 1,
+                        dlist,
+                        dayList[dateRangeIndex - 1],
+                        tbName,
+                        insertTB
+                    )
                 }
             }
         }
@@ -3362,14 +3372,15 @@ object DataSettingUtils {
         nextTbName: String,
         addstr: String,
         column: String,
-        n: Int
+        n: Int,
+        nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
             "SELECT * FROM $nextTbName WHERE $column >=? AND $column<? $addstr",
             arrayOf(
                 n.toString(),
-                (n + Datas.FILTER_OC_OO_PROGRESS ).toString()
+                (n + Datas.FILTER_OC_OO_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS ).toString()
             ),true
         )
         return dlist

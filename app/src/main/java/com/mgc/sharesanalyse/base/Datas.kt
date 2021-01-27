@@ -49,7 +49,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -117,14 +117,14 @@ object Datas {
     const val AA_FILTER_ = "AA_FILTER_"
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
-    const val FILTER_PROGRESS = 5
+    const val FILTER_PROGRESS = 10
     const val FILTER_OC_OO_PROGRESS = 10
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
-    const val reasoning_debug = true
+    const val reasoning_debug = false
     const val reasoning_debug_begin_day = 20210101
     const val reasoning_debug_end_day = 20210115
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
