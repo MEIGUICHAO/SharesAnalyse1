@@ -2628,7 +2628,7 @@ class NewApiViewModel : BaseViewModel() {
 
                     //20避免新股一字板
                     if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
-                        if (mCHDDList.size > 70) {
+                        if (mCHDDList.size > 75) {
                             val revKJOCOOBean =
                                 DataSettingUtils.getRevKJOCOOBean(5,mCHDDList, code, targetBean, requestBean)
                             DBUtils.insertOCOOBean(
