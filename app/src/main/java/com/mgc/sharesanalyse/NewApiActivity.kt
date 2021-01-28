@@ -8,8 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mgc.sharesanalyse.base.App
 import com.mgc.sharesanalyse.base.Datas
-import com.mgc.sharesanalyse.base.toGetReasoningJudgeDFloat
-import com.mgc.sharesanalyse.base.toGetReasoningJudgeXFloat
 import com.mgc.sharesanalyse.entity.HisHqBean
 import com.mgc.sharesanalyse.entity.PriceHisBean
 import com.mgc.sharesanalyse.entity.SinaDealDatailBean
@@ -164,6 +162,10 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReverse.setOnClickListener {
             App.getSinglePool().execute {
+
+                DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
+                DBUtils.dropTable("AA_REV_OC_OO_30")
+                DBUtils.dropTable("AA_REV_OC_OO_50")
                 viewModel.reverseResult()
             }
         }
@@ -247,8 +249,8 @@ class NewApiActivity : AppCompatActivity() {
 //        LogUtil.d("revAllJudgeResult")
 //        viewModel.revAllJudgeResult()
 
-        DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
-        DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
+        DBUtils.dropTable(Datas.ALL_OC_OO_30)
+        DBUtils.dropTable(Datas.ALL_OC_OO_50)
         viewModel.revOCOOJudgeResult()
     }
 

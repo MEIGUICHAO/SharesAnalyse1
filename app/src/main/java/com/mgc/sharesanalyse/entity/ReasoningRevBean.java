@@ -1,5 +1,8 @@
 package com.mgc.sharesanalyse.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 
 public class ReasoningRevBean implements Serializable {
@@ -544,6 +547,60 @@ public class ReasoningRevBean implements Serializable {
     }
 
 
+    private String toOCOOString() {
+        return  CODE +
+                ", '" + N + '\'' +
+                ", '" + D + '\'' +
+                ", '" + D_D + '\'' +
+                ", " + P  +
+                ", " + MP  +
+                ", " + LP  +
+                ", " + After_O_P  +
+                ", " + After_C_P  +", " +
+                OC3 +"," +
+                OC5 +"," +
+                OC10 +"," +
+                OC15 +"," +
+                OC20 +"," +
+                OC25 +"," +
+                OC30 +"," +
+                OC35 +"," +
+                OC40 +"," +
+                OC45 +"," +
+                OC50 +"," +
+                OC55 +"," +
+                OC60 +"," +
+                OC65 +"," +
+                OC70 +"," +
+                OO3 +"," +
+                OO5 +"," +
+                OO10 +"," +
+                OO15 +"," +
+                OO20 +"," +
+                OO25 +"," +
+                OO30 +"," +
+                OO35 +"," +
+                OO40 +"," +
+                OO45 +"," +
+                OO50 +"," +
+                OO55 +"," +
+                OO60 +"," +
+                OO65 +"," +
+                OO70 +"," +
+                S_A_TR +"," +
+                S_R_TR +"," +
+                S_B_TR +"," +
+                S_C_TR +"," +
+                K_A_TR +"," +
+                K_R_TR +"," +
+                K_B_TR +"," +
+                K_C_TR +"," +
+                K_SL_A_TR +"," +
+                K_SL_R_TR +"," +
+                K_SL_B_TR +"," +
+                K_SL_C_TR ;
+    }
+
     private float OC3;
     private float OC5;
     private float OC10;
@@ -588,4 +645,350 @@ public class ReasoningRevBean implements Serializable {
     private float K_SL_R_TR;
     private float K_SL_B_TR;
     private float K_SL_C_TR;
+
+    public float getOC3() {
+        return OC3;
+    }
+
+    public void setOC3(float OC3) {
+        this.OC3 = OC3;
+    }
+
+    public float getOC5() {
+        return OC5;
+    }
+
+    public void setOC5(float OC5) {
+        this.OC5 = OC5;
+    }
+
+    public float getOC10() {
+        return OC10;
+    }
+
+    public void setOC10(float OC10) {
+        this.OC10 = OC10;
+    }
+
+    public float getOC15() {
+        return OC15;
+    }
+
+    public void setOC15(float OC15) {
+        this.OC15 = OC15;
+    }
+
+    public float getOC20() {
+        return OC20;
+    }
+
+    public void setOC20(float OC20) {
+        this.OC20 = OC20;
+    }
+
+    public float getOC25() {
+        return OC25;
+    }
+
+    public void setOC25(float OC25) {
+        this.OC25 = OC25;
+    }
+
+    public float getOC30() {
+        return OC30;
+    }
+
+    public void setOC30(float OC30) {
+        this.OC30 = OC30;
+    }
+
+    public float getOC35() {
+        return OC35;
+    }
+
+    public void setOC35(float OC35) {
+        this.OC35 = OC35;
+    }
+
+    public float getOC40() {
+        return OC40;
+    }
+
+    public void setOC40(float OC40) {
+        this.OC40 = OC40;
+    }
+
+    public float getOC45() {
+        return OC45;
+    }
+
+    public void setOC45(float OC45) {
+        this.OC45 = OC45;
+    }
+
+    public float getOC50() {
+        return OC50;
+    }
+
+    public void setOC50(float OC50) {
+        this.OC50 = OC50;
+    }
+
+    public float getOC55() {
+        return OC55;
+    }
+
+    public void setOC55(float OC55) {
+        this.OC55 = OC55;
+    }
+
+    public float getOC60() {
+        return OC60;
+    }
+
+    public void setOC60(float OC60) {
+        this.OC60 = OC60;
+    }
+
+    public float getOC65() {
+        return OC65;
+    }
+
+    public void setOC65(float OC65) {
+        this.OC65 = OC65;
+    }
+
+    public float getOC70() {
+        return OC70;
+    }
+
+    public void setOC70(float OC70) {
+        this.OC70 = OC70;
+    }
+
+    public float getOO3() {
+        return OO3;
+    }
+
+    public void setOO3(float OO3) {
+        this.OO3 = OO3;
+    }
+
+    public float getOO5() {
+        return OO5;
+    }
+
+    public void setOO5(float OO5) {
+        this.OO5 = OO5;
+    }
+
+    public float getOO10() {
+        return OO10;
+    }
+
+    public void setOO10(float OO10) {
+        this.OO10 = OO10;
+    }
+
+    public float getOO15() {
+        return OO15;
+    }
+
+    public void setOO15(float OO15) {
+        this.OO15 = OO15;
+    }
+
+    public float getOO20() {
+        return OO20;
+    }
+
+    public void setOO20(float OO20) {
+        this.OO20 = OO20;
+    }
+
+    public float getOO25() {
+        return OO25;
+    }
+
+    public void setOO25(float OO25) {
+        this.OO25 = OO25;
+    }
+
+    public float getOO30() {
+        return OO30;
+    }
+
+    public void setOO30(float OO30) {
+        this.OO30 = OO30;
+    }
+
+    public float getOO35() {
+        return OO35;
+    }
+
+    public void setOO35(float OO35) {
+        this.OO35 = OO35;
+    }
+
+    public float getOO40() {
+        return OO40;
+    }
+
+    public void setOO40(float OO40) {
+        this.OO40 = OO40;
+    }
+
+    public float getOO45() {
+        return OO45;
+    }
+
+    public void setOO45(float OO45) {
+        this.OO45 = OO45;
+    }
+
+    public float getOO50() {
+        return OO50;
+    }
+
+    public void setOO50(float OO50) {
+        this.OO50 = OO50;
+    }
+
+    public float getOO55() {
+        return OO55;
+    }
+
+    public void setOO55(float OO55) {
+        this.OO55 = OO55;
+    }
+
+    public float getOO60() {
+        return OO60;
+    }
+
+    public void setOO60(float OO60) {
+        this.OO60 = OO60;
+    }
+
+    public float getOO65() {
+        return OO65;
+    }
+
+    public void setOO65(float OO65) {
+        this.OO65 = OO65;
+    }
+
+    public float getOO70() {
+        return OO70;
+    }
+
+    public void setOO70(float OO70) {
+        this.OO70 = OO70;
+    }
+
+    public float getS_A_TR() {
+        return S_A_TR;
+    }
+
+    public void setS_A_TR(float s_A_TR) {
+        S_A_TR = s_A_TR;
+    }
+
+    public float getS_R_TR() {
+        return S_R_TR;
+    }
+
+    public void setS_R_TR(float s_R_TR) {
+        S_R_TR = s_R_TR;
+    }
+
+    public float getS_B_TR() {
+        return S_B_TR;
+    }
+
+    public void setS_B_TR(float s_B_TR) {
+        S_B_TR = s_B_TR;
+    }
+
+    public float getS_C_TR() {
+        return S_C_TR;
+    }
+
+    public void setS_C_TR(float s_C_TR) {
+        S_C_TR = s_C_TR;
+    }
+
+    public float getK_A_TR() {
+        return K_A_TR;
+    }
+
+    public void setK_A_TR(float k_A_TR) {
+        K_A_TR = k_A_TR;
+    }
+
+    public float getK_R_TR() {
+        return K_R_TR;
+    }
+
+    public void setK_R_TR(float k_R_TR) {
+        K_R_TR = k_R_TR;
+    }
+
+    public float getK_B_TR() {
+        return K_B_TR;
+    }
+
+    public void setK_B_TR(float k_B_TR) {
+        K_B_TR = k_B_TR;
+    }
+
+    public float getK_C_TR() {
+        return K_C_TR;
+    }
+
+    public void setK_C_TR(float k_C_TR) {
+        K_C_TR = k_C_TR;
+    }
+
+    public float getK_SL_A_TR() {
+        return K_SL_A_TR;
+    }
+
+    public void setK_SL_A_TR(float k_SL_A_TR) {
+        K_SL_A_TR = k_SL_A_TR;
+    }
+
+    public float getK_SL_R_TR() {
+        return K_SL_R_TR;
+    }
+
+    public void setK_SL_R_TR(float k_SL_R_TR) {
+        K_SL_R_TR = k_SL_R_TR;
+    }
+
+    public float getK_SL_B_TR() {
+        return K_SL_B_TR;
+    }
+
+    public void setK_SL_B_TR(float k_SL_B_TR) {
+        K_SL_B_TR = k_SL_B_TR;
+    }
+
+    public float getK_SL_C_TR() {
+        return K_SL_C_TR;
+    }
+
+    public void setK_SL_C_TR(float k_SL_C_TR) {
+        K_SL_C_TR = k_SL_C_TR;
+    }
+
+    @Nullable
+    public String insertOCOOTB(@NotNull String tbName) {
+
+        return "INSERT INTO " + tbName + "( CODE ,N ,D ,D_D ,P ,MP ,LP ,AFTER_O_P ,AFTER_C_P ," +
+                " OC3 ,OC5 ,OC10 ,OC15 ,OC20 ,OC25 ,OC30 ,OC35 ,OC40 ,OC45 ,OC50 ,OC55 ,OC60 ,OC65 ,OC70 ," +
+                " OO3 ,OO5 ,OO10 ,OO15 ,OO20 ,OO25 ,OO30 ,OO35 ,OO40 ,OO45 ,OO50 ,OO55 ,OO60 ,OO65 ,OO70 ," +
+                " S_A_TR ,S_R_TR ,S_B_TR ,S_C_TR ,K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR ,K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR  "+
+                " ) VALUES (" + toOCOOString()+")";
+    }
 }

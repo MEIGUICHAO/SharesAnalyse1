@@ -350,6 +350,25 @@ fun Float.toGetSimpleX(): Int {
     return ((this/Datas.FILTER_PROGRESS).toInt()*Datas.FILTER_PROGRESS)
 }
 
+fun Float.toOCOORevJudgeMax(): Float {
+    return  if (this >= 0.toFloat()) {
+        ((this / Datas.FILTER_OC_OO_PROGRESS).toInt() * Datas.FILTER_OC_OO_PROGRESS + Datas.FILTER_OC_OO_PROGRESS).toFloat()
+    } else {
+        ((this / Datas.FILTER_OC_OO_PROGRESS).toInt() * Datas.FILTER_OC_OO_PROGRESS).toFloat()
+    }
+}
+
+fun Float.toOCOORevJudgeMin(): Float {
+
+    var limit = 0.toFloat()
+    if (this >= 0.toFloat()) {
+        limit = ((this/Datas.FILTER_OC_OO_PROGRESS).toInt()*Datas.FILTER_OC_OO_PROGRESS).toFloat()
+    } else {
+        limit = ((this/Datas.FILTER_OC_OO_PROGRESS).toInt()*Datas.FILTER_OC_OO_PROGRESS - Datas.FILTER_OC_OO_PROGRESS).toFloat()
+    }
+    return limit
+}
+
 fun List<String>.toReasoningCodeList(): String {
     var result = ""
     this.forEach {

@@ -1225,9 +1225,11 @@ class NewApiViewModel : BaseViewModel() {
                 val date = "20${it}01"
 //                if (date.toInt() >= 20201201) {
 //                }
-                LogUtil.d("reverseResult-->$it")
-                (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
-                getReverseChddBeans(code, date)
+                if (it <= DateUtils.formatToDay(FormatterEnum.YYMM)) {
+                    LogUtil.d("reverseResult-->$it")
+                    (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
+                    getReverseChddBeans(code, date)
+                }
             }
         }
     }
@@ -2627,45 +2629,8 @@ class NewApiViewModel : BaseViewModel() {
                     //20避免新股一字板
                     if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
                         if (mCHDDList.size > 70) {
-                            val revKJOCOOBean = ReverseKJsonBean()
-                            val originOC = mCHDDList[0].cp
-                            val originOO = mCHDDList[0].op
-                            revKJOCOOBean.code = code.toInt()
-                            revKJOCOOBean.n = targetBean.name
-                            revKJOCOOBean.date = targetBean.date.toInt()
-                            revKJOCOOBean.d_D = requestBean.date.toInt()
-                            revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList[3].cp, originOC)
-                            revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList[5].cp, originOC)
-                            revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList[10].cp, originOC)
-                            revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList[15].cp, originOC)
-                            revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList[20].cp, originOC)
-                            revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList[25].cp, originOC)
-                            revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList[30].cp, originOC)
-                            revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList[35].cp, originOC)
-                            revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList[40].cp, originOC)
-                            revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList[45].cp, originOC)
-                            revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList[50].cp, originOC)
-                            revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList[55].cp, originOC)
-                            revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList[60].cp, originOC)
-                            revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList[65].cp, originOC)
-                            revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList[70].cp, originOC)
-
-
-                            revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList[3].op, originOO)
-                            revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList[5].op, originOO)
-                            revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList[10].op, originOO)
-                            revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList[15].op, originOO)
-                            revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList[20].op, originOO)
-                            revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList[25].op, originOO)
-                            revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList[30].op, originOO)
-                            revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList[35].op, originOO)
-                            revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList[40].op, originOO)
-                            revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList[45].op, originOO)
-                            revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList[50].op, originOO)
-                            revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList[55].op, originOO)
-                            revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[60].op, originOO)
-                            revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[65].op, originOO)
-                            revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[70].op, originOO)
+                            val revKJOCOOBean =
+                                DataSettingUtils.getRevKJOCOOBean(5,mCHDDList, code, targetBean, requestBean)
                             DBUtils.insertOCOOBean(
                                 revKJOCOOBean,
                                 if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30
@@ -2739,10 +2704,7 @@ class NewApiViewModel : BaseViewModel() {
         }
     }
 
-    private fun getOCOOPercent(
-        OValue: Float,
-        origin: Float
-    ) = ((OValue - origin) / origin * 100).toKeep2()
+
 
     private fun getForeachLimitList(): ArrayList<Array<Int>> {
         val foreachLimitList = arrayListOf(
@@ -3909,57 +3871,65 @@ class NewApiViewModel : BaseViewModel() {
 
         (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
         tbList.forEach {
-            val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMinByColumm(
-                it,
-                Datas.REVERSE_KJ_DB,
-                "OC70",true
-            )
+            DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
+            if (DBUtils.tabbleIsExist(it)) {
+                val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMinByColumm(
+                    it,
+                    Datas.REVERSE_KJ_DB,
+                    "OC70",true
+                )
 //            FILTER_OC_OO_PROGRESS
 
-            for (i in rangeMin..rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
+                for (i in rangeMin..rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
 
 
-                val list = DBUtils.getFilterAllByTbName(
-                    Datas.REVERSE_KJ_DB,
-                    "SELECT * FROM $it WHERE OC70 >=? AND OC70<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
-                    arrayOf(
-                        i.toString(),
-                        (i + Datas.FILTER_OC_OO_PROGRESS).toString()
-                    ), true
-                )
+                    val list = DBUtils.getFilterAllByTbName(
+                        Datas.REVERSE_KJ_DB,
+                        "SELECT * FROM $it WHERE OC70 >=? AND OC70<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        arrayOf(
+                            i.toString(),
+                            (i + Datas.FILTER_OC_OO_PROGRESS).toString()
+                        ), true
+                    )
 
-                if (null == list) {
-                    continue
-                }
-
-                (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_$i--$rangeMax")
-
-                if (list.size > 0) {
-                    val insertTB =
-                        if (it.contains("30")) Datas.ALL_Reaoning_OC_OO_30 else Datas.ALL_Reaoning_OC_OO_50
-                    if (list.size == 1) {
-                        val reasoningAllJudgeBean =
-                            DataSettingUtils.getReasoningOCOOJudgeBean(
-                                list,
-                                i,
-                                i + Datas.FILTER_OC_OO_PROGRESS
-                            )
-                        DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                    } else {
-                        val dateRangeIndex = dayList.size - 2
-                        val date = dayList[dateRangeIndex]
-                        if (dateRangeIndex > 0) {
-                            DataSettingUtils.revOCOOlReasoning(
-                                dayList,
-                                dateRangeIndex,
-                                list,
-                                date,
-                                it,
-                                insertTB
-                            )
-                        }
+                    if (null == list) {
+                        continue
                     }
 
+                    (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_$i--$rangeMax")
+                    LogUtil.d("codeInfo-->OC_OO_$i--$rangeMax")
+
+                    if (list.size > 0) {
+                        val insertTB =
+                            if (it.contains("30")) Datas.ALL_OC_OO_30 else Datas.ALL_OC_OO_50
+                        if (list.size == 1) {
+                            val reasoningAllJudgeBean =
+                                DataSettingUtils.getReasoningOCOOJudgeBean(
+                                    list,
+                                    i,
+                                    i + Datas.FILTER_OC_OO_PROGRESS
+                                )
+                            val codeInfo =
+                                list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+
+                            LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
+                            DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
+                        } else {
+                            val dateRangeIndex = dayList.size - 2
+                            val date = dayList[dateRangeIndex]
+                            if (dateRangeIndex > 0) {
+                                DataSettingUtils.revOCOOlReasoning(
+                                    dayList,
+                                    dateRangeIndex,
+                                    list,
+                                    date,
+                                    it,
+                                    insertTB
+                                )
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -4064,18 +4034,21 @@ class NewApiViewModel : BaseViewModel() {
             if (mCHDDList.size > 77) {
                 for (i in 72..mCHDDList.size - 1) {
                     if (mCHDDList[i].date.toInt() >= Datas.REASONING_BEGIN_DATE) {
-//                        if (mCHDDList[i].date == "20210113"||mCHDDList[i].date == "20210114") {
-//                        }
                         if (Datas.reasoning_debug && (mCHDDList[i].date.toInt() < Datas.reasoning_debug_begin_day || mCHDDList[i].date.toInt() > Datas.reasoning_debug_end_day)) {
                             continue
                         }
-                        insertAllReasoning(
-                            false,
-                            foreachLimitList,
-                            i,
-                            mCHDDList,
-                            code
-                        )
+                        //TODO CESHI
+//                        insertAllReasoning(
+//                            false,
+//                            foreachLimitList,
+//                            i,
+//                            mCHDDList,
+//                            code
+//                        )
+
+//                        if (mCHDDList[i].date == "20200928") {
+//                        }
+                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }
@@ -4084,6 +4057,23 @@ class NewApiViewModel : BaseViewModel() {
         (mActivity as NewApiActivity).setBtnReasoningAll("all_finish!!")
 //        (mActivity as NewApiActivity).setBtnGetAll30("all_finish!!")
 //        (mActivity as NewApiActivity).setBtnGetAll50("all_finish!!")
+    }
+
+    private fun insertOCOOReasoning(i: Int, mCHDDList: java.util.ArrayList<CodeHDDBean>, code: String) {
+        if (70 <= mCHDDList.size) {
+            val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
+            if (DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(true,ocooBean)) {
+                val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
+                setReasoningRevBeanBasicInfo(bean50,code,mCHDDList,i,0)
+                DBUtils.insertOCOOReasoningBean(bean50,Datas.ALL_Reaoning_OC_OO_50)
+            }
+            if (DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(false,ocooBean)) {
+                val bean30 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
+                setReasoningRevBeanBasicInfo(bean30,code,mCHDDList,i,0)
+                LogUtil.d("after_C_P:${bean30.after_C_P},OC3:${bean30.oC3}")
+                DBUtils.insertOCOOReasoningBean(bean30,Datas.ALL_Reaoning_OC_OO_30)
+            }
+        }
     }
 
     private fun insertAllReasoning(

@@ -49,7 +49,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -57,7 +57,7 @@ object Datas {
 
 //    val DEBUG_Code = listOf("002096","002370","002943","300641","300906","601015")
 //    val DEBUG_Code = listOf("000816","002797","300491","600983","603698")//all_reaoning_50
-    val DEBUG_Code = listOf("000020","603533")
+    val DEBUG_Code = listOf("000010","000026")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")
 
@@ -130,7 +130,10 @@ object Datas {
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
     const val REV_OC_OO_30 = "AA_REV_OC_OO_30"
     const val REV_OC_OO_50 = "AA_REV_OC_OO_50"
+    const val ALL_OC_OO_30 = "All_OC_OO_30"
+    const val ALL_OC_OO_50 = "All_OC_OO_50"
     const val ALL_Reaoning_OC_OO_30 = "All_Reaoning_OC_OO_30"
     const val ALL_Reaoning_OC_OO_50 = "All_Reaoning_OC_OO_50"
+
 
 }

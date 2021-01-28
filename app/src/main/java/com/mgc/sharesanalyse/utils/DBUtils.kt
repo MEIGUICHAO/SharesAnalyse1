@@ -2018,4 +2018,82 @@ object DBUtils {
         db.execSQL(insertSql)
     }
 
+    fun insertOCOOReasoningBean(revKJOCOOBean: ReasoningRevBean, tbName: String) {
+        switchDBName(Datas.REV_RESONING_DB)
+        if (!tabbleIsExist(tbName)) {
+            val createSQL = revKJOCOOBean.createOCOOTB(tbName)
+            db.execSQL(createSQL)
+        }
+        val insertSql = revKJOCOOBean.insertOCOOTB(tbName)
+        LogUtil.d("$insertSql")
+        db.execSQL(insertSql)
+    }
+
+
+    fun getReasoningOCOOJudgeBeanByOCOOBean(
+        is50: Boolean,
+        ocooBean: ReverseKJsonBean
+    ): Boolean {
+        switchDBName(Datas.REV_RESONING_DB)
+        val list = ArrayList<ReasoningRevBean>()
+        val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
+        val judgeSQL = "OC70_D >= ${ocooBean.oC70} AND OC70_x <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_x <= ${ocooBean.oC65} AND "+
+                "OC60_D >= ${ocooBean.oC60} AND OC60_x <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_x <= ${ocooBean.oC55} AND "+
+                "OC50_D >= ${ocooBean.oC50} AND OC50_x <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_x <= ${ocooBean.oC45} AND "+
+                "OC40_D >= ${ocooBean.oC40} AND OC40_x <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_x <= ${ocooBean.oC35} AND "+
+                "OC30_D >= ${ocooBean.oC30} AND OC30_x <= ${ocooBean.oC30} AND OC25_D >= ${ocooBean.oC25} AND OC25_x <= ${ocooBean.oC25} AND "+
+                "OC20_D >= ${ocooBean.oC20} AND OC20_x <= ${ocooBean.oC20} AND OC15_D >= ${ocooBean.oC15} AND OC15_x <= ${ocooBean.oC15} AND "+
+                "OC10_D >= ${ocooBean.oC10} AND OC10_x <= ${ocooBean.oC10} AND OC5_D >= ${ocooBean.oC5} AND OC5_x <= ${ocooBean.oC5} AND " +
+                "OC3_D >= ${ocooBean.oC3} AND OC3_x <= ${ocooBean.oC3}";
+
+        var needContinue = false
+        if (tabbleIsExist(tbName)) {
+            val cursor =
+                db.rawQuery(" SELECT * FROM $tbName WHERE $judgeSQL", null)
+            if (cursor.count>0) {
+                needContinue = true
+//                while (!cursor.isAfterLast) {
+//                    val reverseBean = ReasoningRevBean()
+//                    reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
+//                    reverseBean.oO5 = cursor.getFloat(cursor.getColumnIndex("OO5"))
+//                    reverseBean.oO10 = cursor.getFloat(cursor.getColumnIndex("OO10"))
+//                    reverseBean.oO15 = cursor.getFloat(cursor.getColumnIndex("OO15"))
+//                    reverseBean.oO20 = cursor.getFloat(cursor.getColumnIndex("OO20"))
+//                    reverseBean.oO25 = cursor.getFloat(cursor.getColumnIndex("OO25"))
+//                    reverseBean.oO30 = cursor.getFloat(cursor.getColumnIndex("OO30"))
+//                    reverseBean.oO35 = cursor.getFloat(cursor.getColumnIndex("OO35"))
+//                    reverseBean.oO40 = cursor.getFloat(cursor.getColumnIndex("OO40"))
+//                    reverseBean.oO45 = cursor.getFloat(cursor.getColumnIndex("OO45"))
+//                    reverseBean.oO50 = cursor.getFloat(cursor.getColumnIndex("OO50"))
+//                    reverseBean.oO55 = cursor.getFloat(cursor.getColumnIndex("OO55"))
+//                    reverseBean.oO60 = cursor.getFloat(cursor.getColumnIndex("OO60"))
+//                    reverseBean.oO65 = cursor.getFloat(cursor.getColumnIndex("OO65"))
+//                    reverseBean.oO70 = cursor.getFloat(cursor.getColumnIndex("OO70"))
+//
+//                    reverseBean.oC3 = cursor.getFloat(cursor.getColumnIndex("OC3"))
+//                    reverseBean.oC5 = cursor.getFloat(cursor.getColumnIndex("OC5"))
+//                    reverseBean.oC10 = cursor.getFloat(cursor.getColumnIndex("OC10"))
+//                    reverseBean.oC15 = cursor.getFloat(cursor.getColumnIndex("OC15"))
+//                    reverseBean.oC20 = cursor.getFloat(cursor.getColumnIndex("OC20"))
+//                    reverseBean.oC25 = cursor.getFloat(cursor.getColumnIndex("OC25"))
+//                    reverseBean.oC30 = cursor.getFloat(cursor.getColumnIndex("OC30"))
+//                    reverseBean.oC35 = cursor.getFloat(cursor.getColumnIndex("OC35"))
+//                    reverseBean.oC40 = cursor.getFloat(cursor.getColumnIndex("OC40"))
+//                    reverseBean.oC45 = cursor.getFloat(cursor.getColumnIndex("OC45"))
+//                    reverseBean.oC50 = cursor.getFloat(cursor.getColumnIndex("OC50"))
+//                    reverseBean.oC55 = cursor.getFloat(cursor.getColumnIndex("OC55"))
+//                    reverseBean.oC60 = cursor.getFloat(cursor.getColumnIndex("OC60"))
+//                    reverseBean.oC65 = cursor.getFloat(cursor.getColumnIndex("OC65"))
+//                    reverseBean.oC70 = cursor.getFloat(cursor.getColumnIndex("OC70"))
+//                    list.add(reverseBean)
+//                    cursor.moveToNext()
+//                }
+                cursor.close()
+            }
+
+        }
+        return needContinue
+    }
+
+
 }

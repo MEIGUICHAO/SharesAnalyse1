@@ -3352,6 +3352,9 @@ object DataSettingUtils {
             if (dlist.size > 0) {
                 if (dateRangeIndex == 0) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
+                    val codeInfo =
+                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+                    LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
                 if ((dateRangeIndex) > 0) {
@@ -3974,73 +3977,219 @@ object DataSettingUtils {
             }
         } else {
 
-            reasoningAllJudgeBean.oC3_D = max.toFloat()
-            reasoningAllJudgeBean.oC5_D = max.toFloat()
-            reasoningAllJudgeBean.oC10_D = max.toFloat()
-            reasoningAllJudgeBean.oC15_D = max.toFloat()
-            reasoningAllJudgeBean.oC20_D = max.toFloat()
-            reasoningAllJudgeBean.oC25_D = max.toFloat()
-            reasoningAllJudgeBean.oC30_D = max.toFloat()
-            reasoningAllJudgeBean.oC35_D = max.toFloat()
-            reasoningAllJudgeBean.oC40_D = max.toFloat()
-            reasoningAllJudgeBean.oC45_D = max.toFloat()
-            reasoningAllJudgeBean.oC50_D = max.toFloat()
-            reasoningAllJudgeBean.oC55_D = max.toFloat()
-            reasoningAllJudgeBean.oC60_D = max.toFloat()
-            reasoningAllJudgeBean.oC65_D = max.toFloat()
-            reasoningAllJudgeBean.oC70_D = max.toFloat()
+            list.forEach {
 
-            reasoningAllJudgeBean.oO3_D = max.toFloat()
-            reasoningAllJudgeBean.oO5_D = max.toFloat()
-            reasoningAllJudgeBean.oO10_D = max.toFloat()
-            reasoningAllJudgeBean.oO15_D = max.toFloat()
-            reasoningAllJudgeBean.oO20_D = max.toFloat()
-            reasoningAllJudgeBean.oO25_D = max.toFloat()
-            reasoningAllJudgeBean.oO30_D = max.toFloat()
-            reasoningAllJudgeBean.oO35_D = max.toFloat()
-            reasoningAllJudgeBean.oO40_D = max.toFloat()
-            reasoningAllJudgeBean.oO45_D = max.toFloat()
-            reasoningAllJudgeBean.oO50_D = max.toFloat()
-            reasoningAllJudgeBean.oO55_D = max.toFloat()
-            reasoningAllJudgeBean.oO60_D = max.toFloat()
-            reasoningAllJudgeBean.oO65_D = max.toFloat()
-            reasoningAllJudgeBean.oO70_D = max.toFloat()
+                if (it is ReverseKJsonBean) {
+                    reasoningAllJudgeBean.oC3_D = it.oC3.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC5_D  = it.oC5.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC10_D  = it.oC10.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC15_D  = it.oC15.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC20_D  = it.oC20.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC25_D  = it.oC25.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC30_D  = it.oC30.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC35_D  = it.oC35.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC40_D  = it.oC40.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC45_D  = it.oC45.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC50_D  = it.oC50.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC55_D  = it.oC55.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC60_D  = it.oC60.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC65_D  = it.oC65.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oC70_D  = it.oC70.toOCOORevJudgeMax()
 
 
-            reasoningAllJudgeBean.oC3_X = min.toFloat()
-            reasoningAllJudgeBean.oC5_X = min.toFloat()
-            reasoningAllJudgeBean.oC10_X = min.toFloat()
-            reasoningAllJudgeBean.oC15_X = min.toFloat()
-            reasoningAllJudgeBean.oC20_X = min.toFloat()
-            reasoningAllJudgeBean.oC25_X = min.toFloat()
-            reasoningAllJudgeBean.oC30_X = min.toFloat()
-            reasoningAllJudgeBean.oC35_X = min.toFloat()
-            reasoningAllJudgeBean.oC40_X = min.toFloat()
-            reasoningAllJudgeBean.oC45_X = min.toFloat()
-            reasoningAllJudgeBean.oC50_X = min.toFloat()
-            reasoningAllJudgeBean.oC55_X = min.toFloat()
-            reasoningAllJudgeBean.oC60_X = min.toFloat()
-            reasoningAllJudgeBean.oC65_X = min.toFloat()
-            reasoningAllJudgeBean.oC70_X = min.toFloat()
+                    reasoningAllJudgeBean.oC3_X  = it.oC3.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC5_X  = it.oC5.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC10_X  = it.oC10.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC15_X  = it.oC15.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC20_X  = it.oC20.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC25_X  = it.oC25.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC30_X  = it.oC30.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC35_X  = it.oC35.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC40_X  = it.oC40.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC45_X  = it.oC45.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC50_X  = it.oC50.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC55_X  = it.oC55.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC60_X  = it.oC60.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC65_X  = it.oC65.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oC70_X  = it.oC70.toOCOORevJudgeMin()
 
-            reasoningAllJudgeBean.oO3_X = min.toFloat()
-            reasoningAllJudgeBean.oO5_X = min.toFloat()
-            reasoningAllJudgeBean.oO10_X = min.toFloat()
-            reasoningAllJudgeBean.oO15_X = min.toFloat()
-            reasoningAllJudgeBean.oO20_X = min.toFloat()
-            reasoningAllJudgeBean.oO25_X = min.toFloat()
-            reasoningAllJudgeBean.oO30_X = min.toFloat()
-            reasoningAllJudgeBean.oO35_X = min.toFloat()
-            reasoningAllJudgeBean.oO40_X = min.toFloat()
-            reasoningAllJudgeBean.oO45_X = min.toFloat()
-            reasoningAllJudgeBean.oO50_X = min.toFloat()
-            reasoningAllJudgeBean.oO55_X = min.toFloat()
-            reasoningAllJudgeBean.oO60_X = min.toFloat()
-            reasoningAllJudgeBean.oO65_X = min.toFloat()
-            reasoningAllJudgeBean.oO70_X = min.toFloat()
+                    reasoningAllJudgeBean.oO3_D  = it.oO3.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO5_D  = it.oO5.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO10_D  = it.oO10.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO15_D  = it.oO15.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO20_D  = it.oO20.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO25_D  = it.oO25.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO30_D  = it.oO30.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO35_D  = it.oO35.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO40_D  = it.oO40.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO45_D  = it.oO45.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO50_D  = it.oO50.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO55_D  = it.oO55.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO60_D  = it.oO60.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO65_D  = it.oO65.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.oO70_D  = it.oO70.toOCOORevJudgeMax()
 
+
+                    reasoningAllJudgeBean.oO3_X  = it.oO3.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO5_X  = it.oO5.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO10_X  = it.oO10.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO15_X  = it.oO15.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO20_X  = it.oO20.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO25_X  = it.oO25.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO30_X  = it.oO30.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO35_X  = it.oO35.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO40_X  = it.oO40.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO45_X  = it.oO45.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO50_X  = it.oO50.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO55_X  = it.oO55.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO60_X  = it.oO60.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO65_X  = it.oO65.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.oO70_X  = it.oO70.toOCOORevJudgeMin()
+                }
+            }
         }
         reasoningAllJudgeBean.count = list.size
         return reasoningAllJudgeBean
     }
+
+    private fun getOCOOPercent(
+        OValue: Float,
+        origin: Float
+    ) = ((OValue - origin) / origin * 100).toKeep2()
+
+    fun getRevKJOCOOBean(
+        index:Int,
+        mCHDDList: ArrayList<CodeHDDBean>,
+        code: String,
+        targetBean: CodeHDDBean?,
+        requestBean: CodeHDDBean?
+    ): ReverseKJsonBean {
+        val revKJOCOOBean = ReverseKJsonBean()
+        val originOC = mCHDDList[index].cp
+        val originOO = mCHDDList[index].op
+        if (null != targetBean && null != requestBean) {
+            revKJOCOOBean.code = code.toInt()
+            revKJOCOOBean.n = targetBean.name
+            revKJOCOOBean.date = targetBean.date.toInt()
+            revKJOCOOBean.d_D = requestBean.date.toInt()
+        }
+        revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList[index+3].cp, originOC)
+        revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList[index+5].cp, originOC)
+        revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList[index+10].cp, originOC)
+        revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList[index+15].cp, originOC)
+        revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList[index+20].cp, originOC)
+        revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList[index+25].cp, originOC)
+        revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList[index+30].cp, originOC)
+        revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList[index+35].cp, originOC)
+        revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList[index+40].cp, originOC)
+        revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList[index+45].cp, originOC)
+        revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList[index+50].cp, originOC)
+        revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList[index+55].cp, originOC)
+        revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList[index+60].cp, originOC)
+        revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList[index+65].cp, originOC)
+        revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList[index+70].cp, originOC)
+
+
+        revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList[index+3].op, originOO)
+        revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList[index+5].op, originOO)
+        revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList[index+10].op, originOO)
+        revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList[index+15].op, originOO)
+        revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList[index+20].op, originOO)
+        revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList[index+25].op, originOO)
+        revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList[index+30].op, originOO)
+        revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList[index+35].op, originOO)
+        revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList[index+40].op, originOO)
+        revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList[index+45].op, originOO)
+        revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList[index+50].op, originOO)
+        revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList[index+55].op, originOO)
+        revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[index+60].op, originOO)
+        revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[index+65].op, originOO)
+        revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[index+70].op, originOO)
+        return revKJOCOOBean
+    }
+
+    fun getInsertRevKJOCOOBean(
+        index:Int,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ): ReverseKJsonBean {
+        val revKJOCOOBean = ReverseKJsonBean()
+        val originOC = mCHDDList[index].cp
+        val originOO = mCHDDList[index].op
+        revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList[index-3].cp, originOC)
+        revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList[index-5].cp, originOC)
+        revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList[index-10].cp, originOC)
+        revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList[index-15].cp, originOC)
+        revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList[index-20].cp, originOC)
+        revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList[index-25].cp, originOC)
+        revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList[index-30].cp, originOC)
+        revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList[index-35].cp, originOC)
+        revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList[index-40].cp, originOC)
+        revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList[index-45].cp, originOC)
+        revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList[index-50].cp, originOC)
+        revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList[index-55].cp, originOC)
+        revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList[index-60].cp, originOC)
+        revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList[index-65].cp, originOC)
+        revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList[index-70].cp, originOC)
+
+
+        revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList[index-3].op, originOO)
+        revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList[index-5].op, originOO)
+        revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList[index-10].op, originOO)
+        revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList[index-15].op, originOO)
+        revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList[index-20].op, originOO)
+        revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList[index-25].op, originOO)
+        revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList[index-30].op, originOO)
+        revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList[index-35].op, originOO)
+        revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList[index-40].op, originOO)
+        revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList[index-45].op, originOO)
+        revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList[index-50].op, originOO)
+        revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList[index-55].op, originOO)
+        revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[index-60].op, originOO)
+        revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[index-65].op, originOO)
+        revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[index-70].op, originOO)
+        return revKJOCOOBean
+    }
+
+    fun getOCOOReasoningRevBean(
+        index:Int,
+        mCHDDList: ArrayList<CodeHDDBean>
+    ): ReasoningRevBean {
+        val revKJOCOOBean = ReasoningRevBean()
+        val originOC = mCHDDList[index].cp
+        val originOO = mCHDDList[index].op
+        revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList[index-3].cp, originOC)
+        revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList[index-5].cp, originOC)
+        revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList[index-10].cp, originOC)
+        revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList[index-15].cp, originOC)
+        revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList[index-20].cp, originOC)
+        revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList[index-25].cp, originOC)
+        revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList[index-30].cp, originOC)
+        revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList[index-35].cp, originOC)
+        revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList[index-40].cp, originOC)
+        revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList[index-45].cp, originOC)
+        revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList[index-50].cp, originOC)
+        revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList[index-55].cp, originOC)
+        revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList[index-60].cp, originOC)
+        revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList[index-65].cp, originOC)
+        revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList[index-70].cp, originOC)
+
+
+        revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList[index-3].op, originOO)
+        revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList[index-5].op, originOO)
+        revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList[index-10].op, originOO)
+        revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList[index-15].op, originOO)
+        revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList[index-20].op, originOO)
+        revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList[index-25].op, originOO)
+        revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList[index-30].op, originOO)
+        revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList[index-35].op, originOO)
+        revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList[index-40].op, originOO)
+        revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList[index-45].op, originOO)
+        revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList[index-50].op, originOO)
+        revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList[index-55].op, originOO)
+        revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList[index-60].op, originOO)
+        revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList[index-65].op, originOO)
+        revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList[index-70].op, originOO)
+        return revKJOCOOBean
+    }
+
 }
