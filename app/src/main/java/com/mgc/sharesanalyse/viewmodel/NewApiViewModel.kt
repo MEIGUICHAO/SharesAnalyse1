@@ -2627,14 +2627,18 @@ class NewApiViewModel : BaseViewModel() {
                     val TOP = targetBean.p_MA_J.aacp
 
                     //20避免新股一字板
-                    if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
+                    if (ROP > TOP && ROP >= 1.1 * TOP && mCHDDList.size > 20) {
                         if (mCHDDList.size > 75) {
                             val revKJOCOOBean =
                                 DataSettingUtils.getRevKJOCOOBean(5,mCHDDList, code, targetBean, requestBean)
                             DBUtils.insertOCOOBean(
                                 revKJOCOOBean,
-                                if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30
+                                if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else if (ROP >= 1.3 * TOP) Datas.REV_OC_OO_30 else Datas.REV_OC_OO_10
                             )
+                        }
+
+                        if (ROP < 1.3 * TOP) {
+                            return@let
                         }
 
                         //TODO OCOO测试暂时注释 begin
@@ -4061,6 +4065,7 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun insertOCOOReasoning(i: Int, mCHDDList: java.util.ArrayList<CodeHDDBean>, code: String) {
         if (70 <= mCHDDList.size) {
+            LogUtil.d("code-->${code},date-->${mCHDDList[i].date}")
             val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
             if (DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(true,ocooBean)) {
                 val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)

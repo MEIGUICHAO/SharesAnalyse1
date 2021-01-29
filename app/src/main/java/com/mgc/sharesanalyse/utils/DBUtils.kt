@@ -2037,14 +2037,23 @@ object DBUtils {
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
         val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
-        val judgeSQL = "OC70_D >= ${ocooBean.oC70} AND OC70_x <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_x <= ${ocooBean.oC65} AND "+
-                "OC60_D >= ${ocooBean.oC60} AND OC60_x <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_x <= ${ocooBean.oC55} AND "+
-                "OC50_D >= ${ocooBean.oC50} AND OC50_x <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_x <= ${ocooBean.oC45} AND "+
-                "OC40_D >= ${ocooBean.oC40} AND OC40_x <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_x <= ${ocooBean.oC35} AND "+
-                "OC30_D >= ${ocooBean.oC30} AND OC30_x <= ${ocooBean.oC30} AND OC25_D >= ${ocooBean.oC25} AND OC25_x <= ${ocooBean.oC25} AND "+
-                "OC20_D >= ${ocooBean.oC20} AND OC20_x <= ${ocooBean.oC20} AND OC15_D >= ${ocooBean.oC15} AND OC15_x <= ${ocooBean.oC15} AND "+
-                "OC10_D >= ${ocooBean.oC10} AND OC10_x <= ${ocooBean.oC10} AND OC5_D >= ${ocooBean.oC5} AND OC5_x <= ${ocooBean.oC5} AND " +
-                "OC3_D >= ${ocooBean.oC3} AND OC3_x <= ${ocooBean.oC3}";
+        val judgeSQL = " OC70_D >= ${ocooBean.oC70} AND OC70_x <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_x <= ${ocooBean.oC65} AND "+
+                " OC60_D >= ${ocooBean.oC60} AND OC60_x <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_x <= ${ocooBean.oC55} AND "+
+                " OC50_D >= ${ocooBean.oC50} AND OC50_x <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_x <= ${ocooBean.oC45} AND "+
+                " OC40_D >= ${ocooBean.oC40} AND OC40_x <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_x <= ${ocooBean.oC35} AND "+
+                " OC30_D >= ${ocooBean.oC30} AND OC30_x <= ${ocooBean.oC30} AND OC25_D >= ${ocooBean.oC25} AND OC25_x <= ${ocooBean.oC25} AND "+
+                " OC20_D >= ${ocooBean.oC20} AND OC20_x <= ${ocooBean.oC20} AND OC15_D >= ${ocooBean.oC15} AND OC15_x <= ${ocooBean.oC15} AND "+
+                " OC10_D >= ${ocooBean.oC10} AND OC10_x <= ${ocooBean.oC10} AND OC5_D >= ${ocooBean.oC5} AND OC5_x <= ${ocooBean.oC5} AND " +
+                " OC3_D >= ${ocooBean.oC3} AND OC3_x <= ${ocooBean.oC3}"+
+                " AND OO70_D >= ${ocooBean.oO70} AND OO70_x <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_x <= ${ocooBean.oO65} AND "+
+                " OO60_D >= ${ocooBean.oO60} AND OO60_x <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_x <= ${ocooBean.oO55} AND "+
+                " OO50_D >= ${ocooBean.oO50} AND OO50_x <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_x <= ${ocooBean.oO45} AND "+
+                " OO40_D >= ${ocooBean.oO40} AND OO40_x <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_x <= ${ocooBean.oO35} AND "+
+                " OO30_D >= ${ocooBean.oO30} AND OO30_x <= ${ocooBean.oO30} AND OO25_D >= ${ocooBean.oO25} AND OO25_x <= ${ocooBean.oO25} AND "+
+                " OO20_D >= ${ocooBean.oO20} AND OO20_x <= ${ocooBean.oO20} AND OO15_D >= ${ocooBean.oO15} AND OO15_x <= ${ocooBean.oO15} AND "+
+                " OO10_D >= ${ocooBean.oO10} AND OO10_x <= ${ocooBean.oO10} AND OO5_D >= ${ocooBean.oO5} AND OO5_x <= ${ocooBean.oO5} AND " +
+                " OO3_D >= ${ocooBean.oO3} AND OO3_x <= ${ocooBean.oO3}"
+
 
         var needContinue = false
         if (tabbleIsExist(tbName)) {

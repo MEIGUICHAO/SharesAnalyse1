@@ -509,6 +509,7 @@ public class ReverseKJsonBean implements BaseReverseImp {
         return code;
     }
 
+    //OC-->OM,OO->OL
     private float OC3;
     private float OC5;
     private float OC10;
@@ -540,6 +541,134 @@ public class ReverseKJsonBean implements BaseReverseImp {
     private float OO60;
     private float OO65;
     private float OO70;
+
+    private float PP5;
+    private float PP10;
+    private float PP15;
+    private float PP20;
+    private float PP25;
+    private float PP30;
+    private float PP35;
+    private float PP40;
+    private float PP45;
+    private float PP50;
+    private float PP55;
+    private float PP60;
+    private float PP65;
+    private float PP70;
+
+
+    public float getPP5() {
+        return PP5;
+    }
+
+    public void setPP5(float PP5) {
+        this.PP5 = PP5;
+    }
+
+    public float getPP10() {
+        return PP10;
+    }
+
+    public void setPP10(float PP10) {
+        this.PP10 = PP10;
+    }
+
+    public float getPP15() {
+        return PP15;
+    }
+
+    public void setPP15(float PP15) {
+        this.PP15 = PP15;
+    }
+
+    public float getPP20() {
+        return PP20;
+    }
+
+    public void setPP20(float PP20) {
+        this.PP20 = PP20;
+    }
+
+    public float getPP25() {
+        return PP25;
+    }
+
+    public void setPP25(float PP25) {
+        this.PP25 = PP25;
+    }
+
+    public float getPP30() {
+        return PP30;
+    }
+
+    public void setPP30(float PP30) {
+        this.PP30 = PP30;
+    }
+
+    public float getPP35() {
+        return PP35;
+    }
+
+    public void setPP35(float PP35) {
+        this.PP35 = PP35;
+    }
+
+    public float getPP40() {
+        return PP40;
+    }
+
+    public void setPP40(float PP40) {
+        this.PP40 = PP40;
+    }
+
+    public float getPP45() {
+        return PP45;
+    }
+
+    public void setPP45(float PP45) {
+        this.PP45 = PP45;
+    }
+
+    public float getPP50() {
+        return PP50;
+    }
+
+    public void setPP50(float PP50) {
+        this.PP50 = PP50;
+    }
+
+    public float getPP55() {
+        return PP55;
+    }
+
+    public void setPP55(float PP55) {
+        this.PP55 = PP55;
+    }
+
+    public float getPP60() {
+        return PP60;
+    }
+
+    public void setPP60(float PP60) {
+        this.PP60 = PP60;
+    }
+
+    public float getPP65() {
+        return PP65;
+    }
+
+    public void setPP65(float PP65) {
+        this.PP65 = PP65;
+    }
+
+    public float getPP70() {
+        return PP70;
+    }
+
+    public void setPP70(float PP70) {
+        this.PP70 = PP70;
+    }
 
     public float getOC3() {
         return OC3;
@@ -784,14 +913,16 @@ public class ReverseKJsonBean implements BaseReverseImp {
     public String insertOCOOTB(String tbName) {
         return "INSERT INTO " + tbName + "(CODE ,N ,D_D ,DATE," +
                 "OC3 ,OC5 ,OC10 ,OC15 ,OC20 ,OC25 ,OC30 ,OC35 ,OC40 ,OC45 ,OC50 ,OC55 ,OC60 ,OC65 ,OC70 ," +
-                "OO3 ,OO5 ,OO10 ,OO15 ,OO20 ,OO25 ,OO30 ,OO35 ,OO40 ,OO45 ,OO50 ,OO55 ,OO60 ,OO65 ,OO70 " +
+                "OO3 ,OO5 ,OO10 ,OO15 ,OO20 ,OO25 ,OO30 ,OO35 ,OO40 ,OO45 ,OO50 ,OO55 ,OO60 ,OO65 ,OO70 ," +
+                "PP5 ,PP10 ,PP15 ,PP20 ,PP25 ,PP30 ,PP35 ,PP40 ,PP45 ,PP50 ,PP55 ,PP60 ,PP65 ,PP70 " +
                 ") VALUES (" + toOCOOString();
     }
 
     public String createOCOOTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D INTEGER,DATE INTEGER," +
                 "OC3 INTEGER,OC5 INTEGER,OC10 INTEGER,OC15 INTEGER,OC20 INTEGER,OC25 INTEGER,OC30 INTEGER,OC35 INTEGER,OC40 INTEGER,OC45 INTEGER,OC50 INTEGER,OC55 INTEGER,OC60 INTEGER,OC65 INTEGER,OC70 INTEGER," +
-                "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER);";
+                "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER," +
+                "PP5 INTEGER,PP10 INTEGER,PP15 INTEGER,PP20 INTEGER,PP25 INTEGER,PP30 INTEGER,PP35 INTEGER,PP40 INTEGER,PP45 INTEGER,PP50 INTEGER,PP55 INTEGER,PP60 INTEGER,PP65 INTEGER,PP70 INTEGER);";
     }
 
     private String toOCOOString() {
@@ -828,6 +959,20 @@ public class ReverseKJsonBean implements BaseReverseImp {
                 ", " + OO55  +
                 ", " + OO60  +
                 ", " + OO65 +
-                ", " + OO70 +")";
+                ", " + OO70 +
+                ", " + PP5  +
+                ", " + PP10 +
+                ", " + PP15  +
+                ", " + PP20  +
+                ", " + PP25 +
+                ", " + PP30  +
+                ", " + PP35  +
+                ", " + PP40 +
+                ", " + PP45  +
+                ", " + PP50  +
+                ", " + PP55  +
+                ", " + PP60  +
+                ", " + PP65 +
+                ", " + PP70 +")";
     }
 }

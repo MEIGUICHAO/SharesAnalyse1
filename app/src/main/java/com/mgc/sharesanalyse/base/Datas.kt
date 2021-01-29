@@ -124,10 +124,11 @@ object Datas {
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
-    const val reasoning_debug = false
+    const val reasoning_debug = true
     const val reasoning_debug_begin_day = 20210101
-    const val reasoning_debug_end_day = 20210115
+    const val reasoning_debug_end_day = 20210126
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
+    const val REV_OC_OO_10 = "AA_REV_OC_OO_10"
     const val REV_OC_OO_30 = "AA_REV_OC_OO_30"
     const val REV_OC_OO_50 = "AA_REV_OC_OO_50"
     const val ALL_OC_OO_30 = "All_OC_OO_30"

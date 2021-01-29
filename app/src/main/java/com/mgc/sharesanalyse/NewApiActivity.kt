@@ -164,6 +164,7 @@ class NewApiActivity : AppCompatActivity() {
             App.getSinglePool().execute {
 
                 DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
+                DBUtils.dropTable("AA_REV_OC_OO_10")
                 DBUtils.dropTable("AA_REV_OC_OO_30")
                 DBUtils.dropTable("AA_REV_OC_OO_50")
                 viewModel.reverseResult()
@@ -231,8 +232,10 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-            DBUtils.dropTable("All_Reasoning_50")
-            DBUtils.dropTable("All_Reasoning_30")
+//            DBUtils.dropTable("All_Reasoning_50")
+//            DBUtils.dropTable("All_Reasoning_30")
+            DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
+            DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
             App.getSinglePool().execute {
                 viewModel.reasoningAll()
 //                viewModel.sortContinue30Map()

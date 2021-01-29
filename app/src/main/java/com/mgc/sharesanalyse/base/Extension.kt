@@ -376,3 +376,31 @@ fun List<String>.toReasoningCodeList(): String {
     }
     return result
 }
+
+fun ArrayList<CodeHDDBean>.getPPValueByAsc(index:Int,begin: Int, end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index+begin)..(index+end)) {
+        value = value + this.get(i).cp
+    }
+    return value/(end+1)
+}
+
+fun ArrayList<CodeHDDBean>.getMaxValueInRange(index:Int,begin: Int, end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index+begin)..(index+end)) {
+        if (this.get(i).cp > value) {
+            value = this.get(i).cp
+        }
+    }
+    return value
+}
+
+fun ArrayList<CodeHDDBean>.getMinValueInRange(index:Int,begin: Int, end: Int): Float {
+    var value = 10086.toFloat()
+    for (i in (index+begin)..(index+end)) {
+        if (this.get(i).cp < value) {
+            value = this.get(i).cp
+        }
+    }
+    return value
+}

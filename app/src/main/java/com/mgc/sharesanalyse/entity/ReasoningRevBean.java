@@ -470,6 +470,10 @@ public class ReasoningRevBean implements Serializable {
                 ", " + LP  +
                 ", " + After_O_P  +
                 ", " + After_C_P  +
+                "," +SHOW +
+                "," +FRATE +
+                "," +RRATE +
+                "," +SIZE +
                 ", " + F36_T  +
                 ", " + F30_T  +
                 ", " + F25_T  +
@@ -521,6 +525,7 @@ public class ReasoningRevBean implements Serializable {
 
     public String createAllTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER" +
+                ",SHOW INTEGER,FRATE INTEGER,RRATE INTEGER,SIZE INTEGER,"+
                 ",F36_T INTEGER,F30_T INTEGER,F25_T INTEGER,F20_T INTEGER,F15_T INTEGER,F10_T INTEGER,F05_T INTEGER,F03_T INTEGER,MA1 INTEGER,MA3 INTEGER,MA5 INTEGER,MA10 INTEGER" +
                 ",L36 INTEGER,L30 INTEGER,L25 INTEGER,L20 INTEGER,L15 INTEGER,L10 INTEGER,L05 INTEGER,L03 INTEGER"+
                 ",C36 INTEGER,C30 INTEGER,C25 INTEGER,C20 INTEGER,C15 INTEGER,C10 INTEGER,C05 INTEGER,C03 INTEGER"+
@@ -531,7 +536,9 @@ public class ReasoningRevBean implements Serializable {
 
 
     public String insertAllTB(String tbName) {
-        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P,F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T,MA1 ,MA3 ,MA5 ,MA10" +
+        return "INSERT INTO " + tbName + "(CODE ,N ,D ,D_D ,P,MP,LP,AFTER_O_P,AFTER_C_P" +
+                ",SHOW ,FRATE ,RRATE ,SIZE "+
+                ",F36_T,F30_T,F25_T,F20_T,F15_T,F10_T,F05_T,F03_T,MA1 ,MA3 ,MA5 ,MA10" +
                 ",L36 ,L30 ,L25 ,L20 ,L15 ,L10 ,L05 ,L03 "+
                 ",C36 ,C30 ,C25 ,C20 ,C15 ,C10 ,C05 ,C03 "+
                 ",O36 ,O30 ,O25 ,O20 ,O15 ,O10 ,O05 ,O03 "+
@@ -541,6 +548,7 @@ public class ReasoningRevBean implements Serializable {
 
     public String createOCOOTB(String tbname) {
         return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER," +
+                "SHOW INTEGER,FRATE INTEGER,RRATE INTEGER,SIZE INTEGER,"+
                 "OC3 INTEGER,OC5 INTEGER,OC10 INTEGER,OC15 INTEGER,OC20 INTEGER,OC25 INTEGER,OC30 INTEGER,OC35 INTEGER,OC40 INTEGER,OC45 INTEGER,OC50 INTEGER,OC55 INTEGER,OC60 INTEGER,OC65 INTEGER,OC70 INTEGER," +
                 "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER,"+
                 "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER,K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER,K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
@@ -557,6 +565,10 @@ public class ReasoningRevBean implements Serializable {
                 ", " + LP  +
                 ", " + After_O_P  +
                 ", " + After_C_P  +", " +
+                SHOW +"," +
+                FRATE +"," +
+                RRATE +"," +
+                SIZE +"," +
                 OC3 +"," +
                 OC5 +"," +
                 OC10 +"," +
@@ -985,10 +997,39 @@ public class ReasoningRevBean implements Serializable {
     @Nullable
     public String insertOCOOTB(@NotNull String tbName) {
 
-        return "INSERT INTO " + tbName + "( CODE ,N ,D ,D_D ,P ,MP ,LP ,AFTER_O_P ,AFTER_C_P ," +
+        return "INSERT INTO " + tbName + "( CODE ,N ,D ,D_D ,P ,MP ,LP ,AFTER_O_P ,AFTER_C_P ,SHOW,FRATE,RRATE,SIZE," +
                 " OC3 ,OC5 ,OC10 ,OC15 ,OC20 ,OC25 ,OC30 ,OC35 ,OC40 ,OC45 ,OC50 ,OC55 ,OC60 ,OC65 ,OC70 ," +
                 " OO3 ,OO5 ,OO10 ,OO15 ,OO20 ,OO25 ,OO30 ,OO35 ,OO40 ,OO45 ,OO50 ,OO55 ,OO60 ,OO65 ,OO70 ," +
                 " S_A_TR ,S_R_TR ,S_B_TR ,S_C_TR ,K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR ,K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR  "+
                 " ) VALUES (" + toOCOOString()+")";
+    }
+
+    int SHOW;
+    float FRATE;
+    float RRATE;
+    int SIZE;
+
+    public int getSHOW() {
+        return SHOW;
+    }
+
+    public void setSHOW(int SHOW) {
+        this.SHOW = SHOW;
+    }
+
+    public float getFRATE() {
+        return FRATE;
+    }
+
+    public void setFRATE(float FRATE) {
+        this.FRATE = FRATE;
+    }
+
+    public float getRRATE() {
+        return RRATE;
+    }
+
+    public void setRRATE(float RRATE) {
+        this.RRATE = RRATE;
     }
 }
