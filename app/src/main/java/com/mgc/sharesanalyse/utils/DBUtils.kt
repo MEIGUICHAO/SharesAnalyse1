@@ -2025,6 +2025,7 @@ object DBUtils {
             db.execSQL(createSQL)
         }
         val insertSql = revKJOCOOBean.insertOCOOTB(tbName)
+        LogUtil.d("insertReasoninResult:${revKJOCOOBean.n},${revKJOCOOBean.d},${revKJOCOOBean.p}")
         LogUtil.d("$insertSql")
         db.execSQL(insertSql)
     }
@@ -2054,6 +2055,7 @@ object DBUtils {
                 " OO10_D >= ${ocooBean.oO10} AND OO10_x <= ${ocooBean.oO10} AND OO5_D >= ${ocooBean.oO5} AND OO5_x <= ${ocooBean.oO5} AND " +
                 " OO3_D >= ${ocooBean.oO3} AND OO3_x <= ${ocooBean.oO3}"
 
+        LogUtil.d("judgeSQL-->\n$judgeSQL")
 
         var needContinue = false
         if (tabbleIsExist(tbName)) {

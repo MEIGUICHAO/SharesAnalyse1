@@ -382,10 +382,10 @@ fun ArrayList<CodeHDDBean>.getPPValueByAsc(index:Int,begin: Int, end: Int): Floa
     for (i in (index+begin)..(index+end)) {
         value = value + this.get(i).cp
     }
-    return value/(end+1)
+    return value/(end-begin+1)
 }
 
-fun ArrayList<CodeHDDBean>.getMaxValueInRange(index:Int,begin: Int, end: Int): Float {
+fun ArrayList<CodeHDDBean>.getMaxValueInRangeByAsc(index:Int, begin: Int, end: Int): Float {
     var value = 0.toFloat()
     for (i in (index+begin)..(index+end)) {
         if (this.get(i).cp > value) {
@@ -395,9 +395,38 @@ fun ArrayList<CodeHDDBean>.getMaxValueInRange(index:Int,begin: Int, end: Int): F
     return value
 }
 
-fun ArrayList<CodeHDDBean>.getMinValueInRange(index:Int,begin: Int, end: Int): Float {
+fun ArrayList<CodeHDDBean>.getMinValueInRangeByAsc(index:Int, begin: Int, end: Int): Float {
     var value = 10086.toFloat()
     for (i in (index+begin)..(index+end)) {
+        if (this.get(i).cp < value) {
+            value = this.get(i).cp
+        }
+    }
+    return value
+}
+
+
+fun ArrayList<CodeHDDBean>.getPPValueByDesc(index:Int,begin: Int, end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index-begin) downTo (index-end)) {
+        value = value + this.get(i).cp
+    }
+    return value/(end-begin+1)
+}
+
+fun ArrayList<CodeHDDBean>.getMaxValueInRangeByDesc(index:Int, begin: Int, end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index-begin) downTo (index-end)) {
+        if (this.get(i).cp > value) {
+            value = this.get(i).cp
+        }
+    }
+    return value
+}
+
+fun ArrayList<CodeHDDBean>.getMinValueInRangeByDesc(index:Int, begin: Int, end: Int): Float {
+    var value = 10086.toFloat()
+    for (i in (index-begin) downTo (index-end)) {
         if (this.get(i).cp < value) {
             value = this.get(i).cp
         }
