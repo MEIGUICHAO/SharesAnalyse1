@@ -3787,275 +3787,277 @@ object DataSettingUtils {
 
             list.forEach {
                 if (it is ReverseKJsonBean) {
+
                     if (reasoningAllJudgeBean.oC3_D < it.oC3) {
-                        reasoningAllJudgeBean.oC3_D = it.oC3
+                        reasoningAllJudgeBean.oC3_D = it.oC3.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC5_D < it.oC5) {
-                        reasoningAllJudgeBean.oC5_D = it.oC5
+                        reasoningAllJudgeBean.oC5_D = it.oC5.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC10_D < it.oC10) {
-                        reasoningAllJudgeBean.oC10_D = it.oC10
+                        reasoningAllJudgeBean.oC10_D = it.oC10.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC15_D < it.oC15) {
-                        reasoningAllJudgeBean.oC15_D = it.oC15
+                        reasoningAllJudgeBean.oC15_D = it.oC15.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC20_D < it.oC20) {
-                        reasoningAllJudgeBean.oC20_D = it.oC20
+                        reasoningAllJudgeBean.oC20_D = it.oC20.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC25_D < it.oC25) {
-                        reasoningAllJudgeBean.oC25_D = it.oC25
+                        reasoningAllJudgeBean.oC25_D = it.oC25.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC30_D < it.oC30) {
-                        reasoningAllJudgeBean.oC30_D = it.oC30
+                        reasoningAllJudgeBean.oC30_D = it.oC30.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC35_D < it.oC35) {
-                        reasoningAllJudgeBean.oC35_D = it.oC35
+                        reasoningAllJudgeBean.oC35_D = it.oC35.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC40_D < it.oC40) {
-                        reasoningAllJudgeBean.oC40_D = it.oC40
+                        reasoningAllJudgeBean.oC40_D = it.oC40.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC45_D < it.oC45) {
-                        reasoningAllJudgeBean.oC45_D = it.oC45
+                        reasoningAllJudgeBean.oC45_D = it.oC45.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC50_D < it.oC50) {
-                        reasoningAllJudgeBean.oC50_D = it.oC50
+                        reasoningAllJudgeBean.oC50_D = it.oC50.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC55_D < it.oC55) {
-                        reasoningAllJudgeBean.oC55_D = it.oC55
+                        reasoningAllJudgeBean.oC55_D = it.oC55.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC60_D < it.oC60) {
-                        reasoningAllJudgeBean.oC60_D = it.oC60
+                        reasoningAllJudgeBean.oC60_D = it.oC60.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC65_D < it.oC65) {
-                        reasoningAllJudgeBean.oC65_D = it.oC65
+                        reasoningAllJudgeBean.oC65_D = it.oC65.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oC70_D < it.oC70) {
-                        reasoningAllJudgeBean.oC70_D = it.oC70
-                    }
-
-
-                    if (reasoningAllJudgeBean.oC3_X > it.oC3) {
-                        reasoningAllJudgeBean.oC3_X = it.oC3
-                    }
-                    if (reasoningAllJudgeBean.oC5_X > it.oC5) {
-                        reasoningAllJudgeBean.oC5_X = it.oC5
-                    }
-                    if (reasoningAllJudgeBean.oC10_X > it.oC10) {
-                        reasoningAllJudgeBean.oC10_X = it.oC10
-                    }
-                    if (reasoningAllJudgeBean.oC15_X > it.oC15) {
-                        reasoningAllJudgeBean.oC15_X = it.oC15
-                    }
-                    if (reasoningAllJudgeBean.oC20_X > it.oC20) {
-                        reasoningAllJudgeBean.oC20_X = it.oC20
-                    }
-                    if (reasoningAllJudgeBean.oC25_X > it.oC25) {
-                        reasoningAllJudgeBean.oC25_X = it.oC25
-                    }
-                    if (reasoningAllJudgeBean.oC30_X > it.oC30) {
-                        reasoningAllJudgeBean.oC30_X = it.oC30
-                    }
-                    if (reasoningAllJudgeBean.oC35_X > it.oC35) {
-                        reasoningAllJudgeBean.oC35_X = it.oC35
-                    }
-                    if (reasoningAllJudgeBean.oC40_X > it.oC40) {
-                        reasoningAllJudgeBean.oC40_X = it.oC40
-                    }
-                    if (reasoningAllJudgeBean.oC45_X > it.oC45) {
-                        reasoningAllJudgeBean.oC45_X = it.oC45
-                    }
-                    if (reasoningAllJudgeBean.oC50_X > it.oC50) {
-                        reasoningAllJudgeBean.oC50_X = it.oC50
-                    }
-                    if (reasoningAllJudgeBean.oC55_X > it.oC55) {
-                        reasoningAllJudgeBean.oC55_X = it.oC55
-                    }
-                    if (reasoningAllJudgeBean.oC60_X > it.oC60) {
-                        reasoningAllJudgeBean.oC60_X = it.oC60
-                    }
-                    if (reasoningAllJudgeBean.oC65_X > it.oC65) {
-                        reasoningAllJudgeBean.oC65_X = it.oC65
-                    }
-                    if (reasoningAllJudgeBean.oC70_X > it.oC70) {
-                        reasoningAllJudgeBean.oC70_X = it.oC70
+                        reasoningAllJudgeBean.oC70_D = it.oC70.toOCOORevJudgeMax()
                     }
 
                     if (reasoningAllJudgeBean.oO3_D < it.oO3) {
-                        reasoningAllJudgeBean.oO3_D = it.oO3
+                        reasoningAllJudgeBean.oO3_D = it.oO3.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO5_D < it.oO5) {
-                        reasoningAllJudgeBean.oO5_D = it.oO5
+                        reasoningAllJudgeBean.oO5_D = it.oO5.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO10_D < it.oO10) {
-                        reasoningAllJudgeBean.oO10_D = it.oO10
+                        reasoningAllJudgeBean.oO10_D = it.oO10.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO15_D < it.oO15) {
-                        reasoningAllJudgeBean.oO15_D = it.oO15
+                        reasoningAllJudgeBean.oO15_D = it.oO15.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO20_D < it.oO20) {
-                        reasoningAllJudgeBean.oO20_D = it.oO20
+                        reasoningAllJudgeBean.oO20_D = it.oO20.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO25_D < it.oO25) {
-                        reasoningAllJudgeBean.oO25_D = it.oO25
+                        reasoningAllJudgeBean.oO25_D = it.oO25.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO30_D < it.oO30) {
-                        reasoningAllJudgeBean.oO30_D = it.oO30
+                        reasoningAllJudgeBean.oO30_D = it.oO30.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO35_D < it.oO35) {
-                        reasoningAllJudgeBean.oO35_D = it.oO35
+                        reasoningAllJudgeBean.oO35_D = it.oO35.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO40_D < it.oO40) {
-                        reasoningAllJudgeBean.oO40_D = it.oO40
+                        reasoningAllJudgeBean.oO40_D = it.oO40.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO45_D < it.oO45) {
-                        reasoningAllJudgeBean.oO45_D = it.oO45
+                        reasoningAllJudgeBean.oO45_D = it.oO45.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO50_D < it.oO50) {
-                        reasoningAllJudgeBean.oO50_D = it.oO50
+                        reasoningAllJudgeBean.oO50_D = it.oO50.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO55_D < it.oO55) {
-                        reasoningAllJudgeBean.oO55_D = it.oO55
+                        reasoningAllJudgeBean.oO55_D = it.oO55.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO60_D < it.oO60) {
-                        reasoningAllJudgeBean.oO60_D = it.oO60
+                        reasoningAllJudgeBean.oO60_D = it.oO60.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO65_D < it.oO65) {
-                        reasoningAllJudgeBean.oO65_D = it.oO65
+                        reasoningAllJudgeBean.oO65_D = it.oO65.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.oO70_D < it.oO70) {
-                        reasoningAllJudgeBean.oO70_D = it.oO70
-                    }
-
-                    if (reasoningAllJudgeBean.oO3_X > it.oO3) {
-                        reasoningAllJudgeBean.oO3_X = it.oO3
-                    }
-                    if (reasoningAllJudgeBean.oO5_X > it.oO5) {
-                        reasoningAllJudgeBean.oO5_X = it.oO5
-                    }
-                    if (reasoningAllJudgeBean.oO10_X > it.oO10) {
-                        reasoningAllJudgeBean.oO10_X = it.oO10
-                    }
-                    if (reasoningAllJudgeBean.oO15_X > it.oO15) {
-                        reasoningAllJudgeBean.oO15_X = it.oO15
-                    }
-                    if (reasoningAllJudgeBean.oO20_X > it.oO20) {
-                        reasoningAllJudgeBean.oO20_X = it.oO20
-                    }
-                    if (reasoningAllJudgeBean.oO25_X > it.oO25) {
-                        reasoningAllJudgeBean.oO25_X = it.oO25
-                    }
-                    if (reasoningAllJudgeBean.oO30_X > it.oO30) {
-                        reasoningAllJudgeBean.oO30_X = it.oO30
-                    }
-                    if (reasoningAllJudgeBean.oO35_X > it.oO35) {
-                        reasoningAllJudgeBean.oO35_X = it.oO35
-                    }
-                    if (reasoningAllJudgeBean.oO40_X > it.oO40) {
-                        reasoningAllJudgeBean.oO40_X = it.oO40
-                    }
-                    if (reasoningAllJudgeBean.oO45_X > it.oO45) {
-                        reasoningAllJudgeBean.oO45_X = it.oO45
-                    }
-                    if (reasoningAllJudgeBean.oO50_X > it.oO50) {
-                        reasoningAllJudgeBean.oO50_X = it.oO50
-                    }
-                    if (reasoningAllJudgeBean.oO55_X > it.oO55) {
-                        reasoningAllJudgeBean.oO55_X = it.oO55
-                    }
-                    if (reasoningAllJudgeBean.oO60_X > it.oO60) {
-                        reasoningAllJudgeBean.oO60_X = it.oO60
-                    }
-                    if (reasoningAllJudgeBean.oO65_X > it.oO65) {
-                        reasoningAllJudgeBean.oO65_X = it.oO65
-                    }
-                    if (reasoningAllJudgeBean.oO70_X > it.oO70) {
-                        reasoningAllJudgeBean.oO70_X = it.oO70
+                        reasoningAllJudgeBean.oO70_D = it.oO70.toOCOORevJudgeMax()
                     }
 
                     if (reasoningAllJudgeBean.pP5_D < it.pP5) {
-                        reasoningAllJudgeBean.pP5_D = it.pP5
+                        reasoningAllJudgeBean.pP5_D = it.pP5.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP10_D < it.pP10) {
-                        reasoningAllJudgeBean.pP10_D = it.pP10
+                        reasoningAllJudgeBean.pP10_D = it.pP10.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP15_D < it.pP15) {
-                        reasoningAllJudgeBean.pP15_D = it.pP15
+                        reasoningAllJudgeBean.pP15_D = it.pP15.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP20_D < it.pP20) {
-                        reasoningAllJudgeBean.pP20_D = it.pP20
+                        reasoningAllJudgeBean.pP20_D = it.pP20.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP25_D < it.pP25) {
-                        reasoningAllJudgeBean.pP25_D = it.pP25
+                        reasoningAllJudgeBean.pP25_D = it.pP25.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP30_D < it.pP30) {
-                        reasoningAllJudgeBean.pP30_D = it.pP30
+                        reasoningAllJudgeBean.pP30_D = it.pP30.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP35_D < it.pP35) {
-                        reasoningAllJudgeBean.pP35_D = it.pP35
+                        reasoningAllJudgeBean.pP35_D = it.pP35.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP40_D < it.pP40) {
-                        reasoningAllJudgeBean.pP40_D = it.pP40
+                        reasoningAllJudgeBean.pP40_D = it.pP40.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP45_D < it.pP45) {
-                        reasoningAllJudgeBean.pP45_D = it.pP45
+                        reasoningAllJudgeBean.pP45_D = it.pP45.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP50_D < it.pP50) {
-                        reasoningAllJudgeBean.pP50_D = it.pP50
+                        reasoningAllJudgeBean.pP50_D = it.pP50.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP55_D < it.pP55) {
-                        reasoningAllJudgeBean.pP55_D = it.pP55
+                        reasoningAllJudgeBean.pP55_D = it.pP55.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP60_D < it.pP60) {
-                        reasoningAllJudgeBean.pP60_D = it.pP60
+                        reasoningAllJudgeBean.pP60_D = it.pP60.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP65_D < it.pP65) {
-                        reasoningAllJudgeBean.pP65_D = it.pP65
+                        reasoningAllJudgeBean.pP65_D = it.pP65.toOCOORevJudgeMax()
                     }
                     if (reasoningAllJudgeBean.pP70_D < it.pP70) {
-                        reasoningAllJudgeBean.pP70_D = it.pP70
+                        reasoningAllJudgeBean.pP70_D = it.pP70.toOCOORevJudgeMax()
                     }
 
+                    if (reasoningAllJudgeBean.oC3_X > it.oC3) {
+                        reasoningAllJudgeBean.oC3_X = it.oC3.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC5_X > it.oC5) {
+                        reasoningAllJudgeBean.oC5_X = it.oC5.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC10_X > it.oC10) {
+                        reasoningAllJudgeBean.oC10_X = it.oC10.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC15_X > it.oC15) {
+                        reasoningAllJudgeBean.oC15_X = it.oC15.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC20_X > it.oC20) {
+                        reasoningAllJudgeBean.oC20_X = it.oC20.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC25_X > it.oC25) {
+                        reasoningAllJudgeBean.oC25_X = it.oC25.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC30_X > it.oC30) {
+                        reasoningAllJudgeBean.oC30_X = it.oC30.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC35_X > it.oC35) {
+                        reasoningAllJudgeBean.oC35_X = it.oC35.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC40_X > it.oC40) {
+                        reasoningAllJudgeBean.oC40_X = it.oC40.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC45_X > it.oC45) {
+                        reasoningAllJudgeBean.oC45_X = it.oC45.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC50_X > it.oC50) {
+                        reasoningAllJudgeBean.oC50_X = it.oC50.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC55_X > it.oC55) {
+                        reasoningAllJudgeBean.oC55_X = it.oC55.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC60_X > it.oC60) {
+                        reasoningAllJudgeBean.oC60_X = it.oC60.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC65_X > it.oC65) {
+                        reasoningAllJudgeBean.oC65_X = it.oC65.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oC70_X > it.oC70) {
+                        reasoningAllJudgeBean.oC70_X = it.oC70.toOCOORevJudgeMin()
+                    }
+
+
+                    if (reasoningAllJudgeBean.oO3_X > it.oO3) {
+                        reasoningAllJudgeBean.oO3_X = it.oO3.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO5_X > it.oO5) {
+                        reasoningAllJudgeBean.oO5_X = it.oO5.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO10_X > it.oO10) {
+                        reasoningAllJudgeBean.oO10_X = it.oO10.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO15_X > it.oO15) {
+                        reasoningAllJudgeBean.oO15_X = it.oO15.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO20_X > it.oO20) {
+                        reasoningAllJudgeBean.oO20_X = it.oO20.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO25_X > it.oO25) {
+                        reasoningAllJudgeBean.oO25_X = it.oO25.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO30_X > it.oO30) {
+                        reasoningAllJudgeBean.oO30_X = it.oO30.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO35_X > it.oO35) {
+                        reasoningAllJudgeBean.oO35_X = it.oO35.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO40_X > it.oO40) {
+                        reasoningAllJudgeBean.oO40_X = it.oO40.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO45_X > it.oO45) {
+                        reasoningAllJudgeBean.oO45_X = it.oO45.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO50_X > it.oO50) {
+                        reasoningAllJudgeBean.oO50_X = it.oO50.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO55_X > it.oO55) {
+                        reasoningAllJudgeBean.oO55_X = it.oO55.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO60_X > it.oO60) {
+                        reasoningAllJudgeBean.oO60_X = it.oO60.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO65_X > it.oO65) {
+                        reasoningAllJudgeBean.oO65_X = it.oO65.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.oO70_X > it.oO70) {
+                        reasoningAllJudgeBean.oO70_X = it.oO70.toOCOORevJudgeMin()
+                    }
+
+
                     if (reasoningAllJudgeBean.pP5_X > it.pP5) {
-                        reasoningAllJudgeBean.pP5_X = it.pP5
+                        reasoningAllJudgeBean.pP5_X = it.pP5.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP10_X > it.pP10) {
-                        reasoningAllJudgeBean.pP10_X = it.pP10
+                        reasoningAllJudgeBean.pP10_X = it.pP10.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP15_X > it.pP15) {
-                        reasoningAllJudgeBean.pP15_X = it.pP15
+                        reasoningAllJudgeBean.pP15_X = it.pP15.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP20_X > it.pP20) {
-                        reasoningAllJudgeBean.pP20_X = it.pP20
+                        reasoningAllJudgeBean.pP20_X = it.pP20.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP25_X > it.pP25) {
-                        reasoningAllJudgeBean.pP25_X = it.pP25
+                        reasoningAllJudgeBean.pP25_X = it.pP25.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP30_X > it.pP30) {
-                        reasoningAllJudgeBean.pP30_X = it.pP30
+                        reasoningAllJudgeBean.pP30_X = it.pP30.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP35_X > it.pP35) {
-                        reasoningAllJudgeBean.pP35_X = it.pP35
+                        reasoningAllJudgeBean.pP35_X = it.pP35.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP40_X > it.pP40) {
-                        reasoningAllJudgeBean.pP40_X = it.pP40
+                        reasoningAllJudgeBean.pP40_X = it.pP40.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP45_X > it.pP45) {
-                        reasoningAllJudgeBean.pP45_X = it.pP45
+                        reasoningAllJudgeBean.pP45_X = it.pP45.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP50_X > it.pP50) {
-                        reasoningAllJudgeBean.pP50_X = it.pP50
+                        reasoningAllJudgeBean.pP50_X = it.pP50.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP55_X > it.pP55) {
-                        reasoningAllJudgeBean.pP55_X = it.pP55
+                        reasoningAllJudgeBean.pP55_X = it.pP55.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP60_X > it.pP60) {
-                        reasoningAllJudgeBean.pP60_X = it.pP60
+                        reasoningAllJudgeBean.pP60_X = it.pP60.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP65_X > it.pP65) {
-                        reasoningAllJudgeBean.pP65_X = it.pP65
+                        reasoningAllJudgeBean.pP65_X = it.pP65.toOCOORevJudgeMin()
                     }
                     if (reasoningAllJudgeBean.pP70_X > it.pP70) {
-                        reasoningAllJudgeBean.pP70_X = it.pP70
+                        reasoningAllJudgeBean.pP70_X = it.pP70.toOCOORevJudgeMin()
                     }
                 }
             }
@@ -4304,53 +4306,53 @@ object DataSettingUtils {
         val revKJOCOOBean = ReasoningRevBean()
         val originOC = mCHDDList.getPPValueByDesc(index,0,3)
 
-        revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,0,3), originOC)
-        revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,4,5), originOC)
-        revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,6,10), originOC)
-        revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,11,15), originOC)
-        revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,16,20), originOC)
-        revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,21,25), originOC)
-        revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,26,30), originOC)
-        revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,31,35), originOC)
-        revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,36,40), originOC)
-        revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,41,45), originOC)
-        revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,46,50), originOC)
-        revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,51,55), originOC)
-        revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,56,60), originOC)
-        revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,61,65), originOC)
-        revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,66,70), originOC)
+        revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,0,3), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,4,5), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC10 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,6,10), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC15 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,11,15), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC20 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,16,20), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC25 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,21,25), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC30 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,26,30), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC35 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,31,35), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC40 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,36,40), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC45 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,41,45), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC50 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,46,50), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC55 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,51,55), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC60 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,56,60), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC65 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,61,65), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oC70 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,66,70), originOC).toOCOORevJudgeMin()
 
 
-        revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,0,3), originOC)
-        revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,4,5), originOC)
-        revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,6,10), originOC)
-        revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,11,15), originOC)
-        revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,16,20), originOC)
-        revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,21,25), originOC)
-        revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,26,30), originOC)
-        revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,31,35), originOC)
-        revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,36,40), originOC)
-        revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,41,45), originOC)
-        revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,46,50), originOC)
-        revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,51,55), originOC)
-        revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,56,60), originOC)
-        revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,61,65), originOC)
-        revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,66,70), originOC)
+        revKJOCOOBean.oO3 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,0,3), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO5 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,4,5), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO10 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,6,10), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO15 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,11,15), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO20 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,16,20), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO25 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,21,25), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO30 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,26,30), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO35 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,31,35), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO40 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,36,40), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO45 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,41,45), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO50 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,46,50), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO55 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,51,55), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,56,60), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,61,65), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,66,70), originOC).toOCOORevJudgeMin()
 
-        revKJOCOOBean.pP5 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,4,5), originOC)
-        revKJOCOOBean.pP10 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,6,10), originOC)
-        revKJOCOOBean.pP15 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,11,15), originOC)
-        revKJOCOOBean.pP20 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,16,20), originOC)
-        revKJOCOOBean.pP25 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,21,25), originOC)
-        revKJOCOOBean.pP30 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,26,30), originOC)
-        revKJOCOOBean.pP35 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,31,35), originOC)
-        revKJOCOOBean.pP40 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,36,40), originOC)
-        revKJOCOOBean.pP45 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,41,45), originOC)
-        revKJOCOOBean.pP50 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,46,50), originOC)
-        revKJOCOOBean.pP55 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,51,55), originOC)
-        revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC)
-        revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC)
-        revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC)
+        revKJOCOOBean.pP5 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,4,5), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP10 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,6,10), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP15 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,11,15), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP20 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,16,20), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP25 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,21,25), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP30 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,26,30), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP35 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,31,35), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP40 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,36,40), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP45 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,41,45), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP50 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,46,50), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP55 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,51,55), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC).toOCOORevJudgeMin()
         return revKJOCOOBean
     }
 

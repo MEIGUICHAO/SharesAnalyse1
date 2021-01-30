@@ -1,9 +1,58 @@
 package com.mgc.sharesanalyse.entity;
 
+import com.mgc.sharesanalyse.utils.BigDecimalUtils;
+
 public class ReasoningAllJudgeBean {
 
     private int D_T;
     private int COUNT;
+    private float FR;
+    private float RR;
+    private int SIZE;
+    private int FS;
+    private int RS;
+
+
+    public float getFR() {
+        return FR;
+    }
+
+    public void setFR(float FR) {
+        this.FR = FR;
+    }
+
+    public float getRR() {
+        return RR;
+    }
+
+    public void setRR(float RR) {
+        this.RR = RR;
+    }
+
+    public int getSIZE() {
+        return SIZE;
+    }
+
+    public void setSIZE(int SIZE) {
+        this.SIZE = SIZE;
+    }
+
+    public int getFS() {
+        return FS;
+    }
+
+    public void setFS(int FS) {
+        this.FS = FS;
+    }
+
+    public int getRS() {
+        return RS;
+    }
+
+    public void setRS(int RS) {
+        this.RS = RS;
+    }
+
     private float OM_M_D;
     private float OM_C_D;
     private float OM_P_D;
@@ -701,7 +750,7 @@ public class ReasoningAllJudgeBean {
 
 
     public String insertOCOOTB(String tbName) {
-        return "INSERT INTO " + tbName + "(COUNT," +
+        return "INSERT INTO " + tbName + "(COUNT,FR ,RR ,FS ,RS ,SIZE ,"+
                 "OC3_D ,OC5_D ,OC10_D ,OC15_D ,OC20_D ,OC25_D ,OC30_D ,OC35_D ,OC40_D ,OC45_D ,OC50_D ,OC55_D ,OC60_D ,OC65_D ,OC70_D ," +
                 "OC3_X ,OC5_X ,OC10_X ,OC15_X ,OC20_X ,OC25_X ,OC30_X ,OC35_X ,OC40_X ,OC45_X ,OC50_X ,OC55_X ,OC60_X ,OC65_X ,OC70_X ," +
                 "OO3_D ,OO5_D ,OO10_D ,OO15_D ,OO20_D ,OO25_D ,OO30_D ,OO35_D ,OO40_D ,OO45_D ,OO50_D ,OO55_D ,OO60_D ,OO65_D ,OO70_D ,"+
@@ -716,6 +765,11 @@ public class ReasoningAllJudgeBean {
 
     private String toOCOOString() {
         return COUNT +"," +
+                FR +"," +
+                RR +"," +
+                FS +"," +
+                RS +"," +
+                SIZE +"," +
                 OC3_D +"," +
                 OC5_D +"," +
                 OC10_D +"," +
@@ -832,7 +886,8 @@ public class ReasoningAllJudgeBean {
 
 
     public String createOCOOTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,COUNT INTEGER," +
+
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT,COUNT INTEGER,FR INTEGER,RR INTEGER,FS INTEGER,RS INTEGER,SIZE INTEGER," +
                 "OC3_D INTEGER,OC3_X INTEGER,OC5_D INTEGER,OC5_X INTEGER,OC10_D INTEGER,OC10_X INTEGER,OC15_D INTEGER,OC15_X INTEGER,OC20_D INTEGER,OC20_X INTEGER,OC25_D INTEGER,OC25_X INTEGER,OC30_D INTEGER,OC30_X INTEGER," +
                 "OC35_D INTEGER,OC35_X INTEGER,OC40_D INTEGER,OC40_X INTEGER,OC45_D INTEGER,OC45_X INTEGER,OC50_D INTEGER,OC50_X INTEGER,OC55_D INTEGER,OC55_X INTEGER,OC60_D INTEGER,OC60_X INTEGER,OC65_D INTEGER,OC65_X INTEGER," +
                 "OC70_D INTEGER,OC70_X INTEGER," +
@@ -844,6 +899,31 @@ public class ReasoningAllJudgeBean {
                 "S_A_TR_D INTEGER,S_R_TR_D INTEGER,S_B_TR_D INTEGER,S_C_TR_D INTEGER,K_A_TR_D INTEGER,K_R_TR_D INTEGER,K_B_TR_D INTEGER,K_C_TR_D INTEGER,K_SL_A_TR_D INTEGER,K_SL_R_TR_D INTEGER,K_SL_B_TR_D INTEGER,K_SL_C_TR_D INTEGER," +
                 "S_A_TR_X INTEGER,S_R_TR_X INTEGER,S_B_TR_X INTEGER,S_C_TR_X INTEGER,K_A_TR_X INTEGER,K_R_TR_X INTEGER,K_B_TR_X INTEGER,K_C_TR_X INTEGER,K_SL_A_TR_X INTEGER,K_SL_R_TR_X INTEGER,K_SL_B_TR_X INTEGER,K_SL_C_TR_X INTEGER" +
                 ");";
+    }
+
+    public Float keep2(float value) {
+        return Float.parseFloat(java.lang.String.format("%.2f", value));
+    }
+
+    public String updateOCOOTB(float p, boolean is50, ReasoningAllJudgeBean judgebean,String tbname,String limit) {
+        String uStr = "";
+        if (is50 && p >= 50) {
+            uStr = ", RS = " + judgebean.getRS() + 1;
+            uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
+        } else if (!is50 && p >= 30) {
+            uStr = ", RS = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
+        } else if (p < 0) {
+            uStr = uStr + ", FS = " + (judgebean.getFS() + 1);
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
+        } else {
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() , (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
+        }
+        return "UPDATE " + tbname + " SET SIZE = " + (judgebean.getSIZE() + 1) + uStr + " WHERE " + limit;
     }
 
     private float OC3_D;

@@ -4051,9 +4051,9 @@ class NewApiViewModel : BaseViewModel() {
 //                            code
 //                        )
 
-                        if (mCHDDList[i].date == "20200928") {
-                            insertOCOOReasoning(i,mCHDDList,code)
-                        }
+//                        if (mCHDDList[i].date == "20200928") {
+//                        }
+                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }
