@@ -706,6 +706,9 @@ public class ReasoningAllJudgeBean {
                 "OC3_X ,OC5_X ,OC10_X ,OC15_X ,OC20_X ,OC25_X ,OC30_X ,OC35_X ,OC40_X ,OC45_X ,OC50_X ,OC55_X ,OC60_X ,OC65_X ,OC70_X ," +
                 "OO3_D ,OO5_D ,OO10_D ,OO15_D ,OO20_D ,OO25_D ,OO30_D ,OO35_D ,OO40_D ,OO45_D ,OO50_D ,OO55_D ,OO60_D ,OO65_D ,OO70_D ,"+
                 "OO3_X ,OO5_X ,OO10_X ,OO15_X ,OO20_X ,OO25_X ,OO30_X ,OO35_X ,OO40_X ,OO45_X ,OO50_X ,OO55_X ,OO60_X ,OO65_X ,OO70_X ," +
+
+                "PP5_D ,PP10_D ,PP15_D ,PP20_D ,PP25_D ,PP30_D ,PP35_D ,PP40_D ,PP45_D ,PP50_D ,PP55_D ,PP60_D ,PP65_D ,PP70_D ,"+
+                "PP5_X ,PP10_X ,PP15_X ,PP20_X ,PP25_X ,PP30_X ,PP35_X ,PP40_X ,PP45_X ,PP50_X ,PP55_X ,PP60_X ,PP65_X ,PP70_X ," +
                 "S_A_TR_D ,S_R_TR_D ,S_B_TR_D ,S_C_TR_D ,K_A_TR_D ,K_R_TR_D ,K_B_TR_D ,K_C_TR_D ,K_SL_A_TR_D ,K_SL_R_TR_D ,K_SL_B_TR_D ,K_SL_C_TR_D ," +
                 "S_A_TR_X ,S_R_TR_X ,S_B_TR_X ,S_C_TR_X ,K_A_TR_X ,K_R_TR_X ,K_B_TR_X ,K_C_TR_X ,K_SL_A_TR_X ,K_SL_R_TR_X ,K_SL_B_TR_X ,K_SL_C_TR_X " +
                 " ) VALUES (" + toOCOOString()+");";
@@ -773,6 +776,34 @@ public class ReasoningAllJudgeBean {
                 OO60_X +"," +
                 OO65_X +"," +
                 OO70_X +"," +
+                PP5_D  + ", " +
+                PP10_D + ", " +
+                PP15_D  +", " +
+                PP20_D  +", " +
+                PP25_D +", " +
+                PP30_D  +", " +
+                PP35_D  +", " +
+                PP40_D +", " +
+                PP45_D  +", " +
+                PP50_D  +", " +
+                PP55_D  +", " +
+                PP60_D  +", " +
+                PP65_D +", " +
+                PP70_D +", " +
+                PP5_X  + ", " +
+                PP10_X + ", " +
+                PP15_X  +", " +
+                PP20_X  +", " +
+                PP25_X +", " +
+                PP30_X  +", " +
+                PP35_X  +", " +
+                PP40_X +", " +
+                PP45_X  +", " +
+                PP50_X  +", " +
+                PP55_X  +", " +
+                PP60_X  +", " +
+                PP65_X +", " +
+                PP70_X +", " +
                 S_A_TR_D +"," +
                 S_R_TR_D +"," +
                 S_B_TR_D +"," +
@@ -808,6 +839,8 @@ public class ReasoningAllJudgeBean {
                 "OO3_D INTEGER,OO3_X INTEGER,OO5_D INTEGER,OO5_X INTEGER,OO10_D INTEGER,OO10_X INTEGER,OO15_D INTEGER,OO15_X INTEGER,OO20_D INTEGER,OO20_X INTEGER,OO25_D INTEGER,OO25_X INTEGER,OO30_D INTEGER,OO30_X INTEGER," +
                 "OO35_D INTEGER,OO35_X INTEGER,OO40_D INTEGER,OO40_X INTEGER,OO45_D INTEGER,OO45_X INTEGER,OO50_D INTEGER,OO50_X INTEGER,OO55_D INTEGER,OO55_X INTEGER,OO60_D INTEGER,OO60_X INTEGER,OO65_D INTEGER,OO65_X INTEGER," +
                 "OO70_D INTEGER,OO70_X INTEGER,"+
+                "PP5_D INTEGER,PP10_D INTEGER,PP15_D INTEGER,PP20_D INTEGER,PP25_D INTEGER,PP30_D INTEGER,PP35_D INTEGER,PP40_D INTEGER,PP45_D INTEGER,PP50_D INTEGER,PP55_D INTEGER,PP60_D INTEGER,PP65_D INTEGER,PP70_D INTEGER,"+
+                "PP5_X INTEGER,PP10_X INTEGER,PP15_X INTEGER,PP20_X INTEGER,PP25_X INTEGER,PP30_X INTEGER,PP35_X INTEGER,PP40_X INTEGER,PP45_X INTEGER,PP50_X INTEGER,PP55_X INTEGER,PP60_X INTEGER,PP65_X INTEGER,PP70_X INTEGER," +
                 "S_A_TR_D INTEGER,S_R_TR_D INTEGER,S_B_TR_D INTEGER,S_C_TR_D INTEGER,K_A_TR_D INTEGER,K_R_TR_D INTEGER,K_B_TR_D INTEGER,K_C_TR_D INTEGER,K_SL_A_TR_D INTEGER,K_SL_R_TR_D INTEGER,K_SL_B_TR_D INTEGER,K_SL_C_TR_D INTEGER," +
                 "S_A_TR_X INTEGER,S_R_TR_X INTEGER,S_B_TR_X INTEGER,S_C_TR_X INTEGER,K_A_TR_X INTEGER,K_R_TR_X INTEGER,K_B_TR_X INTEGER,K_C_TR_X INTEGER,K_SL_A_TR_X INTEGER,K_SL_R_TR_X INTEGER,K_SL_B_TR_X INTEGER,K_SL_C_TR_X INTEGER" +
                 ");";
@@ -828,22 +861,6 @@ public class ReasoningAllJudgeBean {
     private float OC60_D;
     private float OC65_D;
     private float OC70_D;
-
-    private float OO3_D;
-    private float OO5_D;
-    private float OO10_D;
-    private float OO15_D;
-    private float OO20_D;
-    private float OO25_D;
-    private float OO30_D;
-    private float OO35_D;
-    private float OO40_D;
-    private float OO45_D;
-    private float OO50_D;
-    private float OO55_D;
-    private float OO60_D;
-    private float OO65_D;
-    private float OO70_D;
     private float OC3_X;
     private float OC5_X;
     private float OC10_X;
@@ -860,6 +877,22 @@ public class ReasoningAllJudgeBean {
     private float OC65_X;
     private float OC70_X;
 
+    private float OO3_D;
+    private float OO5_D;
+    private float OO10_D;
+    private float OO15_D;
+    private float OO20_D;
+    private float OO25_D;
+    private float OO30_D;
+    private float OO35_D;
+    private float OO40_D;
+    private float OO45_D;
+    private float OO50_D;
+    private float OO55_D;
+    private float OO60_D;
+    private float OO65_D;
+    private float OO70_D;
+
     private float OO3_X;
     private float OO5_X;
     private float OO10_X;
@@ -875,6 +908,260 @@ public class ReasoningAllJudgeBean {
     private float OO60_X;
     private float OO65_X;
     private float OO70_X;
+
+    private float PP5_D;
+    private float PP10_D;
+    private float PP15_D;
+    private float PP20_D;
+    private float PP25_D;
+    private float PP30_D;
+    private float PP35_D;
+    private float PP40_D;
+    private float PP45_D;
+    private float PP50_D;
+    private float PP55_D;
+    private float PP60_D;
+    private float PP65_D;
+    private float PP70_D;
+    private float PP5_X;
+    private float PP10_X;
+    private float PP15_X;
+    private float PP20_X;
+    private float PP25_X;
+    private float PP30_X;
+    private float PP35_X;
+    private float PP40_X;
+    private float PP45_X;
+    private float PP50_X;
+    private float PP55_X;
+    private float PP60_X;
+    private float PP65_X;
+    private float PP70_X;
+
+
+    public float getPP5_D() {
+        return PP5_D;
+    }
+
+    public void setPP5_D(float PP5_D) {
+        this.PP5_D = PP5_D;
+    }
+
+    public float getPP10_D() {
+        return PP10_D;
+    }
+
+    public void setPP10_D(float PP10_D) {
+        this.PP10_D = PP10_D;
+    }
+
+    public float getPP15_D() {
+        return PP15_D;
+    }
+
+    public void setPP15_D(float PP15_D) {
+        this.PP15_D = PP15_D;
+    }
+
+    public float getPP20_D() {
+        return PP20_D;
+    }
+
+    public void setPP20_D(float PP20_D) {
+        this.PP20_D = PP20_D;
+    }
+
+    public float getPP25_D() {
+        return PP25_D;
+    }
+
+    public void setPP25_D(float PP25_D) {
+        this.PP25_D = PP25_D;
+    }
+
+    public float getPP30_D() {
+        return PP30_D;
+    }
+
+    public void setPP30_D(float PP30_D) {
+        this.PP30_D = PP30_D;
+    }
+
+    public float getPP35_D() {
+        return PP35_D;
+    }
+
+    public void setPP35_D(float PP35_D) {
+        this.PP35_D = PP35_D;
+    }
+
+    public float getPP40_D() {
+        return PP40_D;
+    }
+
+    public void setPP40_D(float PP40_D) {
+        this.PP40_D = PP40_D;
+    }
+
+    public float getPP45_D() {
+        return PP45_D;
+    }
+
+    public void setPP45_D(float PP45_D) {
+        this.PP45_D = PP45_D;
+    }
+
+    public float getPP50_D() {
+        return PP50_D;
+    }
+
+    public void setPP50_D(float PP50_D) {
+        this.PP50_D = PP50_D;
+    }
+
+    public float getPP55_D() {
+        return PP55_D;
+    }
+
+    public void setPP55_D(float PP55_D) {
+        this.PP55_D = PP55_D;
+    }
+
+    public float getPP60_D() {
+        return PP60_D;
+    }
+
+    public void setPP60_D(float PP60_D) {
+        this.PP60_D = PP60_D;
+    }
+
+    public float getPP65_D() {
+        return PP65_D;
+    }
+
+    public void setPP65_D(float PP65_D) {
+        this.PP65_D = PP65_D;
+    }
+
+    public float getPP70_D() {
+        return PP70_D;
+    }
+
+    public void setPP70_D(float PP70_D) {
+        this.PP70_D = PP70_D;
+    }
+
+    public float getPP5_X() {
+        return PP5_X;
+    }
+
+    public void setPP5_X(float PP5_X) {
+        this.PP5_X = PP5_X;
+    }
+
+    public float getPP10_X() {
+        return PP10_X;
+    }
+
+    public void setPP10_X(float PP10_X) {
+        this.PP10_X = PP10_X;
+    }
+
+    public float getPP15_X() {
+        return PP15_X;
+    }
+
+    public void setPP15_X(float PP15_X) {
+        this.PP15_X = PP15_X;
+    }
+
+    public float getPP20_X() {
+        return PP20_X;
+    }
+
+    public void setPP20_X(float PP20_X) {
+        this.PP20_X = PP20_X;
+    }
+
+    public float getPP25_X() {
+        return PP25_X;
+    }
+
+    public void setPP25_X(float PP25_X) {
+        this.PP25_X = PP25_X;
+    }
+
+    public float getPP30_X() {
+        return PP30_X;
+    }
+
+    public void setPP30_X(float PP30_X) {
+        this.PP30_X = PP30_X;
+    }
+
+    public float getPP35_X() {
+        return PP35_X;
+    }
+
+    public void setPP35_X(float PP35_X) {
+        this.PP35_X = PP35_X;
+    }
+
+    public float getPP40_X() {
+        return PP40_X;
+    }
+
+    public void setPP40_X(float PP40_X) {
+        this.PP40_X = PP40_X;
+    }
+
+    public float getPP45_X() {
+        return PP45_X;
+    }
+
+    public void setPP45_X(float PP45_X) {
+        this.PP45_X = PP45_X;
+    }
+
+    public float getPP50_X() {
+        return PP50_X;
+    }
+
+    public void setPP50_X(float PP50_X) {
+        this.PP50_X = PP50_X;
+    }
+
+    public float getPP55_X() {
+        return PP55_X;
+    }
+
+    public void setPP55_X(float PP55_X) {
+        this.PP55_X = PP55_X;
+    }
+
+    public float getPP60_X() {
+        return PP60_X;
+    }
+
+    public void setPP60_X(float PP60_X) {
+        this.PP60_X = PP60_X;
+    }
+
+    public float getPP65_X() {
+        return PP65_X;
+    }
+
+    public void setPP65_X(float PP65_X) {
+        this.PP65_X = PP65_X;
+    }
+
+    public float getPP70_X() {
+        return PP70_X;
+    }
+
+    public void setPP70_X(float PP70_X) {
+        this.PP70_X = PP70_X;
+    }
 
     private float S_A_TR_D;
     private float S_R_TR_D;

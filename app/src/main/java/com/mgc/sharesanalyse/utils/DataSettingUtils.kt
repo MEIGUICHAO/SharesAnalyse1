@@ -3738,22 +3738,6 @@ object DataSettingUtils {
             reasoningAllJudgeBean.oC65_D = -10086.toFloat()
             reasoningAllJudgeBean.oC70_D = -10086.toFloat()
 
-            reasoningAllJudgeBean.oO3_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO5_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO10_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO15_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO20_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO25_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO30_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO35_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO40_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO45_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO50_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO55_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO60_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO65_D = -10086.toFloat()
-            reasoningAllJudgeBean.oO70_D = -10086.toFloat()
-
             reasoningAllJudgeBean.oC3_X = 10086.toFloat()
             reasoningAllJudgeBean.oC5_X = 10086.toFloat()
             reasoningAllJudgeBean.oC10_X = 10086.toFloat()
@@ -3770,21 +3754,35 @@ object DataSettingUtils {
             reasoningAllJudgeBean.oC65_X = 10086.toFloat()
             reasoningAllJudgeBean.oC70_X = 10086.toFloat()
 
-            reasoningAllJudgeBean.oO3_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO5_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO10_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO15_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO20_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO25_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO30_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO35_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO40_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO45_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO50_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO55_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO60_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO65_X = 10086.toFloat()
-            reasoningAllJudgeBean.oO70_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP5_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP10_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP15_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP20_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP25_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP30_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP35_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP40_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP45_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP50_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP55_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP60_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP65_D = -10086.toFloat()
+            reasoningAllJudgeBean.pP70_D = -10086.toFloat()
+
+            reasoningAllJudgeBean.pP5_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP10_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP15_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP20_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP25_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP30_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP35_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP40_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP45_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP50_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP55_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP60_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP65_X = 10086.toFloat()
+            reasoningAllJudgeBean.pP70_X = 10086.toFloat()
 
 
             list.forEach {
@@ -3973,6 +3971,92 @@ object DataSettingUtils {
                     if (reasoningAllJudgeBean.oO70_X > it.oO70) {
                         reasoningAllJudgeBean.oO70_X = it.oO70
                     }
+
+                    if (reasoningAllJudgeBean.pP5_D < it.pP5) {
+                        reasoningAllJudgeBean.pP5_D = it.pP5
+                    }
+                    if (reasoningAllJudgeBean.pP10_D < it.pP10) {
+                        reasoningAllJudgeBean.pP10_D = it.pP10
+                    }
+                    if (reasoningAllJudgeBean.pP15_D < it.pP15) {
+                        reasoningAllJudgeBean.pP15_D = it.pP15
+                    }
+                    if (reasoningAllJudgeBean.pP20_D < it.pP20) {
+                        reasoningAllJudgeBean.pP20_D = it.pP20
+                    }
+                    if (reasoningAllJudgeBean.pP25_D < it.pP25) {
+                        reasoningAllJudgeBean.pP25_D = it.pP25
+                    }
+                    if (reasoningAllJudgeBean.pP30_D < it.pP30) {
+                        reasoningAllJudgeBean.pP30_D = it.pP30
+                    }
+                    if (reasoningAllJudgeBean.pP35_D < it.pP35) {
+                        reasoningAllJudgeBean.pP35_D = it.pP35
+                    }
+                    if (reasoningAllJudgeBean.pP40_D < it.pP40) {
+                        reasoningAllJudgeBean.pP40_D = it.pP40
+                    }
+                    if (reasoningAllJudgeBean.pP45_D < it.pP45) {
+                        reasoningAllJudgeBean.pP45_D = it.pP45
+                    }
+                    if (reasoningAllJudgeBean.pP50_D < it.pP50) {
+                        reasoningAllJudgeBean.pP50_D = it.pP50
+                    }
+                    if (reasoningAllJudgeBean.pP55_D < it.pP55) {
+                        reasoningAllJudgeBean.pP55_D = it.pP55
+                    }
+                    if (reasoningAllJudgeBean.pP60_D < it.pP60) {
+                        reasoningAllJudgeBean.pP60_D = it.pP60
+                    }
+                    if (reasoningAllJudgeBean.pP65_D < it.pP65) {
+                        reasoningAllJudgeBean.pP65_D = it.pP65
+                    }
+                    if (reasoningAllJudgeBean.pP70_D < it.pP70) {
+                        reasoningAllJudgeBean.pP70_D = it.pP70
+                    }
+
+                    if (reasoningAllJudgeBean.pP5_X > it.pP5) {
+                        reasoningAllJudgeBean.pP5_X = it.pP5
+                    }
+                    if (reasoningAllJudgeBean.pP10_X > it.pP10) {
+                        reasoningAllJudgeBean.pP10_X = it.pP10
+                    }
+                    if (reasoningAllJudgeBean.pP15_X > it.pP15) {
+                        reasoningAllJudgeBean.pP15_X = it.pP15
+                    }
+                    if (reasoningAllJudgeBean.pP20_X > it.pP20) {
+                        reasoningAllJudgeBean.pP20_X = it.pP20
+                    }
+                    if (reasoningAllJudgeBean.pP25_X > it.pP25) {
+                        reasoningAllJudgeBean.pP25_X = it.pP25
+                    }
+                    if (reasoningAllJudgeBean.pP30_X > it.pP30) {
+                        reasoningAllJudgeBean.pP30_X = it.pP30
+                    }
+                    if (reasoningAllJudgeBean.pP35_X > it.pP35) {
+                        reasoningAllJudgeBean.pP35_X = it.pP35
+                    }
+                    if (reasoningAllJudgeBean.pP40_X > it.pP40) {
+                        reasoningAllJudgeBean.pP40_X = it.pP40
+                    }
+                    if (reasoningAllJudgeBean.pP45_X > it.pP45) {
+                        reasoningAllJudgeBean.pP45_X = it.pP45
+                    }
+                    if (reasoningAllJudgeBean.pP50_X > it.pP50) {
+                        reasoningAllJudgeBean.pP50_X = it.pP50
+                    }
+                    if (reasoningAllJudgeBean.pP55_X > it.pP55) {
+                        reasoningAllJudgeBean.pP55_X = it.pP55
+                    }
+                    if (reasoningAllJudgeBean.pP60_X > it.pP60) {
+                        reasoningAllJudgeBean.pP60_X = it.pP60
+                    }
+                    if (reasoningAllJudgeBean.pP65_X > it.pP65) {
+                        reasoningAllJudgeBean.pP65_X = it.pP65
+                    }
+                    if (reasoningAllJudgeBean.pP70_X > it.pP70) {
+                        reasoningAllJudgeBean.pP70_X = it.pP70
+                    }
                 }
             }
         } else {
@@ -4045,6 +4129,38 @@ object DataSettingUtils {
                     reasoningAllJudgeBean.oO60_X  = it.oO60.toOCOORevJudgeMin()
                     reasoningAllJudgeBean.oO65_X  = it.oO65.toOCOORevJudgeMin()
                     reasoningAllJudgeBean.oO70_X  = it.oO70.toOCOORevJudgeMin()
+
+
+                    reasoningAllJudgeBean.pP5_D  = it.pP5.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP10_D  = it.pP10.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP15_D  = it.pP15.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP20_D  = it.pP20.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP25_D  = it.pP25.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP30_D  = it.pP30.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP35_D  = it.pP35.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP40_D  = it.pP40.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP45_D  = it.pP45.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP50_D  = it.pP50.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP55_D  = it.pP55.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP60_D  = it.pP60.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP65_D  = it.pP65.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.pP70_D  = it.pP70.toOCOORevJudgeMax()
+
+
+                    reasoningAllJudgeBean.pP5_X  = it.pP5.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP10_X  = it.pP10.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP15_X  = it.pP15.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP20_X  = it.pP20.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP25_X  = it.pP25.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP30_X  = it.pP30.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP35_X  = it.pP35.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP40_X  = it.pP40.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP45_X  = it.pP45.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP50_X  = it.pP50.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP55_X  = it.pP55.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP60_X  = it.pP60.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP65_X  = it.pP65.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.pP70_X  = it.pP70.toOCOORevJudgeMin()
                 }
             }
         }
@@ -4163,6 +4279,21 @@ object DataSettingUtils {
         revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,61,65), originOC)
         revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,66,70), originOC)
 
+
+        revKJOCOOBean.pP5 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,4,5), originOC)
+        revKJOCOOBean.pP10 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,6,10), originOC)
+        revKJOCOOBean.pP15 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,11,15), originOC)
+        revKJOCOOBean.pP20 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,16,20), originOC)
+        revKJOCOOBean.pP25 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,21,25), originOC)
+        revKJOCOOBean.pP30 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,26,30), originOC)
+        revKJOCOOBean.pP35 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,31,35), originOC)
+        revKJOCOOBean.pP40 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,36,40), originOC)
+        revKJOCOOBean.pP45 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,41,45), originOC)
+        revKJOCOOBean.pP50 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,46,50), originOC)
+        revKJOCOOBean.pP55 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,51,55), originOC)
+        revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC)
+        revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC)
+        revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC)
         return revKJOCOOBean
     }
 
@@ -4205,6 +4336,21 @@ object DataSettingUtils {
         revKJOCOOBean.oO60 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,56,60), originOC)
         revKJOCOOBean.oO65 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,61,65), originOC)
         revKJOCOOBean.oO70 = getOCOOPercent(mCHDDList.getMinValueInRangeByDesc(index,66,70), originOC)
+
+        revKJOCOOBean.pP5 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,4,5), originOC)
+        revKJOCOOBean.pP10 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,6,10), originOC)
+        revKJOCOOBean.pP15 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,11,15), originOC)
+        revKJOCOOBean.pP20 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,16,20), originOC)
+        revKJOCOOBean.pP25 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,21,25), originOC)
+        revKJOCOOBean.pP30 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,26,30), originOC)
+        revKJOCOOBean.pP35 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,31,35), originOC)
+        revKJOCOOBean.pP40 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,36,40), originOC)
+        revKJOCOOBean.pP45 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,41,45), originOC)
+        revKJOCOOBean.pP50 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,46,50), originOC)
+        revKJOCOOBean.pP55 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,51,55), originOC)
+        revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC)
+        revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC)
+        revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC)
         return revKJOCOOBean
     }
 

@@ -1454,6 +1454,21 @@ object DBUtils {
         reverseBean.oC60 = cursor.getFloat(cursor.getColumnIndex("OC60"))
         reverseBean.oC65 = cursor.getFloat(cursor.getColumnIndex("OC65"))
         reverseBean.oC70 = cursor.getFloat(cursor.getColumnIndex("OC70"))
+
+        reverseBean.pP5 = cursor.getFloat(cursor.getColumnIndex("PP5"))
+        reverseBean.pP10 = cursor.getFloat(cursor.getColumnIndex("PP10"))
+        reverseBean.pP15 = cursor.getFloat(cursor.getColumnIndex("PP15"))
+        reverseBean.pP20 = cursor.getFloat(cursor.getColumnIndex("PP20"))
+        reverseBean.pP25 = cursor.getFloat(cursor.getColumnIndex("PP25"))
+        reverseBean.pP30 = cursor.getFloat(cursor.getColumnIndex("PP30"))
+        reverseBean.pP35 = cursor.getFloat(cursor.getColumnIndex("PP35"))
+        reverseBean.pP40 = cursor.getFloat(cursor.getColumnIndex("PP40"))
+        reverseBean.pP45 = cursor.getFloat(cursor.getColumnIndex("PP45"))
+        reverseBean.pP50 = cursor.getFloat(cursor.getColumnIndex("PP50"))
+        reverseBean.pP55 = cursor.getFloat(cursor.getColumnIndex("PP55"))
+        reverseBean.pP60 = cursor.getFloat(cursor.getColumnIndex("PP60"))
+        reverseBean.pP65 = cursor.getFloat(cursor.getColumnIndex("PP65"))
+        reverseBean.pP70 = cursor.getFloat(cursor.getColumnIndex("PP70"))
         return reverseBean
     }
 
@@ -2053,7 +2068,14 @@ object DBUtils {
                 " OO30_D >= ${ocooBean.oO30} AND OO30_x <= ${ocooBean.oO30} AND OO25_D >= ${ocooBean.oO25} AND OO25_x <= ${ocooBean.oO25} AND "+
                 " OO20_D >= ${ocooBean.oO20} AND OO20_x <= ${ocooBean.oO20} AND OO15_D >= ${ocooBean.oO15} AND OO15_x <= ${ocooBean.oO15} AND "+
                 " OO10_D >= ${ocooBean.oO10} AND OO10_x <= ${ocooBean.oO10} AND OO5_D >= ${ocooBean.oO5} AND OO5_x <= ${ocooBean.oO5} AND " +
-                " OO3_D >= ${ocooBean.oO3} AND OO3_x <= ${ocooBean.oO3}"
+                " OO3_D >= ${ocooBean.oO3} AND OO3_x <= ${ocooBean.oO3}"+
+                " AND PP70_D >= ${ocooBean.pP70} AND PP70_x <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_x <= ${ocooBean.pP65} AND "+
+                " PP60_D >= ${ocooBean.pP60} AND PP60_x <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_x <= ${ocooBean.pP55} AND "+
+                " PP50_D >= ${ocooBean.pP50} AND PP50_x <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_x <= ${ocooBean.pP45} AND "+
+                " PP40_D >= ${ocooBean.pP40} AND PP40_x <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_x <= ${ocooBean.pP35} AND "+
+                " PP30_D >= ${ocooBean.pP30} AND PP30_x <= ${ocooBean.pP30} AND PP25_D >= ${ocooBean.pP25} AND PP25_x <= ${ocooBean.pP25} AND "+
+                " PP20_D >= ${ocooBean.pP20} AND PP20_x <= ${ocooBean.pP20} AND PP15_D >= ${ocooBean.pP15} AND PP15_x <= ${ocooBean.pP15} AND "+
+                " PP10_D >= ${ocooBean.pP10} AND PP10_x <= ${ocooBean.pP10} AND PP5_D >= ${ocooBean.pP5} AND PP5_x <= ${ocooBean.pP5} "
 
 
         var needContinue = false
