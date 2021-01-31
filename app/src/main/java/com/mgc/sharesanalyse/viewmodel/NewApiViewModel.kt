@@ -2620,25 +2620,33 @@ class NewApiViewModel : BaseViewModel() {
                 }
                 val requestBean = it[i]
                 val targetBeanList = ArrayList<CodeHDDBean>()
-                if (mCHDDList.size > 6) {
-                    val targetBean = mCHDDList[5]
-                    val afterBean = mCHDDList[4]
+                if (mCHDDList.size > Datas.REV_DAYS) {
+                    val targetBean = mCHDDList[Datas.REV_DAYS]
+                    val afterBean = mCHDDList[Datas.REV_DAYS-1]
                     val ROP = requestBean.p_MA_J.aacp
                     val TOP = targetBean.p_MA_J.aacp
 
                     //20避免新股一字板
-                    if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
-                        if (mCHDDList.size > 75) {
+                    if (ROP > TOP && ROP >= 1.1 * TOP && mCHDDList.size > 20) {
+                        if (mCHDDList.size > (70 + Datas.REV_DAYS)) {
                             val revKJOCOOBean =
-                                DataSettingUtils.getRevKJOCOOBean(5,mCHDDList, code, targetBean, requestBean)
-                            DBUtils.insertOCOOBean(
-                                revKJOCOOBean,
-//                                if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else if (ROP >= 1.3 * TOP) Datas.REV_OC_OO_30 else Datas.REV_OC_OO_10
-                                if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else Datas.REV_OC_OO_30
-                            )
+                                DataSettingUtils.getRevKJOCOOBean(Datas.REV_DAYS,mCHDDList, code, targetBean, requestBean)
+                            var needInsert = true
+                            for (x in Datas.REV_DAYS downTo 0) {
+                                if (mCHDDList[x].p_MA_J.aacp < TOP * 0.95 ) {
+                                    needInsert = false
+                                    break
+                                }
+                            }
+                            if (needInsert) {
+                                DBUtils.insertOCOOBean(
+                                    revKJOCOOBean,
+                                    if (ROP >= 1.5 * TOP) Datas.REV_OC_OO_50 else (if (ROP >= 1.3 * TOP) Datas.REV_OC_OO_30 else Datas.REV_OC_OO_10)
+                                )
+                            }
                         }
 
-                        if (ROP < 1.3 * TOP) {
+                        if (ROP < 1.1 * TOP) {
                             return@let
                         }
 
@@ -3871,7 +3879,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun revOCOOJudgeResult() {
-        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+        val dayList = arrayOf(3, 5, 10, 15, 20)
+//        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
         val tbList = arrayOf(Datas.REV_OC_OO_30, Datas.REV_OC_OO_50)
 
         (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
@@ -3885,6 +3894,7 @@ class NewApiViewModel : BaseViewModel() {
                 )
 //            FILTER_OC_OO_PROGRESS
 
+                LogUtil.d("rangeMax-->${rangeMax},rangeMin-->${rangeMin}")
                 for (i in rangeMin..rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
 
 
@@ -4068,16 +4078,18 @@ class NewApiViewModel : BaseViewModel() {
         if (70 <= mCHDDList.size) {
             LogUtil.d("code-->${code},date-->${mCHDDList[i].date}")
             val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
-            if (DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(true,ocooBean)) {
+            val pair50 = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(true,ocooBean)
+            if (pair50.first) {
                 val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
                 setReasoningRevBeanBasicInfo(bean50,code,mCHDDList,i,0)
-                DBUtils.insertOCOOReasoningBean(bean50,Datas.ALL_Reaoning_OC_OO_50)
+                DBUtils.insertOCOOReasoningBean(bean50,Datas.ALL_Reaoning_OC_OO_50,pair50.second)
             }
-            if (DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(false,ocooBean)) {
+            val pair30 = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(false,ocooBean)
+            if (pair30.first) {
                 val bean30 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
                 setReasoningRevBeanBasicInfo(bean30,code,mCHDDList,i,0)
                 LogUtil.d("after_C_P:${bean30.after_C_P},OC3:${bean30.oC3}")
-                DBUtils.insertOCOOReasoningBean(bean30,Datas.ALL_Reaoning_OC_OO_30)
+                DBUtils.insertOCOOReasoningBean(bean30,Datas.ALL_Reaoning_OC_OO_30,pair30.second)
             }
         }
     }

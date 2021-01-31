@@ -1709,18 +1709,50 @@ object DBUtils {
         }
         if (tabbleIsExist(insertTB)) {
             val querySQL = "SELECT * FROM $insertTB WHERE "+
-                    "OC3_X = ${reasoningAllJudgeBean.oC3_X}  AND OC5_X = ${reasoningAllJudgeBean.oC5_X}   AND OC10_X  = ${reasoningAllJudgeBean.oC10_X}  AND OC15_X = ${reasoningAllJudgeBean.oC15_X}   AND " +
-                    "OC20_X = ${reasoningAllJudgeBean.oC20_X}   AND OC25_X = ${reasoningAllJudgeBean.oC25_X}   AND OC30_X = ${reasoningAllJudgeBean.oC30_X}   AND OC35_X  = ${reasoningAllJudgeBean.oC35_X}  AND " +
-                    "OC40_X  = ${reasoningAllJudgeBean.oC40_X}  AND OC45_X  = ${reasoningAllJudgeBean.oC45_X}  AND OC50_X  = ${reasoningAllJudgeBean.oC50_X}  AND OC55_X  = ${reasoningAllJudgeBean.oC55_X}  AND " +
-                    "OC60_X  = ${reasoningAllJudgeBean.oC60_X}  AND OC65_X  = ${reasoningAllJudgeBean.oC65_X}  AND OC70_X  = ${reasoningAllJudgeBean.oC70_X}  AND " +
-                    "OO3_X  = ${reasoningAllJudgeBean.oO3_X}  AND OO5_X  = ${reasoningAllJudgeBean.oO5_X}  AND OO10_X  = ${reasoningAllJudgeBean.oO10_X}  AND OO15_X  = ${reasoningAllJudgeBean.oO15_X}  AND " +
-                    "OO20_X  = ${reasoningAllJudgeBean.oO20_X}  AND OO25_X  = ${reasoningAllJudgeBean.oO25_X}  AND OO30_X  = ${reasoningAllJudgeBean.oO30_X}  AND OO35_X = ${reasoningAllJudgeBean.oO35_X}   AND " +
-                    "OO40_X  = ${reasoningAllJudgeBean.oO40_X}  AND OO45_X  = ${reasoningAllJudgeBean.oO45_X}  AND OO50_X  = ${reasoningAllJudgeBean.oO50_X}  AND OO55_X  = ${reasoningAllJudgeBean.oO55_X}  AND " +
-                    "OO60_X  = ${reasoningAllJudgeBean.oO60_X}  AND OO65_X  = ${reasoningAllJudgeBean.oO65_X}  AND OO70_X  = ${reasoningAllJudgeBean.oO70_X}  AND " +
-                    "PP5_X  = ${reasoningAllJudgeBean.pP5_X}  AND PP10_X  = ${reasoningAllJudgeBean.pP10_X}  AND PP15_X  = ${reasoningAllJudgeBean.pP15_X}  AND " +
-                    "PP20_X  = ${reasoningAllJudgeBean.pP20_X}  AND PP25_X  = ${reasoningAllJudgeBean.pP25_X}  AND PP30_X  = ${reasoningAllJudgeBean.pP30_X}  AND PP35_X = ${reasoningAllJudgeBean.pP35_X}   AND " +
-                    "PP40_X  = ${reasoningAllJudgeBean.pP40_X}  AND PP45_X  = ${reasoningAllJudgeBean.pP45_X}  AND PP50_X  = ${reasoningAllJudgeBean.pP50_X}  AND PP55_X  = ${reasoningAllJudgeBean.pP55_X}  AND " +
-                    "PP60_X  = ${reasoningAllJudgeBean.pP60_X}  AND PP65_X  = ${reasoningAllJudgeBean.pP65_X}  AND PP70_X  = ${reasoningAllJudgeBean.pP70_X}"
+                    "OC3_X = ${reasoningAllJudgeBean.oC3_X}  " +
+                    "AND OC5_X = ${reasoningAllJudgeBean.oC5_X}   " +
+                    "AND OC10_X  = ${reasoningAllJudgeBean.oC10_X}  " +
+                    "AND OC15_X = ${reasoningAllJudgeBean.oC15_X}   " +
+                    "AND OC20_X = ${reasoningAllJudgeBean.oC20_X}   " +
+//                    "AND OC25_X = ${reasoningAllJudgeBean.oC25_X}   " +
+//                    "AND OC30_X = ${reasoningAllJudgeBean.oC30_X}   " +
+//                    "AND OC35_X  = ${reasoningAllJudgeBean.oC35_X}  " +
+//                    "AND OC40_X  = ${reasoningAllJudgeBean.oC40_X}  " +
+//                    "AND OC45_X  = ${reasoningAllJudgeBean.oC45_X}  " +
+//                    "AND OC50_X  = ${reasoningAllJudgeBean.oC50_X}  " +
+//                    "AND OC55_X  = ${reasoningAllJudgeBean.oC55_X}  " +
+//                    "AND OC60_X  = ${reasoningAllJudgeBean.oC60_X}  " +
+//                    "AND OC65_X  = ${reasoningAllJudgeBean.oC65_X}  " +
+//                    "AND OC70_X  = ${reasoningAllJudgeBean.oC70_X}  " +
+                    "AND OO3_X  = ${reasoningAllJudgeBean.oO3_X}  " +
+                    "AND OO5_X  = ${reasoningAllJudgeBean.oO5_X}  " +
+                    "AND OO10_X  = ${reasoningAllJudgeBean.oO10_X}  " +
+                    "AND OO15_X  = ${reasoningAllJudgeBean.oO15_X}  " +
+                    "AND OO20_X  = ${reasoningAllJudgeBean.oO20_X}  " +
+//                    "AND OO25_X  = ${reasoningAllJudgeBean.oO25_X}  " +
+//                    "AND OO30_X  = ${reasoningAllJudgeBean.oO30_X}  " +
+//                    "AND OO35_X = ${reasoningAllJudgeBean.oO35_X}   " +
+//                    "AND OO40_X  = ${reasoningAllJudgeBean.oO40_X}  " +
+//                    "AND OO45_X  = ${reasoningAllJudgeBean.oO45_X}  " +
+//                    "AND OO50_X  = ${reasoningAllJudgeBean.oO50_X}  " +
+//                    "AND OO55_X  = ${reasoningAllJudgeBean.oO55_X}  " +
+//                    "AND OO60_X  = ${reasoningAllJudgeBean.oO60_X}  " +
+//                    "AND OO65_X  = ${reasoningAllJudgeBean.oO65_X}  " +
+//                    "AND OO70_X  = ${reasoningAllJudgeBean.oO70_X}  " +
+                    "AND PP5_X  = ${reasoningAllJudgeBean.pP5_X}  " +
+                    "AND PP10_X  = ${reasoningAllJudgeBean.pP10_X}  " +
+                    "AND PP15_X  = ${reasoningAllJudgeBean.pP15_X}  " +
+                    "AND PP20_X  = ${reasoningAllJudgeBean.pP20_X}  "
+//                    "AND PP25_X  = ${reasoningAllJudgeBean.pP25_X}  " +
+//                    "AND PP30_X  = ${reasoningAllJudgeBean.pP30_X}  "
+//                    "AND PP35_X = ${reasoningAllJudgeBean.pP35_X}   " +
+//                    "AND PP40_X  = ${reasoningAllJudgeBean.pP40_X}  " +
+//                    "AND PP45_X  = ${reasoningAllJudgeBean.pP45_X}  " +
+//                    "AND PP50_X  = ${reasoningAllJudgeBean.pP50_X}  " +
+//                    "AND PP55_X  = ${reasoningAllJudgeBean.pP55_X}  " +
+//                    "AND PP60_X  = ${reasoningAllJudgeBean.pP60_X}  " +
+//                    "AND PP65_X  = ${reasoningAllJudgeBean.pP65_X}  " +
+//                    "AND PP70_X  = ${reasoningAllJudgeBean.pP70_X}"
             val cusor = db.rawQuery(querySQL,null)
             if (cusor.count < 1) {
                 cusor.close()
@@ -2051,7 +2083,7 @@ object DBUtils {
         db.execSQL(insertSql)
     }
 
-    fun insertOCOOReasoningBean(revKJOCOOBean: ReasoningRevBean, tbName: String) {
+    fun insertOCOOReasoningBean(revKJOCOOBean: ReasoningRevBean, tbName: String, updateSql: String) {
         switchDBName(Datas.REV_RESONING_DB)
         if (!tabbleIsExist(tbName)) {
             val createSQL = revKJOCOOBean.createOCOOTB(tbName)
@@ -2061,91 +2093,99 @@ object DBUtils {
         LogUtil.d("insertReasoninResult $tbName:${revKJOCOOBean.n},${revKJOCOOBean.d},${revKJOCOOBean.p}")
         LogUtil.d("$insertSql")
         db.execSQL(insertSql)
-        if (revKJOCOOBean.p != 0.toFloat()) {
-            val tbjudgeName = if (tbName.contains("50")) Datas.ALL_OC_OO_50 else  Datas.ALL_OC_OO_30
-            val judgeBean = ReasoningAllJudgeBean()
-
-            val querySQL = "SELECT * FROM $tbjudgeName WHERE "+
-                    "OC3_X = ${ revKJOCOOBean.oC3} AND OC5_X = ${ revKJOCOOBean.oC5}  AND OC10_X  = ${ revKJOCOOBean.oC10} AND OC15_X = ${ revKJOCOOBean.oC15}  AND " +
-                    "OC20_X = ${ revKJOCOOBean.oC20}  AND OC25_X = ${ revKJOCOOBean.oC25}  AND OC30_X = ${ revKJOCOOBean.oC30}  AND OC35_X  = ${ revKJOCOOBean.oC35} AND " +
-                    "OC40_X  = ${ revKJOCOOBean.oC40} AND OC45_X  = ${ revKJOCOOBean.oC45} AND OC50_X  = ${ revKJOCOOBean.oC50} AND OC55_X  = ${ revKJOCOOBean.oC55} AND " +
-                    "OC60_X  = ${ revKJOCOOBean.oC60} AND OC65_X  = ${ revKJOCOOBean.oC65} AND OC70_X  = ${ revKJOCOOBean.oC70} AND " +
-                    "OO3_X  = ${ revKJOCOOBean.oO3} AND OO5_X  = ${ revKJOCOOBean.oO5} AND OO10_X  = ${ revKJOCOOBean.oO10} AND OO15_X  = ${ revKJOCOOBean.oO15} AND " +
-                    "OO20_X  = ${ revKJOCOOBean.oO20} AND OO25_X  = ${ revKJOCOOBean.oO25} AND OO30_X  = ${ revKJOCOOBean.oO30} AND OO35_X = ${ revKJOCOOBean.oO35}  AND " +
-                    "OO40_X  = ${ revKJOCOOBean.oO40} AND OO45_X  = ${ revKJOCOOBean.oO45} AND OO50_X  = ${ revKJOCOOBean.oO50} AND OO55_X  = ${ revKJOCOOBean.oO55} AND " +
-                    "OO60_X  = ${ revKJOCOOBean.oO60} AND OO65_X  = ${ revKJOCOOBean.oO65} AND OO70_X  = ${ revKJOCOOBean.oO70} AND " +
-                    "PP5_X  = ${ revKJOCOOBean.pP5} AND PP10_X  = ${ revKJOCOOBean.pP10} AND PP15_X  = ${ revKJOCOOBean.pP15} AND " +
-                    "PP20_X  = ${ revKJOCOOBean.pP20} AND PP25_X  = ${ revKJOCOOBean.pP25} AND PP30_X  = ${ revKJOCOOBean.pP30} AND PP35_X = ${ revKJOCOOBean.pP35}  AND " +
-                    "PP40_X  = ${ revKJOCOOBean.pP40} AND PP45_X  = ${ revKJOCOOBean.pP45} AND PP50_X  = ${ revKJOCOOBean.pP50} AND PP55_X  = ${ revKJOCOOBean.pP55} AND " +
-                    "PP60_X  = ${ revKJOCOOBean.pP60} AND PP65_X  = ${ revKJOCOOBean.pP65} AND PP70_X  = ${ revKJOCOOBean.pP70}"
-            val cusor = db.rawQuery(querySQL,null)
-            if (null != cusor && cusor.count > 0 && cusor.moveToFirst()) {
-//                FR ,RR ,FS ,RS ,SIZE
-                judgeBean.fs = cusor.getInt(cusor.getColumnIndex("FS"))
-                judgeBean.rs = cusor.getInt(cusor.getColumnIndex("RS"))
-                judgeBean.size = cusor.getInt(cusor.getColumnIndex("SIZE"))
-                cusor.close()
-                val limit =  "OC3_X =  ${revKJOCOOBean.oC3} AND OC5_X =  ${revKJOCOOBean.oC5}  AND OC10_X =  ${revKJOCOOBean.oC10} AND OC15_X =  ${revKJOCOOBean.oC15}  AND " +
-                        "OC20_X =  ${revKJOCOOBean.oC20}  AND OC25_X =  ${revKJOCOOBean.oC25}  AND OC30_X =  ${revKJOCOOBean.oC30}  AND OC35_X =  ${revKJOCOOBean.oC35} AND " +
-                        "OC40_X =  ${revKJOCOOBean.oC40} AND OC45_X =  ${revKJOCOOBean.oC45} AND OC50_X =  ${revKJOCOOBean.oC50} AND OC55_X =  ${revKJOCOOBean.oC55} AND " +
-                        "OC60_X =  ${revKJOCOOBean.oC60} AND OC65_X =  ${revKJOCOOBean.oC65} AND OC70_X =  ${revKJOCOOBean.oC70} AND " +
-                        "OO3_X =  ${revKJOCOOBean.oO3} AND OO5_X =  ${revKJOCOOBean.oO5} AND OO10_X =  ${revKJOCOOBean.oO10} AND OO15_X =  ${revKJOCOOBean.oO15} AND " +
-                        "OO20_X =  ${revKJOCOOBean.oO20} AND OO25_X =  ${revKJOCOOBean.oO25} AND OO30_X =  ${revKJOCOOBean.oO30} AND OO35_X =  ${revKJOCOOBean.oO35}  AND " +
-                        "OO40_X =  ${revKJOCOOBean.oO40} AND OO45_X =  ${revKJOCOOBean.oO45} AND OO50_X =  ${revKJOCOOBean.oO50} AND OO55_X =  ${revKJOCOOBean.oO55} AND " +
-                        "OO60_X =  ${revKJOCOOBean.oO60} AND OO65_X =  ${revKJOCOOBean.oO65} AND OO70_X =  ${revKJOCOOBean.oO70} AND " +
-                        "PP5_X =  ${revKJOCOOBean.pP5} AND PP10_X =  ${revKJOCOOBean.pP10} AND PP15_X =  ${revKJOCOOBean.pP15} AND " +
-                        "PP20_X =  ${revKJOCOOBean.pP20} AND PP25_X =  ${revKJOCOOBean.pP25} AND PP30_X =  ${revKJOCOOBean.pP30} AND PP35_X =  ${revKJOCOOBean.pP35}  AND " +
-                        "PP40_X =  ${revKJOCOOBean.pP40} AND PP45_X =  ${revKJOCOOBean.pP45} AND PP50_X =  ${revKJOCOOBean.pP50} AND PP55_X =  ${revKJOCOOBean.pP55} AND " +
-                        "PP60_X =  ${revKJOCOOBean.pP60} AND PP65_X =  ${revKJOCOOBean.pP65} AND PP70_X =  ${revKJOCOOBean.pP70}"
-                val update = judgeBean.updateOCOOTB(revKJOCOOBean.p,tbName.contains("50"),judgeBean,tbjudgeName,limit)
-                db.execSQL(update)
-            }
-
-        }
+//        if (revKJOCOOBean.p != 0.toFloat()) {
+//
+//            val tbjudgeName = if (tbName.contains("50")) Datas.ALL_OC_OO_50 else  Datas.ALL_OC_OO_30
+//            val judgeBean = ReasoningAllJudgeBean()
+//
+//            val querySQL = "SELECT * FROM $tbjudgeName WHERE "+ updateSql
+//            val cusor = db.rawQuery(querySQL,null)
+//            LogUtil.d("insertReasoninResult-->\n$querySQL")
+//
+//            if (null != cusor && cusor.count > 0 && cusor.moveToFirst()) {
+////                FR ,RR ,FS ,RS ,SIZE
+//                judgeBean.fs = cusor.getInt(cusor.getColumnIndex("FS"))
+//                judgeBean.rs = cusor.getInt(cusor.getColumnIndex("RS"))
+//                judgeBean.size = cusor.getInt(cusor.getColumnIndex("SIZE"))
+//                LogUtil.d("fs:${judgeBean.fs},rs:${judgeBean.rs},size:${judgeBean.size}")
+//                cusor.close()
+//                val update = judgeBean.updateOCOOTB(revKJOCOOBean.p,revKJOCOOBean.lp,tbName.contains("50"),judgeBean,tbjudgeName,updateSql)
+//                db.execSQL(update)
+//            }
+//
+//        }
     }
 
 
     fun getReasoningOCOOJudgeBeanByOCOOBean(
         is50: Boolean,
         ocooBean: ReverseKJsonBean
-    ): Boolean {
+    ): Pair<Boolean, String> {
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
         val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
-        val judgeSQL = " OC70_D >= ${ocooBean.oC70} AND OC70_x <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_x <= ${ocooBean.oC65} AND "+
-                " OC60_D >= ${ocooBean.oC60} AND OC60_x <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_x <= ${ocooBean.oC55} AND "+
-                " OC50_D >= ${ocooBean.oC50} AND OC50_x <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_x <= ${ocooBean.oC45} AND "+
-                " OC40_D >= ${ocooBean.oC40} AND OC40_x <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_x <= ${ocooBean.oC35} AND "+
-                " OC30_D >= ${ocooBean.oC30} AND OC30_x <= ${ocooBean.oC30} AND OC25_D >= ${ocooBean.oC25} AND OC25_x <= ${ocooBean.oC25} AND "+
-                " OC20_D >= ${ocooBean.oC20} AND OC20_x <= ${ocooBean.oC20} AND OC15_D >= ${ocooBean.oC15} AND OC15_x <= ${ocooBean.oC15} AND "+
-                " OC10_D >= ${ocooBean.oC10} AND OC10_x <= ${ocooBean.oC10} AND OC5_D >= ${ocooBean.oC5} AND OC5_x <= ${ocooBean.oC5} AND " +
-                " OC3_D >= ${ocooBean.oC3} AND OC3_x <= ${ocooBean.oC3}"+
-                " AND OO70_D >= ${ocooBean.oO70} AND OO70_x <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_x <= ${ocooBean.oO65} AND "+
-                " OO60_D >= ${ocooBean.oO60} AND OO60_x <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_x <= ${ocooBean.oO55} AND "+
-                " OO50_D >= ${ocooBean.oO50} AND OO50_x <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_x <= ${ocooBean.oO45} AND "+
-                " OO40_D >= ${ocooBean.oO40} AND OO40_x <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_x <= ${ocooBean.oO35} AND "+
-                " OO30_D >= ${ocooBean.oO30} AND OO30_x <= ${ocooBean.oO30} AND OO25_D >= ${ocooBean.oO25} AND OO25_x <= ${ocooBean.oO25} AND "+
-                " OO20_D >= ${ocooBean.oO20} AND OO20_x <= ${ocooBean.oO20} AND OO15_D >= ${ocooBean.oO15} AND OO15_x <= ${ocooBean.oO15} AND "+
-                " OO10_D >= ${ocooBean.oO10} AND OO10_x <= ${ocooBean.oO10} AND OO5_D >= ${ocooBean.oO5} AND OO5_x <= ${ocooBean.oO5} AND " +
-                " OO3_D >= ${ocooBean.oO3} AND OO3_x <= ${ocooBean.oO3}"+
-                " AND PP70_D >= ${ocooBean.pP70} AND PP70_x <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_x <= ${ocooBean.pP65} AND "+
-                " PP60_D >= ${ocooBean.pP60} AND PP60_x <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_x <= ${ocooBean.pP55} AND "+
-                " PP50_D >= ${ocooBean.pP50} AND PP50_x <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_x <= ${ocooBean.pP45} AND "+
-                " PP40_D >= ${ocooBean.pP40} AND PP40_x <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_x <= ${ocooBean.pP35} AND "+
-                " PP30_D >= ${ocooBean.pP30} AND PP30_x <= ${ocooBean.pP30} AND PP25_D >= ${ocooBean.pP25} AND PP25_x <= ${ocooBean.pP25} AND "+
-                " PP20_D >= ${ocooBean.pP20} AND PP20_x <= ${ocooBean.pP20} AND PP15_D >= ${ocooBean.pP15} AND PP15_x <= ${ocooBean.pP15} AND "+
-                " PP10_D >= ${ocooBean.pP10} AND PP10_x <= ${ocooBean.pP10} AND PP5_D >= ${ocooBean.pP5} AND PP5_x <= ${ocooBean.pP5} "
+
+        val judgeSQL =
+//                " OC70_D >= ${ocooBean.oC70} AND OC70_X <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_X <= ${ocooBean.oC65} AND "+
+//                " OC60_D >= ${ocooBean.oC60} AND OC60_X <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_X <= ${ocooBean.oC55} AND "+
+//                " OC50_D >= ${ocooBean.oC50} AND OC50_X <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_X <= ${ocooBean.oC45} AND "+
+//                " OC40_D >= ${ocooBean.oC40} AND OC40_X <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_X <= ${ocooBean.oC35} AND "+
+//                " OC30_D >= ${ocooBean.oC30} AND OC30_X <= ${ocooBean.oC30} AND " +
+//                        "OC25_D >= ${ocooBean.oC25} AND OC25_X <= ${ocooBean.oC25} AND "+
+            " OC20_D >= ${ocooBean.oC20} AND OC20_X <= ${ocooBean.oC20} AND " +
+                    "OC15_D >= ${ocooBean.oC15} AND OC15_X <= ${ocooBean.oC15} AND "+
+                    " OC10_D >= ${ocooBean.oC10} AND OC10_X <= ${ocooBean.oC10} AND " +
+                    "OC5_D >= ${ocooBean.oC5} AND OC5_X <= ${ocooBean.oC5} AND " +
+                    " OC3_D >= ${ocooBean.oC3} AND OC3_X <= ${ocooBean.oC3} AND "+
+//                " AND OO70_D >= ${ocooBean.oO70} AND OO70_X <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_X <= ${ocooBean.oO65} AND "+
+//                " OO60_D >= ${ocooBean.oO60} AND OO60_X <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_X <= ${ocooBean.oO55} AND "+
+//                " OO50_D >= ${ocooBean.oO50} AND OO50_X <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_X <= ${ocooBean.oO45} AND "+
+//                " OO40_D >= ${ocooBean.oO40} AND OO40_X <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_X <= ${ocooBean.oO35} AND "+
+//                "OO30_D >= ${ocooBean.oO30} AND OO30_X <= ${ocooBean.oO30} AND " +
+//                        "OO25_D >= ${ocooBean.oO25} AND OO25_X <= ${ocooBean.oO25} AND "+
+                    " OO20_D >= ${ocooBean.oO20} AND OO20_X <= ${ocooBean.oO20} AND " +
+                    "OO15_D >= ${ocooBean.oO15} AND OO15_X <= ${ocooBean.oO15} AND "+
+                    " OO10_D >= ${ocooBean.oO10} AND OO10_X <= ${ocooBean.oO10} AND " +
+                    "OO5_D >= ${ocooBean.oO5} AND OO5_X <= ${ocooBean.oO5} AND " +
+                    " OO3_D >= ${ocooBean.oO3} AND OO3_X <= ${ocooBean.oO3} AND "+
+//                " AND PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND "+
+//                " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND "+
+//                " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND "+
+//                " PP40_D >= ${ocooBean.pP40} AND PP40_X <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_X <= ${ocooBean.pP35} AND "+
+//                " PP30_D >= ${ocooBean.pP30} AND PP30_X <= ${ocooBean.pP30} AND " +
+//                        "PP25_D >= ${ocooBean.pP25} AND PP25_X <= ${ocooBean.pP25} AND "+
+                    " PP20_D >= ${ocooBean.pP20} AND PP20_X <= ${ocooBean.pP20} AND " +
+                    "PP15_D >= ${ocooBean.pP15} AND PP15_X <= ${ocooBean.pP15} AND "+
+                    " PP10_D >= ${ocooBean.pP10} AND PP10_X <= ${ocooBean.pP10} AND " +
+                    "PP5_D >= ${ocooBean.pP5} AND PP5_X <= ${ocooBean.pP5} ${Datas.FR_RR_LIMIT}"
 
 
         var needContinue = false
+        var updateSQL = ""
+
         if (tabbleIsExist(tbName)) {
 
             val cursor =
                 db.rawQuery(" SELECT * FROM $tbName WHERE $judgeSQL", null)
             LogUtil.d("judgeSQL $is50 cursor-${cursor?.count}-->\n$judgeSQL")
 
-            if (cursor.count>0) {
+            if (cursor.count > 0 && cursor.moveToFirst()) {
                 needContinue = true
+
+                updateSQL = " OC20_D = ${cursor.getFloat(cursor.getColumnIndex("OC20_D"))} AND OC20_X = ${cursor.getFloat(cursor.getColumnIndex("OC20_X"))} AND " +
+                        "OC15_D = ${cursor.getFloat(cursor.getColumnIndex("OC15_D"))} AND OC15_X = ${cursor.getFloat(cursor.getColumnIndex("OC15_X"))} AND "+
+                        " OC10_D = ${cursor.getFloat(cursor.getColumnIndex("OC10_D"))} AND OC10_X = ${cursor.getFloat(cursor.getColumnIndex("OC10_X"))} AND " +
+                        "OC5_D = ${cursor.getFloat(cursor.getColumnIndex("OC5_D"))} AND OC5_X = ${cursor.getFloat(cursor.getColumnIndex("OC5_X"))} AND " +
+                        " OC3_D = ${cursor.getFloat(cursor.getColumnIndex("OC3_D"))} AND OC3_X = ${cursor.getFloat(cursor.getColumnIndex("OC3_X"))} AND "+
+                        " OO20_D = ${cursor.getFloat(cursor.getColumnIndex("OO20_D"))} AND OO20_X = ${cursor.getFloat(cursor.getColumnIndex("OO20_X"))} AND " +
+                        "OO15_D = ${cursor.getFloat(cursor.getColumnIndex("OO15_D"))} AND OO15_X = ${cursor.getFloat(cursor.getColumnIndex("OO15_X"))} AND "+
+                        " OO10_D = ${cursor.getFloat(cursor.getColumnIndex("OO10_D"))} AND OO10_X = ${cursor.getFloat(cursor.getColumnIndex("OO10_X"))} AND " +
+                        "OO5_D = ${cursor.getFloat(cursor.getColumnIndex("OO5_D"))} AND OO5_X = ${cursor.getFloat(cursor.getColumnIndex("OO5_X"))} AND " +
+                        " OO3_D = ${cursor.getFloat(cursor.getColumnIndex("OO3_D"))} AND OO3_X = ${cursor.getFloat(cursor.getColumnIndex("OO3_X"))} AND "+
+                        " PP20_D = ${cursor.getFloat(cursor.getColumnIndex("PP20_D"))} AND PP20_X = ${cursor.getFloat(cursor.getColumnIndex("PP20_X"))} AND " +
+                        "PP15_D = ${cursor.getFloat(cursor.getColumnIndex("PP15_D"))} AND PP15_X = ${cursor.getFloat(cursor.getColumnIndex("PP15_X"))} AND "+
+                        " PP10_D = ${cursor.getFloat(cursor.getColumnIndex("PP10_D"))} AND PP10_X = ${cursor.getFloat(cursor.getColumnIndex("PP10_X"))} AND " +
+                        "PP5_D = ${cursor.getFloat(cursor.getColumnIndex("PP5_D"))} AND PP5_X = ${cursor.getFloat(cursor.getColumnIndex("PP5_X"))} "
 //                while (!cursor.isAfterLast) {
 //                    val reverseBean = ReasoningRevBean()
 //                    reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
@@ -2186,7 +2226,8 @@ object DBUtils {
             }
 
         }
-        return needContinue
+        return Pair(needContinue, updateSQL)
+
     }
 
 

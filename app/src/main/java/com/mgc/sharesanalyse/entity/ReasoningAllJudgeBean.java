@@ -905,22 +905,22 @@ public class ReasoningAllJudgeBean {
         return Float.parseFloat(java.lang.String.format("%.2f", value));
     }
 
-    public String updateOCOOTB(float p, boolean is50, ReasoningAllJudgeBean judgebean,String tbname,String limit) {
+    public String updateOCOOTB(float p,float lp, boolean is50, ReasoningAllJudgeBean judgebean,String tbname,String limit) {
         String uStr = "";
-        if (is50 && p >= 50) {
-            uStr = ", RS = " + judgebean.getRS() + 1;
+        if (is50 && p >= 50&&lp>-5) {
+            uStr = ", RS = " + (judgebean.getRS() + 1);
             uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
-            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
-        } else if (!is50 && p >= 30) {
-            uStr = ", RS = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getFS(), (judgebean.getSIZE() + 1)));
+        } else if (!is50 && p >= 30&&lp>-5) {
+            uStr = ", RS = " + (judgebean.getRS() + 1);
             uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
-            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
-        } else if (p < 0) {
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getFS(), (judgebean.getSIZE() + 1)));
+        } else if (p < 0||lp<=-5) {
             uStr = uStr + ", FS = " + (judgebean.getFS() + 1);
-            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() + 1, (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getFS() + 1, (judgebean.getSIZE() + 1)));
             uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
         } else {
-            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS() , (judgebean.getSIZE() + 1)));
+            uStr = uStr + ", FR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getFS() , (judgebean.getSIZE() + 1)));
             uStr = uStr + ", RR = " + keep2(BigDecimalUtils.INSTANCE.div(judgebean.getRS(), (judgebean.getSIZE() + 1)));
         }
         return "UPDATE " + tbname + " SET SIZE = " + (judgebean.getSIZE() + 1) + uStr + " WHERE " + limit;

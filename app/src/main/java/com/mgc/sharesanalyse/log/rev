@@ -1,1 +1,0 @@
-select * from All_Reasoning_30 where f36_t = -10 and f30_t = 0 and f25_t = -10 and f20_t = -10  and f15_t = -10  and f10_t = -20  and f05_t = -20  and f03_t = 0

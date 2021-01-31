@@ -164,9 +164,9 @@ class NewApiActivity : AppCompatActivity() {
             App.getSinglePool().execute {
 
                 DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
-                DBUtils.dropTable("AA_REV_OC_OO_10")
-                DBUtils.dropTable("AA_REV_OC_OO_30")
-                DBUtils.dropTable("AA_REV_OC_OO_50")
+                DBUtils.dropTable(Datas.REV_OC_OO_10)
+                DBUtils.dropTable(Datas.REV_OC_OO_30)
+                DBUtils.dropTable(Datas.REV_OC_OO_50)
                 viewModel.reverseResult()
             }
         }
