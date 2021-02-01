@@ -546,14 +546,6 @@ public class ReasoningRevBean implements Serializable {
     }
 
 
-    public String createOCOOTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER," +
-                "SHOW INTEGER,FRATE INTEGER,RRATE INTEGER,SIZE INTEGER,"+
-                "OC3 INTEGER,OC5 INTEGER,OC10 INTEGER,OC15 INTEGER,OC20 INTEGER,OC25 INTEGER,OC30 INTEGER,OC35 INTEGER,OC40 INTEGER,OC45 INTEGER,OC50 INTEGER,OC55 INTEGER,OC60 INTEGER,OC65 INTEGER,OC70 INTEGER," +
-                "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER,"+
-                "PP5 INTEGER,PP10 INTEGER,PP15 INTEGER,PP20 INTEGER,PP25 INTEGER,PP30 INTEGER,PP35 INTEGER,PP40 INTEGER,PP45 INTEGER,PP50 INTEGER,PP55 INTEGER,PP60 INTEGER,PP65 INTEGER,PP70 INTEGER,"+
-                "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER,K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER,K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
-    }
 
 
     private String toOCOOString() {
@@ -614,6 +606,14 @@ public class ReasoningRevBean implements Serializable {
                 PP60  +", " +
                 PP65 +", " +
                 PP70 +", " +
+                PPP5  + ", " +
+                PPP10 + ", " +
+                PPP20  +", " +
+                PPP30  +", " +
+                PPP40 +", " +
+                PPP50  +", " +
+                PPP60  +", " +
+                PPP70 +", " +
                 S_A_TR +"," +
                 S_R_TR +"," +
                 S_B_TR +"," +
@@ -1016,8 +1016,20 @@ public class ReasoningRevBean implements Serializable {
                 " OC3 ,OC5 ,OC10 ,OC15 ,OC20 ,OC25 ,OC30 ,OC35 ,OC40 ,OC45 ,OC50 ,OC55 ,OC60 ,OC65 ,OC70 ," +
                 " OO3 ,OO5 ,OO10 ,OO15 ,OO20 ,OO25 ,OO30 ,OO35 ,OO40 ,OO45 ,OO50 ,OO55 ,OO60 ,OO65 ,OO70 ," +
                 "PP5 ,PP10 ,PP15 ,PP20 ,PP25 ,PP30 ,PP35 ,PP40 ,PP45 ,PP50 ,PP55 ,PP60 ,PP65 ,PP70 ,"+
+                "PPP5 ,PPP10  ,PPP20  ,PPP30  ,PPP40  ,PPP50  ,PPP60  ,PPP70 ,"+
                 " S_A_TR ,S_R_TR ,S_B_TR ,S_C_TR ,K_A_TR ,K_R_TR ,K_B_TR ,K_C_TR ,K_SL_A_TR ,K_SL_R_TR ,K_SL_B_TR ,K_SL_C_TR  "+
                 " ) VALUES (" + toOCOOString()+")";
+    }
+
+
+    public String createOCOOTB(String tbname) {
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D TEXT,D_D TEXT,P INTEGER,MP INTEGER,LP INTEGER,AFTER_O_P INTEGER,AFTER_C_P INTEGER," +
+                "SHOW INTEGER,FRATE INTEGER,RRATE INTEGER,SIZE INTEGER,"+
+                "OC3 INTEGER,OC5 INTEGER,OC10 INTEGER,OC15 INTEGER,OC20 INTEGER,OC25 INTEGER,OC30 INTEGER,OC35 INTEGER,OC40 INTEGER,OC45 INTEGER,OC50 INTEGER,OC55 INTEGER,OC60 INTEGER,OC65 INTEGER,OC70 INTEGER," +
+                "OO3 INTEGER,OO5 INTEGER,OO10 INTEGER,OO15 INTEGER,OO20 INTEGER,OO25 INTEGER,OO30 INTEGER,OO35 INTEGER,OO40 INTEGER,OO45 INTEGER,OO50 INTEGER,OO55 INTEGER,OO60 INTEGER,OO65 INTEGER,OO70 INTEGER,"+
+                "PP5 INTEGER,PP10 INTEGER,PP15 INTEGER,PP20 INTEGER,PP25 INTEGER,PP30 INTEGER,PP35 INTEGER,PP40 INTEGER,PP45 INTEGER,PP50 INTEGER,PP55 INTEGER,PP60 INTEGER,PP65 INTEGER,PP70 INTEGER,"+
+                "PPP5 INTEGER,PPP10 INTEGER,PPP20 INTEGER,PPP30 INTEGER,PPP40 INTEGER,PPP50 INTEGER,PPP60 INTEGER,PPP70 INTEGER,"+
+                "S_A_TR INTEGER,S_R_TR INTEGER,S_B_TR INTEGER,S_C_TR INTEGER,K_A_TR INTEGER,K_R_TR INTEGER,K_B_TR INTEGER,K_C_TR INTEGER,K_SL_A_TR INTEGER,K_SL_R_TR INTEGER,K_SL_B_TR INTEGER,K_SL_C_TR INTEGER);";
     }
 
     int SHOW;
@@ -1065,6 +1077,78 @@ public class ReasoningRevBean implements Serializable {
     private float PP65;
     private float PP70;
 
+    private float PPP5;
+    private float PPP10;
+    private float PPP20;
+    private float PPP30;
+    private float PPP40;
+    private float PPP50;
+    private float PPP60;
+    private float PPP70;
+
+    public float getPPP5() {
+        return PPP5;
+    }
+
+    public void setPPP5(float PPP5) {
+        this.PPP5 = PPP5;
+    }
+
+    public float getPPP10() {
+        return PPP10;
+    }
+
+    public void setPPP10(float PPP10) {
+        this.PPP10 = PPP10;
+    }
+
+    public float getPPP20() {
+        return PPP20;
+    }
+
+    public void setPPP20(float PPP20) {
+        this.PPP20 = PPP20;
+    }
+
+    public float getPPP30() {
+        return PPP30;
+    }
+
+    public void setPPP30(float PPP30) {
+        this.PPP30 = PPP30;
+    }
+
+    public float getPPP40() {
+        return PPP40;
+    }
+
+    public void setPPP40(float PPP40) {
+        this.PPP40 = PPP40;
+    }
+
+    public float getPPP50() {
+        return PPP50;
+    }
+
+    public void setPPP50(float PPP50) {
+        this.PPP50 = PPP50;
+    }
+
+    public float getPPP60() {
+        return PPP60;
+    }
+
+    public void setPPP60(float PPP60) {
+        this.PPP60 = PPP60;
+    }
+
+    public float getPPP70() {
+        return PPP70;
+    }
+
+    public void setPPP70(float PPP70) {
+        this.PPP70 = PPP70;
+    }
 
     public float getPP5() {
         return PP5;
