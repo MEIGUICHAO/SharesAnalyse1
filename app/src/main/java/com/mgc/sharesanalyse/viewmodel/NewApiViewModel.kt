@@ -2652,12 +2652,12 @@ class NewApiViewModel : BaseViewModel() {
 
                         //TODO OCOO测试暂时注释 begin
 //                        insertRevBean(
-//                            5,
-//                            5,
+//                            Datas.REV_DAYS,
+//                            Datas.REV_DAYS,
 //                            targetBeanList,
 //                            mCHDDList,
-//                            6,
-//                            6,
+//                            Datas.REV_DAYS+1,
+//                            Datas.REV_DAYS+1,
 //                            afterBean,
 //                            targetBean,
 //                            requestBean,
@@ -4563,9 +4563,9 @@ class NewApiViewModel : BaseViewModel() {
         code: String,
         fitlerType: Int
     ) {
-        if (i + 5 < mCHDDList.size) {
+        if (i + Datas.REV_DAYS < mCHDDList.size) {
             val pList = ArrayList<Float>()
-            for (m in (i + 1)..(i + 5)) {
+            for (m in (i + 1)..(i + Datas.REV_DAYS)) {
                 pList.add(
                     (BigDecimalUtils.safeDiv(
                         (mCHDDList[m].cp - mCHDDList[i].cp),
@@ -4573,7 +4573,7 @@ class NewApiViewModel : BaseViewModel() {
                     ) * 100).toKeep2()
                 )
             }
-            reasoningRevBean.p = pList[4]
+            reasoningRevBean.p = pList[Datas.REV_DAYS-1]
             reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
                 (mCHDDList[i + 1].op - mCHDDList[i].cp),
                 mCHDDList[i].cp
@@ -4584,11 +4584,11 @@ class NewApiViewModel : BaseViewModel() {
             ) * 100).toKeep2()
             pList.sortFloatAsc()
             reasoningRevBean.lp = pList[0]
-            reasoningRevBean.mp = pList[4]
+            reasoningRevBean.mp = pList[Datas.REV_DAYS-1]
 
             LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
 
-            reasoningRevBean.d_D = mCHDDList[i + 5].date
+            reasoningRevBean.d_D = mCHDDList[i + Datas.REV_DAYS].date
         }
     }
 

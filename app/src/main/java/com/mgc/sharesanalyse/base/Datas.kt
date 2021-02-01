@@ -118,14 +118,14 @@ object Datas {
     const val REV_FILTERDB = "REV_FILTERDB"
     const val REV_DAYS = 20
     const val FILTER_PROGRESS = 10
-    const val FILTER_OC_OO_PROGRESS = 5
+    const val FILTER_OC_OO_PROGRESS = 2
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
     const val reasoning_debug = true
-    const val reasoning_debug_begin_day = 20210101
+    const val reasoning_debug_begin_day = 20201215
     const val reasoning_debug_end_day = 20210201
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
     const val REV_OC_OO_10 = "AA_REV_OC_OO_10"
@@ -135,7 +135,9 @@ object Datas {
     const val ALL_OC_OO_50 = "All_OC_OO_50"
     const val ALL_Reaoning_OC_OO_30 = "All_Reaoning_OC_OO_30"
     const val ALL_Reaoning_OC_OO_50 = "All_Reaoning_OC_OO_50"
-    const val FR_RR_LIMIT = "AND FR > 0 AND FR < 0.5 AND RR > 0.2"
+    const val FR_RR_LIMIT = "AND FR > 0 AND RR > 0 and RR > 0.2 AND FR < 0.4"
+//    const val FR_RR_LIMIT = "AND FR > 0 AND FR < 0.5 AND RR > 0.2"
+    const val NEED_UPDATE_REV_= false
 
 
 }

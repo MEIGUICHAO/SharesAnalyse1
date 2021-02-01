@@ -169,7 +169,7 @@ object DBUtils {
         db = DaoManager.getDB()
     }
 
-    fun getLastCHDDBeanDate(code: String,tbName: String):String {
+    fun getLastCHDDBeanDate(code: String, tbName: String): String {
         val pathList = FileUtil.getFileNameList(Datas.DBPath)
         val mList = ArrayList<String>()
         pathList.forEach {
@@ -180,7 +180,7 @@ object DBUtils {
             }
         }
         mList.sortStringDateAsc(FormatterEnum.YYMM)
-        var chddbean :ArrayList<CodeHDDBean>? = null
+        var chddbean: ArrayList<CodeHDDBean>? = null
         var jianIndex = 1
 //                = queryCHDDByTableName(tbName,code.toCodeHDD(mList[mList.size - 1], FormatterEnum.YYMM))
 
@@ -188,7 +188,10 @@ object DBUtils {
             if (mList.size - jianIndex < 0) {
                 break
             }
-            chddbean  = queryCHDDByTableName(tbName,code.toCodeHDD(mList[mList.size - jianIndex], FormatterEnum.YYMM))
+            chddbean = queryCHDDByTableName(
+                tbName,
+                code.toCodeHDD(mList[mList.size - jianIndex], FormatterEnum.YYMM)
+            )
             jianIndex++
         }
 
@@ -450,7 +453,8 @@ object DBUtils {
         switchDBName(code.toCodeHDD(codeHDDBean.date, FormatterEnum.YYYYMMDD))
         createCodeHDD(dbName)
         val sql =
-            "UPDATE $dbName SET GAP_J = '${if(null==codeHDDBean.gaP_J) "" else GsonHelper.getInstance().toJson(codeHDDBean.gaP_J)}' WHERE  DATE = ${codeHDDBean.date}"
+            "UPDATE $dbName SET GAP_J = '${if (null == codeHDDBean.gaP_J) "" else GsonHelper.getInstance()
+                .toJson(codeHDDBean.gaP_J)}' WHERE  DATE = ${codeHDDBean.date}"
         LogUtil.d("$code updateCHDDGapJson----\n$sql")
         db.execSQL(sql)
     }
@@ -736,7 +740,7 @@ object DBUtils {
         var isexsit = false
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND DATE =?", arrayOf(code,date))
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND DATE =?", arrayOf(code, date))
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
@@ -830,7 +834,7 @@ object DBUtils {
 
             if (tabbleIsExist(tableName)) {
                 var cursor =
-                        db.rawQuery("SELECT * FROM $tableName", null)
+                    db.rawQuery("SELECT * FROM $tableName", null)
                 LogUtil.d("cursor:${cursor.count}")
                 if (null != cursor && cursor.moveToFirst()) {
                     list = ArrayList<CodeHDDBean>()
@@ -872,7 +876,8 @@ object DBUtils {
                             codeHDDBean.k_TR_J = GsonHelper.parse(K_TR_J, K_TR_Json::class.java)
                         }
                         if (!Shape_J.isNullOrEmpty()) {
-                            codeHDDBean.shape_J = GsonHelper.parse(Shape_J, ShapeJsonBean::class.java)
+                            codeHDDBean.shape_J =
+                                GsonHelper.parse(Shape_J, ShapeJsonBean::class.java)
                         }
                         if (!K_J.isNullOrEmpty()) {
                             codeHDDBean.k_J = GsonHelper.parse(K_J, KJsonBean::class.java)
@@ -880,19 +885,19 @@ object DBUtils {
 
                         if (!p_autr_j.isNullOrEmpty()) {
                             codeHDDBean.p_autr_j =
-                                    GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
+                                GsonHelper.parse(p_autr_j, CodeHDDBean.P_AUTR_J::class.java)
                         }
                         if (!P_DA_J.isNullOrEmpty()) {
                             codeHDDBean.p_DA_J =
-                                    GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
+                                GsonHelper.parse(P_DA_J, CodeHDDBean.P_DA_J::class.java)
                         }
                         if (!P_PP_J.isNullOrEmpty()) {
                             codeHDDBean.p_PP_J =
-                                    GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
+                                GsonHelper.parse(P_PP_J, CodeHDDBean.P_PP_J::class.java)
                         }
                         if (!P_MA_J.isNullOrEmpty()) {
                             codeHDDBean.p_MA_J =
-                                    GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
+                                GsonHelper.parse(P_MA_J, CodeHDDBean.P_MA_J::class.java)
                         }
 //                    if (!SpePP_J.isNullOrEmpty()) {
 //                        codeHDDBean.spePP_J = GsonHelper.parse(SpePP_J, CodeHDDBean.SpePP_J::class.java)
@@ -911,7 +916,7 @@ object DBUtils {
                 cursor.close()
             }
         } catch (e: java.lang.Exception) {
-            queryCHDDByTableName(tableName,dbName)
+            queryCHDDByTableName(tableName, dbName)
         }
         return list
     }
@@ -999,7 +1004,7 @@ object DBUtils {
         )
         LogUtil.d("insertReverseKJTable!!")
         createReverseKJTable(tbName, reverseBean)
-        if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(),date)) {
+        if (!queryDataIsExsitByCodeAndDate(tbName, reverseBean.code.toString(), date)) {
             var insertSqlStr = ""
             insertSqlStr = reverseBean.insertTB(tbName)
             if (reverseBean is ReverseKJsonBean) {
@@ -1028,13 +1033,17 @@ object DBUtils {
     }
 
 
-
     fun insertGapRecordJTable(
         tbName: String,
         gapJsonBean: GapRecordBean,
         date: String
     ) {
-        switchDBName(Datas.GAP_RECORD_DB+DateUtils.changeFromDefaultFormatter(date,FormatterEnum.YYMM))
+        switchDBName(
+            Datas.GAP_RECORD_DB + DateUtils.changeFromDefaultFormatter(
+                date,
+                FormatterEnum.YYMM
+            )
+        )
         LogUtil.d("insertGapRecordJTable!!")
         createGapRecordKJTable(tbName, gapJsonBean)
         try {
@@ -1067,7 +1076,7 @@ object DBUtils {
         var isexsit = false
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND B_D =?", arrayOf(code,bd))
+                db.rawQuery("SELECT * FROM $dbName WHERE CODE =? AND B_D =?", arrayOf(code, bd))
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
@@ -1086,7 +1095,6 @@ object DBUtils {
     }
 
 
-
     fun insertRevCode(
         code: String,
         reverseBean: BaseReverseImp,
@@ -1098,11 +1106,11 @@ object DBUtils {
         if (reverseBean is TR_K_SLL_Bean) {
             tbName = Datas.REV_CODE_TR + code
         }
-        createRevCodeTable(tbName, reverseBean,code)
-        if (!queryDataIsExsitInRevCodeTB(tbName, date,kotlin.run {
+        createRevCodeTable(tbName, reverseBean, code)
+        if (!queryDataIsExsitInRevCodeTB(tbName, date, kotlin.run {
                 if (reverseBean is ReverseKJsonBean) {
                     reverseBean.d_T
-                } else if(reverseBean is TR_K_SLL_Bean) {
+                } else if (reverseBean is TR_K_SLL_Bean) {
                     reverseBean.d_T
                 } else {
                     ""
@@ -1111,7 +1119,8 @@ object DBUtils {
             var insertSqlStr = ""
             if (reverseBean is ReverseKJsonBean) {
                 insertSqlStr = reverseBean.insertRevCodeTB(tbName)
-                val insertDerbySqlStr = reverseBean.insertRevCodeDerbyTB(Datas.REV_CODE_DERBY + code)
+                val insertDerbySqlStr =
+                    reverseBean.insertRevCodeDerbyTB(Datas.REV_CODE_DERBY + code)
                 db.execSQL(insertDerbySqlStr)
             } else if (reverseBean is TR_K_SLL_Bean) {
                 insertSqlStr = reverseBean.insertRevCodeTB(tbName)
@@ -1124,7 +1133,7 @@ object DBUtils {
         var isexsit = false
         if (tabbleIsExist(dbName)) {
             var cursor =
-                db.rawQuery("SELECT * FROM $dbName WHERE D_T =? AND DATE =?", arrayOf(DT,date))
+                db.rawQuery("SELECT * FROM $dbName WHERE D_T =? AND DATE =?", arrayOf(DT, date))
             isexsit = cursor.count > 0
             LogUtil.d("isexsit:$isexsit cursor.count:${cursor.count}")
             cursor.close()
@@ -1151,8 +1160,13 @@ object DBUtils {
     }
 
 
-    fun queryRevLimit(tbName: String,smallerMap:HashMap<String,String>, biggerMap:HashMap<String,String>,reverseType:Int): ArrayList<BaseReverseImp>? {
-        val pair = tbName.getQuerySql(smallerMap,biggerMap)
+    fun queryRevLimit(
+        tbName: String,
+        smallerMap: HashMap<String, String>,
+        biggerMap: HashMap<String, String>,
+        reverseType: Int
+    ): ArrayList<BaseReverseImp>? {
+        val pair = tbName.getQuerySql(smallerMap, biggerMap)
         var list: ArrayList<BaseReverseImp>? = null
         LogUtil.d("queryRevLimit:${pair.first}")
         if (tabbleIsExist(tbName)) {
@@ -1163,11 +1177,11 @@ object DBUtils {
                 cursor.moveToFirst()
                 while (!cursor.isAfterLast) {
                     when (reverseType) {
-                        1->{
+                        1 -> {
                             val reverseBean = getRevKJBeanByCursor(cursor)
                             list.add(reverseBean)
                         }
-                        2->{
+                        2 -> {
                             val reverseBean = getDerbyRevKJBeanByCursor(cursor)
                             list.add(reverseBean)
                         }
@@ -1233,7 +1247,8 @@ object DBUtils {
         reverseBean.gs = cursor.getInt(cursor.getColumnIndex("GS"))
         return reverseBean
     }
-//    " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT," +
+
+    //    " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, CODE INTEGER,N TEXT,D_D TEXT,DATE TEXT," +
 //    " INTEGER, INTEGER, INTEGER, INTEGER," +
 //    " INTEGER, INTEGER, INTEGER, INTEGER," +
 //    " INTEGER, INTEGER, INTEGER, INTEGER);"
@@ -1267,13 +1282,19 @@ object DBUtils {
         var minValue = ""
         var maxValue = ""
         var cursor =
-            db.rawQuery(" SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName))", null)
+            db.rawQuery(
+                " SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName))",
+                null
+            )
         if (null != cursor && cursor.moveToFirst()) {
             minValue = cursor.getString(cursor.getColumnIndex(column))
         }
         cursor.close()
         cursor =
-            db.rawQuery(" SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName))", null)
+            db.rawQuery(
+                " SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName))",
+                null
+            )
         if (null != cursor && cursor.moveToFirst()) {
             maxValue = cursor.getString(cursor.getColumnIndex(column))
         }
@@ -1289,7 +1310,7 @@ object DBUtils {
         dbName: String
     ): Pair<String, String> {
         switchDBName(dbName)
-        val addSql =  codeList.getCodeArrayAndLimitSQL(false)
+        val addSql = codeList.getCodeArrayAndLimitSQL(false)
 
 
         val querySql = " SELECT * FROM $tbName WHERE $addSql "
@@ -1309,7 +1330,7 @@ object DBUtils {
 //        300064 ,0928 ,300064 ,0929 ,600211 ,0724 , cursor.count:0
         cursor.close()
 
-        return Pair(ommList[0].toString(), ommList[ommList.size-1].toString())
+        return Pair(ommList[0].toString(), ommList[ommList.size - 1].toString())
     }
 
     fun copyFilterTB2NewTB(
@@ -1317,15 +1338,20 @@ object DBUtils {
         countList: java.util.ArrayList<BaseReverseImp>,
         type: Int
     ) {
-        switchDBName(Datas.REV_FILTERDB+"2020")
+        switchDBName(Datas.REV_FILTERDB + "2020")
         if (countList[0] is ReverseKJsonBean) {
-            createRevFilterTable(newTBName, countList[0],type)
+            createRevFilterTable(newTBName, countList[0], type)
             countList.forEach {
                 if (it is ReverseKJsonBean) {
-                    if (!queryDataIsExsitByCodeAndDate(newTBName, it.code.toString(),it.date.toString())){
+                    if (!queryDataIsExsitByCodeAndDate(
+                            newTBName,
+                            it.code.toString(),
+                            it.date.toString()
+                        )
+                    ) {
                         var insertSqlStr = ""
                         when (type) {
-                            1->{
+                            1 -> {
                                 insertSqlStr = it.insertTB(newTBName)
                             }
                         }
@@ -1346,7 +1372,7 @@ object DBUtils {
         if (!tabbleIsExist(dbName)) {
             var sqlStr = ""
             when (type) {
-                1->{
+                1 -> {
                     sqlStr = reverseBean.createTB(dbName)
                 }
             }
@@ -1357,7 +1383,10 @@ object DBUtils {
     }
 
     @SuppressLint("Recycle")
-    fun getAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+    fun getAAFilterAllByTbName(
+        sqlStr: String,
+        selection: Array<String?>?
+    ): ArrayList<BaseReverseImp>? {
         switchDBName(Datas.REV_FILTERDB + 2020)
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
@@ -1375,7 +1404,12 @@ object DBUtils {
         return list
     }
 
-    fun getFilterAllByTbName(dbName: String, sqlStr:String,selection:Array<String?>?,isOCOO:Boolean = false): ArrayList<BaseReverseImp>? {
+    fun getFilterAllByTbName(
+        dbName: String,
+        sqlStr: String,
+        selection: Array<String?>?,
+        isOCOO: Boolean = false
+    ): ArrayList<BaseReverseImp>? {
         switchDBName(dbName)
         LogUtil.d("$sqlStr")
         var list: ArrayList<BaseReverseImp>? = null
@@ -1399,7 +1433,11 @@ object DBUtils {
         return list
     }
 
-    fun getFilterAllByDerbyTbName(dbName: String, sqlStr:String,selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+    fun getFilterAllByDerbyTbName(
+        dbName: String,
+        sqlStr: String,
+        selection: Array<String?>?
+    ): ArrayList<BaseReverseImp>? {
         switchDBName(dbName)
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
@@ -1473,7 +1511,10 @@ object DBUtils {
     }
 
     @SuppressLint("Recycle")
-    fun getDerbyAAFilterAllByTbName(sqlStr:String, selection:Array<String?>?): ArrayList<BaseReverseImp>? {
+    fun getDerbyAAFilterAllByTbName(
+        sqlStr: String,
+        selection: Array<String?>?
+    ): ArrayList<BaseReverseImp>? {
         switchDBName(Datas.REV_FILTERDB + 2020)
         var list: ArrayList<BaseReverseImp>? = null
         val cursor =
@@ -1492,29 +1533,38 @@ object DBUtils {
     }
 
 
-    fun createOtherBBTBDataByOriginCodeAndDate(dbName: String,code:Int,date:String,type: Int,tbName: String,endStr:String = ""):String {
-        var newTbName =""
+    fun createOtherBBTBDataByOriginCodeAndDate(
+        dbName: String,
+        code: Int,
+        date: String,
+        type: Int,
+        tbName: String,
+        endStr: String = ""
+    ): String {
+        var newTbName = ""
         switchDBName(dbName)
         if (!tabbleIsExist(tbName)) {
             return ""
         }
         val cursor =
-            db.rawQuery(" SELECT * FROM $tbName WHERE CODE=? AND DATE =?", arrayOf(code.toString(),date))
+            db.rawQuery(
+                " SELECT * FROM $tbName WHERE CODE=? AND DATE =?",
+                arrayOf(code.toString(), date)
+            )
         cursor?.let {
-            val list: ArrayList<BaseReverseImp>
-                    = ArrayList()
+            val list: ArrayList<BaseReverseImp> = ArrayList()
             it.moveToFirst()
             while (!it.isAfterLast) {
                 when (type) {
-                    1->{
+                    1 -> {
                         val bean = getRevKJBeanByCursor(it)
                         list.add(bean)
                     }
-                    2->{
+                    2 -> {
                         val bean = getDerbyRevKJBeanByCursor(it)
                         list.add(bean)
                     }
-                    3->{
+                    3 -> {
                         val bean = getTRKSLLBeanByCursor(it)
                         list.add(bean)
                     }
@@ -1523,11 +1573,11 @@ object DBUtils {
             }
             it.close()
             switchDBName(Datas.REV_FILTERDB + 2020)
-            var createTB =""
-            var insertTB =""
+            var createTB = ""
+            var insertTB = ""
             list.forEach {
                 when (type) {
-                    1->{
+                    1 -> {
                         if (it is ReverseKJsonBean) {
                             newTbName =
                                 tbName.replace("A_RTB", Datas.BB_FIL_COPY_ + "A_RTB") + endStr
@@ -1536,25 +1586,28 @@ object DBUtils {
 
                         }
                     }
-                    2->{
+                    2 -> {
                         if (it is ReverseKJsonBean) {
-                            newTbName = tbName.replace(Datas.Derby,Datas.BB_FIL_COPY_+Datas.Derby) + endStr
+                            newTbName = tbName.replace(
+                                Datas.Derby,
+                                Datas.BB_FIL_COPY_ + Datas.Derby
+                            ) + endStr
                             createTB = it.createDerbyTB(newTbName)
                             insertTB = it.insertDerbyTB(newTbName)
                         }
                     }
-                    3->{
+                    3 -> {
                         if (it is TR_K_SLL_Bean) {
-                            newTbName = tbName.replace("TR", "BB_TR" ) + endStr
+                            newTbName = tbName.replace("TR", "BB_TR") + endStr
                             createTB = it.createTB(newTbName)
                             insertTB = it.insertTB(newTbName)
                         }
                     }
 
                 }
-                if (!createTB.isEmpty()&&!insertTB.isEmpty()) {
+                if (!createTB.isEmpty() && !insertTB.isEmpty()) {
                     db.execSQL(createTB)
-                    if (!queryDataIsExsitByCodeAndDate(newTbName,code.toString(),date)) {
+                    if (!queryDataIsExsitByCodeAndDate(newTbName, code.toString(), date)) {
                         LogUtil.d("insertTB:$insertTB")
                         db.execSQL(insertTB)
                     }
@@ -1573,7 +1626,7 @@ object DBUtils {
             it.moveToFirst()
             while (!it.isAfterLast) {
                 val name = it.getString(it.getColumnIndex("name"))
-                if (!name.equals(tbName)&&!name.equals("sqlite_sequence")) {
+                if (!name.equals(tbName) && !name.equals("sqlite_sequence")) {
                     dropTable(name)
                 }
                 it.moveToNext()
@@ -1595,7 +1648,7 @@ object DBUtils {
     }
 
     fun getAllCopyBBTBNameList(): ArrayList<String> {
-        switchDBName(Datas.REV_FILTERDB+"2020")
+        switchDBName(Datas.REV_FILTERDB + "2020")
         val cursor =
             db.rawQuery(" SELECT name FROM sqlite_master", null)
         val list = ArrayList<String>()
@@ -1613,16 +1666,21 @@ object DBUtils {
         return list
     }
 
-    fun insertFilterResultJson(p50FilterBBKjRangeBean: P50FilterBBKJRangeBean):String {
-        switchDBName(Datas.REV_FILTERDB+"2020")
+    fun insertFilterResultJson(p50FilterBBKjRangeBean: P50FilterBBKJRangeBean): String {
+        switchDBName(Datas.REV_FILTERDB + "2020")
         val tbName = "AAA_FILTER_RESULT"
         val createSql = p50FilterBBKjRangeBean.createTB(tbName)
         db.execSQL(createSql)
         var sqlStr = ""
         if (!queryIsExsitByCodeAndCustomColumn(tbName, arrayOf("P_TYPE"), arrayOf("50"))) {
-            sqlStr = p50FilterBBKjRangeBean.insertTB(tbName,"50", GsonHelper.toJson(p50FilterBBKjRangeBean))
+            sqlStr = p50FilterBBKjRangeBean.insertTB(
+                tbName,
+                "50",
+                GsonHelper.toJson(p50FilterBBKjRangeBean)
+            )
         } else {
-            sqlStr = p50FilterBBKjRangeBean.updateTB(tbName,GsonHelper.toJson(p50FilterBBKjRangeBean))
+            sqlStr =
+                p50FilterBBKjRangeBean.updateTB(tbName, GsonHelper.toJson(p50FilterBBKjRangeBean))
         }
         LogUtil.d(sqlStr)
         db.execSQL(sqlStr)
@@ -1643,12 +1701,17 @@ object DBUtils {
     }
 
 
-    fun queryIsExsitByCodeAndCustomColumn(tbName: String, customKey: Array<String>, customValue: Array<String>): Boolean {
+    fun queryIsExsitByCodeAndCustomColumn(
+        tbName: String,
+        customKey: Array<String>,
+        customValue: Array<String>
+    ): Boolean {
         var isexsit = false
         if (tabbleIsExist(tbName)) {
             var whereLimit = ""
             customKey.forEach {
-                whereLimit = if (whereLimit.isEmpty()) "$whereLimit $it = ?" else "$whereLimit AND $it = ?"
+                whereLimit =
+                    if (whereLimit.isEmpty()) "$whereLimit $it = ?" else "$whereLimit AND $it = ?"
             }
             var cursor =
                 db.rawQuery("SELECT * FROM $tbName WHERE $whereLimit", customValue)
@@ -1663,23 +1726,31 @@ object DBUtils {
         switchDBName(Datas.REV_RESONING_DB)
         val createSql = reasoningRevBean.createTB("Reasoning")
         db.execSQL(createSql)
-        val isExit = queryIsExsitByCodeAndCustomColumn("Reasoning",arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))
+        val isExit = queryIsExsitByCodeAndCustomColumn(
+            "Reasoning",
+            arrayOf("CODE", "D"),
+            arrayOf(reasoningRevBean.code.toString(), reasoningRevBean.d)
+        )
         LogUtil.d("insertReasoningRevTB--->${reasoningRevBean.code},date--->${reasoningRevBean.d}")
-        if (!isExit){
+        if (!isExit) {
             val insert = reasoningRevBean.insertTB("Reasoning")
             db.execSQL(insert)
         }
         return isExit
     }
 
-    fun insertReasoningAllTB(reasoningRevBean: ReasoningRevBean,is50: Boolean): Boolean {
+    fun insertReasoningAllTB(reasoningRevBean: ReasoningRevBean, is50: Boolean): Boolean {
         switchDBName(Datas.REV_RESONING_DB)
         val tbName = if (is50) "All_Reasoning_50" else "All_Reasoning_30"
         val createSql = reasoningRevBean.createAllTB(tbName)
         db.execSQL(createSql)
-        val isExit = queryIsExsitByCodeAndCustomColumn(tbName,arrayOf("CODE","D"), arrayOf(reasoningRevBean.code.toString(),reasoningRevBean.d))
+        val isExit = queryIsExsitByCodeAndCustomColumn(
+            tbName,
+            arrayOf("CODE", "D"),
+            arrayOf(reasoningRevBean.code.toString(), reasoningRevBean.d)
+        )
         LogUtil.d("insertReasoningAllTB--->${reasoningRevBean.code},date--->${reasoningRevBean.d},$is50,${reasoningRevBean.p}")
-        if (!isExit){
+        if (!isExit) {
             val insert = reasoningRevBean.insertAllTB(tbName)
             db.execSQL(insert)
         }
@@ -1691,7 +1762,7 @@ object DBUtils {
         val list = ArrayList<ReasoningRevBean>()
         if (tabbleIsExist(tbName)) {
             val cursor =
-                    db.rawQuery(" SELECT * FROM $tbName", null)
+                db.rawQuery(" SELECT * FROM $tbName", null)
             getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
         }
         return list
@@ -1708,52 +1779,52 @@ object DBUtils {
             db.execSQL(createSQL)
         }
         if (tabbleIsExist(insertTB)) {
-            val querySQL = "SELECT * FROM $insertTB WHERE "+
+            val querySQL = "SELECT * FROM $insertTB WHERE " +
                     "OC3_X = ${reasoningAllJudgeBean.oC3_X}  " +
                     "AND OC5_X = ${reasoningAllJudgeBean.oC5_X}   " +
                     "AND OC10_X  = ${reasoningAllJudgeBean.oC10_X}  " +
                     "AND OC15_X = ${reasoningAllJudgeBean.oC15_X}   " +
                     "AND OC20_X = ${reasoningAllJudgeBean.oC20_X}   " +
-//                    "AND OC25_X = ${reasoningAllJudgeBean.oC25_X}   " +
-//                    "AND OC30_X = ${reasoningAllJudgeBean.oC30_X}   " +
-//                    "AND OC35_X  = ${reasoningAllJudgeBean.oC35_X}  " +
-//                    "AND OC40_X  = ${reasoningAllJudgeBean.oC40_X}  " +
-//                    "AND OC45_X  = ${reasoningAllJudgeBean.oC45_X}  " +
-//                    "AND OC50_X  = ${reasoningAllJudgeBean.oC50_X}  " +
-//                    "AND OC55_X  = ${reasoningAllJudgeBean.oC55_X}  " +
-//                    "AND OC60_X  = ${reasoningAllJudgeBean.oC60_X}  " +
-//                    "AND OC65_X  = ${reasoningAllJudgeBean.oC65_X}  " +
-//                    "AND OC70_X  = ${reasoningAllJudgeBean.oC70_X}  " +
+                    "AND OC25_X = ${reasoningAllJudgeBean.oC25_X}   " +
+                    "AND OC30_X = ${reasoningAllJudgeBean.oC30_X}   " +
+                    "AND OC35_X  = ${reasoningAllJudgeBean.oC35_X}  " +
+                    "AND OC40_X  = ${reasoningAllJudgeBean.oC40_X}  " +
+                    "AND OC45_X  = ${reasoningAllJudgeBean.oC45_X}  " +
+                    "AND OC50_X  = ${reasoningAllJudgeBean.oC50_X}  " +
+                    "AND OC55_X  = ${reasoningAllJudgeBean.oC55_X}  " +
+                    "AND OC60_X  = ${reasoningAllJudgeBean.oC60_X}  " +
+                    "AND OC65_X  = ${reasoningAllJudgeBean.oC65_X}  " +
+                    "AND OC70_X  = ${reasoningAllJudgeBean.oC70_X}  " +
                     "AND OO3_X  = ${reasoningAllJudgeBean.oO3_X}  " +
                     "AND OO5_X  = ${reasoningAllJudgeBean.oO5_X}  " +
                     "AND OO10_X  = ${reasoningAllJudgeBean.oO10_X}  " +
                     "AND OO15_X  = ${reasoningAllJudgeBean.oO15_X}  " +
                     "AND OO20_X  = ${reasoningAllJudgeBean.oO20_X}  " +
-//                    "AND OO25_X  = ${reasoningAllJudgeBean.oO25_X}  " +
-//                    "AND OO30_X  = ${reasoningAllJudgeBean.oO30_X}  " +
-//                    "AND OO35_X = ${reasoningAllJudgeBean.oO35_X}   " +
-//                    "AND OO40_X  = ${reasoningAllJudgeBean.oO40_X}  " +
-//                    "AND OO45_X  = ${reasoningAllJudgeBean.oO45_X}  " +
-//                    "AND OO50_X  = ${reasoningAllJudgeBean.oO50_X}  " +
-//                    "AND OO55_X  = ${reasoningAllJudgeBean.oO55_X}  " +
-//                    "AND OO60_X  = ${reasoningAllJudgeBean.oO60_X}  " +
-//                    "AND OO65_X  = ${reasoningAllJudgeBean.oO65_X}  " +
-//                    "AND OO70_X  = ${reasoningAllJudgeBean.oO70_X}  " +
+                    "AND OO25_X  = ${reasoningAllJudgeBean.oO25_X}  " +
+                    "AND OO30_X  = ${reasoningAllJudgeBean.oO30_X}  " +
+                    "AND OO35_X = ${reasoningAllJudgeBean.oO35_X}   " +
+                    "AND OO40_X  = ${reasoningAllJudgeBean.oO40_X}  " +
+                    "AND OO45_X  = ${reasoningAllJudgeBean.oO45_X}  " +
+                    "AND OO50_X  = ${reasoningAllJudgeBean.oO50_X}  " +
+                    "AND OO55_X  = ${reasoningAllJudgeBean.oO55_X}  " +
+                    "AND OO60_X  = ${reasoningAllJudgeBean.oO60_X}  " +
+                    "AND OO65_X  = ${reasoningAllJudgeBean.oO65_X}  " +
+                    "AND OO70_X  = ${reasoningAllJudgeBean.oO70_X}  " +
                     "AND PP5_X  = ${reasoningAllJudgeBean.pP5_X}  " +
                     "AND PP10_X  = ${reasoningAllJudgeBean.pP10_X}  " +
                     "AND PP15_X  = ${reasoningAllJudgeBean.pP15_X}  " +
                     "AND PP20_X  = ${reasoningAllJudgeBean.pP20_X}  "
-//                    "AND PP25_X  = ${reasoningAllJudgeBean.pP25_X}  " +
-//                    "AND PP30_X  = ${reasoningAllJudgeBean.pP30_X}  "
-//                    "AND PP35_X = ${reasoningAllJudgeBean.pP35_X}   " +
-//                    "AND PP40_X  = ${reasoningAllJudgeBean.pP40_X}  " +
-//                    "AND PP45_X  = ${reasoningAllJudgeBean.pP45_X}  " +
-//                    "AND PP50_X  = ${reasoningAllJudgeBean.pP50_X}  " +
-//                    "AND PP55_X  = ${reasoningAllJudgeBean.pP55_X}  " +
-//                    "AND PP60_X  = ${reasoningAllJudgeBean.pP60_X}  " +
-//                    "AND PP65_X  = ${reasoningAllJudgeBean.pP65_X}  " +
-//                    "AND PP70_X  = ${reasoningAllJudgeBean.pP70_X}"
-            val cusor = db.rawQuery(querySQL,null)
+                    "AND PP25_X  = ${reasoningAllJudgeBean.pP25_X}  " +
+                    "AND PP30_X  = ${reasoningAllJudgeBean.pP30_X}  "
+                    "AND PP35_X = ${reasoningAllJudgeBean.pP35_X}   " +
+                    "AND PP40_X  = ${reasoningAllJudgeBean.pP40_X}  " +
+                    "AND PP45_X  = ${reasoningAllJudgeBean.pP45_X}  " +
+                    "AND PP50_X  = ${reasoningAllJudgeBean.pP50_X}  " +
+                    "AND PP55_X  = ${reasoningAllJudgeBean.pP55_X}  " +
+                    "AND PP60_X  = ${reasoningAllJudgeBean.pP60_X}  " +
+                    "AND PP65_X  = ${reasoningAllJudgeBean.pP65_X}  " +
+                    "AND PP70_X  = ${reasoningAllJudgeBean.pP70_X}"
+            val cusor = db.rawQuery(querySQL, null)
             if (cusor.count < 1) {
                 cusor.close()
                 val insertSQL = reasoningAllJudgeBean.insertOCOOTB(insertTB)
@@ -1791,7 +1862,10 @@ object DBUtils {
         LogUtil.d("$D_T querySql-->$querySql")
         if (tabbleIsExist(tbName)) {
             val cursor =
-                db.rawQuery(" SELECT * FROM $tbName WHERE D_T=$D_T AND OM_M_X<=$allOmM AND OM_M_D>=$allOmM $querySql", null)
+                db.rawQuery(
+                    " SELECT * FROM $tbName WHERE D_T=$D_T AND OM_M_X<=$allOmM AND OM_M_D>=$allOmM $querySql",
+                    null
+                )
             if (null != cursor && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast) {
                     val reasoningAllJudgeBean = ReasoningAllJudgeBean()
@@ -1829,24 +1903,36 @@ object DBUtils {
                     reasoningAllJudgeBean.oL_L_X = cursor.getFloat(cursor.getColumnIndex("OL_L_X"))
 
 
-                    reasoningAllJudgeBean.oM_OC_D = cursor.getFloat(cursor.getColumnIndex("OM_OC_D"))
-                    reasoningAllJudgeBean.oM_OP_D = cursor.getFloat(cursor.getColumnIndex("OM_OP_D"))
-                    reasoningAllJudgeBean.oM_OL_D = cursor.getFloat(cursor.getColumnIndex("OM_OL_D"))
-                    reasoningAllJudgeBean.oC_OP_D = cursor.getFloat(cursor.getColumnIndex("OC_OP_D"))
-                    reasoningAllJudgeBean.oC_OL_D = cursor.getFloat(cursor.getColumnIndex("OC_OL_D"))
-                    reasoningAllJudgeBean.oP_OL_D = cursor.getFloat(cursor.getColumnIndex("OP_OL_D"))
+                    reasoningAllJudgeBean.oM_OC_D =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OC_D"))
+                    reasoningAllJudgeBean.oM_OP_D =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OP_D"))
+                    reasoningAllJudgeBean.oM_OL_D =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OL_D"))
+                    reasoningAllJudgeBean.oC_OP_D =
+                        cursor.getFloat(cursor.getColumnIndex("OC_OP_D"))
+                    reasoningAllJudgeBean.oC_OL_D =
+                        cursor.getFloat(cursor.getColumnIndex("OC_OL_D"))
+                    reasoningAllJudgeBean.oP_OL_D =
+                        cursor.getFloat(cursor.getColumnIndex("OP_OL_D"))
                     reasoningAllJudgeBean.m_C_D = cursor.getFloat(cursor.getColumnIndex("M_C_D"))
                     reasoningAllJudgeBean.m_P_D = cursor.getFloat(cursor.getColumnIndex("M_P_D"))
                     reasoningAllJudgeBean.m_L_D = cursor.getFloat(cursor.getColumnIndex("M_L_D"))
                     reasoningAllJudgeBean.c_P_D = cursor.getFloat(cursor.getColumnIndex("C_P_D"))
                     reasoningAllJudgeBean.c_L_D = cursor.getFloat(cursor.getColumnIndex("C_L_D"))
                     reasoningAllJudgeBean.p_L_D = cursor.getFloat(cursor.getColumnIndex("P_L_D"))
-                    reasoningAllJudgeBean.oM_OC_X = cursor.getFloat(cursor.getColumnIndex("OM_OC_X"))
-                    reasoningAllJudgeBean.oM_OP_X = cursor.getFloat(cursor.getColumnIndex("OM_OP_X"))
-                    reasoningAllJudgeBean.oM_OL_X = cursor.getFloat(cursor.getColumnIndex("OM_OL_X"))
-                    reasoningAllJudgeBean.oC_OP_X = cursor.getFloat(cursor.getColumnIndex("OC_OP_X"))
-                    reasoningAllJudgeBean.oC_OL_X = cursor.getFloat(cursor.getColumnIndex("OC_OL_X"))
-                    reasoningAllJudgeBean.oP_OL_X = cursor.getFloat(cursor.getColumnIndex("OP_OL_X"))
+                    reasoningAllJudgeBean.oM_OC_X =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OC_X"))
+                    reasoningAllJudgeBean.oM_OP_X =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OP_X"))
+                    reasoningAllJudgeBean.oM_OL_X =
+                        cursor.getFloat(cursor.getColumnIndex("OM_OL_X"))
+                    reasoningAllJudgeBean.oC_OP_X =
+                        cursor.getFloat(cursor.getColumnIndex("OC_OP_X"))
+                    reasoningAllJudgeBean.oC_OL_X =
+                        cursor.getFloat(cursor.getColumnIndex("OC_OL_X"))
+                    reasoningAllJudgeBean.oP_OL_X =
+                        cursor.getFloat(cursor.getColumnIndex("OP_OL_X"))
                     reasoningAllJudgeBean.m_C_X = cursor.getFloat(cursor.getColumnIndex("M_C_X"))
                     reasoningAllJudgeBean.m_P_X = cursor.getFloat(cursor.getColumnIndex("M_P_X"))
                     reasoningAllJudgeBean.m_L_X = cursor.getFloat(cursor.getColumnIndex("M_L_X"))
@@ -1865,7 +1951,11 @@ object DBUtils {
                     reasoningAllJudgeBean.count = cursor.getInt(cursor.getColumnIndex("COUNT"))
                     reasoningAllJudgeBean.d_T = cursor.getInt(cursor.getColumnIndex("D_T"))
                     list.add(reasoningAllJudgeBean)
-                    LogUtil.d("$tbName $D_T,size:${list.size},reasoningAllJudgeBean-->\n${GsonHelper.toJson(reasoningAllJudgeBean)}")
+                    LogUtil.d(
+                        "$tbName $D_T,size:${list.size},reasoningAllJudgeBean-->\n${GsonHelper.toJson(
+                            reasoningAllJudgeBean
+                        )}"
+                    )
                     cursor.moveToNext()
                 }
                 cursor.close()
@@ -1883,9 +1973,10 @@ object DBUtils {
         switchDBName(Datas.REV_RESONING_DB)
         val list = ArrayList<ReasoningRevBean>()
 
-        val endJudgeStr =getJudgeEndStr(bean)
+        val endJudgeStr = getJudgeEndStr(bean)
         if (tabbleIsExist(tbName)) {
-            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T}  ${endJudgeStr}"
+            val querySQL =
+                "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} AND  F03_T = ${bean.f03_T}  ${endJudgeStr}"
 
             getReasoningPList(tbName, querySQL, list)
         }
@@ -1902,16 +1993,19 @@ object DBUtils {
         val list = ArrayList<ReasoningRevBean>()
         val list1 = ArrayList<ReasoningRevBean>()
         val list2 = ArrayList<ReasoningRevBean>()
-        val endJudgeStr =getJudgeEndStr(bean)
+        val endJudgeStr = getJudgeEndStr(bean)
         if (tabbleIsExist(tbName)) {
-            val querySQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}"
-            val query1SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
-                    " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3} "
-            val query2SQL = "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
-                    "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
-                    " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3}  AND  MA5 = ${bean.mA_5} "
+            val querySQL =
+                "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                        "AND  F03_T = ${bean.f03_T} ${endJudgeStr}"
+            val query1SQL =
+                "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                        "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
+                        " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3} "
+            val query2SQL =
+                "F36_T = ${bean.f36_T} AND F30_T = ${bean.f30_T} AND F25_T = ${bean.f25_T} AND F20_T = ${bean.f20_T} AND F15_T = ${bean.f15_T} AND  F10_T = ${bean.f10_T} AND F05_T = ${bean.f05_T} " +
+                        "AND  F03_T = ${bean.f03_T} ${endJudgeStr}" +
+                        " AND  MA1 = ${bean.mA_1} AND  MA3 = ${bean.mA_3}  AND  MA5 = ${bean.mA_5} "
             getReasoningPList(tbName, querySQL, list)
             getReasoningPList(tbName, query1SQL, list1)
             getReasoningPList(tbName, query2SQL, list2)
@@ -1919,13 +2013,13 @@ object DBUtils {
         list.sortReasoningRevBeanByP()
         list1.sortReasoningRevBeanByP()
         list2.sortReasoningRevBeanByP()
-        return Triple(list,list1,list2)
+        return Triple(list, list1, list2)
     }
 
     private fun getJudgeEndStr(bean: ReasoningRevBean): String {
         return " AND L36 = ${bean.l36} AND L30 = ${bean.l30} AND L25 = ${bean.l25} AND L20 = ${bean.l20} AND L15 = ${bean.l15} AND L10 = ${bean.l10}  AND L05 = ${bean.l05} AND L03 = ${bean.l03}" +
-                    " AND O36 = ${bean.o36} AND O30 = ${bean.o30} AND O25 = ${bean.o25} AND O20 = ${bean.o20} AND O15 = ${bean.o15} AND O10 = ${bean.o10}  AND O05 = ${bean.o05} AND O03 = ${bean.o03}" +
-        " AND C36 = ${bean.c36} AND C30 = ${bean.c30} AND C25 = ${bean.c25} AND C20 = ${bean.c20} AND C15 = ${bean.c15} AND C10 = ${bean.c10}  AND C05 = ${bean.c05} AND C03 = ${bean.c03}"
+                " AND O36 = ${bean.o36} AND O30 = ${bean.o30} AND O25 = ${bean.o25} AND O20 = ${bean.o20} AND O15 = ${bean.o15} AND O10 = ${bean.o10}  AND O05 = ${bean.o05} AND O03 = ${bean.o03}" +
+                " AND C36 = ${bean.c36} AND C30 = ${bean.c30} AND C25 = ${bean.c25} AND C20 = ${bean.c20} AND C15 = ${bean.c15} AND C10 = ${bean.c10}  AND C05 = ${bean.c05} AND C03 = ${bean.c03}"
     }
 
     private fun getReasoningPList(
@@ -2036,7 +2130,7 @@ object DBUtils {
                     bean.mA_5 = MA5
                     bean.mA_10 = MA10
                 }
-    //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+                //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                 bean.code = CODE
                 bean.n = N
                 bean.d = D
@@ -2046,7 +2140,7 @@ object DBUtils {
                 bean.lp = LP
                 bean.after_O_P = AFTER_O_P
                 bean.after_C_P = AFTER_C_P
-    //                    bean.fitlertype = FITLERTYPE
+                //                    bean.fitlertype = FITLERTYPE
                 list.add(bean)
                 cursor.moveToNext()
             }
@@ -2054,20 +2148,21 @@ object DBUtils {
         }
     }
 
-    fun getNullDDFromReasoningTB(tbName:String): ArrayList<ReasoningRevBean> {
+    fun getNullDDFromReasoningTB(tbName: String): ArrayList<ReasoningRevBean> {
         switchDBName(Datas.REV_RESONING_DB)
 
         val cursor =
             db.rawQuery(" SELECT * FROM $tbName WHERE D_D ='null'", null)
 
         val list = ArrayList<ReasoningRevBean>()
-        getReasoningRevBeanByCusorAndTb(cursor,tbName,list)
+        getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
         return list
     }
 
-    fun updateReasoning(tbName:String,bean:ReasoningRevBean) {
+    fun updateReasoning(tbName: String, bean: ReasoningRevBean) {
         DBUtils.switchDBName(Datas.REV_RESONING_DB)
-        val sql = "UPDATE $tbName SET D_D = '${bean.d_D}',MP = ${bean.mp},P = ${bean.p} ,LP = ${bean.lp} ,AFTER_O_P = ${bean.after_O_P} ,AFTER_C_P = ${bean.after_C_P} WHERE CODE=${bean.code} AND D = '${bean.d}'"
+        val sql =
+            "UPDATE $tbName SET D_D = '${bean.d_D}',MP = ${bean.mp},P = ${bean.p} ,LP = ${bean.lp} ,AFTER_O_P = ${bean.after_O_P} ,AFTER_C_P = ${bean.after_C_P} WHERE CODE=${bean.code} AND D = '${bean.d}'"
         LogUtil.d("$sql")
         db.execSQL(sql)
     }
@@ -2083,7 +2178,11 @@ object DBUtils {
         db.execSQL(insertSql)
     }
 
-    fun insertOCOOReasoningBean(revKJOCOOBean: ReasoningRevBean, tbName: String, updateSql: String) {
+    fun insertOCOOReasoningBean(
+        revKJOCOOBean: ReasoningRevBean,
+        tbName: String,
+        updateSql: String
+    ) {
         switchDBName(Datas.REV_RESONING_DB)
         if (!tabbleIsExist(tbName)) {
             val createSQL = revKJOCOOBean.createOCOOTB(tbName)
@@ -2093,27 +2192,34 @@ object DBUtils {
         LogUtil.d("insertReasoninResult $tbName:${revKJOCOOBean.n},${revKJOCOOBean.d},${revKJOCOOBean.p}")
         LogUtil.d("$insertSql")
         db.execSQL(insertSql)
-//        if (revKJOCOOBean.p != 0.toFloat()) {
-//
-//            val tbjudgeName = if (tbName.contains("50")) Datas.ALL_OC_OO_50 else  Datas.ALL_OC_OO_30
-//            val judgeBean = ReasoningAllJudgeBean()
-//
-//            val querySQL = "SELECT * FROM $tbjudgeName WHERE "+ updateSql
-//            val cusor = db.rawQuery(querySQL,null)
-//            LogUtil.d("insertReasoninResult-->\n$querySQL")
-//
-//            if (null != cusor && cusor.count > 0 && cusor.moveToFirst()) {
-////                FR ,RR ,FS ,RS ,SIZE
-//                judgeBean.fs = cusor.getInt(cusor.getColumnIndex("FS"))
-//                judgeBean.rs = cusor.getInt(cusor.getColumnIndex("RS"))
-//                judgeBean.size = cusor.getInt(cusor.getColumnIndex("SIZE"))
-//                LogUtil.d("fs:${judgeBean.fs},rs:${judgeBean.rs},size:${judgeBean.size}")
-//                cusor.close()
-//                val update = judgeBean.updateOCOOTB(revKJOCOOBean.p,revKJOCOOBean.lp,tbName.contains("50"),judgeBean,tbjudgeName,updateSql)
-//                db.execSQL(update)
-//            }
-//
-//        }
+        if (Datas.NEED_UPDATE_REV_ && revKJOCOOBean.p != 0.toFloat()) {
+
+            val tbjudgeName = if (tbName.contains("50")) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
+            val judgeBean = ReasoningAllJudgeBean()
+
+            val querySQL = "SELECT * FROM $tbjudgeName WHERE " + updateSql
+            val cusor = db.rawQuery(querySQL, null)
+            LogUtil.d("insertReasoninResult-->\n$querySQL")
+
+            if (null != cusor && cusor.count > 0 && cusor.moveToFirst()) {
+//                FR ,RR ,FS ,RS ,SIZE
+                judgeBean.fs = cusor.getInt(cusor.getColumnIndex("FS"))
+                judgeBean.rs = cusor.getInt(cusor.getColumnIndex("RS"))
+                judgeBean.size = cusor.getInt(cusor.getColumnIndex("SIZE"))
+                LogUtil.d("fs:${judgeBean.fs},rs:${judgeBean.rs},size:${judgeBean.size}")
+                cusor.close()
+                val update = judgeBean.updateOCOOTB(
+                    revKJOCOOBean.p,
+                    revKJOCOOBean.lp,
+                    tbName.contains("50"),
+                    judgeBean,
+                    tbjudgeName,
+                    updateSql
+                )
+                db.execSQL(update)
+            }
+
+        }
     }
 
 
@@ -2126,36 +2232,36 @@ object DBUtils {
         val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
 
         val judgeSQL =
-//                " OC70_D >= ${ocooBean.oC70} AND OC70_X <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_X <= ${ocooBean.oC65} AND "+
-//                " OC60_D >= ${ocooBean.oC60} AND OC60_X <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_X <= ${ocooBean.oC55} AND "+
-//                " OC50_D >= ${ocooBean.oC50} AND OC50_X <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_X <= ${ocooBean.oC45} AND "+
-//                " OC40_D >= ${ocooBean.oC40} AND OC40_X <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_X <= ${ocooBean.oC35} AND "+
-//                " OC30_D >= ${ocooBean.oC30} AND OC30_X <= ${ocooBean.oC30} AND " +
-//                        "OC25_D >= ${ocooBean.oC25} AND OC25_X <= ${ocooBean.oC25} AND "+
-            " OC20_D >= ${ocooBean.oC20} AND OC20_X <= ${ocooBean.oC20} AND " +
-                    "OC15_D >= ${ocooBean.oC15} AND OC15_X <= ${ocooBean.oC15} AND "+
+            " OC70_D >= ${ocooBean.oC70} AND OC70_X <= ${ocooBean.oC70} AND OC65_D >= ${ocooBean.oC65} AND OC65_X <= ${ocooBean.oC65} AND " +
+                    " OC60_D >= ${ocooBean.oC60} AND OC60_X <= ${ocooBean.oC60} AND OC55_D >= ${ocooBean.oC55} AND OC55_X <= ${ocooBean.oC55} AND " +
+                    " OC50_D >= ${ocooBean.oC50} AND OC50_X <= ${ocooBean.oC50} AND OC45_D >= ${ocooBean.oC45} AND OC45_X <= ${ocooBean.oC45} AND " +
+                    " OC40_D >= ${ocooBean.oC40} AND OC40_X <= ${ocooBean.oC40} AND OC35_D >= ${ocooBean.oC35} AND OC35_X <= ${ocooBean.oC35} AND " +
+                    " OC30_D >= ${ocooBean.oC30} AND OC30_X <= ${ocooBean.oC30} AND " +
+                    "OC25_D >= ${ocooBean.oC25} AND OC25_X <= ${ocooBean.oC25} AND " +
+                    " OC20_D >= ${ocooBean.oC20} AND OC20_X <= ${ocooBean.oC20} AND " +
+                    "OC15_D >= ${ocooBean.oC15} AND OC15_X <= ${ocooBean.oC15} AND " +
                     " OC10_D >= ${ocooBean.oC10} AND OC10_X <= ${ocooBean.oC10} AND " +
                     "OC5_D >= ${ocooBean.oC5} AND OC5_X <= ${ocooBean.oC5} AND " +
-                    " OC3_D >= ${ocooBean.oC3} AND OC3_X <= ${ocooBean.oC3} AND "+
-//                " AND OO70_D >= ${ocooBean.oO70} AND OO70_X <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_X <= ${ocooBean.oO65} AND "+
-//                " OO60_D >= ${ocooBean.oO60} AND OO60_X <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_X <= ${ocooBean.oO55} AND "+
-//                " OO50_D >= ${ocooBean.oO50} AND OO50_X <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_X <= ${ocooBean.oO45} AND "+
-//                " OO40_D >= ${ocooBean.oO40} AND OO40_X <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_X <= ${ocooBean.oO35} AND "+
-//                "OO30_D >= ${ocooBean.oO30} AND OO30_X <= ${ocooBean.oO30} AND " +
-//                        "OO25_D >= ${ocooBean.oO25} AND OO25_X <= ${ocooBean.oO25} AND "+
+                    " OC3_D >= ${ocooBean.oC3} AND OC3_X <= ${ocooBean.oC3} AND " +
+                " OO70_D >= ${ocooBean.oO70} AND OO70_X <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_X <= ${ocooBean.oO65} AND "+
+                " OO60_D >= ${ocooBean.oO60} AND OO60_X <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_X <= ${ocooBean.oO55} AND "+
+                " OO50_D >= ${ocooBean.oO50} AND OO50_X <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_X <= ${ocooBean.oO45} AND "+
+                " OO40_D >= ${ocooBean.oO40} AND OO40_X <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_X <= ${ocooBean.oO35} AND "+
+                "OO30_D >= ${ocooBean.oO30} AND OO30_X <= ${ocooBean.oO30} AND " +
+                        "OO25_D >= ${ocooBean.oO25} AND OO25_X <= ${ocooBean.oO25} AND "+
                     " OO20_D >= ${ocooBean.oO20} AND OO20_X <= ${ocooBean.oO20} AND " +
-                    "OO15_D >= ${ocooBean.oO15} AND OO15_X <= ${ocooBean.oO15} AND "+
+                    "OO15_D >= ${ocooBean.oO15} AND OO15_X <= ${ocooBean.oO15} AND " +
                     " OO10_D >= ${ocooBean.oO10} AND OO10_X <= ${ocooBean.oO10} AND " +
                     "OO5_D >= ${ocooBean.oO5} AND OO5_X <= ${ocooBean.oO5} AND " +
-                    " OO3_D >= ${ocooBean.oO3} AND OO3_X <= ${ocooBean.oO3} AND "+
-//                " AND PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND "+
-//                " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND "+
-//                " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND "+
-//                " PP40_D >= ${ocooBean.pP40} AND PP40_X <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_X <= ${ocooBean.pP35} AND "+
-//                " PP30_D >= ${ocooBean.pP30} AND PP30_X <= ${ocooBean.pP30} AND " +
-//                        "PP25_D >= ${ocooBean.pP25} AND PP25_X <= ${ocooBean.pP25} AND "+
+                    " OO3_D >= ${ocooBean.oO3} AND OO3_X <= ${ocooBean.oO3} AND " +
+                " PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND "+
+                " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND "+
+                " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND "+
+                " PP40_D >= ${ocooBean.pP40} AND PP40_X <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_X <= ${ocooBean.pP35} AND "+
+                " PP30_D >= ${ocooBean.pP30} AND PP30_X <= ${ocooBean.pP30} AND " +
+                        "PP25_D >= ${ocooBean.pP25} AND PP25_X <= ${ocooBean.pP25} AND "+
                     " PP20_D >= ${ocooBean.pP20} AND PP20_X <= ${ocooBean.pP20} AND " +
-                    "PP15_D >= ${ocooBean.pP15} AND PP15_X <= ${ocooBean.pP15} AND "+
+                    "PP15_D >= ${ocooBean.pP15} AND PP15_X <= ${ocooBean.pP15} AND " +
                     " PP10_D >= ${ocooBean.pP10} AND PP10_X <= ${ocooBean.pP10} AND " +
                     "PP5_D >= ${ocooBean.pP5} AND PP5_X <= ${ocooBean.pP5} ${Datas.FR_RR_LIMIT}"
 
@@ -2172,20 +2278,135 @@ object DBUtils {
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 needContinue = true
 
-                updateSQL = " OC20_D = ${cursor.getFloat(cursor.getColumnIndex("OC20_D"))} AND OC20_X = ${cursor.getFloat(cursor.getColumnIndex("OC20_X"))} AND " +
-                        "OC15_D = ${cursor.getFloat(cursor.getColumnIndex("OC15_D"))} AND OC15_X = ${cursor.getFloat(cursor.getColumnIndex("OC15_X"))} AND "+
-                        " OC10_D = ${cursor.getFloat(cursor.getColumnIndex("OC10_D"))} AND OC10_X = ${cursor.getFloat(cursor.getColumnIndex("OC10_X"))} AND " +
-                        "OC5_D = ${cursor.getFloat(cursor.getColumnIndex("OC5_D"))} AND OC5_X = ${cursor.getFloat(cursor.getColumnIndex("OC5_X"))} AND " +
-                        " OC3_D = ${cursor.getFloat(cursor.getColumnIndex("OC3_D"))} AND OC3_X = ${cursor.getFloat(cursor.getColumnIndex("OC3_X"))} AND "+
-                        " OO20_D = ${cursor.getFloat(cursor.getColumnIndex("OO20_D"))} AND OO20_X = ${cursor.getFloat(cursor.getColumnIndex("OO20_X"))} AND " +
-                        "OO15_D = ${cursor.getFloat(cursor.getColumnIndex("OO15_D"))} AND OO15_X = ${cursor.getFloat(cursor.getColumnIndex("OO15_X"))} AND "+
-                        " OO10_D = ${cursor.getFloat(cursor.getColumnIndex("OO10_D"))} AND OO10_X = ${cursor.getFloat(cursor.getColumnIndex("OO10_X"))} AND " +
-                        "OO5_D = ${cursor.getFloat(cursor.getColumnIndex("OO5_D"))} AND OO5_X = ${cursor.getFloat(cursor.getColumnIndex("OO5_X"))} AND " +
-                        " OO3_D = ${cursor.getFloat(cursor.getColumnIndex("OO3_D"))} AND OO3_X = ${cursor.getFloat(cursor.getColumnIndex("OO3_X"))} AND "+
-                        " PP20_D = ${cursor.getFloat(cursor.getColumnIndex("PP20_D"))} AND PP20_X = ${cursor.getFloat(cursor.getColumnIndex("PP20_X"))} AND " +
-                        "PP15_D = ${cursor.getFloat(cursor.getColumnIndex("PP15_D"))} AND PP15_X = ${cursor.getFloat(cursor.getColumnIndex("PP15_X"))} AND "+
-                        " PP10_D = ${cursor.getFloat(cursor.getColumnIndex("PP10_D"))} AND PP10_X = ${cursor.getFloat(cursor.getColumnIndex("PP10_X"))} AND " +
-                        "PP5_D = ${cursor.getFloat(cursor.getColumnIndex("PP5_D"))} AND PP5_X = ${cursor.getFloat(cursor.getColumnIndex("PP5_X"))} "
+                updateSQL =
+
+                    " OC70_D = ${cursor.getFloat(cursor.getColumnIndex("OC70_D"))} AND OC70_X = ${cursor.getFloat(
+                        cursor.getColumnIndex("OC70_X")
+                    )} AND OC65_D = ${cursor.getFloat(cursor.getColumnIndex("OC65_D"))} AND OC65_X = ${cursor.getFloat(
+                        cursor.getColumnIndex("OC65_X")
+                    )} AND " +
+                            " OC60_D = ${cursor.getFloat(cursor.getColumnIndex("OC60_D"))} AND OC60_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC60_X")
+                            )} AND OC55_D = ${cursor.getFloat(cursor.getColumnIndex("OC55_D"))} AND OC55_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC55_X")
+                            )} AND " +
+                            " OC50_D = ${cursor.getFloat(cursor.getColumnIndex("OC50_D"))} AND OC50_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC50_X")
+                            )} AND OC45_D = ${cursor.getFloat(cursor.getColumnIndex("OC45_D"))} AND OC45_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC45_X")
+                            )} AND " +
+                            " OC40_D = ${cursor.getFloat(cursor.getColumnIndex("OC40_D"))} AND OC40_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC40_X")
+                            )} AND OC35_D = ${cursor.getFloat(cursor.getColumnIndex("OC35_D"))} AND OC35_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC35_X")
+                            )} AND " +
+                            " OC30_D = ${cursor.getFloat(cursor.getColumnIndex("OC30_D"))} AND OC30_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC30_X")
+                            )} AND " +
+                            "OC25_D = ${cursor.getFloat(cursor.getColumnIndex("OC25_D"))} AND OC25_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC25_X")
+                            )} AND " +
+                            " OC20_D = ${cursor.getFloat(cursor.getColumnIndex("OC20_D"))} AND OC20_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC20_X")
+                            )} AND " +
+                            "OC15_D = ${cursor.getFloat(cursor.getColumnIndex("OC15_D"))} AND OC15_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC15_X")
+                            )} AND " +
+                            " OC10_D = ${cursor.getFloat(cursor.getColumnIndex("OC10_D"))} AND OC10_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC10_X")
+                            )} AND " +
+                            "OC5_D = ${cursor.getFloat(cursor.getColumnIndex("OC5_D"))} AND OC5_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC5_X")
+                            )} AND " +
+                            " OC3_D = ${cursor.getFloat(cursor.getColumnIndex("OC3_D"))} AND OC3_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OC3_X")
+                            )} AND " +
+
+
+                            /*------------------------------------------*/
+                            " OO70_D = ${cursor.getFloat(cursor.getColumnIndex("OO70_D"))} AND OO70_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO70_X")
+                            )} AND OO65_D = ${cursor.getFloat(cursor.getColumnIndex("OO65_D"))} AND OO65_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO65_X")
+                            )} AND " +
+                            " OO60_D = ${cursor.getFloat(cursor.getColumnIndex("OO60_D"))} AND OO60_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO60_X")
+                            )} AND OO55_D = ${cursor.getFloat(cursor.getColumnIndex("OO55_D"))} AND OO55_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO55_X")
+                            )} AND " +
+                            " OO50_D = ${cursor.getFloat(cursor.getColumnIndex("OO50_D"))} AND OO50_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO50_X")
+                            )} AND OO45_D = ${cursor.getFloat(cursor.getColumnIndex("OO45_D"))} AND OO45_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO45_X")
+                            )} AND " +
+                            " OO40_D = ${cursor.getFloat(cursor.getColumnIndex("OO40_D"))} AND OO40_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO40_X")
+                            )} AND OO35_D = ${cursor.getFloat(cursor.getColumnIndex("OO35_D"))} AND OO35_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO35_X")
+                            )} AND " +
+                            " OO30_D = ${cursor.getFloat(cursor.getColumnIndex("OO30_D"))} AND OO30_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO30_X")
+                            )} AND " +
+                            "OO25_D = ${cursor.getFloat(cursor.getColumnIndex("OO25_D"))} AND OO25_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO25_X")
+                            )} AND " +
+                            " OO20_D = ${cursor.getFloat(cursor.getColumnIndex("OO20_D"))} AND OO20_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO20_X")
+                            )} AND " +
+                            "OO15_D = ${cursor.getFloat(cursor.getColumnIndex("OO15_D"))} AND OO15_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO15_X")
+                            )} AND " +
+                            " OO10_D = ${cursor.getFloat(cursor.getColumnIndex("OO10_D"))} AND OO10_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO10_X")
+                            )} AND " +
+                            "OO5_D = ${cursor.getFloat(cursor.getColumnIndex("OO5_D"))} AND OO5_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO5_X")
+                            )} AND " +
+                            " OO3_D = ${cursor.getFloat(cursor.getColumnIndex("OO3_D"))} AND OO3_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("OO3_X")
+                            )} AND " +
+                            " PP20_D = ${cursor.getFloat(cursor.getColumnIndex("PP20_D"))} AND PP20_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP20_X")
+                            )} AND " +
+
+
+
+                            /*------------------------------------------*/
+                            " PP70_D = ${cursor.getFloat(cursor.getColumnIndex("PP70_D"))} AND PP70_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP70_X")
+                            )} AND PP65_D = ${cursor.getFloat(cursor.getColumnIndex("PP65_D"))} AND PP65_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP65_X")
+                            )} AND " +
+                            " PP60_D = ${cursor.getFloat(cursor.getColumnIndex("PP60_D"))} AND PP60_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP60_X")
+                            )} AND PP55_D = ${cursor.getFloat(cursor.getColumnIndex("PP55_D"))} AND PP55_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP55_X")
+                            )} AND " +
+                            " PP50_D = ${cursor.getFloat(cursor.getColumnIndex("PP50_D"))} AND PP50_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP50_X")
+                            )} AND PP45_D = ${cursor.getFloat(cursor.getColumnIndex("PP45_D"))} AND PP45_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP45_X")
+                            )} AND " +
+                            " PP40_D = ${cursor.getFloat(cursor.getColumnIndex("PP40_D"))} AND PP40_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP40_X")
+                            )} AND PP35_D = ${cursor.getFloat(cursor.getColumnIndex("PP35_D"))} AND PP35_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP35_X")
+                            )} AND " +
+                            " PP30_D = ${cursor.getFloat(cursor.getColumnIndex("PP30_D"))} AND PP30_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP30_X")
+                            )} AND " +
+                            "PP25_D = ${cursor.getFloat(cursor.getColumnIndex("PP25_D"))} AND PP25_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP25_X")
+                            )} AND " +
+                            "PP15_D = ${cursor.getFloat(cursor.getColumnIndex("PP15_D"))} AND PP15_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP15_X")
+                            )} AND " +
+                            " PP10_D = ${cursor.getFloat(cursor.getColumnIndex("PP10_D"))} AND PP10_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP10_X")
+                            )} AND " +
+                            "PP5_D = ${cursor.getFloat(cursor.getColumnIndex("PP5_D"))} AND PP5_X = ${cursor.getFloat(
+                                cursor.getColumnIndex("PP5_X")
+                            )} "
 //                while (!cursor.isAfterLast) {
 //                    val reverseBean = ReasoningRevBean()
 //                    reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
