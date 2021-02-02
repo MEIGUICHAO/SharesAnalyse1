@@ -4078,19 +4078,27 @@ class NewApiViewModel : BaseViewModel() {
         if (70 <= mCHDDList.size) {
             LogUtil.d("code-->${code},date-->${mCHDDList[i].date}")
             val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
-            val pair50 = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(true,ocooBean)
-            if (pair50.first) {
-                val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
-                setReasoningRevBeanBasicInfo(bean50,code,mCHDDList,i,0)
-                DBUtils.insertOCOOReasoningBean(bean50,Datas.ALL_Reaoning_OC_OO_50,pair50.second)
-            }
-            val pair30 = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(false,ocooBean)
-            if (pair30.first) {
-                val bean30 = DataSettingUtils.getOCOOReasoningRevBean(i,mCHDDList)
-                setReasoningRevBeanBasicInfo(bean30,code,mCHDDList,i,0)
-                LogUtil.d("after_C_P:${bean30.after_C_P},OC3:${bean30.oC3}")
-                DBUtils.insertOCOOReasoningBean(bean30,Datas.ALL_Reaoning_OC_OO_30,pair30.second)
-            }
+            insertOCOOReasoning5030Bean(true, ocooBean, i, mCHDDList, code, Datas.ALL_Reaoning_OC_OO_50)
+            insertOCOOReasoning5030Bean(false, ocooBean, i, mCHDDList, code, Datas.ALL_Reaoning_OC_OO_30)
+        }
+    }
+
+    private fun insertOCOOReasoning5030Bean(
+        is50: Boolean,
+        ocooBean: ReverseKJsonBean,
+        i: Int,
+        mCHDDList: java.util.ArrayList<CodeHDDBean>,
+        code: String,
+        tbName: String
+    ) {
+        val triple = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(is50, ocooBean)
+        if (triple.first) {
+            val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i, mCHDDList)
+            bean50.rrate = triple.third.rr
+            bean50.frate = triple.third.fr
+            bean50.size = triple.third.size
+            setReasoningRevBeanBasicInfo(bean50, code, mCHDDList, i, 0)
+            DBUtils.insertOCOOReasoningBean(bean50, tbName, triple.second)
         }
     }
 

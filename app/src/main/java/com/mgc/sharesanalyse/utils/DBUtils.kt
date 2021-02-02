@@ -2189,7 +2189,7 @@ object DBUtils {
             db.execSQL(createSQL)
         }
         val insertSql = revKJOCOOBean.insertOCOOTB(tbName)
-        LogUtil.d("insertReasoninResult $tbName:${revKJOCOOBean.n},${revKJOCOOBean.d},${revKJOCOOBean.p}")
+        LogUtil.d("insertReasoninResult $tbName:${revKJOCOOBean.n},${revKJOCOOBean.d},${revKJOCOOBean.p},rr:${revKJOCOOBean.rrate},fr:${revKJOCOOBean.frate},size:${revKJOCOOBean.size}")
         LogUtil.d("$insertSql")
         db.execSQL(insertSql)
         if (Datas.NEED_UPDATE_REV_ && revKJOCOOBean.p != 0.toFloat()) {
@@ -2226,9 +2226,9 @@ object DBUtils {
     fun getReasoningOCOOJudgeBeanByOCOOBean(
         is50: Boolean,
         ocooBean: ReverseKJsonBean
-    ): Pair<Boolean, String> {
+    ): Triple<Boolean, String, ReasoningAllJudgeBean> {
         switchDBName(Datas.REV_RESONING_DB)
-        val list = ArrayList<ReasoningRevBean>()
+        val judgeBean = ReasoningAllJudgeBean()
         val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
 
         val judgeSQL =
@@ -2277,6 +2277,12 @@ object DBUtils {
 
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 needContinue = true
+                val fr  = cursor.getFloat(cursor.getColumnIndex("FR"))
+                val rr  = cursor.getFloat(cursor.getColumnIndex("RR"))
+                val size  = cursor.getInt(cursor.getColumnIndex("SIZE"))
+                judgeBean.fr = fr
+                judgeBean.rr = rr
+                judgeBean.size = size
 
                 updateSQL =
 
@@ -2407,47 +2413,11 @@ object DBUtils {
                             "PP5_D = ${cursor.getFloat(cursor.getColumnIndex("PP5_D"))} AND PP5_X = ${cursor.getFloat(
                                 cursor.getColumnIndex("PP5_X")
                             )} "
-//                while (!cursor.isAfterLast) {
-//                    val reverseBean = ReasoningRevBean()
-//                    reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
-//                    reverseBean.oO5 = cursor.getFloat(cursor.getColumnIndex("OO5"))
-//                    reverseBean.oO10 = cursor.getFloat(cursor.getColumnIndex("OO10"))
-//                    reverseBean.oO15 = cursor.getFloat(cursor.getColumnIndex("OO15"))
-//                    reverseBean.oO20 = cursor.getFloat(cursor.getColumnIndex("OO20"))
-//                    reverseBean.oO25 = cursor.getFloat(cursor.getColumnIndex("OO25"))
-//                    reverseBean.oO30 = cursor.getFloat(cursor.getColumnIndex("OO30"))
-//                    reverseBean.oO35 = cursor.getFloat(cursor.getColumnIndex("OO35"))
-//                    reverseBean.oO40 = cursor.getFloat(cursor.getColumnIndex("OO40"))
-//                    reverseBean.oO45 = cursor.getFloat(cursor.getColumnIndex("OO45"))
-//                    reverseBean.oO50 = cursor.getFloat(cursor.getColumnIndex("OO50"))
-//                    reverseBean.oO55 = cursor.getFloat(cursor.getColumnIndex("OO55"))
-//                    reverseBean.oO60 = cursor.getFloat(cursor.getColumnIndex("OO60"))
-//                    reverseBean.oO65 = cursor.getFloat(cursor.getColumnIndex("OO65"))
-//                    reverseBean.oO70 = cursor.getFloat(cursor.getColumnIndex("OO70"))
-//
-//                    reverseBean.oC3 = cursor.getFloat(cursor.getColumnIndex("OC3"))
-//                    reverseBean.oC5 = cursor.getFloat(cursor.getColumnIndex("OC5"))
-//                    reverseBean.oC10 = cursor.getFloat(cursor.getColumnIndex("OC10"))
-//                    reverseBean.oC15 = cursor.getFloat(cursor.getColumnIndex("OC15"))
-//                    reverseBean.oC20 = cursor.getFloat(cursor.getColumnIndex("OC20"))
-//                    reverseBean.oC25 = cursor.getFloat(cursor.getColumnIndex("OC25"))
-//                    reverseBean.oC30 = cursor.getFloat(cursor.getColumnIndex("OC30"))
-//                    reverseBean.oC35 = cursor.getFloat(cursor.getColumnIndex("OC35"))
-//                    reverseBean.oC40 = cursor.getFloat(cursor.getColumnIndex("OC40"))
-//                    reverseBean.oC45 = cursor.getFloat(cursor.getColumnIndex("OC45"))
-//                    reverseBean.oC50 = cursor.getFloat(cursor.getColumnIndex("OC50"))
-//                    reverseBean.oC55 = cursor.getFloat(cursor.getColumnIndex("OC55"))
-//                    reverseBean.oC60 = cursor.getFloat(cursor.getColumnIndex("OC60"))
-//                    reverseBean.oC65 = cursor.getFloat(cursor.getColumnIndex("OC65"))
-//                    reverseBean.oC70 = cursor.getFloat(cursor.getColumnIndex("OC70"))
-//                    list.add(reverseBean)
-//                    cursor.moveToNext()
-//                }
                 cursor.close()
             }
 
         }
-        return Pair(needContinue, updateSQL)
+        return Triple(needContinue, updateSQL,judgeBean)
 
     }
 

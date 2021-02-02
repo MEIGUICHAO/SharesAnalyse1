@@ -124,7 +124,7 @@ object Datas {
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
-    const val reasoning_debug = false
+    const val reasoning_debug = true
     const val reasoning_debug_begin_day = 20201215
     const val reasoning_debug_end_day = 20210201
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
@@ -136,8 +136,8 @@ object Datas {
     const val ALL_Reaoning_OC_OO_30 = "All_Reaoning_OC_OO_30"
     const val ALL_Reaoning_OC_OO_50 = "All_Reaoning_OC_OO_50"
 //    const val FR_RR_LIMIT = "AND FR > 0 AND FR < 0.5 AND RR > 0.2"
-    const val NEED_UPDATE_REV_= true
-    val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else " AND FR > 0 AND RR > 0 and RR > 0.2 AND FR < 0.4"
+    const val NEED_UPDATE_REV_= false
+    val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else " AND RR > 0.2 AND FR < 0.4 AND SIZE > 1"
 
 
 
