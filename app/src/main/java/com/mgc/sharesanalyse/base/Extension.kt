@@ -385,6 +385,14 @@ fun ArrayList<CodeHDDBean>.getPPValueByAsc(index:Int,begin: Int, end: Int): Floa
     return value/(end-begin+1)
 }
 
+fun ArrayList<CodeHDDBean>.getPPPValueByAsc(index:Int, end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index) until (index+end)) {
+        value = value + this.get(i).cp
+    }
+    return value/(end)
+}
+
 fun ArrayList<CodeHDDBean>.getMaxValueInRangeByAsc(index:Int, begin: Int, end: Int): Float {
     var value = 0.toFloat()
     for (i in (index+begin)..(index+end)) {

@@ -2651,63 +2651,63 @@ class NewApiViewModel : BaseViewModel() {
                         }
 
                         //TODO OCOO测试暂时注释 begin
-//                        insertRevBean(
-//                            Datas.REV_DAYS,
-//                            Datas.REV_DAYS,
-//                            targetBeanList,
-//                            mCHDDList,
-//                            Datas.REV_DAYS+1,
-//                            Datas.REV_DAYS+1,
-//                            afterBean,
-//                            targetBean,
-//                            requestBean,
-//                            code,
-//                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
-//                            ""
-//                        )
-//                        val foreachLimitList = getForeachLimitList()
-//                        val foreachTBNAmeList = arrayListOf(
-//                            arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
-//                            arrayOf(Datas.REVERSE_TB_P50_55, Datas.REVERSE_TB_P30_55),
-//                            arrayOf(Datas.REVERSE_TB_P50_10, Datas.REVERSE_TB_P30_10),
-//                            arrayOf(Datas.REVERSE_TB_P50_15, Datas.REVERSE_TB_P30_15),
-//                            arrayOf(Datas.REVERSE_TB_P50_20, Datas.REVERSE_TB_P30_20),
-//                            arrayOf(Datas.REVERSE_TB_P50_25, Datas.REVERSE_TB_P30_25),
-//                            arrayOf(Datas.REVERSE_TB_P50_30, Datas.REVERSE_TB_P30_30),
-//                            arrayOf(Datas.REVERSE_TB_P50_36, Datas.REVERSE_TB_P30_36)
-//                        )
-//                        val foreachREVTRTBNAmeList = arrayListOf(
-//                            arrayOf(Datas.REV_TR_TB_P50_33, Datas.REV_TR_TB_P30_33),
-//                            arrayOf(Datas.REV_TR_TB_P50_55, Datas.REV_TR_TB_P30_55),
-//                            arrayOf(Datas.REV_TR_TB_P50_10, Datas.REV_TR_TB_P30_10),
-//                            arrayOf(Datas.REV_TR_TB_P50_15, Datas.REV_TR_TB_P30_15),
-//                            arrayOf(Datas.REV_TR_TB_P50_20, Datas.REV_TR_TB_P30_20),
-//                            arrayOf(Datas.REV_TR_TB_P50_25, Datas.REV_TR_TB_P30_25),
-//                            arrayOf(Datas.REV_TR_TB_P50_30, Datas.REV_TR_TB_P30_30),
-//                            arrayOf(Datas.REV_TR_TB_P50_36, Datas.REV_TR_TB_P30_36)
-//                        )
-//                        insertReverseKJSLL(code, targetBean, requestBean)
-//
-//                        for (i in 0 until foreachLimitList.size) {
-//                            if (mCHDDList.size > foreachLimitList[i][0]) {
-//                                insertRevBean(
-//                                    foreachLimitList[i][1],
-//                                    foreachLimitList[i][2],
-//                                    targetBeanList,
-//                                    mCHDDList,
-//                                    foreachLimitList[i][3],
-//                                    foreachLimitList[i][4],
-//                                    afterBean,
-//                                    targetBean,
-//                                    requestBean,
-//                                    code,
-//                                    if (ROP >= 1.5 * TOP) foreachTBNAmeList[i][0] else foreachTBNAmeList[i][1],
-//                                    if (ROP >= 1.5 * TOP) foreachREVTRTBNAmeList[i][0] else foreachREVTRTBNAmeList[i][1]
-//                                )
-//                            } else {
-//                                break
-//                            }
-//                        }
+                        insertRevBean(
+                            Datas.REV_DAYS,
+                            Datas.REV_DAYS,
+                            targetBeanList,
+                            mCHDDList,
+                            Datas.REV_DAYS+1,
+                            Datas.REV_DAYS+1,
+                            afterBean,
+                            targetBean,
+                            requestBean,
+                            code,
+                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
+                            ""
+                        )
+                        val foreachLimitList = getForeachLimitList()
+                        val foreachTBNAmeList = arrayListOf(
+                            arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
+                            arrayOf(Datas.REVERSE_TB_P50_55, Datas.REVERSE_TB_P30_55),
+                            arrayOf(Datas.REVERSE_TB_P50_10, Datas.REVERSE_TB_P30_10),
+                            arrayOf(Datas.REVERSE_TB_P50_15, Datas.REVERSE_TB_P30_15),
+                            arrayOf(Datas.REVERSE_TB_P50_20, Datas.REVERSE_TB_P30_20),
+                            arrayOf(Datas.REVERSE_TB_P50_25, Datas.REVERSE_TB_P30_25),
+                            arrayOf(Datas.REVERSE_TB_P50_30, Datas.REVERSE_TB_P30_30),
+                            arrayOf(Datas.REVERSE_TB_P50_36, Datas.REVERSE_TB_P30_36)
+                        )
+                        val foreachREVTRTBNAmeList = arrayListOf(
+                            arrayOf(Datas.REV_TR_TB_P50_33, Datas.REV_TR_TB_P30_33),
+                            arrayOf(Datas.REV_TR_TB_P50_55, Datas.REV_TR_TB_P30_55),
+                            arrayOf(Datas.REV_TR_TB_P50_10, Datas.REV_TR_TB_P30_10),
+                            arrayOf(Datas.REV_TR_TB_P50_15, Datas.REV_TR_TB_P30_15),
+                            arrayOf(Datas.REV_TR_TB_P50_20, Datas.REV_TR_TB_P30_20),
+                            arrayOf(Datas.REV_TR_TB_P50_25, Datas.REV_TR_TB_P30_25),
+                            arrayOf(Datas.REV_TR_TB_P50_30, Datas.REV_TR_TB_P30_30),
+                            arrayOf(Datas.REV_TR_TB_P50_36, Datas.REV_TR_TB_P30_36)
+                        )
+                        insertReverseKJSLL(code, targetBean, requestBean)
+
+                        for (i in 0 until foreachLimitList.size) {
+                            if (mCHDDList.size > foreachLimitList[i][0]) {
+                                insertRevBean(
+                                    foreachLimitList[i][1],
+                                    foreachLimitList[i][2],
+                                    targetBeanList,
+                                    mCHDDList,
+                                    foreachLimitList[i][3],
+                                    foreachLimitList[i][4],
+                                    afterBean,
+                                    targetBean,
+                                    requestBean,
+                                    code,
+                                    if (ROP >= 1.5 * TOP) foreachTBNAmeList[i][0] else foreachTBNAmeList[i][1],
+                                    if (ROP >= 1.5 * TOP) foreachREVTRTBNAmeList[i][0] else foreachREVTRTBNAmeList[i][1]
+                                )
+                            } else {
+                                break
+                            }
+                        }
                         //TODO OCOO测试暂时注释 end
                     }
                 }
@@ -2721,14 +2721,14 @@ class NewApiViewModel : BaseViewModel() {
 
     private fun getForeachLimitList(): ArrayList<Array<Int>> {
         val foreachLimitList = arrayListOf(
-            arrayOf(11, 6, 7, 8, 10),//33
-            arrayOf(15, 8, 9, 10, 14),//55
-            arrayOf(25, 10, 14, 15, 24),//10
-            arrayOf(35, 15, 19, 20, 34),//15
-            arrayOf(45, 20, 24, 25, 44),//20
-            arrayOf(55, 25, 29, 30, 54),//25
-            arrayOf(65, 30, 34, 35, 64),//30
-            arrayOf(77, 35, 40, 41, 76)//36
+            arrayOf(6+Datas.REV_DAYS, 1+Datas.REV_DAYS, 2+Datas.REV_DAYS, 3+Datas.REV_DAYS, 5+Datas.REV_DAYS),//33
+            arrayOf(10+Datas.REV_DAYS, 3+Datas.REV_DAYS, 4+Datas.REV_DAYS, 5+Datas.REV_DAYS, 9+Datas.REV_DAYS),//55
+            arrayOf(20+Datas.REV_DAYS, 5+Datas.REV_DAYS, 9+Datas.REV_DAYS, 10+Datas.REV_DAYS, 19+Datas.REV_DAYS),//10
+            arrayOf(30+Datas.REV_DAYS, 10+Datas.REV_DAYS, 14+Datas.REV_DAYS, 15+Datas.REV_DAYS, 29+Datas.REV_DAYS),//15
+            arrayOf(40+Datas.REV_DAYS, 15+Datas.REV_DAYS, 19+Datas.REV_DAYS, 20+Datas.REV_DAYS, 39+Datas.REV_DAYS),//20
+            arrayOf(50+Datas.REV_DAYS, 20+Datas.REV_DAYS, 24+Datas.REV_DAYS, 25+Datas.REV_DAYS, 49+Datas.REV_DAYS),//25
+            arrayOf(60+Datas.REV_DAYS, 25+Datas.REV_DAYS, 29+Datas.REV_DAYS, 30+Datas.REV_DAYS, 59+Datas.REV_DAYS),//30
+            arrayOf(72+Datas.REV_DAYS, 30+Datas.REV_DAYS, 35+Datas.REV_DAYS, 36+Datas.REV_DAYS, 71+Datas.REV_DAYS)//36
         )
         return foreachLimitList
     }
