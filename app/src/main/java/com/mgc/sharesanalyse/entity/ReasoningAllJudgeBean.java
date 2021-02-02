@@ -439,6 +439,11 @@ public class ReasoningAllJudgeBean {
         return
                 "" + D_T +
                 ", " + COUNT +
+                ", " + FR +
+                ", " + RR +
+                ", " + FS +
+                ", " + RS +
+                ", " + SIZE +
                 ", " + OM_M_D +
                 ", " + OM_C_D +
                 ", " + OM_P_D +
@@ -508,7 +513,7 @@ public class ReasoningAllJudgeBean {
     }
 
     public String createTB(String tbname) {
-        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, D_T INTEGER,COUNT INTEGER" +
+        return "CREATE TABLE IF NOT EXISTS " + tbname + " (_ID INTEGER PRIMARY KEY AUTOINCREMENT, D_T INTEGER,COUNT INTEGER,FR INTEGER,RR INTEGER,FS INTEGER,RS INTEGER,SIZE INTEGER" +
                 ",OM_M_D INTEGER,OM_M_X INTEGER,OM_C_D INTEGER,OM_C_X INTEGER,OM_P_D INTEGER,OM_P_X INTEGER,OM_L_D INTEGER,OM_L_X INTEGER,OC_M_D INTEGER,OC_M_X INTEGER" +
                 ",OC_C_D INTEGER,OC_C_X INTEGER,OC_P_D INTEGER,OC_P_X INTEGER,OC_L_D INTEGER,OC_L_X INTEGER,OO_M_D INTEGER,OO_M_X INTEGER,OO_C_D INTEGER,OO_C_X INTEGER" +
                 ",OO_P_D INTEGER,OO_P_X INTEGER,OO_L_D INTEGER,OO_L_X INTEGER,OL_M_D INTEGER,OL_M_X INTEGER,OL_C_D INTEGER,OL_C_X INTEGER,OL_P_D INTEGER,OL_P_X INTEGER" +
@@ -521,7 +526,7 @@ public class ReasoningAllJudgeBean {
 
 
     public String insertTB(String tbName) {
-        return "INSERT INTO " + tbName + "(D_T  ,COUNT" +
+        return "INSERT INTO " + tbName + "(D_T  ,COUNT,FR ,RR ,FS ,RS ,SIZE " +
                 ",OM_M_D ,OM_C_D ,OM_P_D ,OM_L_D ,OC_M_D ,OC_C_D ,OC_P_D ,OC_L_D ,OO_M_D ,OO_C_D ,OO_P_D ,OO_L_D ,OL_M_D ,OL_C_D ,OL_P_D ,OL_L_D" +
                 ",OM_M_X ,OM_C_X ,OM_P_X ,OM_L_X ,OC_M_X ,OC_C_X ,OC_P_X ,OC_L_X ,OO_M_X ,OO_C_X ,OO_P_X ,OO_L_X ,OL_M_X ,OL_C_X ,OL_P_X ,OL_L_X " +
                 ",OM_OC_D ,OM_OC_X ,OM_OP_D ,OM_OP_X ,OM_OL_D ,OM_OL_X " +
