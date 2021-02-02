@@ -2254,6 +2254,13 @@ object DBUtils {
                     " OO10_D >= ${ocooBean.oO10} AND OO10_X <= ${ocooBean.oO10} AND " +
                     "OO5_D >= ${ocooBean.oO5} AND OO5_X <= ${ocooBean.oO5} AND " +
                     " OO3_D >= ${ocooBean.oO3} AND OO3_X <= ${ocooBean.oO3} AND " +
+
+
+                " PPP70_D >= ${ocooBean.ppP70} AND PPP70_X <= ${ocooBean.ppP70} AND PPP40_D >= ${ocooBean.ppP40} AND PPP40_X <= ${ocooBean.ppP40} AND "+
+                " PPP60_D >= ${ocooBean.ppP60} AND PPP60_X <= ${ocooBean.ppP60} AND PPP30_D >= ${ocooBean.ppP30} AND PPP30_X <= ${ocooBean.ppP30} AND "+
+                " PPP50_D >= ${ocooBean.ppP50} AND PPP50_X <= ${ocooBean.ppP50} AND PPP20_D >= ${ocooBean.ppP20} AND PPP20_X <= ${ocooBean.ppP20} AND "+
+                " PPP10_D >= ${ocooBean.ppP10} AND PPP10_X <= ${ocooBean.ppP10} AND PPP5_D >= ${ocooBean.ppP5} AND PPP5_X <= ${ocooBean.ppP5} AND "+
+
                 " PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND "+
                 " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND "+
                 " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND "+

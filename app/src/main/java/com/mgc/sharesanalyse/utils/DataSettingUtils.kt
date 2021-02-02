@@ -4305,6 +4305,16 @@ object DataSettingUtils {
         revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC)
         revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC)
         revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC)
+
+
+        revKJOCOOBean.ppP5 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,5), originOC)
+        revKJOCOOBean.ppP10 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,10), originOC)
+        revKJOCOOBean.ppP20 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,20), originOC)
+        revKJOCOOBean.ppP30 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,30), originOC)
+        revKJOCOOBean.ppP40 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,40), originOC)
+        revKJOCOOBean.ppP50 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,50), originOC)
+        revKJOCOOBean.ppP60 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,60), originOC)
+        revKJOCOOBean.ppP70 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,70), originOC)
         return revKJOCOOBean
     }
 
@@ -4362,6 +4372,16 @@ object DataSettingUtils {
         revKJOCOOBean.pP60 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,56,60), originOC).toOCOORevJudgeMin()
         revKJOCOOBean.pP65 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,61,65), originOC).toOCOORevJudgeMin()
         revKJOCOOBean.pP70 = getOCOOPercent(mCHDDList.getPPValueByDesc(index,66,70), originOC).toOCOORevJudgeMin()
+
+
+        revKJOCOOBean.ppP5 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,5), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP10 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,10), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP20 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,20), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP30 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,30), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP40 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,40), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP50 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,50), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP60 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,60), originOC).toOCOORevJudgeMin()
+        revKJOCOOBean.ppP70 = getOCOOPercent(mCHDDList.getPPPValueByDesc(index,70), originOC).toOCOORevJudgeMin()
         return revKJOCOOBean
     }
 

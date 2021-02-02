@@ -250,7 +250,7 @@ class NewApiActivity : AppCompatActivity() {
 //        DBUtils.dropTable("All_30")
 //        DBUtils.dropTable("All_50")
 //        LogUtil.d("revAllJudgeResult")
-//        viewModel.revAllJudgeResult()
+        viewModel.revAllJudgeResult()
 
         DBUtils.dropTable(Datas.ALL_OC_OO_30)
         DBUtils.dropTable(Datas.ALL_OC_OO_50)

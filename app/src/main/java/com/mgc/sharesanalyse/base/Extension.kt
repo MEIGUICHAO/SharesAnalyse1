@@ -414,6 +414,14 @@ fun ArrayList<CodeHDDBean>.getMinValueInRangeByAsc(index:Int, begin: Int, end: I
 }
 
 
+fun ArrayList<CodeHDDBean>.getPPPValueByDesc(index:Int,end: Int): Float {
+    var value = 0.toFloat()
+    for (i in (index-1) downTo (index-end)) {
+        value = value + this.get(i).cp
+    }
+    return value/(end)
+}
+
 fun ArrayList<CodeHDDBean>.getPPValueByDesc(index:Int,begin: Int, end: Int): Float {
     var value = 0.toFloat()
     for (i in (index-begin) downTo (index-end)) {

@@ -2651,20 +2651,22 @@ class NewApiViewModel : BaseViewModel() {
                         }
 
                         //TODO OCOO测试暂时注释 begin
-                        insertRevBean(
-                            Datas.REV_DAYS,
-                            Datas.REV_DAYS,
-                            targetBeanList,
-                            mCHDDList,
-                            Datas.REV_DAYS+1,
-                            Datas.REV_DAYS+1,
-                            afterBean,
-                            targetBean,
-                            requestBean,
-                            code,
-                            (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
-                            ""
-                        )
+                        if (mCHDDList.size > Datas.REV_DAYS + 1) {
+                            insertRevBean(
+                                Datas.REV_DAYS,
+                                Datas.REV_DAYS,
+                                targetBeanList,
+                                mCHDDList,
+                                Datas.REV_DAYS+1,
+                                Datas.REV_DAYS+1,
+                                afterBean,
+                                targetBean,
+                                requestBean,
+                                code,
+                                (if (ROP >= 1.5 * TOP) Datas.REVERSE_TB_P50_11 else Datas.REVERSE_TB_P30_11),
+                                ""
+                            )
+                        }
                         val foreachLimitList = getForeachLimitList()
                         val foreachTBNAmeList = arrayListOf(
                             arrayOf(Datas.REVERSE_TB_P50_33, Datas.REVERSE_TB_P30_33),
@@ -3786,6 +3788,7 @@ class NewApiViewModel : BaseViewModel() {
                             p50FilterBBKJRangeBean,
                             code
                         )
+                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
 
@@ -3799,6 +3802,8 @@ class NewApiViewModel : BaseViewModel() {
                     p50FilterBBKJRangeBean,
                     code
                 )
+
+                insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code)
             }
         }
     }
@@ -3879,8 +3884,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun revOCOOJudgeResult() {
-        val dayList = arrayOf(3, 5, 10, 15, 20)
-//        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+//        val dayList = arrayOf(3, 5, 10, 15, 20)
+        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
         val tbList = arrayOf(Datas.REV_OC_OO_30, Datas.REV_OC_OO_50)
 
         (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
@@ -4053,13 +4058,13 @@ class NewApiViewModel : BaseViewModel() {
                             continue
                         }
                         //TODO CESHI
-//                        insertAllReasoning(
-//                            false,
-//                            foreachLimitList,
-//                            i,
-//                            mCHDDList,
-//                            code
-//                        )
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
 
 //                        if (mCHDDList[i].date == "20200928") {
 //                        }
