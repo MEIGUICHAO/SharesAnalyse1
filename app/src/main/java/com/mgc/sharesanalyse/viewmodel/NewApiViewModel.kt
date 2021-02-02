@@ -2627,7 +2627,7 @@ class NewApiViewModel : BaseViewModel() {
                     val TOP = targetBean.p_MA_J.aacp
 
                     //20避免新股一字板
-                    if (ROP > TOP && ROP >= 1.1 * TOP && mCHDDList.size > 20) {
+                    if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
                         if (mCHDDList.size > (70 + Datas.REV_DAYS)) {
                             val revKJOCOOBean =
                                 DataSettingUtils.getRevKJOCOOBean(Datas.REV_DAYS,mCHDDList, code, targetBean, requestBean)
@@ -2646,7 +2646,7 @@ class NewApiViewModel : BaseViewModel() {
                             }
                         }
 
-                        if (ROP < 1.1 * TOP) {
+                        if (ROP < 1.3 * TOP) {
                             return@let
                         }
 
