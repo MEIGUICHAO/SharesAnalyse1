@@ -1221,14 +1221,16 @@ class NewApiViewModel : BaseViewModel() {
     public fun reverseResult() {
         val (mList, codelist) = getCHDDDateListAndCodeList()
         codelist.forEach { code ->
-            mList.forEach {
-                val date = "20${it}01"
+            if (!Datas.REVERSE_DEBUG||(Datas.REVERSE_DEBUG && code.toInt() > Datas.REVERSE_BEGIN_CODE)) {
+                mList.forEach {
+                    val date = "20${it}01"
 //                if (date.toInt() >= 20201201) {
 //                }
-                if (it <= DateUtils.formatToDay(FormatterEnum.YYMM)) {
-                    LogUtil.d("reverseResult-->$it")
-                    (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
-                    getReverseChddBeans(code, date)
+                    if (it <= DateUtils.formatToDay(FormatterEnum.YYMM)) {
+                        LogUtil.d("reverseResult-->$it")
+                        (mActivity as NewApiActivity).setBtnReverseInfo("Reverse_$code _${date}")
+                        getReverseChddBeans(code, date)
+                    }
                 }
             }
         }
@@ -2627,11 +2629,11 @@ class NewApiViewModel : BaseViewModel() {
                     val TOP = targetBean.p_MA_J.aacp
 
                     //20避免新股一字板
+                    var needInsert = true
                     if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
                         if (mCHDDList.size > (70 + Datas.REV_DAYS)) {
                             val revKJOCOOBean =
                                 DataSettingUtils.getRevKJOCOOBean(Datas.REV_DAYS,mCHDDList, code, targetBean, requestBean)
-                            var needInsert = true
                             for (x in Datas.REV_DAYS downTo 0) {
                                 if (mCHDDList[x].p_MA_J.aacp < TOP * 0.95 ) {
                                     needInsert = false
