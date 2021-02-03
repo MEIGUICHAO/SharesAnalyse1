@@ -2401,6 +2401,12 @@ object DBUtils {
                             )} AND " +
 
 
+
+                            " PPP70_D = ${cursor.getFloat(cursor.getColumnIndex("PPP70_D"))} AND PPP70_X = ${cursor.getFloat(cursor.getColumnIndex("PPP70_X"))} AND PPP40_D = ${cursor.getFloat(cursor.getColumnIndex("PPP40_D"))} AND PPP40_X = ${cursor.getFloat(cursor.getColumnIndex("PPP40_X"))} AND " +
+                            " PPP60_D = ${cursor.getFloat(cursor.getColumnIndex("PPP60_D"))} AND PPP60_X = ${cursor.getFloat(cursor.getColumnIndex("PPP60_X"))} AND PPP30_D = ${cursor.getFloat(cursor.getColumnIndex("PPP30_D"))} AND PPP30_X = ${cursor.getFloat(cursor.getColumnIndex("PPP30_X"))} AND " +
+                            " PPP50_D = ${cursor.getFloat(cursor.getColumnIndex("PPP50_D"))} AND PPP50_X = ${cursor.getFloat(cursor.getColumnIndex("PPP50_X"))} AND PPP20_D = ${cursor.getFloat(cursor.getColumnIndex("PPP20_D"))} AND PPP20_X = ${cursor.getFloat(cursor.getColumnIndex("PPP20_X"))} AND " +
+                            " PPP10_D = ${cursor.getFloat(cursor.getColumnIndex("PPP10_D"))} AND PPP10_X = ${cursor.getFloat(cursor.getColumnIndex("PPP10_X"))} AND PPP5_D = ${cursor.getFloat(cursor.getColumnIndex("PPP5_D"))} AND PPP5_X = ${cursor.getFloat(cursor.getColumnIndex("PPP5_X"))} AND " +
+
                             /*------------------------------------------*/
                             " PP70_D = ${cursor.getFloat(cursor.getColumnIndex("PP70_D"))} AND PP70_X = ${cursor.getFloat(
                                 cursor.getColumnIndex("PP70_X")
