@@ -168,8 +168,6 @@ class NewApiActivity : AppCompatActivity() {
 //                DBUtils.dropTable(Datas.REV_OC_OO_30)
 //                DBUtils.dropTable(Datas.REV_OC_OO_50)
                 viewModel.reverseResult()
-                btnRevAllTb.performClick()
-                btnReasoningAll.performClick()
             }
         }
         btnGapResult.setOnClickListener {
@@ -247,12 +245,10 @@ class NewApiActivity : AppCompatActivity() {
 
 
     fun revAllJudgeResult() {
-//        LogUtil.d("revAllJudgeResult")
         DBUtils.switchDBName(Datas.REV_RESONING_DB)
-        DBUtils.dropTable("All_30")
-        DBUtils.dropTable("All_50")
-//        LogUtil.d("revAllJudgeResult")
-        viewModel.revAllJudgeResult()
+//        DBUtils.dropTable("All_30")
+//        DBUtils.dropTable("All_50")
+//        viewModel.revAllJudgeResult()
 
         DBUtils.dropTable(Datas.ALL_OC_OO_30)
         DBUtils.dropTable(Datas.ALL_OC_OO_50)

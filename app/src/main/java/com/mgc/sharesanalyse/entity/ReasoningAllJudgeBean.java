@@ -763,6 +763,8 @@ public class ReasoningAllJudgeBean {
 
                 "PP5_D ,PP10_D ,PP15_D ,PP20_D ,PP25_D ,PP30_D ,PP35_D ,PP40_D ,PP45_D ,PP50_D ,PP55_D ,PP60_D ,PP65_D ,PP70_D ,"+
                 "PP5_X ,PP10_X ,PP15_X ,PP20_X ,PP25_X ,PP30_X ,PP35_X ,PP40_X ,PP45_X ,PP50_X ,PP55_X ,PP60_X ,PP65_X ,PP70_X ," +
+                "PPP5_D ,PPP10_D ,PPP20_D ,PPP30_D ,PPP40_D ,PPP50_D ,PPP60_D ,PPP70_D ,"+
+                "PPP5_X ,PPP10_X ,PPP20_X ,PPP30_X ,PPP40_X ,PPP50_X ,PPP60_X ,PPP70_X ," +
                 "S_A_TR_D ,S_R_TR_D ,S_B_TR_D ,S_C_TR_D ,K_A_TR_D ,K_R_TR_D ,K_B_TR_D ,K_C_TR_D ,K_SL_A_TR_D ,K_SL_R_TR_D ,K_SL_B_TR_D ,K_SL_C_TR_D ," +
                 "S_A_TR_X ,S_R_TR_X ,S_B_TR_X ,S_C_TR_X ,K_A_TR_X ,K_R_TR_X ,K_B_TR_X ,K_C_TR_X ,K_SL_A_TR_X ,K_SL_R_TR_X ,K_SL_B_TR_X ,K_SL_C_TR_X " +
                 " ) VALUES (" + toOCOOString()+");";
@@ -863,6 +865,24 @@ public class ReasoningAllJudgeBean {
                 PP60_X  +", " +
                 PP65_X +", " +
                 PP70_X +", " +
+
+                PPP5_D  + ", " +
+                PPP10_D + ", " +
+                PPP20_D  +", " +
+                PPP30_D  +", " +
+                PPP40_D +", " +
+                PPP50_D  +", " +
+                PPP60_D  +", " +
+                PPP70_D +", " +
+                PPP5_X  + ", " +
+                PPP10_X + ", " +
+                PPP20_X  +", " +
+                PPP30_X  +", " +
+                PPP40_X +", " +
+                PPP50_X  +", " +
+                PPP60_X  +", " +
+                PPP70_X +", " +
+
                 S_A_TR_D +"," +
                 S_R_TR_D +"," +
                 S_B_TR_D +"," +
@@ -901,6 +921,10 @@ public class ReasoningAllJudgeBean {
                 "OO70_D INTEGER,OO70_X INTEGER,"+
                 "PP5_D INTEGER,PP10_D INTEGER,PP15_D INTEGER,PP20_D INTEGER,PP25_D INTEGER,PP30_D INTEGER,PP35_D INTEGER,PP40_D INTEGER,PP45_D INTEGER,PP50_D INTEGER,PP55_D INTEGER,PP60_D INTEGER,PP65_D INTEGER,PP70_D INTEGER,"+
                 "PP5_X INTEGER,PP10_X INTEGER,PP15_X INTEGER,PP20_X INTEGER,PP25_X INTEGER,PP30_X INTEGER,PP35_X INTEGER,PP40_X INTEGER,PP45_X INTEGER,PP50_X INTEGER,PP55_X INTEGER,PP60_X INTEGER,PP65_X INTEGER,PP70_X INTEGER," +
+
+                "PPP5_D INTEGER,PPP10_D INTEGER,PPP20_D INTEGER,PPP30_D INTEGER,PPP40_D INTEGER,PPP50_D INTEGER,PPP60_D INTEGER,PPP70_D INTEGER,"+
+                "PPP5_X INTEGER,PPP10_X INTEGER,PPP20_X INTEGER,PPP30_X INTEGER,PPP40_X INTEGER,PPP50_X INTEGER,PPP60_X INTEGER,PPP70_X INTEGER," +
+
                 "S_A_TR_D INTEGER,S_R_TR_D INTEGER,S_B_TR_D INTEGER,S_C_TR_D INTEGER,K_A_TR_D INTEGER,K_R_TR_D INTEGER,K_B_TR_D INTEGER,K_C_TR_D INTEGER,K_SL_A_TR_D INTEGER,K_SL_R_TR_D INTEGER,K_SL_B_TR_D INTEGER,K_SL_C_TR_D INTEGER," +
                 "S_A_TR_X INTEGER,S_R_TR_X INTEGER,S_B_TR_X INTEGER,S_C_TR_X INTEGER,K_A_TR_X INTEGER,K_R_TR_X INTEGER,K_B_TR_X INTEGER,K_C_TR_X INTEGER,K_SL_A_TR_X INTEGER,K_SL_R_TR_X INTEGER,K_SL_B_TR_X INTEGER,K_SL_C_TR_X INTEGER" +
                 ");";
@@ -1023,6 +1047,150 @@ public class ReasoningAllJudgeBean {
     private float PP65_X;
     private float PP70_X;
 
+    private float PPP5_D;
+    private float PPP10_D;
+    private float PPP20_D;
+    private float PPP30_D;
+    private float PPP40_D;
+    private float PPP50_D;
+    private float PPP60_D;
+    private float PPP70_D;
+    private float PPP5_X;
+    private float PPP10_X;
+    private float PPP20_X;
+    private float PPP30_X;
+    private float PPP40_X;
+    private float PPP50_X;
+    private float PPP60_X;
+    private float PPP70_X;
+
+    public float getPPP5_D() {
+        return PPP5_D;
+    }
+
+    public void setPPP5_D(float PPP5_D) {
+        this.PPP5_D = PPP5_D;
+    }
+
+    public float getPPP10_D() {
+        return PPP10_D;
+    }
+
+    public void setPPP10_D(float PPP10_D) {
+        this.PPP10_D = PPP10_D;
+    }
+
+    public float getPPP20_D() {
+        return PPP20_D;
+    }
+
+    public void setPPP20_D(float PPP20_D) {
+        this.PPP20_D = PPP20_D;
+    }
+
+    public float getPPP30_D() {
+        return PPP30_D;
+    }
+
+    public void setPPP30_D(float PPP30_D) {
+        this.PPP30_D = PPP30_D;
+    }
+
+    public float getPPP40_D() {
+        return PPP40_D;
+    }
+
+    public void setPPP40_D(float PPP40_D) {
+        this.PPP40_D = PPP40_D;
+    }
+
+    public float getPPP50_D() {
+        return PPP50_D;
+    }
+
+    public void setPPP50_D(float PPP50_D) {
+        this.PPP50_D = PPP50_D;
+    }
+
+    public float getPPP60_D() {
+        return PPP60_D;
+    }
+
+    public void setPPP60_D(float PPP60_D) {
+        this.PPP60_D = PPP60_D;
+    }
+
+    public float getPPP70_D() {
+        return PPP70_D;
+    }
+
+    public void setPPP70_D(float PPP70_D) {
+        this.PPP70_D = PPP70_D;
+    }
+
+    public float getPPP5_X() {
+        return PPP5_X;
+    }
+
+    public void setPPP5_X(float PPP5_X) {
+        this.PPP5_X = PPP5_X;
+    }
+
+    public float getPPP10_X() {
+        return PPP10_X;
+    }
+
+    public void setPPP10_X(float PPP10_X) {
+        this.PPP10_X = PPP10_X;
+    }
+
+    public float getPPP20_X() {
+        return PPP20_X;
+    }
+
+    public void setPPP20_X(float PPP20_X) {
+        this.PPP20_X = PPP20_X;
+    }
+
+    public float getPPP30_X() {
+        return PPP30_X;
+    }
+
+    public void setPPP30_X(float PPP30_X) {
+        this.PPP30_X = PPP30_X;
+    }
+
+    public float getPPP40_X() {
+        return PPP40_X;
+    }
+
+    public void setPPP40_X(float PPP40_X) {
+        this.PPP40_X = PPP40_X;
+    }
+
+    public float getPPP50_X() {
+        return PPP50_X;
+    }
+
+    public void setPPP50_X(float PPP50_X) {
+        this.PPP50_X = PPP50_X;
+    }
+
+    public float getPPP60_X() {
+        return PPP60_X;
+    }
+
+    public void setPPP60_X(float PPP60_X) {
+        this.PPP60_X = PPP60_X;
+    }
+
+    public float getPPP70_X() {
+        return PPP70_X;
+    }
+
+    public void setPPP70_X(float PPP70_X) {
+        this.PPP70_X = PPP70_X;
+    }
 
     public float getPP5_D() {
         return PP5_D;

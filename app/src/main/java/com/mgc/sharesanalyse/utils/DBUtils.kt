@@ -1507,6 +1507,15 @@ object DBUtils {
         reverseBean.pP60 = cursor.getFloat(cursor.getColumnIndex("PP60"))
         reverseBean.pP65 = cursor.getFloat(cursor.getColumnIndex("PP65"))
         reverseBean.pP70 = cursor.getFloat(cursor.getColumnIndex("PP70"))
+
+        reverseBean.ppP5 = cursor.getFloat(cursor.getColumnIndex("PPP5"))
+        reverseBean.ppP10 = cursor.getFloat(cursor.getColumnIndex("PPP10"))
+        reverseBean.ppP20 = cursor.getFloat(cursor.getColumnIndex("PPP20"))
+        reverseBean.ppP30 = cursor.getFloat(cursor.getColumnIndex("PPP30"))
+        reverseBean.ppP40 = cursor.getFloat(cursor.getColumnIndex("PPP40"))
+        reverseBean.ppP50 = cursor.getFloat(cursor.getColumnIndex("PPP50"))
+        reverseBean.ppP60 = cursor.getFloat(cursor.getColumnIndex("PPP60"))
+        reverseBean.ppP70 = cursor.getFloat(cursor.getColumnIndex("PPP70"))
         return reverseBean
     }
 
@@ -1823,7 +1832,16 @@ object DBUtils {
                     "AND PP55_X  = ${reasoningAllJudgeBean.pP55_X}  " +
                     "AND PP60_X  = ${reasoningAllJudgeBean.pP60_X}  " +
                     "AND PP65_X  = ${reasoningAllJudgeBean.pP65_X}  " +
-                    "AND PP70_X  = ${reasoningAllJudgeBean.pP70_X}"
+                    "AND PP70_X  = ${reasoningAllJudgeBean.pP70_X} " +
+
+                    "AND PPP5_X  = ${reasoningAllJudgeBean.ppP5_X}  " +
+                    "AND PPP10_X  = ${reasoningAllJudgeBean.ppP10_X}  " +
+                    "AND PPP20_X  = ${reasoningAllJudgeBean.ppP20_X}  "
+                    "AND PPP30_X  = ${reasoningAllJudgeBean.ppP30_X}  "
+                    "AND PPP40_X  = ${reasoningAllJudgeBean.ppP40_X}  " +
+                    "AND PPP50_X  = ${reasoningAllJudgeBean.ppP50_X}  " +
+                    "AND PPP60_X  = ${reasoningAllJudgeBean.ppP60_X}  " +
+                    "AND PPP70_X  = ${reasoningAllJudgeBean.ppP70_X}"
             val cusor = db.rawQuery(querySQL, null)
             if (cusor.count < 1) {
                 cusor.close()
@@ -2243,12 +2261,12 @@ object DBUtils {
                     " OC10_D >= ${ocooBean.oC10} AND OC10_X <= ${ocooBean.oC10} AND " +
                     "OC5_D >= ${ocooBean.oC5} AND OC5_X <= ${ocooBean.oC5} AND " +
                     " OC3_D >= ${ocooBean.oC3} AND OC3_X <= ${ocooBean.oC3} AND " +
-                " OO70_D >= ${ocooBean.oO70} AND OO70_X <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_X <= ${ocooBean.oO65} AND "+
-                " OO60_D >= ${ocooBean.oO60} AND OO60_X <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_X <= ${ocooBean.oO55} AND "+
-                " OO50_D >= ${ocooBean.oO50} AND OO50_X <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_X <= ${ocooBean.oO45} AND "+
-                " OO40_D >= ${ocooBean.oO40} AND OO40_X <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_X <= ${ocooBean.oO35} AND "+
-                "OO30_D >= ${ocooBean.oO30} AND OO30_X <= ${ocooBean.oO30} AND " +
-                        "OO25_D >= ${ocooBean.oO25} AND OO25_X <= ${ocooBean.oO25} AND "+
+                    " OO70_D >= ${ocooBean.oO70} AND OO70_X <= ${ocooBean.oO70} AND OO65_D >= ${ocooBean.oO65} AND OO65_X <= ${ocooBean.oO65} AND " +
+                    " OO60_D >= ${ocooBean.oO60} AND OO60_X <= ${ocooBean.oO60} AND OO55_D >= ${ocooBean.oO55} AND OO55_X <= ${ocooBean.oO55} AND " +
+                    " OO50_D >= ${ocooBean.oO50} AND OO50_X <= ${ocooBean.oO50} AND OO45_D >= ${ocooBean.oO45} AND OO45_X <= ${ocooBean.oO45} AND " +
+                    " OO40_D >= ${ocooBean.oO40} AND OO40_X <= ${ocooBean.oO40} AND OO35_D >= ${ocooBean.oO35} AND OO35_X <= ${ocooBean.oO35} AND " +
+                    "OO30_D >= ${ocooBean.oO30} AND OO30_X <= ${ocooBean.oO30} AND " +
+                    "OO25_D >= ${ocooBean.oO25} AND OO25_X <= ${ocooBean.oO25} AND " +
                     " OO20_D >= ${ocooBean.oO20} AND OO20_X <= ${ocooBean.oO20} AND " +
                     "OO15_D >= ${ocooBean.oO15} AND OO15_X <= ${ocooBean.oO15} AND " +
                     " OO10_D >= ${ocooBean.oO10} AND OO10_X <= ${ocooBean.oO10} AND " +
@@ -2256,17 +2274,17 @@ object DBUtils {
                     " OO3_D >= ${ocooBean.oO3} AND OO3_X <= ${ocooBean.oO3} AND " +
 
 
-                " PPP70_D >= ${ocooBean.ppP70} AND PPP70_X <= ${ocooBean.ppP70} AND PPP40_D >= ${ocooBean.ppP40} AND PPP40_X <= ${ocooBean.ppP40} AND "+
-                " PPP60_D >= ${ocooBean.ppP60} AND PPP60_X <= ${ocooBean.ppP60} AND PPP30_D >= ${ocooBean.ppP30} AND PPP30_X <= ${ocooBean.ppP30} AND "+
-                " PPP50_D >= ${ocooBean.ppP50} AND PPP50_X <= ${ocooBean.ppP50} AND PPP20_D >= ${ocooBean.ppP20} AND PPP20_X <= ${ocooBean.ppP20} AND "+
-                " PPP10_D >= ${ocooBean.ppP10} AND PPP10_X <= ${ocooBean.ppP10} AND PPP5_D >= ${ocooBean.ppP5} AND PPP5_X <= ${ocooBean.ppP5} AND "+
+                    " PPP70_D >= ${ocooBean.ppP70} AND PPP70_X <= ${ocooBean.ppP70} AND PPP40_D >= ${ocooBean.ppP40} AND PPP40_X <= ${ocooBean.ppP40} AND " +
+                    " PPP60_D >= ${ocooBean.ppP60} AND PPP60_X <= ${ocooBean.ppP60} AND PPP30_D >= ${ocooBean.ppP30} AND PPP30_X <= ${ocooBean.ppP30} AND " +
+                    " PPP50_D >= ${ocooBean.ppP50} AND PPP50_X <= ${ocooBean.ppP50} AND PPP20_D >= ${ocooBean.ppP20} AND PPP20_X <= ${ocooBean.ppP20} AND " +
+                    " PPP10_D >= ${ocooBean.ppP10} AND PPP10_X <= ${ocooBean.ppP10} AND PPP5_D >= ${ocooBean.ppP5} AND PPP5_X <= ${ocooBean.ppP5} AND " +
 
-                " PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND "+
-                " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND "+
-                " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND "+
-                " PP40_D >= ${ocooBean.pP40} AND PP40_X <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_X <= ${ocooBean.pP35} AND "+
-                " PP30_D >= ${ocooBean.pP30} AND PP30_X <= ${ocooBean.pP30} AND " +
-                        "PP25_D >= ${ocooBean.pP25} AND PP25_X <= ${ocooBean.pP25} AND "+
+                    " PP70_D >= ${ocooBean.pP70} AND PP70_X <= ${ocooBean.pP70} AND PP65_D >= ${ocooBean.pP65} AND PP65_X <= ${ocooBean.pP65} AND " +
+                    " PP60_D >= ${ocooBean.pP60} AND PP60_X <= ${ocooBean.pP60} AND PP55_D >= ${ocooBean.pP55} AND PP55_X <= ${ocooBean.pP55} AND " +
+                    " PP50_D >= ${ocooBean.pP50} AND PP50_X <= ${ocooBean.pP50} AND PP45_D >= ${ocooBean.pP45} AND PP45_X <= ${ocooBean.pP45} AND " +
+                    " PP40_D >= ${ocooBean.pP40} AND PP40_X <= ${ocooBean.pP40} AND PP35_D >= ${ocooBean.pP35} AND PP35_X <= ${ocooBean.pP35} AND " +
+                    " PP30_D >= ${ocooBean.pP30} AND PP30_X <= ${ocooBean.pP30} AND " +
+                    "PP25_D >= ${ocooBean.pP25} AND PP25_X <= ${ocooBean.pP25} AND " +
                     " PP20_D >= ${ocooBean.pP20} AND PP20_X <= ${ocooBean.pP20} AND " +
                     "PP15_D >= ${ocooBean.pP15} AND PP15_X <= ${ocooBean.pP15} AND " +
                     " PP10_D >= ${ocooBean.pP10} AND PP10_X <= ${ocooBean.pP10} AND " +
@@ -2284,9 +2302,9 @@ object DBUtils {
 
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 needContinue = true
-                val fr  = cursor.getFloat(cursor.getColumnIndex("FR"))
-                val rr  = cursor.getFloat(cursor.getColumnIndex("RR"))
-                val size  = cursor.getInt(cursor.getColumnIndex("SIZE"))
+                val fr = cursor.getFloat(cursor.getColumnIndex("FR"))
+                val rr = cursor.getFloat(cursor.getColumnIndex("RR"))
+                val size = cursor.getInt(cursor.getColumnIndex("SIZE"))
                 judgeBean.fr = fr
                 judgeBean.rr = rr
                 judgeBean.size = size
@@ -2383,7 +2401,6 @@ object DBUtils {
                             )} AND " +
 
 
-
                             /*------------------------------------------*/
                             " PP70_D = ${cursor.getFloat(cursor.getColumnIndex("PP70_D"))} AND PP70_X = ${cursor.getFloat(
                                 cursor.getColumnIndex("PP70_X")
@@ -2424,7 +2441,7 @@ object DBUtils {
             }
 
         }
-        return Triple(needContinue, updateSQL,judgeBean)
+        return Triple(needContinue, updateSQL, judgeBean)
 
     }
 

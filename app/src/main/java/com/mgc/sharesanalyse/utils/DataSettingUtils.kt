@@ -3785,6 +3785,26 @@ object DataSettingUtils {
             reasoningAllJudgeBean.pP70_X = 10086.toFloat()
 
 
+
+            reasoningAllJudgeBean.ppP5_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP10_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP20_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP30_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP40_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP50_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP60_D = -10086.toFloat()
+            reasoningAllJudgeBean.ppP70_D = -10086.toFloat()
+
+            reasoningAllJudgeBean.ppP5_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP10_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP20_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP30_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP40_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP50_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP60_X = 10086.toFloat()
+            reasoningAllJudgeBean.ppP70_X = 10086.toFloat()
+
+
             list.forEach {
                 if (it is ReverseKJsonBean) {
 
@@ -3923,6 +3943,32 @@ object DataSettingUtils {
                         reasoningAllJudgeBean.pP70_D = it.pP70.toOCOORevJudgeMax()
                     }
 
+
+                    if (reasoningAllJudgeBean.ppP5_D < it.ppP5) {
+                        reasoningAllJudgeBean.ppP5_D = it.ppP5.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP10_D < it.ppP10) {
+                        reasoningAllJudgeBean.ppP10_D = it.ppP10.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP20_D < it.ppP20) {
+                        reasoningAllJudgeBean.ppP20_D = it.ppP20.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP30_D < it.ppP30) {
+                        reasoningAllJudgeBean.ppP30_D = it.ppP30.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP40_D < it.ppP40) {
+                        reasoningAllJudgeBean.ppP40_D = it.ppP40.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP50_D < it.ppP50) {
+                        reasoningAllJudgeBean.ppP50_D = it.ppP50.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP60_D < it.ppP60) {
+                        reasoningAllJudgeBean.ppP60_D = it.ppP60.toOCOORevJudgeMax()
+                    }
+                    if (reasoningAllJudgeBean.ppP70_D < it.ppP70) {
+                        reasoningAllJudgeBean.ppP70_D = it.ppP70.toOCOORevJudgeMax()
+                    }
+
                     if (reasoningAllJudgeBean.oC3_X > it.oC3) {
                         reasoningAllJudgeBean.oC3_X = it.oC3.toOCOORevJudgeMin()
                     }
@@ -4059,6 +4105,33 @@ object DataSettingUtils {
                     if (reasoningAllJudgeBean.pP70_X > it.pP70) {
                         reasoningAllJudgeBean.pP70_X = it.pP70.toOCOORevJudgeMin()
                     }
+
+
+
+                    if (reasoningAllJudgeBean.ppP5_X > it.ppP5) {
+                        reasoningAllJudgeBean.ppP5_X = it.ppP5.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP10_X > it.ppP10) {
+                        reasoningAllJudgeBean.ppP10_X = it.ppP10.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP20_X > it.ppP20) {
+                        reasoningAllJudgeBean.ppP20_X = it.ppP20.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP30_X > it.ppP30) {
+                        reasoningAllJudgeBean.ppP30_X = it.ppP30.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP40_X > it.ppP40) {
+                        reasoningAllJudgeBean.ppP40_X = it.ppP40.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP50_X > it.ppP50) {
+                        reasoningAllJudgeBean.ppP50_X = it.ppP50.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP60_X > it.ppP60) {
+                        reasoningAllJudgeBean.ppP60_X = it.ppP60.toOCOORevJudgeMin()
+                    }
+                    if (reasoningAllJudgeBean.ppP70_X > it.ppP70) {
+                        reasoningAllJudgeBean.ppP70_X = it.ppP70.toOCOORevJudgeMin()
+                    }
                 }
             }
         } else {
@@ -4163,6 +4236,26 @@ object DataSettingUtils {
                     reasoningAllJudgeBean.pP60_X  = it.pP60.toOCOORevJudgeMin()
                     reasoningAllJudgeBean.pP65_X  = it.pP65.toOCOORevJudgeMin()
                     reasoningAllJudgeBean.pP70_X  = it.pP70.toOCOORevJudgeMin()
+
+
+                    reasoningAllJudgeBean.ppP5_D  = it.ppP5.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP10_D  = it.ppP10.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP20_D  = it.ppP20.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP30_D  = it.ppP30.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP40_D  = it.ppP40.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP50_D  = it.ppP50.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP60_D  = it.ppP60.toOCOORevJudgeMax()
+                    reasoningAllJudgeBean.ppP70_D  = it.ppP70.toOCOORevJudgeMax()
+
+
+                    reasoningAllJudgeBean.ppP5_X  = it.ppP5.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP10_X  = it.ppP10.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP20_X  = it.ppP20.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP30_X  = it.ppP30.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP40_X  = it.ppP40.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP50_X  = it.ppP50.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP60_X  = it.ppP60.toOCOORevJudgeMin()
+                    reasoningAllJudgeBean.ppP70_X  = it.ppP70.toOCOORevJudgeMin()
                 }
             }
         }
