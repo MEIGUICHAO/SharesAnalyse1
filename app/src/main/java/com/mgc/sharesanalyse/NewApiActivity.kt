@@ -232,8 +232,8 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-            DBUtils.dropTable("All_Reasoning_50")
-            DBUtils.dropTable("All_Reasoning_30")
+//            DBUtils.dropTable("All_Reasoning_50")
+//            DBUtils.dropTable("All_Reasoning_30")
             DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
             DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
             App.getSinglePool().execute {
