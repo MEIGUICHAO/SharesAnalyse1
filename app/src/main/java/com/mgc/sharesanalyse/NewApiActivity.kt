@@ -228,6 +228,9 @@ class NewApiActivity : AppCompatActivity() {
 //            LogUtil.d("!!$rangeMax26,$rangeMin26==$rangeMax24,$rangeMin24")
             App.getSinglePool().execute {
                 revAllJudgeResult()
+                btnReasoningAll.post {
+                    btnReasoningAll.performClick()
+                }
             }
         }
         btnReasoningAll.setOnClickListener {

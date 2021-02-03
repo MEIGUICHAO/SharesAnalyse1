@@ -3919,7 +3919,7 @@ class NewApiViewModel : BaseViewModel() {
                         continue
                     }
 
-                    (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_$i--$rangeMax")
+                    (mActivity as NewApiActivity).setBtnRevAllTb("$it->$i--$rangeMax")
                     LogUtil.d("codeInfo-->OC_OO_$i--$rangeMax")
 
                     if (list.size > 0) {
@@ -3942,6 +3942,8 @@ class NewApiViewModel : BaseViewModel() {
                             val date = dayList[dateRangeIndex]
                             if (dateRangeIndex > 0) {
                                 DataSettingUtils.revOCOOlReasoning(
+                                    tagList,
+                                    0,
                                     dayList,
                                     dateRangeIndex,
                                     list,

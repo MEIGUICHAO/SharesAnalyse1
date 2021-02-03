@@ -3309,6 +3309,8 @@ object DataSettingUtils {
     }
 
     fun revOCOOlReasoning(
+        tagList: Array<String>,
+        tagIndex: Int,
         dayList: Array<Int>,
         dateRangeIndex: Int,
         list: ArrayList<BaseReverseImp>,
@@ -3316,11 +3318,40 @@ object DataSettingUtils {
         tbName: String,
         insertTB: String
     ) {
+        var needSkip = false
+        if (tagIndex == tagList.size - 1) {
+            if (date == 3 || date == 15 || date == 25 || date == 35 || date == 45 || date == 55) {
+                needSkip = true
+            }
+        } else if (tagIndex == tagList.size - 2) {
+            if (date == 3 ) {
+                needSkip = true
+            }
+        }
+        var mTagIndex = tagIndex
+        var mDateRangeIndex = dateRangeIndex - 1
+        if (needSkip) {
+            if (dateRangeIndex == 0 && tagIndex < tagList.size) {
+                mTagIndex++
+                mDateRangeIndex = dayList.size - 2
+            }
+            revOCOOlReasoning(
+                tagList,
+                mTagIndex,
+                dayList,
+                mDateRangeIndex,
+                list,
+                dayList[mDateRangeIndex],
+                tbName,
+                insertTB
+            )
+            return
+        }
         val mNextCodeList = list.getCodeList()
         val addstr =
             mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
-        val column = "OC$date"
+        val column = "${tagList[tagIndex]}$date"
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             true,
             tbName,
@@ -3349,20 +3380,22 @@ object DataSettingUtils {
 //                nextContinue++
 //                dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
 //            }
+
             if (dlist.size > 0) {
-                if (dateRangeIndex == 0) {
+                if (mTagIndex == tagList.size&&dateRangeIndex == 0) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
                     val codeInfo =
                         list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
                     LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                }
-                if ((dateRangeIndex) > 0) {
+                } else if ((mDateRangeIndex) > 0) {
                     revOCOOlReasoning(
+                        tagList,
+                        mTagIndex,
                         dayList,
-                        dateRangeIndex - 1,
+                        mDateRangeIndex,
                         dlist,
-                        dayList[dateRangeIndex - 1],
+                        dayList[mDateRangeIndex],
                         tbName,
                         insertTB
                     )
