@@ -1316,15 +1316,16 @@ object DBUtils {
         val querySql = " SELECT * FROM $tbName WHERE $addSql "
         var cursor =
             db.rawQuery(querySql, null)
+        LogUtil.d("querySql-->$querySql \n $addSql cursor.count:${cursor.count}")
         val ommList = ArrayList<Float>()
         if (null != cursor && cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
+                LogUtil.d("column-->$column")
                 ommList.add(cursor.getFloat(cursor.getColumnIndex(column)))
                 cursor.moveToNext()
             }
         }
         ommList.sortFloatAsc()
-        LogUtil.d("querySql-->$querySql \n $addSql cursor.count:${cursor.count}")
 //        SELECT * FROM A_RTB_50_30 WHERE (OM_M IN (SELECT MIN(OM_M) FROM A_RTB_50_30 WHERE  CODE = ?  AND CODE = ?  AND CODE = ? ))
 //        SELECT * FROM A_RTB_50_30 WHERE (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?) AND (CODE = ? AND DATE = ?)
 //        300064 ,0928 ,300064 ,0929 ,600211 ,0724 , cursor.count:0

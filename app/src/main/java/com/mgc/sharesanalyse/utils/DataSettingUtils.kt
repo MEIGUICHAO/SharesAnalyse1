@@ -3320,7 +3320,7 @@ object DataSettingUtils {
     ) {
         var needSkip = false
         if (tagIndex == tagList.size - 1) {
-            if (date == 3 || date == 15 || date == 25 || date == 35 || date == 45 || date == 55) {
+            if (date == 3 || date == 15 || date == 25 || date == 35 || date == 45 || date == 55 || date == 65) {
                 needSkip = true
             }
         } else if (tagIndex == tagList.size - 2) {
@@ -3328,24 +3328,26 @@ object DataSettingUtils {
                 needSkip = true
             }
         }
-        var mTagIndex = tagIndex
-        var mDateRangeIndex = dateRangeIndex - 1
         if (needSkip) {
-            if (dateRangeIndex == 0 && tagIndex < tagList.size) {
+            var mTagIndex = tagIndex
+            var mDateRangeIndex = dateRangeIndex -1
+            if (date == 3) {
                 mTagIndex++
-                mDateRangeIndex = dayList.size - 2
+                mDateRangeIndex = dayList.size-2
             }
-            revOCOOlReasoning(
-                tagList,
-                mTagIndex,
-                dayList,
-                mDateRangeIndex,
-                list,
-                dayList[mDateRangeIndex],
-                tbName,
-                insertTB
-            )
-            return
+            if (mTagIndex < tagList.size) {
+                revOCOOlReasoning(
+                    tagList,
+                    mTagIndex,
+                    dayList,
+                    mDateRangeIndex,
+                    list,
+                    dayList[mDateRangeIndex],
+                    tbName,
+                    insertTB
+                )
+                return
+            }
         }
         val mNextCodeList = list.getCodeList()
         val addstr =
@@ -3376,26 +3378,27 @@ object DataSettingUtils {
                 nextContinue++
                 dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
             }
-//            while ((list.size - dlist!!.size == 1)) {
-//                nextContinue++
-//                dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
-//            }
-
+//            val (mTagIndex, mDateRangeIndex) = getNextRevOCOOParameter(
+//                tagIndex,
+//                dateRangeIndex,
+//                tagList,
+//                dayList
+//            )
             if (dlist.size > 0) {
-                if (mTagIndex == tagList.size&&dateRangeIndex == 0) {
+                if (tagIndex == tagList.size-2 && date == 5) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
                     val codeInfo =
                         list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
                     LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                } else if ((mDateRangeIndex) > 0) {
+                } else {
                     revOCOOlReasoning(
                         tagList,
-                        mTagIndex,
+                        if (date==3) tagIndex + 1 else tagIndex,
                         dayList,
-                        mDateRangeIndex,
+                        if (dateRangeIndex>0)dateRangeIndex-1 else dayList.size - 2,
                         dlist,
-                        dayList[mDateRangeIndex],
+                        dayList[if (dateRangeIndex>0)dateRangeIndex-1 else dayList.size - 2],
                         tbName,
                         insertTB
                     )
@@ -3403,6 +3406,8 @@ object DataSettingUtils {
             }
         }
     }
+
+
 
     fun getOCOODlist(
         nextTbName: String,
