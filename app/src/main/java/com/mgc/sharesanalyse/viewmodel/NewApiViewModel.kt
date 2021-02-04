@@ -3966,6 +3966,7 @@ class NewApiViewModel : BaseViewModel() {
 
         LogUtil.d("revAllJudgeResult")
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
+        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
         val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
         LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
@@ -4027,10 +4028,13 @@ class NewApiViewModel : BaseViewModel() {
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                     dateRangeIndex = dayList.size - 2
                     date = dayList[dateRangeIndex]
+                    var tagIndex = 1
                     LogUtil.d("nextTbName!!!-->($i,${(i + Datas.FILTER_PROGRESS)})")
                     if (dateRangeIndex > 0) {
                         DataSettingUtils.revAllReasoning30(
                             pt,
+                            tagList,
+                            tagIndex,
                             dayList,
                             dateRangeIndex,
                             list,
@@ -4063,17 +4067,17 @@ class NewApiViewModel : BaseViewModel() {
                             continue
                         }
                         //TODO CESHI
-//                        insertAllReasoning(
-//                            false,
-//                            foreachLimitList,
-//                            i,
-//                            mCHDDList,
-//                            code
-//                        )
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
 
 //                        if (mCHDDList[i].date == "20200928") {
 //                        }
-                        insertOCOOReasoning(i,mCHDDList,code)
+//                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }
@@ -4151,6 +4155,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (continue50) {
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
+                    insertOCOOReasoning(i,mCHDDList,code)
                 }
 
                 if (continue30) {
@@ -4163,6 +4168,7 @@ class NewApiViewModel : BaseViewModel() {
                         fitlerType
                     )
                     DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
+                    insertOCOOReasoning(i,mCHDDList,code)
                     /*--------------------------------------------------------------*/
 //                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 //                    if (continue30) {

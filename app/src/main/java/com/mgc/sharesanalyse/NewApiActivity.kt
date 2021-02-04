@@ -235,8 +235,8 @@ class NewApiActivity : AppCompatActivity() {
         }
         btnReasoningAll.setOnClickListener {
             DBUtils.switchDBName(Datas.REV_RESONING_DB)
-//            DBUtils.dropTable("All_Reasoning_50")
-//            DBUtils.dropTable("All_Reasoning_30")
+            DBUtils.dropTable("All_Reasoning_50")
+            DBUtils.dropTable("All_Reasoning_30")
             DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
             DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
             App.getSinglePool().execute {
@@ -249,13 +249,13 @@ class NewApiActivity : AppCompatActivity() {
 
     fun revAllJudgeResult() {
         DBUtils.switchDBName(Datas.REV_RESONING_DB)
-//        DBUtils.dropTable("All_30")
-//        DBUtils.dropTable("All_50")
-//        viewModel.revAllJudgeResult()
+        DBUtils.dropTable("All_30")
+        DBUtils.dropTable("All_50")
+        viewModel.revAllJudgeResult()
 
-        DBUtils.dropTable(Datas.ALL_OC_OO_30)
-        DBUtils.dropTable(Datas.ALL_OC_OO_50)
-        viewModel.revOCOOJudgeResult()
+//        DBUtils.dropTable(Datas.ALL_OC_OO_30)
+//        DBUtils.dropTable(Datas.ALL_OC_OO_50)
+//        viewModel.revOCOOJudgeResult()
     }
 
     fun setBtnReasoningAll(info: String) {

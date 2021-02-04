@@ -3229,6 +3229,8 @@ object DataSettingUtils {
 
     fun revAllReasoning30(
         pt: Int,
+        tagList: Array<String>,
+        tagIndex: Int,
         dayList: Array<Int>,
         dateRangeIndex: Int,
         list: ArrayList<BaseReverseImp>,
@@ -3243,6 +3245,7 @@ object DataSettingUtils {
         val addstr =
             mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
         val countLimit = if (list.size >= 4) 4 else 2
+        val comlumn = tagList[tagIndex]
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             false,
             nextTbName,
@@ -3296,6 +3299,8 @@ object DataSettingUtils {
                 if ((dateRangeIndex) > 0) {
                     revAllReasoning30(
                         pt,
+                        tagList,
+                        tagIndex,
                         dayList,
                         dateRangeIndex - 1,
                         dlist,
@@ -3841,6 +3846,34 @@ object DataSettingUtils {
             reasoningAllJudgeBean.ppP50_X = 10086.toFloat()
             reasoningAllJudgeBean.ppP60_X = 10086.toFloat()
             reasoningAllJudgeBean.ppP70_X = 10086.toFloat()
+
+
+            reasoningAllJudgeBean.s_A_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.s_R_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.s_B_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.s_C_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_A_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_R_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_B_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_C_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_SL_A_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_SL_R_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_SL_B_TR_D = -10086.toFloat()
+            reasoningAllJudgeBean.k_SL_C_TR_D = -10086.toFloat()
+
+            reasoningAllJudgeBean.s_A_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.s_R_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.s_B_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.s_C_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_A_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_R_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_B_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_C_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_SL_A_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_SL_R_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_SL_B_TR_X = 10086.toFloat()
+            reasoningAllJudgeBean.k_SL_C_TR_X = 10086.toFloat()
+
 
 
             list.forEach {
