@@ -1414,8 +1414,13 @@ object DBUtils {
         switchDBName(dbName)
         LogUtil.d("$sqlStr")
         var list: ArrayList<BaseReverseImp>? = null
-        val cursor =
-            db.rawQuery(sqlStr, selection)
+        var cursor:Cursor? = null
+        try {
+            cursor =
+                db.rawQuery(sqlStr, selection)
+        } catch (e: java.lang.Exception) {
+            return list
+        }
         cursor?.let {
             list = ArrayList()
             it.moveToFirst()
