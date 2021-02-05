@@ -3256,13 +3256,18 @@ object DataSettingUtils {
         var nextContinue = 0
         for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
 
-            mActivity.setBtnRevAllTb("OM_M->${iList[0]},$comlumn $pt-> $n -- $nextMax ")
+            mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
             if (nextContinue > 0) {
 //                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--
                 continue
             }
-            var dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+            var dlist:ArrayList<BaseReverseImp>?
+            try {
+                dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+            } catch (e: java.lang.Exception) {
+                continue
+            }
             LogUtil.d("getDlist")
             if (null == dlist) {
                 continue
@@ -3521,7 +3526,22 @@ object DataSettingUtils {
 
         if (need50Continue) {
             val juede50BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(
-                allOmM,
+                OM_M,
+                OM_C,
+                OM_P,
+                OM_L,
+                OL_M,
+                OL_C,
+                OL_P,
+                OL_L,
+                OC_M,
+                OC_C,
+                OC_P,
+                OC_L,
+                OP_M,
+                OP_C,
+                OP_P,
+                OP_L,
                 true,
                 dayType + 1,
                 allReasoning50Bean
@@ -3548,30 +3568,45 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning50Bean
             )
-            if (need50Continue) {
-                need50Continue = getDerbyNeedContinue(
-                    juede50BeanList,
-                    need50Continue,
-                    OM_OC,
-                    OM_OP,
-                    OM_OL,
-                    OC_OP,
-                    OC_OL,
-                    OP_OL,
-                    M_C,
-                    M_P,
-                    M_L,
-                    C_P,
-                    C_L,
-                    P_L
-                )
-
-//                LogUtil.d("getDerbyNeedContinue-->$need50Continue")
-            }
+//            if (need50Continue) {
+//                need50Continue = getDerbyNeedContinue(
+//                    juede50BeanList,
+//                    need50Continue,
+//                    OM_OC,
+//                    OM_OP,
+//                    OM_OL,
+//                    OC_OP,
+//                    OC_OL,
+//                    OP_OL,
+//                    M_C,
+//                    M_P,
+//                    M_L,
+//                    C_P,
+//                    C_L,
+//                    P_L
+//                )
+//
+////                LogUtil.d("getDerbyNeedContinue-->$need50Continue")
+//            }
         }
         if (need30Continue) {
             val juede30BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(
-                allOmM,
+                OM_M,
+                OM_C,
+                OM_P,
+                OM_L,
+                OL_M,
+                OL_C,
+                OL_P,
+                OL_L,
+                OC_M,
+                OC_C,
+                OC_P,
+                OC_L,
+                OP_M,
+                OP_C,
+                OP_P,
+                OP_L,
                 false,
                 dayType + 1,
                 allReasoning30Bean
@@ -3598,25 +3633,25 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning30Bean
             )
-            if (need30Continue) {
-                need30Continue = getDerbyNeedContinue(
-                    juede30BeanList,
-                    need30Continue,
-                    OM_OC,
-                    OM_OP,
-                    OM_OL,
-                    OC_OP,
-                    OC_OL,
-                    OP_OL,
-                    M_C,
-                    M_P,
-                    M_L,
-                    C_P,
-                    C_L,
-                    P_L
-                )
-//                LogUtil.d("getDerbyNeedContinue-->$need30Continue")
-            }
+//            if (need30Continue) {
+//                need30Continue = getDerbyNeedContinue(
+//                    juede30BeanList,
+//                    need30Continue,
+//                    OM_OC,
+//                    OM_OP,
+//                    OM_OL,
+//                    OC_OP,
+//                    OC_OL,
+//                    OP_OL,
+//                    M_C,
+//                    M_P,
+//                    M_L,
+//                    C_P,
+//                    C_L,
+//                    P_L
+//                )
+////                LogUtil.d("getDerbyNeedContinue-->$need30Continue")
+//            }
         }
 
         return Pair(need50Continue, need30Continue)

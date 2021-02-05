@@ -1869,7 +1869,22 @@ object DBUtils {
     }
 
     fun getReasoningAllJudgeBeanByAllOmM(
-        allOmM: Float,
+        OM_M:Float,
+        OM_C:Float,
+        OM_P:Float,
+        OM_L:Float,
+        OL_M:Float,
+        OL_C:Float,
+        OL_P:Float,
+        OL_L:Float,
+        OC_M:Float,
+        OC_C:Float,
+        OC_P:Float,
+        OC_L:Float,
+        OP_M:Float,
+        OP_C:Float,
+        OP_P:Float,
+        OP_L:Float,
         is50: Boolean,
         D_T: Int,
         allReasoningBean: ReasoningRevBean
@@ -1882,7 +1897,24 @@ object DBUtils {
         if (tabbleIsExist(tbName)) {
             val cursor =
                 db.rawQuery(
-                    " SELECT * FROM $tbName WHERE D_T=$D_T AND OM_M_X<=$allOmM AND OM_M_D>=$allOmM $querySql",
+                    " SELECT * FROM $tbName WHERE D_T=$D_T " +
+                            " AND OM_M_X<=$OM_M AND OM_M_D>=$OM_M " +
+                            " AND OM_C_X<=$OM_C AND OM_C_D>=$OM_C " +
+                            " AND OM_P_X<=$OM_P AND OM_P_D>=$OM_P " +
+                            " AND OM_L_X<=$OM_L AND OM_L_D>=$OM_L " +
+                            " AND OC_M_X<=$OC_M AND OC_M_D>=$OC_M " +
+                            " AND OC_C_X<=$OC_C AND OC_C_D>=$OC_C " +
+                            " AND OC_P_X<=$OC_P AND OC_P_D>=$OC_P " +
+                            " AND OC_L_X<=$OC_L AND OC_L_D>=$OC_L " +
+                            " AND OO_M_X<=$OP_M AND OO_M_D>=$OP_M " +
+                            " AND OO_C_X<=$OP_C AND OO_C_D>=$OP_C " +
+                            " AND OO_P_X<=$OP_P AND OO_P_D>=$OP_P " +
+                            " AND OO_L_X<=$OP_L AND OO_L_D>=$OP_L " +
+                            " AND OL_M_X<=$OL_M AND OL_M_D>=$OL_M " +
+                            " AND OL_C_X<=$OL_C AND OL_C_D>=$OL_C " +
+                            " AND OL_P_X<=$OL_P AND OL_P_D>=$OL_P " +
+                            " AND OL_L_X<=$OL_L AND OL_L_D>=$OL_L " +
+                            "$querySql",
                     null
                 )
             if (null != cursor && cursor.moveToFirst()) {

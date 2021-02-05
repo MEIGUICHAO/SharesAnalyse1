@@ -1208,10 +1208,10 @@ class NewApiViewModel : BaseViewModel() {
         )
 
         //TODO 重新
-        if (!Datas.DEBUG) {
-            (mActivity as NewApiActivity).revAllJudgeResult()
-        }
-        updateReasoningTB()
+//        if (!Datas.DEBUG) {
+//            (mActivity as NewApiActivity).revAllJudgeResult()
+//        }
+//        updateReasoningTB()
 
 
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
@@ -3982,7 +3982,7 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("revAllJudgeResult")
             var nextContinue = 0
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
-                (mActivity as NewApiActivity).setBtnRevAllTb("OM_M $pt-> $i -- $rangeMax ")
+                (mActivity as NewApiActivity).setBtnRevAllTb("OM_M $pt-> $i --> $rangeMax ")
                 if (nextContinue > 0) {
                     nextContinue--
                     continue
@@ -3990,6 +3990,7 @@ class NewApiViewModel : BaseViewModel() {
                 var date = 36
                 LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size - 1
+
 
                 var list = DBUtils.getFilterAllByTbName(
                     Datas.REVERSE_KJ_DB,
@@ -3999,7 +4000,6 @@ class NewApiViewModel : BaseViewModel() {
                         (i + Datas.FILTER_PROGRESS).toString()
                     )
                 )
-
                 if (null == list) {
                     continue
                 }
