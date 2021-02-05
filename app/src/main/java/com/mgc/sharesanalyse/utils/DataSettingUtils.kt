@@ -3249,7 +3249,7 @@ object DataSettingUtils {
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             false,
             nextTbName,
-            "OM_M",
+            comlumn,
             mNextCodeList,
             Datas.REVERSE_KJ_DB
         )
@@ -3260,51 +3260,58 @@ object DataSettingUtils {
                 nextContinue--
                 continue
             }
-            var dlist = getDlist(nextTbName, addstr, n, nextContinue)
+            var dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
             if (null == dlist) {
                 continue
             }
             while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
                 nextContinue++
-                dlist = getDlist(nextTbName, addstr, n, nextContinue)
+                dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
             }
             while ((list.size - dlist!!.size == 1)) {
                 nextContinue++
-                dlist = getDlist(nextTbName, addstr, n, nextContinue)
+                dlist = getDlist(nextTbName, comlumn,addstr, n, nextContinue)
             }
             if (dlist.size > 1) {
-
-                val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
-                val reasoningAllJudgeBean =
-                    getReasoningAllJudgeBean(dlist, derbyList, date)
-                for (a in 7 - dateRangeIndex until iList.size) {
-                    iList[a] = 0
+                if (tagIndex == tagList.size - 1) {
+                    val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
+                    val reasoningAllJudgeBean =
+                        getReasoningAllJudgeBean(dlist, derbyList, date)
+                    for (a in 7 - dateRangeIndex until iList.size) {
+                        iList[a] = 0
+                    }
+                    iList[7 - dateRangeIndex] = n
+                    reasoningAllJudgeBean.f36_T = iList[0]
+                    reasoningAllJudgeBean.f30_T = iList[1]
+                    reasoningAllJudgeBean.f25_T = iList[2]
+                    reasoningAllJudgeBean.f20_T = iList[3]
+                    reasoningAllJudgeBean.f15_T = iList[4]
+                    reasoningAllJudgeBean.f10_T = iList[5]
+                    reasoningAllJudgeBean.f05_T = iList[6]
+                    reasoningAllJudgeBean.f03_T = iList[7]
+                    var istr = ""
+                    val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
+                    for (q in 0 until iList.size) {
+                        istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
+                    }
+                    LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
+                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
-                iList[7 - dateRangeIndex] = n
-                reasoningAllJudgeBean.f36_T = iList[0]
-                reasoningAllJudgeBean.f30_T = iList[1]
-                reasoningAllJudgeBean.f25_T = iList[2]
-                reasoningAllJudgeBean.f20_T = iList[3]
-                reasoningAllJudgeBean.f15_T = iList[4]
-                reasoningAllJudgeBean.f10_T = iList[5]
-                reasoningAllJudgeBean.f05_T = iList[6]
-                reasoningAllJudgeBean.f03_T = iList[7]
-                var istr = ""
-                val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
-                for (q in 0 until iList.size) {
-                    istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
+                var mdateRangeIndex = dateRangeIndex
+                var mTagIndex = tagIndex+1
+                if (mTagIndex == tagList.size) {
+                    mdateRangeIndex = dateRangeIndex - 1
+                    mTagIndex = 0
                 }
-                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
-                DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
-                if ((dateRangeIndex) > 0) {
+                if ((mdateRangeIndex) >= 0) {
                     revAllReasoning30(
                         pt,
                         tagList,
-                        tagIndex,
+                        mTagIndex,
                         dayList,
-                        dateRangeIndex - 1,
+                        mdateRangeIndex,
                         dlist,
-                        dayList[dateRangeIndex - 1],
+                        dayList[mdateRangeIndex],
                         insertTB,
                         iList
                     )
@@ -3434,13 +3441,14 @@ object DataSettingUtils {
 
     fun getDlist(
         nextTbName: String,
+        column: String,
         addstr: String,
         n: Int,
         nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE OM_M >=? AND OM_M<? $addstr",
+            "SELECT * FROM $nextTbName WHERE $column >=? AND $column<? $addstr",
             arrayOf(
                 n.toString(),
                 (n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS).toString()
