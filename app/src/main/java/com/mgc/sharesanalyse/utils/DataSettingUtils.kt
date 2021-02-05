@@ -3243,7 +3243,7 @@ object DataSettingUtils {
         val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
         val addstr =
-            mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+            mNextCodeList.getCodeArrayAndLimitSQL(nextTbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
         val countLimit = if (list.size >= 4) 4 else 2
         val comlumn = tagList[tagIndex]
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
@@ -3255,24 +3255,29 @@ object DataSettingUtils {
         )
         var nextContinue = 0
         for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
+
+            mActivity.setBtnRevAllTb("OM_M->${iList[0]},$comlumn $pt-> $n -- $nextMax ")
             if (nextContinue > 0) {
 //                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--
                 continue
             }
             var dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+            LogUtil.d("getDlist")
             if (null == dlist) {
                 continue
             }
             while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
                 nextContinue++
                 dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+                LogUtil.d("getDlist")
             }
-            while ((list.size - dlist!!.size == 1)) {
+            while ((list.size - dlist!!.size == 1)&&(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)<=nextMax) {
                 nextContinue++
                 dlist = getDlist(nextTbName, comlumn,addstr, n, nextContinue)
+                LogUtil.d("getDlist-->$nextContinue")
             }
-            if (dlist.size > 1) {
+            if (dlist.size > 0) {
                 if (tagIndex == tagList.size - 1) {
                     val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
                     val reasoningAllJudgeBean =
@@ -3303,7 +3308,7 @@ object DataSettingUtils {
                     mdateRangeIndex = dateRangeIndex - 1
                     mTagIndex = 0
                 }
-                if ((mdateRangeIndex) >= 0) {
+                if ((mdateRangeIndex) >= 0&&mTagIndex != 0) {
                     revAllReasoning30(
                         pt,
                         tagList,
@@ -3363,7 +3368,7 @@ object DataSettingUtils {
         }
         val mNextCodeList = list.getCodeList()
         val addstr =
-            mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+            mNextCodeList.getCodeArrayAndLimitSQL(tbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
         val column = "${tagList[tagIndex]}$date"
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
@@ -3399,9 +3404,9 @@ object DataSettingUtils {
             if (dlist.size > 0) {
                 if (tagIndex == tagList.size-2 && date == 5) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
-                    val codeInfo =
-                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
-                    LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
+//                    val codeInfo =
+//                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+//                    LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
                 } else {
                     revOCOOlReasoning(
@@ -3448,11 +3453,8 @@ object DataSettingUtils {
     ): ArrayList<BaseReverseImp>? {
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE $column >=? AND $column<? $addstr",
-            arrayOf(
-                n.toString(),
-                (n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS).toString()
-            )
+            "SELECT * FROM $nextTbName WHERE $column >=${ n.toString()} AND $column<${(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr",
+            null
         )
         return dlist
     }

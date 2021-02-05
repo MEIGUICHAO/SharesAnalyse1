@@ -3932,10 +3932,10 @@ class NewApiViewModel : BaseViewModel() {
                                     i,
                                     i + Datas.FILTER_OC_OO_PROGRESS
                                 )
-                            val codeInfo =
-                                list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+//                            val codeInfo =
+//                                list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
-                            LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
+//                            LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
                             DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
                         } else {
                             val dateRangeIndex = dayList.size - 2
@@ -3982,7 +3982,7 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("revAllJudgeResult")
             var nextContinue = 0
             for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
-                (mActivity as NewApiActivity).setBtnRevAllTb("$pt-> $i -- $rangeMax ")
+                (mActivity as NewApiActivity).setBtnRevAllTb("OM_M $pt-> $i -- $rangeMax ")
                 if (nextContinue > 0) {
                     nextContinue--
                     continue
@@ -4019,7 +4019,7 @@ class NewApiViewModel : BaseViewModel() {
 //                list?.forEach {
 //                    LogUtil.d("$tbName code:$it")
 //                }
-                if (list.size > 1) {
+                if (list.size > 0) {
                     LogUtil.d("revAllJudgeResult")
 //                    val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
 //                    val reasoningAllJudgeBean =

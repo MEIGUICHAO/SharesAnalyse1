@@ -1310,7 +1310,7 @@ object DBUtils {
         dbName: String
     ): Pair<String, String> {
         switchDBName(dbName)
-        val addSql = codeList.getCodeArrayAndLimitSQL(false)
+        val addSql = codeList.getCodeArrayAndLimitSQL(tbName,false)
 
 
         val querySql = " SELECT * FROM $tbName WHERE $addSql "
