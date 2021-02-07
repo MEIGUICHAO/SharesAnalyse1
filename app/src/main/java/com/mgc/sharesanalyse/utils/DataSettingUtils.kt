@@ -3303,12 +3303,13 @@ object DataSettingUtils {
                     LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
-                if (tagIndex+1 < tagList.size ) {
+                var mTagIndex = tagIndex+1
+                if (mTagIndex < tagList.size) {
                     LogUtil.d("foreach:$comlumn,$n,$date")
                     revAllReasoning30(
                         pt,
                         tagList,
-                        tagIndex+1,
+                        mTagIndex,
                         dayList,
                         dateRangeIndex,
                         dlist,
@@ -3316,6 +3317,22 @@ object DataSettingUtils {
                         insertTB,
                         iList
                     )
+                } else {
+                    mTagIndex = 0
+                    var mDateRangeIndex = dateRangeIndex- 1
+                    if (mDateRangeIndex >= 0) {
+                        revAllReasoning30(
+                            pt,
+                            tagList,
+                            mTagIndex,
+                            dayList,
+                            mDateRangeIndex,
+                            dlist,
+                            dayList[mDateRangeIndex],
+                            insertTB,
+                            iList
+                        )
+                    }
                 }
             }
         }
