@@ -3966,7 +3966,8 @@ class NewApiViewModel : BaseViewModel() {
 
         LogUtil.d("revAllJudgeResult")
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
-        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
+//        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
+        val tagList = arrayOf("OM_M","OM_C","OM_L")
         val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
         LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
@@ -4027,10 +4028,10 @@ class NewApiViewModel : BaseViewModel() {
 //                    reasoningAllJudgeBean.f36_T = i
                     val insertTB = "All_${pt}"
 //                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
-                    dateRangeIndex = dayList.size - 2
+                    dateRangeIndex = dayList.size - 1
                     date = dayList[dateRangeIndex]
                     var tagIndex = 0
-                    LogUtil.d("nextTbName!!!-->($i,${(i + Datas.FILTER_PROGRESS)})")
+                    LogUtil.d("nextTbName!!!-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()})")
                     if (dateRangeIndex > 0) {
                         DataSettingUtils.revAllReasoning30(
                             pt,
@@ -4068,16 +4069,17 @@ class NewApiViewModel : BaseViewModel() {
                             continue
                         }
                         //TODO CESHI
-                        insertAllReasoning(
-                            false,
-                            foreachLimitList,
-                            i,
-                            mCHDDList,
-                            code
-                        )
 
-//                        if (mCHDDList[i].date == "20200928") {
-//                        }
+                        if (mCHDDList[i].date == "20200622") {
+
+                            insertAllReasoning(
+                                false,
+                                foreachLimitList,
+                                i,
+                                mCHDDList,
+                                code
+                            )
+                        }
 //                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }

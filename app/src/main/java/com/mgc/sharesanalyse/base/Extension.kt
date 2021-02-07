@@ -249,12 +249,21 @@ fun ArrayList<String>.getCodeArrayAndLimitSQL(tbName:String,needFirstAnd: Boolea
 //    SELECT * FROM tablename where (cdp= 300 and inline=301) or (cdp= 301 and inline=301) or (cdp= 302 and inline=301) or (cdp= 303 and inline=301) or (cdp= 304 and inline=301) or (cdp= 305 and inline=301) or (cdp= 306 and inline=301) or (cdp= 307 and inline=301)
 //    SELECT * FROM tablename where (inline= 300 and cdp=300) union all SELECT * FROM tablename where (inline= 301 and cdp=300) union all SELECT * FROM tablename where (inline= 302 and cdp=300) union all SELECT * FROM tablename where (inline= 303 and cdp=300)
     var addSql = ""
+    val unionBegin = " union all SELECT * FROM $tbName WHERE "
     this.forEach {
+        val unionList = addSql.split(unionBegin)
+        var addBegin = " OR "
+        if (unionList.size >= 1) {
+            val unionOrSize = unionList[unionList.size - 1].split(addBegin).size
+            if (unionOrSize > 500) {
+                addBegin = unionBegin
+            }
+        }
         if (needFirstAnd) {
-            addSql =if (addSql.isEmpty()) "AND ( CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')" else addSql + "  union all SELECT * FROM $tbName WHERE (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
+            addSql =if (addSql.isEmpty()) "AND ( CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')" else addSql + "$addBegin (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
         } else {
             addSql = if (addSql.isEmpty()) "(CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
-            else addSql + " union all SELECT * FROM $tbName WHERE (CODE =${it.split("###")[0]} AND DATE ='${it.split("###")[1]}')"
+            else addSql + "$addBegin (CODE =${it.split("###")[0]} AND DATE ='${it.split("###")[1]}')"
         }
     }
     return addSql

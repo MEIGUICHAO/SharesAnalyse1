@@ -3254,7 +3254,7 @@ object DataSettingUtils {
             Datas.REVERSE_KJ_DB
         )
         var nextContinue = 0
-        for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
+        for (n in nextMin .. nextMax step Datas.FILTER_PROGRESS) {
 
             mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
             if (nextContinue > 0) {
@@ -3263,23 +3263,19 @@ object DataSettingUtils {
                 continue
             }
             var dlist:ArrayList<BaseReverseImp>?
-            try {
-                dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
-            } catch (e: java.lang.Exception) {
-                continue
-            }
+            dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
             LogUtil.d("getDlist")
             if (null == dlist) {
                 continue
             }
-            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
+            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
                 nextContinue++
                 dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
                 LogUtil.d("getDlist")
             }
-            while ((list.size - dlist!!.size == 1)&&(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)<=nextMax) {
+            while ((list.size - dlist!!.size == 1) && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
                 nextContinue++
-                dlist = getDlist(nextTbName, comlumn,addstr, n, nextContinue)
+                dlist = getDlist(nextTbName, comlumn, addstr, n, nextContinue)
                 LogUtil.d("getDlist-->$nextContinue")
             }
             if (dlist.size > 0) {
@@ -3304,24 +3300,19 @@ object DataSettingUtils {
                     for (q in 0 until iList.size) {
                         istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
                     }
-                    LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
+                    LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
-                var mdateRangeIndex = dateRangeIndex
-                var mTagIndex = tagIndex+1
-                if (mTagIndex == tagList.size) {
-                    mdateRangeIndex = dateRangeIndex - 1
-                    mTagIndex = 0
-                }
-                if ((mdateRangeIndex) >= 0&&mTagIndex != 0) {
+                if (tagIndex+1 < tagList.size ) {
+                    LogUtil.d("foreach:$comlumn,$n,$date")
                     revAllReasoning30(
                         pt,
                         tagList,
-                        mTagIndex,
+                        tagIndex+1,
                         dayList,
-                        mdateRangeIndex,
+                        dateRangeIndex,
                         dlist,
-                        dayList[mdateRangeIndex],
+                        dayList[dateRangeIndex],
                         insertTB,
                         iList
                     )
