@@ -4070,16 +4070,16 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
-                        if (mCHDDList[i].date == "20200622") {
-
-                            insertAllReasoning(
-                                false,
-                                foreachLimitList,
-                                i,
-                                mCHDDList,
-                                code
-                            )
-                        }
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
+//                        if (mCHDDList[i].date == "20200727") {
+//
+//                        }
 //                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
