@@ -4005,7 +4005,7 @@ class NewApiViewModel : BaseViewModel() {
                     continue
                 }
 
-                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= rangeMax) {
+                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) < rangeMax) {
                     nextContinue++
                     LogUtil.d("nextContinue-->$nextContinue")
                     list = DBUtils.getFilterAllByTbName(
@@ -4031,7 +4031,7 @@ class NewApiViewModel : BaseViewModel() {
                     dateRangeIndex = dayList.size - 1
                     date = dayList[dateRangeIndex]
                     var tagIndex = 0
-                    LogUtil.d("nextTbName!!!-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()})")
+                    LogUtil.d("nextTbName!!!-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})")
                     if (dateRangeIndex > 0) {
                         DataSettingUtils.revAllReasoning30(
                             pt,
@@ -4042,7 +4042,8 @@ class NewApiViewModel : BaseViewModel() {
                             list,
                             dayList[dateRangeIndex],
                             insertTB,
-                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0)
+                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0),
+                            "OM_M-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})"
                         )
                     }
 

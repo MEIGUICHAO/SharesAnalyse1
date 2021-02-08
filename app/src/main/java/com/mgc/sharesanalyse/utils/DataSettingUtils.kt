@@ -3236,8 +3236,10 @@ object DataSettingUtils {
         list: ArrayList<BaseReverseImp>,
         date: Int,
         insertTB: String,
-        iList: ArrayList<Int>
+        iList: ArrayList<Int>,
+        difTag:String
     ) {
+
 
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
@@ -3253,12 +3255,14 @@ object DataSettingUtils {
             mNextCodeList,
             Datas.REVERSE_KJ_DB
         )
+        val mDifTag = "$difTag,$comlumn-->($nextMin,$nextMax)"
         var nextContinue = 0
-        for (n in nextMin .. nextMax step Datas.FILTER_PROGRESS) {
+        LogUtil.d("mDifTag: $mDifTag ")
+        for (n in nextMin until nextMax step Datas.FILTER_PROGRESS) {
 
             mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
             if (nextContinue > 0) {
-//                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
+                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--
                 continue
             }
@@ -3278,6 +3282,7 @@ object DataSettingUtils {
                 dlist = getDlist(nextTbName, comlumn, addstr, n, nextContinue)
                 LogUtil.d("getDlist-->$nextContinue")
             }
+            LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue,$comlumn:$n")
             if (dlist.size > 0) {
                 if (tagIndex == tagList.size - 1) {
                     val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
@@ -3305,7 +3310,7 @@ object DataSettingUtils {
                 }
                 var mTagIndex = tagIndex+1
                 if (mTagIndex < tagList.size) {
-                    LogUtil.d("foreach:$comlumn,$n,$date")
+                    LogUtil.d("pt:$pt,foreach:$comlumn,range:$n-${(n + (nextContinue + 1) * Datas.FILTER_PROGRESS)},min-max:${nextMin}->${nextMax},date:$date,size->${dlist.size}")
                     revAllReasoning30(
                         pt,
                         tagList,
@@ -3315,25 +3320,27 @@ object DataSettingUtils {
                         dlist,
                         dayList[dateRangeIndex],
                         insertTB,
-                        iList
+                        iList,
+                        mDifTag
                     )
-                } else {
-                    mTagIndex = 0
-                    var mDateRangeIndex = dateRangeIndex- 1
-                    if (mDateRangeIndex >= 0) {
-                        revAllReasoning30(
-                            pt,
-                            tagList,
-                            mTagIndex,
-                            dayList,
-                            mDateRangeIndex,
-                            dlist,
-                            dayList[mDateRangeIndex],
-                            insertTB,
-                            iList
-                        )
-                    }
                 }
+//                else {
+//                    mTagIndex = 0
+//                    var mDateRangeIndex = dateRangeIndex- 1
+//                    if (mDateRangeIndex >= 0) {
+//                        revAllReasoning30(
+//                            pt,
+//                            tagList,
+//                            mTagIndex,
+//                            dayList,
+//                            mDateRangeIndex,
+//                            dlist,
+//                            dayList[mDateRangeIndex],
+//                            insertTB,
+//                            iList
+//                        )
+//                    }
+//                }
             }
         }
     }
