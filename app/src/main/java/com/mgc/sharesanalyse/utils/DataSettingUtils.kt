@@ -3356,11 +3356,12 @@ object DataSettingUtils {
         insertTB: String
     ) {
         var needSkip = false
-        if (tagIndex == tagList.size - 1) {
+        val column = "${tagList[tagIndex]}$date"
+        if ("PPP".equals(column)) {
             if (date == 3 || date == 15 || date == 25 || date == 35 || date == 45 || date == 55 || date == 65) {
                 needSkip = true
             }
-        } else if (tagIndex == tagList.size - 2) {
+        } else if ("PP".equals(column)) {
             if (date == 3 ) {
                 needSkip = true
             }
@@ -3390,7 +3391,6 @@ object DataSettingUtils {
         val addstr =
             mNextCodeList.getCodeArrayAndLimitSQL(tbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
-        val column = "${tagList[tagIndex]}$date"
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             true,
             tbName,
@@ -3399,9 +3399,12 @@ object DataSettingUtils {
             Datas.REVERSE_KJ_DB
         )
 
+        mActivity.setReasoningProgress("$column,$nextMin-->$nextMax")
+        LogUtil.d("$column,$nextMin-->$nextMax")
+
         var nextContinue = 0
         val countLimit = if (list.size >= 4) 4 else 2
-        for (n in nextMin..nextMax step Datas.FILTER_OC_OO_PROGRESS) {
+        for (n in nextMin until nextMax step Datas.FILTER_OC_OO_PROGRESS) {
             if (nextContinue > 0) {
                 nextContinue--
                 continue
@@ -3411,7 +3414,7 @@ object DataSettingUtils {
                 continue
             }
 
-            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_OC_OO_PROGRESS) <= nextMax) {
+            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_OC_OO_PROGRESS) < nextMax) {
                 nextContinue++
                 dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
             }
@@ -3422,7 +3425,11 @@ object DataSettingUtils {
 //                dayList
 //            )
             if (dlist.size > 0) {
-                if (tagIndex == tagList.size-2 && date == 5) {
+                if (tagIndex == 2&&date==30) {
+                    LogUtil.d("---")
+                }
+                if (tagIndex == tagList.size-1 && date == 3) {
+//                if (tagIndex == tagList.size-1 && date == 5) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
 //                    val codeInfo =
 //                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
@@ -3431,11 +3438,11 @@ object DataSettingUtils {
                 } else {
                     revOCOOlReasoning(
                         tagList,
-                        if (date==3) tagIndex + 1 else tagIndex,
+                        if (date == 3) tagIndex + 1 else tagIndex,
                         dayList,
-                        if (dateRangeIndex>0)dateRangeIndex-1 else dayList.size - 2,
+                        if (dateRangeIndex > 0) dateRangeIndex - 1 else dayList.size - 1,
                         dlist,
-                        dayList[if (dateRangeIndex>0)dateRangeIndex-1 else dayList.size - 2],
+                        dayList[if (dateRangeIndex > 0) dateRangeIndex - 1 else dayList.size - 1],
                         tbName,
                         insertTB
                     )
@@ -3453,6 +3460,8 @@ object DataSettingUtils {
         n: Int,
         nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
+
+        LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
             "SELECT * FROM $nextTbName WHERE $column >=? AND $column<? $addstr",
@@ -3471,6 +3480,8 @@ object DataSettingUtils {
         n: Int,
         nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
+
+        LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
             "SELECT * FROM $nextTbName WHERE $column >=${ n.toString()} AND $column<${(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr",

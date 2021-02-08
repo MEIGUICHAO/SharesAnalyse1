@@ -55,8 +55,8 @@ object Datas {
 
     //------------------------------------
 //    val DEBUG_Code = listOf("000010","002096","002370","002943","300641","300906","601015")
-    val DEBUG_Code = listOf("000816","002797","300491","600983","603698")//all_reaoning_50
-//    val DEBUG_Code = listOf("000012")
+//    val DEBUG_Code = listOf("000816","002797","300491","600983","603698")//all_reaoning_50
+    val DEBUG_Code = listOf("000012")
 //    val DEBUG_Code = listOf("000025")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")
@@ -125,6 +125,7 @@ object Datas {
     const val REASONING_BEGIN_DATE = 20200601
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
+    val debugSelectMaxMinStr = if (DEBUG) "WHERE (${DEBUG_Code.toReasoningCodeList()})" else ""
     const val reasoning_debug = false
     const val reasoning_debug_begin_day = 20201215
     const val reasoning_debug_end_day = 20210201

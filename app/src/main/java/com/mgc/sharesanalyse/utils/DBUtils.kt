@@ -1283,7 +1283,7 @@ object DBUtils {
         var maxValue = ""
         var cursor =
             db.rawQuery(
-                " SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName))",
+                " SELECT * FROM $tbName WHERE ($column IN (SELECT MIN($column) FROM $tbName ${Datas.debugSelectMaxMinStr}))",
                 null
             )
         if (null != cursor && cursor.moveToFirst()) {
@@ -1292,7 +1292,7 @@ object DBUtils {
         cursor.close()
         cursor =
             db.rawQuery(
-                " SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName))",
+                " SELECT * FROM $tbName WHERE ($column IN (SELECT MAX($column) FROM $tbName ${Datas.debugSelectMaxMinStr}))",
                 null
             )
         if (null != cursor && cursor.moveToFirst()) {
@@ -1415,26 +1415,24 @@ object DBUtils {
         LogUtil.d("$sqlStr")
         var list: ArrayList<BaseReverseImp>? = null
         var cursor:Cursor? = null
-        try {
-            cursor =
-                db.rawQuery(sqlStr, selection)
-        } catch (e: java.lang.Exception) {
-            return list
-        }
-        cursor?.let {
+        cursor =
+            db.rawQuery(sqlStr, selection)
+        LogUtil.d("getFilterAllByTbName!!!")
+        if (null != cursor) {
             list = ArrayList()
-            it.moveToFirst()
-            while (!it.isAfterLast) {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
                 if (isOCOO) {
-                    val bean = getRevKJOCOOBeanByCursor(it)
-                    list!!.add(bean)
+                    val bean = getRevKJOCOOBeanByCursor(cursor)
+                    list.add(bean)
+                    LogUtil.d("getFilterAllByTbName!!!\n$sqlStr${list?.size}")
                 } else {
-                    val bean = getRevKJBeanByCursor(it)
-                    list!!.add(bean)
+                    val bean = getRevKJBeanByCursor(cursor)
+                    list.add(bean)
                 }
-                it.moveToNext()
+                cursor.moveToNext()
             }
-            it.close()
+            cursor.close()
         }
         return list
     }

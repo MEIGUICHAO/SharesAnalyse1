@@ -3887,32 +3887,33 @@ class NewApiViewModel : BaseViewModel() {
 
     fun revOCOOJudgeResult() {
 //        val dayList = arrayOf(3, 5, 10, 15, 20)
-        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
-        val tagList = arrayOf("OC", "OO", "PP", "PPP")
-        val tbList = arrayOf(Datas.REV_OC_OO_30, Datas.REV_OC_OO_50)
+        val dayList = arrayOf(3, 5)
+//        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+        val tagList = arrayOf("OC")
+//        val tagList = arrayOf("OC", "OO", "PP", "PPP")
+        val tbList = arrayOf(Datas.REV_OC_OO_30)//, Datas.REV_OC_OO_50
 
         (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
         tbList.forEach {
             DBUtils.switchDBName(Datas.REVERSE_KJ_DB)
             if (DBUtils.tabbleIsExist(it)) {
+
                 val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMinByColumm(
                     it,
                     Datas.REVERSE_KJ_DB,
-                    "OC70",true
+                    "OC${dayList[dayList.size - 1]}",true
                 )
 //            FILTER_OC_OO_PROGRESS
 
                 LogUtil.d("rangeMax-->${rangeMax},rangeMin-->${rangeMin}")
-                for (i in rangeMin..rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
+                for (i in rangeMin until rangeMax step Datas.FILTER_OC_OO_PROGRESS) {
 
 
+                    LogUtil.d("getFilterAllByTbName!!!")
                     val list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $it WHERE OC70 >=? AND OC70<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
-                        arrayOf(
-                            i.toString(),
-                            (i + Datas.FILTER_OC_OO_PROGRESS).toString()
-                        ), true
+                        "SELECT * FROM $it WHERE OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        null, true
                     )
 
                     if (null == list) {
@@ -3940,17 +3941,17 @@ class NewApiViewModel : BaseViewModel() {
                         } else {
                             val dateRangeIndex = dayList.size - 2
                             val date = dayList[dateRangeIndex]
-                            if (dateRangeIndex > 0) {
-                                DataSettingUtils.revOCOOlReasoning(
-                                    tagList,
-                                    0,
-                                    dayList,
-                                    dateRangeIndex,
-                                    list,
-                                    date,
-                                    it,
-                                    insertTB
-                                )
+                            if (dateRangeIndex >= 0) {
+//                                DataSettingUtils.revOCOOlReasoning(
+//                                    tagList,
+//                                    0,
+//                                    dayList,
+//                                    dateRangeIndex,
+//                                    list,
+//                                    date,
+//                                    it,
+//                                    insertTB
+//                                )
                             }
                         }
 
@@ -4071,17 +4072,17 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
-                        insertAllReasoning(
-                            false,
-                            foreachLimitList,
-                            i,
-                            mCHDDList,
-                            code
-                        )
+//                        insertAllReasoning(
+//                            false,
+//                            foreachLimitList,
+//                            i,
+//                            mCHDDList,
+//                            code
+//                        )
 //                        if (mCHDDList[i].date == "20200727") {
 //
 //                        }
-//                        insertOCOOReasoning(i,mCHDDList,code)
+                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }
