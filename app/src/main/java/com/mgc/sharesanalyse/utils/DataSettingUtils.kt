@@ -3323,24 +3323,24 @@ object DataSettingUtils {
                         iList,
                         mDifTag
                     )
+                } else {
+                    mTagIndex = 0
+                    var mDateRangeIndex = dateRangeIndex- 1
+                    if (mDateRangeIndex >= 0) {
+                        revAllReasoning30(
+                            pt,
+                            tagList,
+                            mTagIndex,
+                            dayList,
+                            mDateRangeIndex,
+                            dlist,
+                            dayList[mDateRangeIndex],
+                            insertTB,
+                            iList,
+                            mDifTag
+                        )
+                    }
                 }
-//                else {
-//                    mTagIndex = 0
-//                    var mDateRangeIndex = dateRangeIndex- 1
-//                    if (mDateRangeIndex >= 0) {
-//                        revAllReasoning30(
-//                            pt,
-//                            tagList,
-//                            mTagIndex,
-//                            dayList,
-//                            mDateRangeIndex,
-//                            dlist,
-//                            dayList[mDateRangeIndex],
-//                            insertTB,
-//                            iList
-//                        )
-//                    }
-//                }
             }
         }
     }
