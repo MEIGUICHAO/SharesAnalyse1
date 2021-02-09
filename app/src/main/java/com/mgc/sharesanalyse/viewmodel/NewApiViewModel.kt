@@ -3886,8 +3886,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun revOCOOJudgeResult() {
-//        val dayList = arrayOf(3, 5, 10, 15, 20)
-        val dayList = arrayOf(3, 5)
+        val dayList = arrayOf(3, 5, 10)
 //        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
         val tagList = arrayOf("OC")
 //        val tagList = arrayOf("OC", "OO", "PP", "PPP")
@@ -3912,7 +3911,7 @@ class NewApiViewModel : BaseViewModel() {
                     LogUtil.d("getFilterAllByTbName!!!")
                     val list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $it WHERE OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                         null, true
                     )
 
@@ -3942,16 +3941,16 @@ class NewApiViewModel : BaseViewModel() {
                             val dateRangeIndex = dayList.size - 2
                             val date = dayList[dateRangeIndex]
                             if (dateRangeIndex >= 0) {
-//                                DataSettingUtils.revOCOOlReasoning(
-//                                    tagList,
-//                                    0,
-//                                    dayList,
-//                                    dateRangeIndex,
-//                                    list,
-//                                    date,
-//                                    it,
-//                                    insertTB
-//                                )
+                                DataSettingUtils.revOCOOlReasoning(
+                                    tagList,
+                                    0,
+                                    dayList,
+                                    dateRangeIndex,
+                                    list,
+                                    date,
+                                    it,
+                                    insertTB
+                                )
                             }
                         }
 
@@ -3996,7 +3995,7 @@ class NewApiViewModel : BaseViewModel() {
 
                 var list = DBUtils.getFilterAllByTbName(
                     Datas.REVERSE_KJ_DB,
-                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                    "SELECT * FROM $tbName WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND  OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                     arrayOf(
                         i.toString(),
                         (i + Datas.FILTER_PROGRESS).toString()
@@ -4011,7 +4010,7 @@ class NewApiViewModel : BaseViewModel() {
                     LogUtil.d("nextContinue-->$nextContinue")
                     list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        "SELECT * FROM $tbName  WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE)  OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                         arrayOf(
                             i.toString(),
                             ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()

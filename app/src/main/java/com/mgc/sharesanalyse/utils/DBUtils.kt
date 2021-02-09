@@ -1417,7 +1417,7 @@ object DBUtils {
         var cursor:Cursor? = null
         cursor =
             db.rawQuery(sqlStr, selection)
-        LogUtil.d("getFilterAllByTbName!!!")
+        LogUtil.d("getFilterAllByTbName!!!${cursor.count}")
         if (null != cursor) {
             list = ArrayList()
             cursor.moveToFirst()
@@ -1425,7 +1425,7 @@ object DBUtils {
                 if (isOCOO) {
                     val bean = getRevKJOCOOBeanByCursor(cursor)
                     list.add(bean)
-                    LogUtil.d("getFilterAllByTbName!!!\n$sqlStr${list?.size}")
+                    LogUtil.d("getFilterAllByTbName!!!\n$sqlStr${list.size}")
                 } else {
                     val bean = getRevKJBeanByCursor(cursor)
                     list.add(bean)

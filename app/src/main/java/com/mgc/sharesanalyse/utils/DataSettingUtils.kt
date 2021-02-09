@@ -3464,7 +3464,7 @@ object DataSettingUtils {
         LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE $column >=? AND $column<? $addstr",
+            "SELECT * FROM $nextTbName WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND  $column >=? AND $column<? $addstr",
             arrayOf(
                 n.toString(),
                 (n + Datas.FILTER_OC_OO_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS ).toString()
@@ -3484,7 +3484,7 @@ object DataSettingUtils {
         LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE $column >=${ n.toString()} AND $column<${(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr",
+            "SELECT * FROM $nextTbName  WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND   $column >=${ n.toString()} AND $column<${(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr",
             null
         )
         return dlist
