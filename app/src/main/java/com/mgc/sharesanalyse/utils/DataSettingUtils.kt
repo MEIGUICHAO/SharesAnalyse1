@@ -3389,7 +3389,7 @@ object DataSettingUtils {
         }
         val mNextCodeList = list.getCodeList()
         val addstr =
-            mNextCodeList.getCodeArrayAndLimitSQL(tbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+            mNextCodeList.getCodeArrayAndLimitSQL(tbName,false) + Datas.reasoning_debug_end_str
 
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             true,
@@ -3409,14 +3409,14 @@ object DataSettingUtils {
                 nextContinue--
                 continue
             }
-            var dlist = getOCOODlist(tbName, addstr, column,n,nextContinue)
+            var dlist = getOCOODlist(tbName, "AND ($addstr)", column,n,nextContinue)
             if (null == dlist) {
                 continue
             }
 
             while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_OC_OO_PROGRESS) < nextMax) {
                 nextContinue++
-                dlist = getOCOODlist(tbName, addstr, column,n, nextContinue)
+                dlist = getOCOODlist(tbName, "AND ($addstr)", column,n, nextContinue)
             }
 //            val (mTagIndex, mDateRangeIndex) = getNextRevOCOOParameter(
 //                tagIndex,
@@ -3464,11 +3464,8 @@ object DataSettingUtils {
         LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND  $column >=? AND $column<? $addstr",
-            arrayOf(
-                n.toString(),
-                (n + Datas.FILTER_OC_OO_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS ).toString()
-            ),true
+            "SELECT * FROM $nextTbName WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND  $column >=${n.toString()} AND $column<${(n + Datas.FILTER_OC_OO_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS )} $addstr",
+            null,true
         )
         return dlist
     }
