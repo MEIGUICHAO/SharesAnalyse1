@@ -119,7 +119,7 @@ object Datas {
     const val REV_FILTERDB = "REV_FILTERDB"
     const val REV_DAYS = 20
     const val FILTER_PROGRESS = 10
-    const val FILTER_OC_OO_PROGRESS = 20
+    const val FILTER_OC_OO_PROGRESS = 2
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601

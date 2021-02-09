@@ -3357,11 +3357,11 @@ object DataSettingUtils {
     ) {
         var needSkip = false
         val column = "${tagList[tagIndex]}$date"
-        if ("PPP".equals(column)) {
+        if ("PPP".equals(tagList[tagIndex])) {
             if (date == 3 || date == 15 || date == 25 || date == 35 || date == 45 || date == 55 || date == 65) {
                 needSkip = true
             }
-        } else if ("PP".equals(column)) {
+        } else if ("PP".equals(tagList[tagIndex])) {
             if (date == 3 ) {
                 needSkip = true
             }
@@ -3428,8 +3428,8 @@ object DataSettingUtils {
                 if (tagIndex == 2&&date==30) {
                     LogUtil.d("---")
                 }
-                if (tagIndex == tagList.size-1 && date == 3) {
-//                if (tagIndex == tagList.size-1 && date == 5) {
+//                if (tagIndex == tagList.size-1 && date == 3) {
+                if (tagIndex == tagList.size-1 && date == 5) {
                     val reasoningAllJudgeBean = getReasoningOCOOJudgeBean(list,n,n+ Datas.FILTER_OC_OO_PROGRESS)
 //                    val codeInfo =
 //                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
