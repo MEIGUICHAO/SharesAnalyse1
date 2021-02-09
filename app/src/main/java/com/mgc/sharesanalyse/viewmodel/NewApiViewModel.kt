@@ -3886,8 +3886,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun revOCOOJudgeResult() {
-        val dayList = arrayOf(3, 5, 10)
-//        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+//        val dayList = arrayOf(3, 5, 10)
+        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
 //        val tagList = arrayOf("OC")
         val tagList = arrayOf("OC", "OO", "PP", "PPP")
         val tbList = arrayOf(Datas.REV_OC_OO_30)//, Datas.REV_OC_OO_50
@@ -4078,9 +4078,7 @@ class NewApiViewModel : BaseViewModel() {
 //                            mCHDDList,
 //                            code
 //                        )
-                        if (mCHDDList[i].date == "20201019"||mCHDDList[i].date == "20201021"||mCHDDList[i].date == "20201022") {
-                            insertOCOOReasoning(i,mCHDDList,code)
-                        }
+                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }
