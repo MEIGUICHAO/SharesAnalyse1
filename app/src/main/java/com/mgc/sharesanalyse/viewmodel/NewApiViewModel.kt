@@ -3890,7 +3890,7 @@ class NewApiViewModel : BaseViewModel() {
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
 //        val tagList = arrayOf("OC")
         val tagList = arrayOf("OC", "OO", "PP", "PPP")
-        val tbList = arrayOf(Datas.REV_OC_OO_30)//, Datas.REV_OC_OO_50
+        val tbList = arrayOf(Datas.REV_OC_OO_30, Datas.REV_OC_OO_50)//
 
         (mActivity as NewApiActivity).setBtnRevAllTb("OC_OO_Begin")
         tbList.forEach {
@@ -3910,7 +3910,6 @@ class NewApiViewModel : BaseViewModel() {
 
                     LogUtil.d("getFilterAllByTbName!!!")
                     val querySQL = "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}"
-                    LogUtil.d("querySQL-->$querySQL")
                     val list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
                         querySQL,
@@ -3934,13 +3933,6 @@ class NewApiViewModel : BaseViewModel() {
                                     i,
                                     i + Datas.FILTER_OC_OO_PROGRESS
                                 )
-                            var listResult = ""
-                            list.forEach {
-                                if (it is ReverseKJsonBean) {
-                                    listResult = "$listResult${it.code},${it.date},"
-                                }
-                            }
-                            LogUtil.d("listResult-->$listResult")
 //                            val codeInfo =
 //                                list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
@@ -3950,13 +3942,6 @@ class NewApiViewModel : BaseViewModel() {
                             val dateRangeIndex = dayList.size - 2
                             val date = dayList[dateRangeIndex]
 
-                            var listResult = ""
-                            list.forEach {
-                                if (it is ReverseKJsonBean) {
-                                    listResult = "$listResult${it.code},${it.date},"
-                                }
-                            }
-                            LogUtil.d("begin--listResult-->$listResult")
                             if (dateRangeIndex >= 0) {
                                 DataSettingUtils.revOCOOlReasoning(
                                     tagList,
@@ -4027,7 +4012,7 @@ class NewApiViewModel : BaseViewModel() {
                     LogUtil.d("nextContinue-->$nextContinue")
                     list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $tbName  WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE)  OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        "SELECT * FROM $tbName  WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                         arrayOf(
                             i.toString(),
                             ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
@@ -4088,14 +4073,14 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
-//                        insertAllReasoning(
-//                            false,
-//                            foreachLimitList,
-//                            i,
-//                            mCHDDList,
-//                            code
-//                        )
-                        insertOCOOReasoning(i,mCHDDList,code)
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
+//                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
             }

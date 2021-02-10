@@ -3345,6 +3345,7 @@ object DataSettingUtils {
         }
     }
 
+    var mOCOOlReasoningInsertResult = ""
     fun revOCOOlReasoning(
         tagList: Array<String>,
         tagIndex: Int,
@@ -3435,16 +3436,21 @@ object DataSettingUtils {
 //                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 //                    LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
 
+
+                    mOCOOlReasoningInsertResult = getListResult(list)
+                    DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
+                } else {
+
                     var listResult = ""
                     list.forEach {
                         if (it is ReverseKJsonBean) {
                             listResult = "$listResult${it.code},${it.date},"
                         }
                     }
-                    LogUtil.d("listResult-->$listResult")
-                    DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
-                } else {
-
+                    LogUtil.d("$column $date begin--listResult-->$listResult")
+                    if (mOCOOlReasoningInsertResult.equals(getListResult(list))) {
+                        break
+                    }
                     revOCOOlReasoning(
                         tagList,
                         if (date == 3) tagIndex + 1 else tagIndex,
@@ -3460,6 +3466,15 @@ object DataSettingUtils {
         }
     }
 
+    private fun getListResult(list: ArrayList<BaseReverseImp>): String {
+        var listResult = ""
+        list.forEach {
+            if (it is ReverseKJsonBean) {
+                listResult = "$listResult${it.code},${it.date},"
+            }
+        }
+        return listResult
+    }
 
 
     fun getOCOODlist(
@@ -3471,11 +3486,14 @@ object DataSettingUtils {
     ): ArrayList<BaseReverseImp>? {
 
         LogUtil.d("getFilterAllByTbName!!!")
+        val ocooListQuery =
+            "SELECT * FROM $nextTbName WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND  $column >=${n.toString()} AND $column<${(n + Datas.FILTER_OC_OO_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr"
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND  $column >=${n.toString()} AND $column<${(n + Datas.FILTER_OC_OO_PROGRESS+ nextContinue * Datas.FILTER_PROGRESS )} $addstr",
+            ocooListQuery,
             null,true
         )
+        LogUtil.d("ocooListQuery-->$ocooListQuery")
         return dlist
     }
 
