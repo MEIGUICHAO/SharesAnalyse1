@@ -3909,9 +3909,11 @@ class NewApiViewModel : BaseViewModel() {
 
 
                     LogUtil.d("getFilterAllByTbName!!!")
+                    val querySQL = "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}"
+                    LogUtil.d("querySQL-->$querySQL")
                     val list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        querySQL,
                         null, true
                     )
 
@@ -3932,6 +3934,13 @@ class NewApiViewModel : BaseViewModel() {
                                     i,
                                     i + Datas.FILTER_OC_OO_PROGRESS
                                 )
+                            var listResult = ""
+                            list.forEach {
+                                if (it is ReverseKJsonBean) {
+                                    listResult = "$listResult${it.code},${it.date},"
+                                }
+                            }
+                            LogUtil.d("listResult-->$listResult")
 //                            val codeInfo =
 //                                list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 
@@ -3940,6 +3949,14 @@ class NewApiViewModel : BaseViewModel() {
                         } else {
                             val dateRangeIndex = dayList.size - 2
                             val date = dayList[dateRangeIndex]
+
+                            var listResult = ""
+                            list.forEach {
+                                if (it is ReverseKJsonBean) {
+                                    listResult = "$listResult${it.code},${it.date},"
+                                }
+                            }
+                            LogUtil.d("begin--listResult-->$listResult")
                             if (dateRangeIndex >= 0) {
                                 DataSettingUtils.revOCOOlReasoning(
                                     tagList,

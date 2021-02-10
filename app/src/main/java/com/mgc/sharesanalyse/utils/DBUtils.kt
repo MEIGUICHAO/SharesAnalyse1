@@ -1425,7 +1425,7 @@ object DBUtils {
                 if (isOCOO) {
                     val bean = getRevKJOCOOBeanByCursor(cursor)
                     list.add(bean)
-                    LogUtil.d("getFilterAllByTbName!!!\n$sqlStr${list.size}")
+                    LogUtil.d("getFilterAllByTbName!!!${list.size}")
                 } else {
                     val bean = getRevKJBeanByCursor(cursor)
                     list.add(bean)

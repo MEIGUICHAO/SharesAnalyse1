@@ -3434,8 +3434,17 @@ object DataSettingUtils {
 //                    val codeInfo =
 //                        list.getCodeList().getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
 //                    LogUtil.d("codeInfo--(${reasoningAllJudgeBean.oC70_X}-${reasoningAllJudgeBean.oC70_D}):\n$codeInfo")
+
+                    var listResult = ""
+                    list.forEach {
+                        if (it is ReverseKJsonBean) {
+                            listResult = "$listResult${it.code},${it.date},"
+                        }
+                    }
+                    LogUtil.d("listResult-->$listResult")
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
                 } else {
+
                     revOCOOlReasoning(
                         tagList,
                         if (date == 3) tagIndex + 1 else tagIndex,
