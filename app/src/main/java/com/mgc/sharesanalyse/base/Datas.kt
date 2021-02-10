@@ -49,7 +49,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -140,7 +140,7 @@ object Datas {
 //    const val FR_RR_LIMIT = "AND FR > 0 AND FR < 0.5 AND RR > 0.2"
     const val REVERSE_DEBUG= false
     const val REVERSE_BEGIN_CODE = 2540
-    const val NEED_UPDATE_REV_= false
+    const val NEED_UPDATE_REV_= true
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
 
 
