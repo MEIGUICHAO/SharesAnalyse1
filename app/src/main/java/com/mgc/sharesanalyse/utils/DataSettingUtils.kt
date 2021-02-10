@@ -3260,7 +3260,9 @@ object DataSettingUtils {
         LogUtil.d("mDifTag: $mDifTag ")
         for (n in nextMin until nextMax step Datas.FILTER_PROGRESS) {
 
-            mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
+            if ("OM_C".equals(comlumn)&&date==36) {
+                mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
+            }
             if (nextContinue > 0) {
                 LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--

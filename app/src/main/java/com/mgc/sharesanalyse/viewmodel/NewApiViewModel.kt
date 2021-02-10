@@ -3968,8 +3968,8 @@ class NewApiViewModel : BaseViewModel() {
 
         LogUtil.d("revAllJudgeResult")
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
-//        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
-        val tagList = arrayOf("OM_M","OM_C","OM_L")
+        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
+//        val tagList = arrayOf("OM_M","OM_C","OM_L")
         val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
         LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
