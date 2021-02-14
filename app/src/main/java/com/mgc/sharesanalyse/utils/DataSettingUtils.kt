@@ -3308,9 +3308,13 @@ object DataSettingUtils {
                         istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
                     }
                     LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
+                    mOCOOlReasoningInsertResult = getListResult(list)
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
                 var mTagIndex = tagIndex+1
+                if (mOCOOlReasoningInsertResult.equals(getListResult(list))) {
+                    break
+                }
                 if (mTagIndex < tagList.size) {
                     LogUtil.d("pt:$pt,foreach:$comlumn,range:$n-${(n + (nextContinue + 1) * Datas.FILTER_PROGRESS)},min-max:${nextMin}->${nextMax},date:$date,size->${dlist.size}")
                     revAllReasoning30(
@@ -3443,13 +3447,13 @@ object DataSettingUtils {
                     DBUtils.insertOCOOJudgeTB(reasoningAllJudgeBean, insertTB)
                 } else {
 
-                    var listResult = ""
-                    list.forEach {
-                        if (it is ReverseKJsonBean) {
-                            listResult = "$listResult${it.code},${it.date},"
-                        }
-                    }
-                    LogUtil.d("$column $date begin--listResult-->$listResult")
+//                    var listResult = getListResult(list)
+//                    list.forEach {
+//                        if (it is ReverseKJsonBean) {
+//                            listResult = "$listResult${it.code},${it.date},"
+//                        }
+//                    }
+//                    LogUtil.d("$column $date begin--listResult-->$listResult")
                     if (mOCOOlReasoningInsertResult.equals(getListResult(list))) {
                         break
                     }
