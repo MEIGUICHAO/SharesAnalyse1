@@ -3308,7 +3308,9 @@ object DataSettingUtils {
                         istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
                     }
                     LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
-                    mOCOOlReasoningInsertResult = getListResult(list)
+                    if (dateRangeIndex == 0 && tagIndex == tagList.size - 1) {
+                        mOCOOlReasoningInsertResult = getListResult(list)
+                    }
                     DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
                 }
                 var mTagIndex = tagIndex+1
