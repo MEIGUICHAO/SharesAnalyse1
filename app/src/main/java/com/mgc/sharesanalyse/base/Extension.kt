@@ -255,8 +255,9 @@ fun ArrayList<String>.getCodeArrayAndLimitSQL(tbName:String,needFirstAnd: Boolea
         var addBegin = " OR "
         if (unionList.size >= 1) {
             val unionOrSize = unionList[unionList.size - 1].split(addBegin).size
-            if (unionOrSize > 500) {
-                addBegin = unionBegin
+            if (unionOrSize > 900) {
+                return addSql
+//                addBegin = unionBegin
             }
         }
         if (needFirstAnd) {

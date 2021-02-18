@@ -49,15 +49,15 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = false
+    const val DEBUG = true
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
     //------------------------------------
 //    val DEBUG_Code = listOf("000010","002096","002370","002943","300641","300906","601015")
 //    val DEBUG_Code = listOf("000816","002797","300491","600983","603698")//all_reaoning_50
-    val DEBUG_Code = listOf("000006","000009","000011","000012","000025")
-//    val DEBUG_Code = listOf("000025")
+//    val DEBUG_Code = listOf("000006","000009","000011","000012","000025")
+    val DEBUG_Code = listOf("000025")
 //    val DEBUG_Code = listOf("300337","002626","300152","300405","300247","300283","300029","300414"
 //    ,"000561","002308","002508","002068","002732","000558","002724","300387")
 
@@ -119,7 +119,7 @@ object Datas {
     const val REV_FILTERDB = "REV_FILTERDB"
     const val REV_DAYS = 20
     const val FILTER_PROGRESS = 10
-    const val FILTER_OC_OO_PROGRESS = 2
+    const val FILTER_OC_OO_PROGRESS = 10
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
     const val REASONING_BEGIN_DATE = 20200601

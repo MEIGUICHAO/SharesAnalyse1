@@ -3761,7 +3761,8 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     private fun getReasoningForeachLimitList(): ArrayList<Array<Int>> {
-        val initList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
+        val initList = arrayOf(5, 10, 15, 20, 25, 30, 36)
+//        val initList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
         val foreachLimitList = ArrayList<Array<Int>>()
         initList.forEach {
             //target end  old:begin end
@@ -3790,7 +3791,7 @@ class NewApiViewModel : BaseViewModel() {
                             p50FilterBBKJRangeBean,
                             code
                         )
-                        insertOCOOReasoning(i,mCHDDList,code)
+//                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
 
@@ -3805,7 +3806,7 @@ class NewApiViewModel : BaseViewModel() {
                     code
                 )
 
-                insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code)
+//                insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code)
             }
         }
     }
@@ -4073,13 +4074,15 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
-                        insertAllReasoning(
-                            false,
-                            foreachLimitList,
-                            i,
-                            mCHDDList,
-                            code
-                        )
+                        if (mCHDDList[i].date.equals("20200727")) {
+                            insertAllReasoning(
+                                false,
+                                foreachLimitList,
+                                i,
+                                mCHDDList,
+                                code
+                            )
+                        }
 //                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
@@ -4091,12 +4094,11 @@ class NewApiViewModel : BaseViewModel() {
 //        (mActivity as NewApiActivity).setBtnGetAll50("all_finish!!")
     }
 
-    private fun insertOCOOReasoning(i: Int, mCHDDList: java.util.ArrayList<CodeHDDBean>, code: String) {
+    private fun insertOCOOReasoning(i: Int, mCHDDList: java.util.ArrayList<CodeHDDBean>, code: String,is50: Boolean) {
         if (70 <= mCHDDList.size) {
             LogUtil.d("code-->${code},date-->${mCHDDList[i].date}")
             val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
-            insertOCOOReasoning5030Bean(true, ocooBean, i, mCHDDList, code, Datas.ALL_Reaoning_OC_OO_50)
-            insertOCOOReasoning5030Bean(false, ocooBean, i, mCHDDList, code, Datas.ALL_Reaoning_OC_OO_30)
+            insertOCOOReasoning5030Bean(is50, ocooBean, i, mCHDDList, code, if (is50)Datas.ALL_Reaoning_OC_OO_50 else Datas.ALL_Reaoning_OC_OO_30)
         }
     }
 
@@ -4158,7 +4160,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (continue50) {
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
-                    insertOCOOReasoning(i,mCHDDList,code)
+                    insertOCOOReasoning(i,mCHDDList,code,true)
                 }
 
                 if (continue30) {
@@ -4171,7 +4173,7 @@ class NewApiViewModel : BaseViewModel() {
                         fitlerType
                     )
                     DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    insertOCOOReasoning(i,mCHDDList,code)
+                    insertOCOOReasoning(i,mCHDDList,code,false)
                     /*--------------------------------------------------------------*/
 //                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 //                    if (continue30) {
@@ -4271,6 +4273,7 @@ class NewApiViewModel : BaseViewModel() {
                     (mActivity as NewApiActivity).setBtnGetAll50("all_50_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
+                    insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code,true)
                 }
                 if (continue30) {
 
@@ -4284,7 +4287,7 @@ class NewApiViewModel : BaseViewModel() {
                         fitlerType
                     )
                     DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-
+                    insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code,false)
 //                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 //                    if (continue30) {
 //                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
