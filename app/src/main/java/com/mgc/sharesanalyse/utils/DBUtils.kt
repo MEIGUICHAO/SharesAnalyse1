@@ -1896,8 +1896,8 @@ object DBUtils {
         val list = ArrayList<ReasoningAllJudgeBean>()
         val tbName = if (is50) "All_50" else "All_30"
         val querySql = allReasoningBean.getF_TSql(D_T)
-        val mSQL = " SELECT * FROM $tbName WHERE " +
-                " OM_M_X<=$OM_M AND OM_M_D>=$OM_M " +
+        val mSQL = " SELECT * FROM $tbName WHERE D_T=$D_T " +
+                " AND OM_M_X<=$OM_M AND OM_M_D>=$OM_M " +
                 " AND OM_C_X<=$OM_C AND OM_C_D>=$OM_C " +
                 " AND OM_P_X<=$OM_P AND OM_P_D>=$OM_P " +
                 " AND OM_L_X<=$OM_L AND OM_L_D>=$OM_L " +
@@ -1912,8 +1912,8 @@ object DBUtils {
                 " AND OL_M_X<=$OL_M AND OL_M_D>=$OL_M " +
                 " AND OL_C_X<=$OL_C AND OL_C_D>=$OL_C " +
                 " AND OL_P_X<=$OL_P AND OL_P_D>=$OL_P " +
-                " AND OL_L_X<=$OL_L AND OL_L_D>=$OL_L "
-//                "$querySql"
+                " AND OL_L_X<=$OL_L AND OL_L_D>=$OL_L "+
+                "$querySql"
         if (tabbleIsExist(tbName)) {
             val cursor =
                 db.rawQuery(

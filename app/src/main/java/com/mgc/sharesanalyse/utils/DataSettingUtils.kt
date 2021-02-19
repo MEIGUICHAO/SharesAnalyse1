@@ -3227,131 +3227,228 @@ object DataSettingUtils {
         return reasoningAllJudgeBean
     }
 
+
     fun revAllReasoning30(
         pt: Int,
-        tagList: Array<String>,
-        tagIndex: Int,
         dayList: Array<Int>,
         dateRangeIndex: Int,
         list: ArrayList<BaseReverseImp>,
         date: Int,
         insertTB: String,
-        iList: ArrayList<Int>,
-        difTag:String
+        iList: ArrayList<Int>
     ) {
-
 
         val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
         val mNextCodeList = list.getCodeList()
         val addstr =
-            mNextCodeList.getCodeArrayAndLimitSQL(nextTbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+            mNextCodeList.getCodeArrayAndLimitSQL(true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
         val countLimit = if (list.size >= 4) 4 else 2
-        val comlumn = tagList[tagIndex]
         val (nextMax, nextMin) = getRangeMaxMiByCodeList(
             false,
             nextTbName,
-            comlumn,
+            "OM_M",
             mNextCodeList,
             Datas.REVERSE_KJ_DB
         )
-        val mDifTag = "$difTag,$comlumn-->($nextMin,$nextMax)"
         var nextContinue = 0
-        LogUtil.d("mDifTag: $mDifTag ")
-        for (n in nextMin until nextMax step Datas.FILTER_PROGRESS) {
-
-            if ("OM_C".equals(comlumn)&&date==36) {
-                mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
-            }
+        for (n in nextMin..nextMax step Datas.FILTER_PROGRESS) {
             if (nextContinue > 0) {
-                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
+//                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
                 nextContinue--
                 continue
             }
-            var dlist:ArrayList<BaseReverseImp>?
-            dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
-            LogUtil.d("getDlist")
+            var dlist = getDlist(nextTbName, addstr, n, nextContinue)
             if (null == dlist) {
                 continue
             }
-            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
+            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= nextMax) {
                 nextContinue++
-                dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
-                LogUtil.d("getDlist")
+                dlist = getDlist(nextTbName, addstr, n, nextContinue)
             }
-            while ((list.size - dlist!!.size == 1) && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
+            while ((list.size - dlist!!.size == 1)) {
                 nextContinue++
-                dlist = getDlist(nextTbName, comlumn, addstr, n, nextContinue)
-                LogUtil.d("getDlist-->$nextContinue")
+                dlist = getDlist(nextTbName, addstr, n, nextContinue)
             }
-            LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue,$comlumn:$n")
-            if (dlist.size > 0) {
-                if (tagIndex == tagList.size - 1) {
-                    val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
-                    val reasoningAllJudgeBean =
-                        getReasoningAllJudgeBean(dlist, derbyList, date)
-                    for (a in 7 - dateRangeIndex until iList.size) {
-                        iList[a] = 0
-                    }
-                    iList[7 - dateRangeIndex] = n
-                    reasoningAllJudgeBean.f36_T = iList[0]
-                    reasoningAllJudgeBean.f30_T = iList[1]
-                    reasoningAllJudgeBean.f25_T = iList[2]
-                    reasoningAllJudgeBean.f20_T = iList[3]
-                    reasoningAllJudgeBean.f15_T = iList[4]
-                    reasoningAllJudgeBean.f10_T = iList[5]
-                    reasoningAllJudgeBean.f05_T = iList[6]
-                    reasoningAllJudgeBean.f03_T = iList[7]
-                    var istr = ""
-                    val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
-                    for (q in 0 until iList.size) {
-                        istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
-                    }
-                    LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
-                    if (dateRangeIndex == 0 && tagIndex == tagList.size - 1) {
-                        mOCOOlReasoningInsertResult = getListResult(list)
-                    }
-                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+            if (dlist.size > 1) {
+
+                val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
+                val reasoningAllJudgeBean =
+                    getReasoningAllJudgeBean(dlist, derbyList, date)
+                for (a in 7 - dateRangeIndex until iList.size) {
+                    iList[a] = 0
                 }
-                var mTagIndex = tagIndex+1
-                if (mOCOOlReasoningInsertResult.equals(getListResult(list))) {
-                    break
+                iList[7 - dateRangeIndex] = n
+                reasoningAllJudgeBean.f36_T = iList[0]
+                reasoningAllJudgeBean.f30_T = iList[1]
+                reasoningAllJudgeBean.f25_T = iList[2]
+                reasoningAllJudgeBean.f20_T = iList[3]
+                reasoningAllJudgeBean.f15_T = iList[4]
+                reasoningAllJudgeBean.f10_T = iList[5]
+                reasoningAllJudgeBean.f05_T = iList[6]
+                reasoningAllJudgeBean.f03_T = iList[7]
+                var istr = ""
+                val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
+                for (q in 0 until iList.size) {
+                    istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
                 }
-                if (mTagIndex < tagList.size) {
-                    LogUtil.d("pt:$pt,foreach:$comlumn,range:$n-${(n + (nextContinue + 1) * Datas.FILTER_PROGRESS)},min-max:${nextMin}->${nextMax},date:$date,size->${dlist.size}")
+                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM-->($n-${n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS}),istr-->$istr")
+                DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+                if ((dateRangeIndex) > 0) {
                     revAllReasoning30(
                         pt,
-                        tagList,
-                        mTagIndex,
                         dayList,
-                        dateRangeIndex,
+                        dateRangeIndex - 1,
                         dlist,
-                        dayList[dateRangeIndex],
+                        dayList[dateRangeIndex - 1],
                         insertTB,
-                        iList,
-                        mDifTag
+                        iList
                     )
-                } else {
-                    mTagIndex = 0
-                    var mDateRangeIndex = dateRangeIndex- 1
-                    if (mDateRangeIndex >= 0) {
-                        revAllReasoning30(
-                            pt,
-                            tagList,
-                            mTagIndex,
-                            dayList,
-                            mDateRangeIndex,
-                            dlist,
-                            dayList[mDateRangeIndex],
-                            insertTB,
-                            iList,
-                            mDifTag
-                        )
-                    }
                 }
             }
         }
     }
+
+
+//    fun revAllReasoning30(
+//        pt: Int,
+//        tagList: Array<String>,
+//        tagIndex: Int,
+//        dayList: Array<Int>,
+//        dateRangeIndex: Int,
+//        list: ArrayList<BaseReverseImp>,
+//        date: Int,
+//        insertTB: String,
+//        iList: ArrayList<Int>,
+//        difTag:String
+//    ) {
+//
+//
+//        val nextTbName = "A_RTB_${pt}_${dayList[dateRangeIndex]}"
+//        val nextTbDerbyName = "Derby_A_RTB_${pt}_${dayList[dateRangeIndex]}"
+//        val mNextCodeList = list.getCodeList()
+//        val addstr =
+//            mNextCodeList.getCodeArrayAndLimitSQL(nextTbName,true) + Datas.debugEndstr + Datas.reasoning_debug_end_str
+//        val countLimit = if (list.size >= 4) 4 else 2
+//        val comlumn = tagList[tagIndex]
+//        val (nextMax, nextMin) = getRangeMaxMiByCodeList(
+//            false,
+//            nextTbName,
+//            comlumn,
+//            mNextCodeList,
+//            Datas.REVERSE_KJ_DB
+//        )
+//        val mDifTag = "$difTag,$comlumn-->($nextMin,$nextMax)"
+//        var nextContinue = 0
+//        LogUtil.d("mDifTag: $mDifTag ")
+//        for (n in nextMin until nextMax step Datas.FILTER_PROGRESS) {
+//
+//            if ("OM_C".equals(comlumn)&&date==36) {
+//                mActivity.setReasoningProgress("$comlumn $pt-> $n --> $nextMax ")
+//            }
+//            if (nextContinue > 0) {
+//                LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue")
+//                nextContinue--
+//                continue
+//            }
+//            var dlist:ArrayList<BaseReverseImp>?
+//            dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+//            LogUtil.d("getDlist")
+//            if (null == dlist) {
+//                continue
+//            }
+//            while (dlist!!.size < countLimit && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
+//                nextContinue++
+//                dlist = getDlist(nextTbName,comlumn, addstr, n, nextContinue)
+//                LogUtil.d("getDlist")
+//            }
+//            while ((list.size - dlist!!.size == 1) && (n + (nextContinue + 1) * Datas.FILTER_PROGRESS) < nextMax) {
+//                nextContinue++
+//                dlist = getDlist(nextTbName, comlumn, addstr, n, nextContinue)
+//                LogUtil.d("getDlist-->$nextContinue")
+//            }
+//            LogUtil.d("nextTbName-->$nextTbName ,nextContinue:$nextContinue,$comlumn:$n")
+//            if (dlist.size > 0) {
+//                val derbyList = list.getAllJudgeDerbyList(nextTbDerbyName)
+//                val reasoningAllJudgeBean =
+//                    getReasoningAllJudgeBean(dlist, derbyList, date)
+//                for (a in 7 - dateRangeIndex until iList.size) {
+//                    iList[a] = 0
+//                }
+//                iList[7 - dateRangeIndex] = n
+//                reasoningAllJudgeBean.f36_T = iList[0]
+//                reasoningAllJudgeBean.f30_T = iList[1]
+//                reasoningAllJudgeBean.f25_T = iList[2]
+//                reasoningAllJudgeBean.f20_T = iList[3]
+//                reasoningAllJudgeBean.f15_T = iList[4]
+//                reasoningAllJudgeBean.f10_T = iList[5]
+//                reasoningAllJudgeBean.f05_T = iList[6]
+//                reasoningAllJudgeBean.f03_T = iList[7]
+//                var istr = ""
+//                val idaylist = arrayListOf("36", "30", "25", "20", "15", "10", "5", "3")
+//                for (q in 0 until iList.size) {
+//                    istr = istr + "F_T_${idaylist[q]}-->${iList[q]};"
+//                }
+//                LogUtil.d("nextTbName-->$nextTbName-->${dlist.size},OM_M:${iList[0]},$comlumn-->($n->${n + (nextContinue+1) * Datas.FILTER_PROGRESS}),nextMax:${nextMax},istr-->$istr")
+//                if (dateRangeIndex == 0 && tagIndex == tagList.size - 1) {
+//                    mOCOOlReasoningInsertResult = getListResult(list)
+//                }
+//                DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+//                if ((dateRangeIndex) > 0) {
+//                    revAllReasoning30(
+//                        pt,
+//                        tagList,
+//                        tagIndex,
+//                        dayList,
+//                        dateRangeIndex-1,
+//                        dlist,
+//                        dayList[dateRangeIndex-1],
+//                        insertTB,
+//                        iList,
+//                        difTag
+//                    )
+//                }
+////                if (tagIndex == tagList.size - 1) {
+////                }
+////                var mTagIndex = tagIndex+1
+////                if (mOCOOlReasoningInsertResult.equals(getListResult(list))) {
+////                    break
+////                }
+////                if (mTagIndex < tagList.size) {
+////                    LogUtil.d("pt:$pt,foreach:$comlumn,range:$n-${(n + (nextContinue + 1) * Datas.FILTER_PROGRESS)},min-max:${nextMin}->${nextMax},date:$date,size->${dlist.size}")
+////                    revAllReasoning30(
+////                        pt,
+////                        tagList,
+////                        mTagIndex,
+////                        dayList,
+////                        dateRangeIndex,
+////                        dlist,
+////                        dayList[dateRangeIndex],
+////                        insertTB,
+////                        iList,
+////                        mDifTag
+////                    )
+////                } else {
+////                    mTagIndex = 0
+////                    var mDateRangeIndex = dateRangeIndex- 1
+////                    if (mDateRangeIndex >= 0) {
+////                        revAllReasoning30(
+////                            pt,
+////                            tagList,
+////                            mTagIndex,
+////                            dayList,
+////                            mDateRangeIndex,
+////                            dlist,
+////                            dayList[mDateRangeIndex],
+////                            insertTB,
+////                            iList,
+////                            mDifTag
+////                        )
+////                    }
+////                }
+//            }
+//        }
+//    }
 
     var mOCOOlReasoningInsertResult = ""
     fun revOCOOlReasoning(
@@ -3507,17 +3604,17 @@ object DataSettingUtils {
 
     fun getDlist(
         nextTbName: String,
-        column: String,
         addstr: String,
         n: Int,
         nextContinue: Int
     ): ArrayList<BaseReverseImp>? {
-
-        LogUtil.d("getFilterAllByTbName!!!")
         val dlist = DBUtils.getFilterAllByTbName(
             Datas.REVERSE_KJ_DB,
-            "SELECT * FROM $nextTbName  WHERE _ID in (select max(_ID) from $nextTbName group by CODE,DATE) AND   $column >=${ n.toString()} AND $column<${(n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS)} $addstr",
-            null
+            "SELECT * FROM $nextTbName WHERE OM_M >=? AND OM_M<? $addstr",
+            arrayOf(
+                n.toString(),
+                (n + Datas.FILTER_PROGRESS + nextContinue * Datas.FILTER_PROGRESS).toString()
+            )
         )
         return dlist
     }
@@ -3626,26 +3723,26 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning50Bean
             )
-//            if (need50Continue) {
-//                need50Continue = getDerbyNeedContinue(
-//                    juede50BeanList,
-//                    need50Continue,
-//                    OM_OC,
-//                    OM_OP,
-//                    OM_OL,
-//                    OC_OP,
-//                    OC_OL,
-//                    OP_OL,
-//                    M_C,
-//                    M_P,
-//                    M_L,
-//                    C_P,
-//                    C_L,
-//                    P_L
-//                )
-//
-////                LogUtil.d("getDerbyNeedContinue-->$need50Continue")
-//            }
+            if (need50Continue) {
+                need50Continue = getDerbyNeedContinue(
+                    juede50BeanList,
+                    need50Continue,
+                    OM_OC,
+                    OM_OP,
+                    OM_OL,
+                    OC_OP,
+                    OC_OL,
+                    OP_OL,
+                    M_C,
+                    M_P,
+                    M_L,
+                    C_P,
+                    C_L,
+                    P_L
+                )
+
+//                LogUtil.d("getDerbyNeedContinue-->$need50Continue")
+            }
         }
         if (need30Continue) {
             val juede30BeanList = DBUtils.getReasoningAllJudgeBeanByAllOmM(
@@ -3691,25 +3788,25 @@ object DataSettingUtils {
                 OP_L,
                 allReasoning30Bean
             )
-//            if (need30Continue) {
-//                need30Continue = getDerbyNeedContinue(
-//                    juede30BeanList,
-//                    need30Continue,
-//                    OM_OC,
-//                    OM_OP,
-//                    OM_OL,
-//                    OC_OP,
-//                    OC_OL,
-//                    OP_OL,
-//                    M_C,
-//                    M_P,
-//                    M_L,
-//                    C_P,
-//                    C_L,
-//                    P_L
-//                )
-////                LogUtil.d("getDerbyNeedContinue-->$need30Continue")
-//            }
+            if (need30Continue) {
+                need30Continue = getDerbyNeedContinue(
+                    juede30BeanList,
+                    need30Continue,
+                    OM_OC,
+                    OM_OP,
+                    OM_OL,
+                    OC_OP,
+                    OC_OL,
+                    OP_OL,
+                    M_C,
+                    M_P,
+                    M_L,
+                    C_P,
+                    C_L,
+                    P_L
+                )
+//                LogUtil.d("getDerbyNeedContinue-->$need30Continue")
+            }
         }
 
         return Pair(need50Continue, need30Continue)

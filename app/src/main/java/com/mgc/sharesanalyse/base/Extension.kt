@@ -245,6 +245,24 @@ fun ArrayList<BaseReverseImp>.getCodeList(): ArrayList<String> {
     return mNextCodeList
 }
 
+fun ArrayList<String>.getCodeArrayAndLimitSQL(needFirstAnd: Boolean): String {
+//    val array = arrayOfNulls<String>(this.size*2)
+//    for (i in 0 until this.size ) {
+//        array[i*2] = this[i].split("###")[0]
+//        array[i*2+1] = "'${ this[i].split("###")[1] }'"
+//    }
+    var addSql = ""
+    this.forEach {
+        if (needFirstAnd) {
+            addSql =if (addSql.isEmpty()) "AND ( (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')" else addSql + " OR (CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
+        } else {
+            addSql = if (addSql.isEmpty()) "(CODE =${it.split("###")[0]} AND DATE = '${it.split("###")[1]}')"
+            else addSql + " OR (CODE =${it.split("###")[0]} AND DATE ='${it.split("###")[1]}')"
+        }
+    }
+    return if (needFirstAnd) addSql+")" else addSql
+}
+
 fun ArrayList<String>.getCodeArrayAndLimitSQL(tbName:String,needFirstAnd: Boolean): String {
 //    SELECT * FROM tablename where (cdp= 300 and inline=301) or (cdp= 301 and inline=301) or (cdp= 302 and inline=301) or (cdp= 303 and inline=301) or (cdp= 304 and inline=301) or (cdp= 305 and inline=301) or (cdp= 306 and inline=301) or (cdp= 307 and inline=301)
 //    SELECT * FROM tablename where (inline= 300 and cdp=300) union all SELECT * FROM tablename where (inline= 301 and cdp=300) union all SELECT * FROM tablename where (inline= 302 and cdp=300) union all SELECT * FROM tablename where (inline= 303 and cdp=300)

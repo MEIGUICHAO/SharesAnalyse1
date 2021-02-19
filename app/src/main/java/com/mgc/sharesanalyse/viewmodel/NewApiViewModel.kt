@@ -3969,8 +3969,6 @@ class NewApiViewModel : BaseViewModel() {
 
         LogUtil.d("revAllJudgeResult")
         val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
-        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
-//        val tagList = arrayOf("OM_M","OM_C","OM_L")
         val ptList = arrayOf(50, 30)
         (mActivity as NewApiActivity).setBtnRevAllTb("begin")
         LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
@@ -3979,6 +3977,7 @@ class NewApiViewModel : BaseViewModel() {
             LogUtil.d("revAllJudgeResult")
             val tbName = "A_RTB_${pt}_36"
             val tbDerbyName = "Derby_A_RTB_${pt}_36"
+            (mActivity as NewApiActivity).setBtnRevAllTb(tbName)
             val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
                 tbName,
                 Datas.REVERSE_KJ_DB
@@ -3995,25 +3994,24 @@ class NewApiViewModel : BaseViewModel() {
                 LogUtil.d("revAllJudgeResult")
                 var dateRangeIndex = dayList.size - 1
 
-
                 var list = DBUtils.getFilterAllByTbName(
                     Datas.REVERSE_KJ_DB,
-                    "SELECT * FROM $tbName WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND  OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                    "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                     arrayOf(
                         i.toString(),
                         (i + Datas.FILTER_PROGRESS).toString()
                     )
                 )
+
                 if (null == list) {
                     continue
                 }
 
-                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) < rangeMax) {
+                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) <= rangeMax) {
                     nextContinue++
-                    LogUtil.d("nextContinue-->$nextContinue")
                     list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
-                        "SELECT * FROM $tbName  WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+                        "SELECT * FROM $tbName WHERE OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
                         arrayOf(
                             i.toString(),
                             ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
@@ -4023,30 +4021,26 @@ class NewApiViewModel : BaseViewModel() {
 //                list?.forEach {
 //                    LogUtil.d("$tbName code:$it")
 //                }
-                if (list.size > 0) {
+                if (list.size > 1) {
                     LogUtil.d("revAllJudgeResult")
-//                    val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
-//                    val reasoningAllJudgeBean =
-//                        DataSettingUtils.getReasoningAllJudgeBean(list, derbyList, date)
-//                    reasoningAllJudgeBean.f36_T = i
+                    val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
+                    val reasoningAllJudgeBean =
+                        DataSettingUtils.getReasoningAllJudgeBean(list, derbyList, date)
+                    reasoningAllJudgeBean.f36_T = i
                     val insertTB = "All_${pt}"
-//                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
-                    dateRangeIndex = dayList.size - 1
+                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+                    dateRangeIndex = dayList.size - 2
                     date = dayList[dateRangeIndex]
-                    var tagIndex = 0
-                    LogUtil.d("nextTbName!!!-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})")
+                    LogUtil.d("nextTbName!!!-->($i,${(i + Datas.FILTER_PROGRESS)})")
                     if (dateRangeIndex > 0) {
                         DataSettingUtils.revAllReasoning30(
                             pt,
-                            tagList,
-                            tagIndex+1,
                             dayList,
                             dateRangeIndex,
                             list,
                             dayList[dateRangeIndex],
                             insertTB,
-                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0),
-                            "OM_M-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})"
+                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0)
                         )
                     }
 
@@ -4057,6 +4051,98 @@ class NewApiViewModel : BaseViewModel() {
 
         (mActivity as NewApiActivity).setBtnRevAllTb("Finish")
     }
+//    fun revAllJudgeResult() {
+//
+//        LogUtil.d("revAllJudgeResult")
+//        val dayList = arrayOf(3, 5, 10, 15, 20, 25, 30, 36)
+//        val tagList = arrayOf("OM_M", "OC_M", "OO_M", "OL_M")
+////        val tagList = arrayOf("OM_M","OM_C", "OM_P", "OM_L", "OC_M", "OC_C","OC_P", "OC_L", "OO_M", "OO_C", "OO_P", "OO_L")
+////        val tagList = arrayOf("OM_M","OM_C","OM_L")
+//        val ptList = arrayOf(50, 30)
+//        (mActivity as NewApiActivity).setBtnRevAllTb("begin")
+//        LogUtil.d("debugEndstr-->${Datas.debugEndstr}")
+//        ptList.forEach { pt ->
+//
+//            LogUtil.d("revAllJudgeResult")
+//            val tbName = "A_RTB_${pt}_36"
+//            val tbDerbyName = "Derby_A_RTB_${pt}_36"
+//            val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMin(
+//                tbName,
+//                Datas.REVERSE_KJ_DB
+//            )
+//            LogUtil.d("revAllJudgeResult")
+//            var nextContinue = 0
+//            for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {
+//                (mActivity as NewApiActivity).setBtnRevAllTb("OM_M $pt-> $i --> $rangeMax ")
+//                if (nextContinue > 0) {
+//                    nextContinue--
+//                    continue
+//                }
+//                var date = 36
+//                LogUtil.d("revAllJudgeResult")
+//                var dateRangeIndex = dayList.size - 1
+//
+//
+//                var list = DBUtils.getFilterAllByTbName(
+//                    Datas.REVERSE_KJ_DB,
+//                    "SELECT * FROM $tbName WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND  OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+//                    arrayOf(
+//                        i.toString(),
+//                        (i + Datas.FILTER_PROGRESS).toString()
+//                    )
+//                )
+//                if (null == list) {
+//                    continue
+//                }
+//
+//                while (list!!.size < 2 && (i + (nextContinue + 1) * Datas.FILTER_PROGRESS) < rangeMax) {
+//                    nextContinue++
+//                    LogUtil.d("nextContinue-->$nextContinue")
+//                    list = DBUtils.getFilterAllByTbName(
+//                        Datas.REVERSE_KJ_DB,
+//                        "SELECT * FROM $tbName  WHERE _ID in (select max(_ID) from $tbName group by CODE,DATE) AND OM_M >=? AND OM_M<? ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}",
+//                        arrayOf(
+//                            i.toString(),
+//                            ((i + (nextContinue + 1) * Datas.FILTER_PROGRESS)).toString()
+//                        )
+//                    )
+//                }
+////                list?.forEach {
+////                    LogUtil.d("$tbName code:$it")
+////                }
+//                if (list.size > 0) {
+//                    LogUtil.d("revAllJudgeResult")
+////                    val derbyList = list.getAllJudgeDerbyList(tbDerbyName)
+////                    val reasoningAllJudgeBean =
+////                        DataSettingUtils.getReasoningAllJudgeBean(list, derbyList, date)
+////                    reasoningAllJudgeBean.f36_T = i
+//                    val insertTB = "All_${pt}"
+////                    DBUtils.insertAllJudgeTB(reasoningAllJudgeBean, insertTB)
+//                    dateRangeIndex = dayList.size - 1
+//                    var tagIndex = 0
+//                    LogUtil.d("nextTbName!!!-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})")
+//                    if (dateRangeIndex > 0) {
+//                        DataSettingUtils.revAllReasoning30(
+//                            pt,
+//                            tagList,
+//                            tagIndex+1,
+//                            dayList,
+//                            dateRangeIndex,
+//                            list,
+//                            dayList[dateRangeIndex],
+//                            insertTB,
+//                            arrayListOf(i, 0, 0, 0, 0, 0, 0, 0),
+//                            "OM_M-->($i,${((i + (nextContinue + 1) * Datas.FILTER_PROGRESS))})"
+//                        )
+//                    }
+//
+//                }
+//            }
+//
+//        }
+//
+//        (mActivity as NewApiActivity).setBtnRevAllTb("Finish")
+//    }
 
 
     fun reasoningAll() {
@@ -4074,15 +4160,15 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
-                        if (mCHDDList[i].date.equals("20200727")) {
-                            insertAllReasoning(
-                                false,
-                                foreachLimitList,
-                                i,
-                                mCHDDList,
-                                code
-                            )
-                        }
+                        insertAllReasoning(
+                            false,
+                            foreachLimitList,
+                            i,
+                            mCHDDList,
+                            code
+                        )
+//                        if (mCHDDList[i].date.equals("20200727")) {
+//                        }
 //                        insertOCOOReasoning(i,mCHDDList,code)
                     }
                 }
