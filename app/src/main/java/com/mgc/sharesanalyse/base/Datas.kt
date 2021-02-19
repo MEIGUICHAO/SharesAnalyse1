@@ -49,7 +49,7 @@ object Datas {
 //    const val MAPPFilter = "MAPPF_DEBUG_"
 //    const val MAPPFilterDB = "MAPPFilterDB_DEBUG"
     //------------------------------------
-    const val DEBUG = true
+    const val DEBUG = false
     const val FILTER_CODE_TB = "FC_"
     const val MAPPFilterDB = "FilterDB_"
 
@@ -118,7 +118,7 @@ object Datas {
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
     const val REV_DAYS = 20
-    const val FILTER_PROGRESS = 2
+    const val FILTER_PROGRESS = 3
     const val FILTER_OC_OO_PROGRESS = 5
     const val FILTER_DERBY_PROGRESS = 5
     const val REV_RESONING_DB = "REV_RESONING_DB"
@@ -127,7 +127,7 @@ object Datas {
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
     val debugSelectMaxMinStr = if (DEBUG) "WHERE (${DEBUG_Code.toReasoningCodeList()})" else ""
     const val reasoning_debug = false
-    const val reasoning_debug_begin_day = 20201215
+    const val reasoning_debug_begin_day = 20201226
     const val reasoning_debug_end_day = 20210201
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
     const val REV_OC_OO_10 = "AA_REV_OC_OO_10"
