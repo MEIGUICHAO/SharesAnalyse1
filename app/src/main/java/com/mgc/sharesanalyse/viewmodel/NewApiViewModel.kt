@@ -1211,7 +1211,7 @@ class NewApiViewModel : BaseViewModel() {
 //        if (!Datas.DEBUG) {
 //            (mActivity as NewApiActivity).revAllJudgeResult()
 //        }
-//        updateReasoningTB()
+        updateReasoningTB()
 
 
         //    0日期	1开盘	2收盘	3涨跌额	4涨跌幅	5最低	6最高	7成交量(手)	8成交金额(万)	9换手率
@@ -4721,6 +4721,7 @@ class NewApiViewModel : BaseViewModel() {
 //        }
 //    }
 
+    //更新P
     fun updateReasoningTB() {
 //        2 -> "All_Reasoning_30"
 //        else -> "All_Reasoning_50"
@@ -4728,26 +4729,50 @@ class NewApiViewModel : BaseViewModel() {
         val tb50 = "All_Reasoning_50"
         val r30List = DBUtils.getNullDDFromReasoningTB(tb30)
         val r50List = DBUtils.getNullDDFromReasoningTB(tb50)
+        val ocoo50List = DBUtils.getNullDDFromReasoningTB(Datas.ALL_Reaoning_OC_OO_50)
+        val ocoo30List = DBUtils.getNullDDFromReasoningTB(Datas.ALL_Reaoning_OC_OO_30)
         val (mList, codelist) = getCHDDDateListAndCodeList()
         r30List.forEach {
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 10..mCHDDList.size - 1) {
-                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - 5].date}--${mCHDDList[i].date}")
-                if (mCHDDList[i - 5].date == it.d) {
-                    setReasoningPMpLpCpOpDdInfo(i - 5, mCHDDList, it, it.code.toString(), 30)
+            for (i in mCHDDList.size - 2*Datas.REV_DAYS ..mCHDDList.size - 1) {
+                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
+                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
+                    setReasoningPMpLpCpOpDdInfo(i - Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 30)
                     DBUtils.updateReasoning(tb30, it)
-                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i - 5].date}")
+                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
                 }
             }
         }
         r50List.forEach {
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 10..mCHDDList.size - 1) {
-                if (mCHDDList[i - 5].date == it.d) {
+            for (i in mCHDDList.size - 2*Datas.REV_DAYS..mCHDDList.size - 1) {
+                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
                     setReasoningPMpLpCpOpDdInfo(i, mCHDDList, it, it.code.toString(), 50)
                     DBUtils.updateReasoning(tb50, it)
                     LogUtil.d("update_50")
-                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i - 5].date}")
+                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
+                }
+            }
+        }
+        ocoo30List.forEach {
+            val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
+            for (i in mCHDDList.size - 2*Datas.REV_DAYS ..mCHDDList.size - 1) {
+                LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
+                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
+                    setReasoningPMpLpCpOpDdInfo(i - Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 30)
+                    DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_30, it)
+                    (mActivity as NewApiActivity).setBtnResoning("OCOO_30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
+                }
+            }
+        }
+        ocoo50List.forEach {
+            val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
+            for (i in mCHDDList.size - 2*Datas.REV_DAYS..mCHDDList.size - 1) {
+                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
+                    setReasoningPMpLpCpOpDdInfo(i, mCHDDList, it, it.code.toString(), 50)
+                    DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_50, it)
+                    LogUtil.d("update_50")
+                    (mActivity as NewApiActivity).setBtnResoning("OCOO_50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
                 }
             }
         }

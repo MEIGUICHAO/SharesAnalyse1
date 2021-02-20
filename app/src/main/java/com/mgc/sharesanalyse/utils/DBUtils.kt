@@ -2215,7 +2215,7 @@ object DBUtils {
     }
 
     fun updateReasoning(tbName: String, bean: ReasoningRevBean) {
-        DBUtils.switchDBName(Datas.REV_RESONING_DB)
+        switchDBName(Datas.REV_RESONING_DB)
         val sql =
             "UPDATE $tbName SET D_D = '${bean.d_D}',MP = ${bean.mp},P = ${bean.p} ,LP = ${bean.lp} ,AFTER_O_P = ${bean.after_O_P} ,AFTER_C_P = ${bean.after_C_P} WHERE CODE=${bean.code} AND D = '${bean.d}'"
         LogUtil.d("$sql")
