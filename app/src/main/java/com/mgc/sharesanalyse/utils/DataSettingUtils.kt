@@ -2298,53 +2298,53 @@ object DataSettingUtils {
                     }
                 }
 
-                else -> {
-                    if (day < 35) {
-                        val tbName =
-                            "${Datas.BB_FIL_COPY_}A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
-                                fitlerType + 10
-                            )}"
-                        val tbDerbyName =
-                            "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
-                                fitlerType + 10
-                            )}"
-
-                        beginBoolean = stepByStepJudge(
-                            tbName,
-                            OM_M,
-                            OM_C,
-                            OM_P,
-                            OM_L,
-                            OL_M,
-                            OL_C,
-                            OL_P,
-                            OL_L,
-                            OC_M,
-                            OC_C,
-                            OC_P,
-                            OC_L,
-                            OP_M,
-                            OP_C,
-                            OP_P,
-                            OP_L,
-                            tbDerbyName,
-                            OM_OC,
-                            OM_OP,
-                            OM_OL,
-                            OC_OP,
-                            OC_OL,
-                            OP_OL,
-                            M_C,
-                            M_P,
-                            M_L,
-                            C_P,
-                            C_L,
-                            P_L
-                        )
-                        LogUtil.d("${codeHDDBean.name}-->stepByStepJudge-->$beginBoolean")
-
-                    }
-                }
+//                else -> {
+//                    if (day < 35) {
+//                        val tbName =
+//                            "${Datas.BB_FIL_COPY_}A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
+//                                fitlerType + 10
+//                            )}"
+//                        val tbDerbyName =
+//                            "${Datas.BB_FIL_COPY_}Derby_A_RTB_50_${day + 1}_R_${Math.abs(fitlerType)}_${Math.abs(
+//                                fitlerType + 10
+//                            )}"
+//
+//                        beginBoolean = stepByStepJudge(
+//                            tbName,
+//                            OM_M,
+//                            OM_C,
+//                            OM_P,
+//                            OM_L,
+//                            OL_M,
+//                            OL_C,
+//                            OL_P,
+//                            OL_L,
+//                            OC_M,
+//                            OC_C,
+//                            OC_P,
+//                            OC_L,
+//                            OP_M,
+//                            OP_C,
+//                            OP_P,
+//                            OP_L,
+//                            tbDerbyName,
+//                            OM_OC,
+//                            OM_OP,
+//                            OM_OL,
+//                            OC_OP,
+//                            OC_OL,
+//                            OP_OL,
+//                            M_C,
+//                            M_P,
+//                            M_L,
+//                            C_P,
+//                            C_L,
+//                            P_L
+//                        )
+//                        LogUtil.d("${codeHDDBean.name}-->stepByStepJudge-->$beginBoolean")
+//
+//                    }
+//                }
             }
 
         }
@@ -2386,6 +2386,7 @@ object DataSettingUtils {
         P_L: Float
     ): Boolean {
         var beginBoolean1 = false
+        LogUtil.d("!!!!!tbName-->$tbName")
         val (rangeMax, rangeMin) = getRangeMaxMin(tbName, Datas.REV_FILTERDB + "2020")
         var firstStepBoolean = false
         for (i in rangeMin..rangeMax step Datas.FILTER_PROGRESS) {

@@ -2090,7 +2090,8 @@ object DBUtils {
     private fun getReasoningRevBeanByCusorAndTb(
         cursor: Cursor?,
         tbName: String,
-        list: ArrayList<ReasoningRevBean>
+        list: ArrayList<ReasoningRevBean>,
+        isUpdate:Boolean = false
     ) {
         if (null != cursor && cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
@@ -2105,7 +2106,7 @@ object DBUtils {
                 val LP = cursor.getFloat(cursor.getColumnIndex("LP"))
                 val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
                 val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
-                if (!tbName.equals("Reasoning")) {
+                if (!tbName.equals("Reasoning") && !isUpdate) {
                     val F36_T = cursor.getInt(cursor.getColumnIndex("F36_T"))
                     val F30_T = cursor.getInt(cursor.getColumnIndex("F30_T"))
                     val F25_T = cursor.getInt(cursor.getColumnIndex("F25_T"))
@@ -2210,7 +2211,7 @@ object DBUtils {
             db.rawQuery(" SELECT * FROM $tbName WHERE D_D ='null'", null)
 
         val list = ArrayList<ReasoningRevBean>()
-        getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+        getReasoningRevBeanByCusorAndTb(cursor, tbName, list,true)
         return list
     }
 

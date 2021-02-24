@@ -241,6 +241,7 @@ class NewApiActivity : AppCompatActivity() {
 //            DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
             App.getSinglePool().execute {
                 viewModel.reasoningAll()
+//                viewModel.updateReasoningTB()
 //                viewModel.sortContinue30Map()
             }
         }
