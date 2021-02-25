@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.set
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.RecyclerAdapter
 import com.mgc.sharesanalyse.base.ViewHolder
 import com.mgc.sharesanalyse.base.sortDescReasoningByDate
@@ -25,28 +26,30 @@ class ReasoningActivity : AppCompatActivity() {
         val tb = when (type) {
             1 -> "Reasoning"
             2 -> "All_Reasoning_30"
-            else -> "All_Reasoning_50"
+            3 -> "All_Reasoning_50"
+            4 -> Datas.ALL_Reaoning_OC_OO_30
+            else -> Datas.ALL_Reaoning_OC_OO_50
         }
         val dataMap = SparseArray<String>()
         val list = DBUtils.getReasoningResult(tb)
         list.sortDescReasoningByDate()
         val removeList = ArrayList<ReasoningRevBean>()
         val countLimit = 600
-        if (type == 2) {
-            for (i in 0 until if (list.size>countLimit) countLimit else list.size){
-                val initList = DBUtils.getReasoningInitAllJudgeResult(tb,list[i])
-                val (fuCount, rCount) = getFuRRCount(initList, 30.toFloat())
-                if (type30Judge(fuCount,rCount, initList)) {
-                    removeList.add(list[i])
-                }
-            }
-            LogUtil.d("list.size->${list.size},${list[0].d}")
-            LogUtil.d("removeList.size->${list.size}")
-            removeList.forEach {
-                list.remove(it)
-            }
-            LogUtil.d("list.size->${list.size}")
-        }
+//        if (type == 2) {
+//            for (i in 0 until if (list.size>countLimit) countLimit else list.size){
+//                val initList = DBUtils.getReasoningInitAllJudgeResult(tb,list[i])
+//                val (fuCount, rCount) = getFuRRCount(initList, 30.toFloat())
+//                if (type30Judge(fuCount,rCount, initList)) {
+//                    removeList.add(list[i])
+//                }
+//            }
+//            LogUtil.d("list.size->${list.size},${list[0].d}")
+//            LogUtil.d("removeList.size->${list.size}")
+//            removeList.forEach {
+//                list.remove(it)
+//            }
+//            LogUtil.d("list.size->${list.size}")
+//        }
 
         for (i in 0 until list.size) {
             dataMap.put(i, null)
@@ -114,6 +117,15 @@ class ReasoningActivity : AppCompatActivity() {
                     result = getResultStr(result, fList3, fu2Count, r2Count)
                 }
             }
+        } else if (type == 4 || type == 5) {
+            val ocooList = DBUtils.getReasoningOOOCAllJudgeResult(tb, it)
+            val requestP = when (type) {
+                4 -> 30.toFloat()
+                else -> 50.toFloat()
+            }
+            val (fuCount, rCount) = getFuRRCount(ocooList, requestP)
+            result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
+            result = getResultStr(result, ocooList, fuCount, rCount)
         } else {
             result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
         }

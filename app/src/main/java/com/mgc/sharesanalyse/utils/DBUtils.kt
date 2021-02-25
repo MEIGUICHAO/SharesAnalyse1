@@ -1776,7 +1776,11 @@ object DBUtils {
         if (tabbleIsExist(tbName)) {
             val cursor =
                 db.rawQuery(" SELECT * FROM $tbName", null)
-            getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+            if (tbName.contains("OC_OO")) {
+                getReasoningOCOORevBeanByCusorAndTb(cursor, list)
+            } else {
+                getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+            }
         }
         return list
 
@@ -2071,6 +2075,30 @@ object DBUtils {
         return Triple(list, list1, list2)
     }
 
+    fun getReasoningOOOCAllJudgeResult(
+        tbName: String,
+        bean: ReasoningRevBean
+    ): ArrayList<ReasoningRevBean> {
+
+        switchDBName(Datas.REV_RESONING_DB)
+        val list = ArrayList<ReasoningRevBean>()
+
+        if (tabbleIsExist(tbName)) {
+            val querySQL =
+                " OC3 = ${bean.oC3} AND OC5 = ${bean.oC5} AND OC10 = ${bean.oC10} AND OC15 = ${bean.oC15} AND OC20 = ${bean.oC20} AND OC25 = ${bean.oC25} AND OC30 = ${bean.oC30} AND OC35 = ${bean.oC35} " +
+                        "AND OC40 = ${bean.oC40} AND OC45 = ${bean.oC45} AND OC50 = ${bean.oC50} AND OC55 = ${bean.oC55} AND OC60 = ${bean.oC60} AND OC65 = ${bean.oC65} AND OC70 = ${bean.oC70} " +
+                        "AND OO3 = ${bean.oO3} AND OO5 = ${bean.oO5} AND OO10 = ${bean.oO10} AND OO15 = ${bean.oO15} AND OO20 = ${bean.oO20} AND OO25 = ${bean.oO25} AND OO30 = ${bean.oO30} AND OO35 = ${bean.oO35} " +
+                        "AND OO40 = ${bean.oO40} AND OO45 = ${bean.oO45} AND OO50 = ${bean.oO50} AND OO55 = ${bean.oO55} AND OO60 = ${bean.oO60} AND OO65 = ${bean.oO65} AND OO70 = ${bean.oO70} " +
+                        "AND PP5 = ${bean.pP5} AND PP10 = ${bean.pP10} AND PP15 = ${bean.pP15} AND PP20 = ${bean.pP20} AND PP25 = ${bean.pP25} AND PP30 = ${bean.pP30} AND PP35 = ${bean.pP35} " +
+                        "AND PP40 = ${bean.pP40} AND PP45 = ${bean.pP45} AND PP50 = ${bean.pP50} AND PP55 = ${bean.pP55} AND PP60 = ${bean.pP60} AND PP65 = ${bean.pP65} AND PP70 = ${bean.pP70} " +
+                        "AND PPP5 = ${bean.ppP5} AND PPP10 = ${bean.ppP10} AND PPP20 = ${bean.ppP20} AND PPP30 = ${bean.ppP30} " +
+                        "AND PPP40 = ${bean.ppP40} AND PPP50 = ${bean.ppP50} AND PPP60 = ${bean.ppP60}  AND PPP70 = ${bean.ppP70} "
+            getReasoningPList(tbName, querySQL, list)
+        }
+        list.sortReasoningRevBeanByP()
+        return list
+    }
+
     private fun getJudgeEndStr(bean: ReasoningRevBean): String {
         return " AND L36 = ${bean.l36} AND L30 = ${bean.l30} AND L25 = ${bean.l25} AND L20 = ${bean.l20} AND L15 = ${bean.l15} AND L10 = ${bean.l10}  AND L05 = ${bean.l05} AND L03 = ${bean.l03}" +
                 " AND O36 = ${bean.o36} AND O30 = ${bean.o30} AND O25 = ${bean.o25} AND O20 = ${bean.o20} AND O15 = ${bean.o15} AND O10 = ${bean.o10}  AND O05 = ${bean.o05} AND O03 = ${bean.o03}" +
@@ -2084,7 +2112,11 @@ object DBUtils {
     ) {
         val cursor =
             db.rawQuery(" SELECT * FROM $tbName WHERE $querySQL", null)
-        getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+        if (tbName.contains("OC_OO")) {
+            getReasoningOCOORevBeanByCusorAndTb(cursor, list)
+        } else {
+            getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
+        }
     }
 
     private fun getReasoningRevBeanByCusorAndTb(
@@ -2198,6 +2230,97 @@ object DBUtils {
                 bean.after_C_P = AFTER_C_P
                 //                    bean.fitlertype = FITLERTYPE
                 list.add(bean)
+                cursor.moveToNext()
+            }
+            cursor.close()
+        }
+    }
+
+    private fun getReasoningOCOORevBeanByCusorAndTb(
+        cursor: Cursor?,
+        list: ArrayList<ReasoningRevBean>
+    ) {
+        if (null != cursor && cursor.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+
+                val reverseBean = ReasoningRevBean()
+                val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
+                val D = cursor.getString(cursor.getColumnIndex("D"))
+                val N = cursor.getString(cursor.getColumnIndex("N"))
+                val D_D = cursor.getString(cursor.getColumnIndex("D_D"))
+                val P = cursor.getFloat(cursor.getColumnIndex("P"))
+                val MP = cursor.getFloat(cursor.getColumnIndex("MP"))
+                val LP = cursor.getFloat(cursor.getColumnIndex("LP"))
+                val AFTER_O_P = cursor.getFloat(cursor.getColumnIndex("AFTER_O_P"))
+                val AFTER_C_P = cursor.getFloat(cursor.getColumnIndex("AFTER_C_P"))
+
+                reverseBean.oO3 = cursor.getFloat(cursor.getColumnIndex("OO3"))
+                reverseBean.oO5 = cursor.getFloat(cursor.getColumnIndex("OO5"))
+                reverseBean.oO10 = cursor.getFloat(cursor.getColumnIndex("OO10"))
+                reverseBean.oO15 = cursor.getFloat(cursor.getColumnIndex("OO15"))
+                reverseBean.oO20 = cursor.getFloat(cursor.getColumnIndex("OO20"))
+                reverseBean.oO25 = cursor.getFloat(cursor.getColumnIndex("OO25"))
+                reverseBean.oO30 = cursor.getFloat(cursor.getColumnIndex("OO30"))
+                reverseBean.oO35 = cursor.getFloat(cursor.getColumnIndex("OO35"))
+                reverseBean.oO40 = cursor.getFloat(cursor.getColumnIndex("OO40"))
+                reverseBean.oO45 = cursor.getFloat(cursor.getColumnIndex("OO45"))
+                reverseBean.oO50 = cursor.getFloat(cursor.getColumnIndex("OO50"))
+                reverseBean.oO55 = cursor.getFloat(cursor.getColumnIndex("OO55"))
+                reverseBean.oO60 = cursor.getFloat(cursor.getColumnIndex("OO60"))
+                reverseBean.oO65 = cursor.getFloat(cursor.getColumnIndex("OO65"))
+                reverseBean.oO70 = cursor.getFloat(cursor.getColumnIndex("OO70"))
+
+                reverseBean.oC3 = cursor.getFloat(cursor.getColumnIndex("OC3"))
+                reverseBean.oC5 = cursor.getFloat(cursor.getColumnIndex("OC5"))
+                reverseBean.oC10 = cursor.getFloat(cursor.getColumnIndex("OC10"))
+                reverseBean.oC15 = cursor.getFloat(cursor.getColumnIndex("OC15"))
+                reverseBean.oC20 = cursor.getFloat(cursor.getColumnIndex("OC20"))
+                reverseBean.oC25 = cursor.getFloat(cursor.getColumnIndex("OC25"))
+                reverseBean.oC30 = cursor.getFloat(cursor.getColumnIndex("OC30"))
+                reverseBean.oC35 = cursor.getFloat(cursor.getColumnIndex("OC35"))
+                reverseBean.oC40 = cursor.getFloat(cursor.getColumnIndex("OC40"))
+                reverseBean.oC45 = cursor.getFloat(cursor.getColumnIndex("OC45"))
+                reverseBean.oC50 = cursor.getFloat(cursor.getColumnIndex("OC50"))
+                reverseBean.oC55 = cursor.getFloat(cursor.getColumnIndex("OC55"))
+                reverseBean.oC60 = cursor.getFloat(cursor.getColumnIndex("OC60"))
+                reverseBean.oC65 = cursor.getFloat(cursor.getColumnIndex("OC65"))
+                reverseBean.oC70 = cursor.getFloat(cursor.getColumnIndex("OC70"))
+
+                reverseBean.pP5 = cursor.getFloat(cursor.getColumnIndex("PP5"))
+                reverseBean.pP10 = cursor.getFloat(cursor.getColumnIndex("PP10"))
+                reverseBean.pP15 = cursor.getFloat(cursor.getColumnIndex("PP15"))
+                reverseBean.pP20 = cursor.getFloat(cursor.getColumnIndex("PP20"))
+                reverseBean.pP25 = cursor.getFloat(cursor.getColumnIndex("PP25"))
+                reverseBean.pP30 = cursor.getFloat(cursor.getColumnIndex("PP30"))
+                reverseBean.pP35 = cursor.getFloat(cursor.getColumnIndex("PP35"))
+                reverseBean.pP40 = cursor.getFloat(cursor.getColumnIndex("PP40"))
+                reverseBean.pP45 = cursor.getFloat(cursor.getColumnIndex("PP45"))
+                reverseBean.pP50 = cursor.getFloat(cursor.getColumnIndex("PP50"))
+                reverseBean.pP55 = cursor.getFloat(cursor.getColumnIndex("PP55"))
+                reverseBean.pP60 = cursor.getFloat(cursor.getColumnIndex("PP60"))
+                reverseBean.pP65 = cursor.getFloat(cursor.getColumnIndex("PP65"))
+                reverseBean.pP70 = cursor.getFloat(cursor.getColumnIndex("PP70"))
+
+                reverseBean.ppP5 = cursor.getFloat(cursor.getColumnIndex("PPP5"))
+                reverseBean.ppP10 = cursor.getFloat(cursor.getColumnIndex("PPP10"))
+                reverseBean.ppP20 = cursor.getFloat(cursor.getColumnIndex("PPP20"))
+                reverseBean.ppP30 = cursor.getFloat(cursor.getColumnIndex("PPP30"))
+                reverseBean.ppP40 = cursor.getFloat(cursor.getColumnIndex("PPP40"))
+                reverseBean.ppP50 = cursor.getFloat(cursor.getColumnIndex("PPP50"))
+                reverseBean.ppP60 = cursor.getFloat(cursor.getColumnIndex("PPP60"))
+                reverseBean.ppP70 = cursor.getFloat(cursor.getColumnIndex("PPP70"))
+                //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
+                reverseBean.code = CODE
+                reverseBean.n = N
+                reverseBean.d = D
+                reverseBean.d_D = D_D
+                reverseBean.p = P
+                reverseBean.mp = MP
+                reverseBean.lp = LP
+                reverseBean.after_O_P = AFTER_O_P
+                reverseBean.after_C_P = AFTER_C_P
+                //                    bean.fitlertype = FITLERTYPE
+                list.add(reverseBean)
                 cursor.moveToNext()
             }
             cursor.close()

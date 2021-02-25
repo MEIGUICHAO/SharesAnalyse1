@@ -20,33 +20,56 @@ class ReasoningDetailActivity : AppCompatActivity() {
         setContentView(R.layout.act_reasoning_result)
         val tb = intent.getStringExtra("TB")
         val bean = intent.getSerializableExtra("BEAN") as ReasoningRevBean
-        val list = ArrayList<ReasoningRevBean>()
-        val (filterList, fList2, fList3) = DBUtils.getReasoningAllJudgeResult(tb!!, bean)
-        list.addAll(filterList)
-        list.addAll(fList2)
-        list.addAll(fList3)
         val dataMap = SparseArray<String>()
-        LogUtil.d("list.size->${list.size}")
-        for (i in 0 until list.size) {
-            LogUtil.d("--$i---")
-            var addStr = ""
-            if (i == 0) {
-                addStr = "----Filter1-----\n"
+
+        if (tb!!.contains("OC_OO")) {
+
+            val ocooList = DBUtils.getReasoningOOOCAllJudgeResult(tb, bean)
+
+            for (i in 0 until ocooList.size) {
+                LogUtil.d("--$i---")
+                var endStr = "\n---------"
+                dataMap.put(
+                    i,
+                    "${ocooList[i].n},c-->${ocooList[i].code},d-->${ocooList[i].d},p-->${ocooList[i].p}" +
+                            "\n lp-->${ocooList[i].lp},mp-->${ocooList[i].mp}" +
+                            "\n ao-->${ocooList[i].after_O_P},ac-->${ocooList[i].after_C_P}" +
+                            "${endStr}"
+                )
             }
-            if (i == filterList.size) {
-                addStr = "----Filter2-----\n"
+
+        } else {
+
+            val list = ArrayList<ReasoningRevBean>()
+            val (filterList, fList2, fList3) = DBUtils.getReasoningAllJudgeResult(tb, bean)
+            list.addAll(filterList)
+            list.addAll(fList2)
+            list.addAll(fList3)
+            LogUtil.d("list.size->${list.size}")
+            for (i in 0 until list.size) {
+                LogUtil.d("--$i---")
+                var addStr = ""
+                if (i == 0) {
+                    addStr = "----Filter1-----\n"
+                }
+                if (i == filterList.size) {
+                    addStr = "----Filter2-----\n"
+                }
+                if (i == (filterList.size + fList2.size)) {
+                    addStr = "----Filter3-----\n"
+                }
+                var endStr = ""
+                if (i < filterList.size) {
+                    endStr = "\n${list[i].mA_1}&&${list[i].mA_3}&&${list[i].mA_5}\n------------"
+                }
+                dataMap.put(
+                    i,
+                    "${addStr}${list[i].n},c-->${list[i].code},d-->${list[i].d},p-->${list[i].p}" +
+                            "\n lp-->${list[i].lp},mp-->${list[i].mp}" +
+                            "\n ao-->${list[i].after_O_P},ac-->${list[i].after_C_P}" +
+                            "${endStr}"
+                )
             }
-            if (i == (filterList.size+fList2.size)) {
-                addStr = "----Filter3-----\n"
-            }
-            var endStr = ""
-            if (i < filterList.size) {
-                endStr = "\n${list[i].mA_1}&&${list[i].mA_3}&&${list[i].mA_5}\n------------"
-            }
-            dataMap.put(i, "${addStr}${list[i].n},c-->${list[i].code},d-->${list[i].d},p-->${list[i].p}" +
-                    "\n lp-->${list[i].lp},mp-->${list[i].mp}" +
-                    "\n ao-->${list[i].after_O_P},ac-->${list[i].after_C_P}" +
-                    "${endStr}")
         }
 
         val adapter = object : RecyclerAdapter<String>(this, R.layout.item_tv, dataMap) {

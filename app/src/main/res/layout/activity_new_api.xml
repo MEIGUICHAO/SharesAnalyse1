@@ -137,6 +137,7 @@
             android:id="@+id/btnGetResoningResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:text="GetResoningResult" />
@@ -153,6 +154,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="GetAll50" />
+        <Button
+            android:id="@+id/btnGetAllOCOO30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetAllOCOO30" />
+        <Button
+            android:id="@+id/btnGetAllOCOO50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="GetAllOCOO50" />
 
 
     </LinearLayout>

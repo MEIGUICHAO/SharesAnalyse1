@@ -217,6 +217,16 @@ class NewApiActivity : AppCompatActivity() {
             intent.putExtra("TYPE", 3)
             startActivity(intent)
         }
+        btnGetAllOCOO30.setOnClickListener {
+            val intent = Intent(this, ReasoningActivity::class.java)
+            intent.putExtra("TYPE", 4)
+            startActivity(intent)
+        }
+        btnGetAllOCOO50.setOnClickListener {
+            val intent = Intent(this, ReasoningActivity::class.java)
+            intent.putExtra("TYPE", 5)
+            startActivity(intent)
+        }
         btnRevAllTb.setOnClickListener {
 
 //            val (rangeMax26,rangeMin26)= DataSettingUtils.getMMByValue(Pair("-13.84","-13.84"))
