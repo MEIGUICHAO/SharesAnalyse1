@@ -2084,15 +2084,16 @@ object DBUtils {
         val list = ArrayList<ReasoningRevBean>()
 
         if (tabbleIsExist(tbName)) {
-            val querySQL =
-                " OC3 = ${bean.oC3} AND OC5 = ${bean.oC5} AND OC10 = ${bean.oC10} AND OC15 = ${bean.oC15} AND OC20 = ${bean.oC20} AND OC25 = ${bean.oC25} AND OC30 = ${bean.oC30} AND OC35 = ${bean.oC35} " +
-                        "AND OC40 = ${bean.oC40} AND OC45 = ${bean.oC45} AND OC50 = ${bean.oC50} AND OC55 = ${bean.oC55} AND OC60 = ${bean.oC60} AND OC65 = ${bean.oC65} AND OC70 = ${bean.oC70} " +
-                        "AND OO3 = ${bean.oO3} AND OO5 = ${bean.oO5} AND OO10 = ${bean.oO10} AND OO15 = ${bean.oO15} AND OO20 = ${bean.oO20} AND OO25 = ${bean.oO25} AND OO30 = ${bean.oO30} AND OO35 = ${bean.oO35} " +
-                        "AND OO40 = ${bean.oO40} AND OO45 = ${bean.oO45} AND OO50 = ${bean.oO50} AND OO55 = ${bean.oO55} AND OO60 = ${bean.oO60} AND OO65 = ${bean.oO65} AND OO70 = ${bean.oO70} " +
-                        "AND PP5 = ${bean.pP5} AND PP10 = ${bean.pP10} AND PP15 = ${bean.pP15} AND PP20 = ${bean.pP20} AND PP25 = ${bean.pP25} AND PP30 = ${bean.pP30} AND PP35 = ${bean.pP35} " +
-                        "AND PP40 = ${bean.pP40} AND PP45 = ${bean.pP45} AND PP50 = ${bean.pP50} AND PP55 = ${bean.pP55} AND PP60 = ${bean.pP60} AND PP65 = ${bean.pP65} AND PP70 = ${bean.pP70} " +
-                        "AND PPP5 = ${bean.ppP5} AND PPP10 = ${bean.ppP10} AND PPP20 = ${bean.ppP20} AND PPP30 = ${bean.ppP30} " +
-                        "AND PPP40 = ${bean.ppP40} AND PPP50 = ${bean.ppP50} AND PPP60 = ${bean.ppP60}  AND PPP70 = ${bean.ppP70} "
+            val querySQL ="J_ID = ${bean.j_ID}"
+//                " OC3 = ${bean.oC3} AND OC5 = ${bean.oC5} AND OC10 = ${bean.oC10} AND OC15 = ${bean.oC15} AND OC20 = ${bean.oC20} AND OC25 = ${bean.oC25} AND OC30 = ${bean.oC30} AND OC35 = ${bean.oC35} " +
+//                        "AND OC40 = ${bean.oC40} AND OC45 = ${bean.oC45} AND OC50 = ${bean.oC50} AND OC55 = ${bean.oC55} AND OC60 = ${bean.oC60} AND OC65 = ${bean.oC65} AND OC70 = ${bean.oC70} " +
+//                        "AND OO3 = ${bean.oO3} AND OO5 = ${bean.oO5} AND OO10 = ${bean.oO10} AND OO15 = ${bean.oO15} AND OO20 = ${bean.oO20} AND OO25 = ${bean.oO25} AND OO30 = ${bean.oO30} AND OO35 = ${bean.oO35} " +
+//                        "AND OO40 = ${bean.oO40} AND OO45 = ${bean.oO45} AND OO50 = ${bean.oO50} AND OO55 = ${bean.oO55} AND OO60 = ${bean.oO60} AND OO65 = ${bean.oO65} AND OO70 = ${bean.oO70} " +
+//                        "AND PP5 = ${bean.pP5} AND PP10 = ${bean.pP10} AND PP15 = ${bean.pP15} AND PP20 = ${bean.pP20} AND PP25 = ${bean.pP25} AND PP30 = ${bean.pP30} AND PP35 = ${bean.pP35} " +
+//                        "AND PP40 = ${bean.pP40} AND PP45 = ${bean.pP45} AND PP50 = ${bean.pP50} AND PP55 = ${bean.pP55} AND PP60 = ${bean.pP60} AND PP65 = ${bean.pP65} AND PP70 = ${bean.pP70} " +
+//                        "AND PPP5 = ${bean.ppP5} AND PPP10 = ${bean.ppP10} AND PPP20 = ${bean.ppP20} AND PPP30 = ${bean.ppP30} " +
+//                        "AND PPP40 = ${bean.ppP40} AND PPP50 = ${bean.ppP50} AND PPP60 = ${bean.ppP60}  AND PPP70 = ${bean.ppP70} "
+            LogUtil.d("querySQL-->$querySQL")
             getReasoningPList(tbName, querySQL, list)
         }
         list.sortReasoningRevBeanByP()
@@ -2117,6 +2118,24 @@ object DBUtils {
         } else {
             getReasoningRevBeanByCusorAndTb(cursor, tbName, list)
         }
+    }
+
+    fun getCodeListByTBName(tbName: String): ArrayList<ReasoningRevBean> {
+        switchDBName(Datas.REV_RESONING_DB)
+        val cursor =
+            db.rawQuery(" SELECT * FROM $tbName ", null)
+        val list = ArrayList<ReasoningRevBean>()
+        if (null != cursor && cursor.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+                val bean = ReasoningRevBean()
+                bean.code = cursor.getInt(cursor.getColumnIndex("CODE"))
+                bean.d = cursor.getString(cursor.getColumnIndex("D"))
+                list.add(bean)
+                cursor.moveToNext()
+            }
+        }
+        cursor.close()
+        return list
     }
 
     private fun getReasoningRevBeanByCusorAndTb(
@@ -2309,6 +2328,7 @@ object DBUtils {
                 reverseBean.ppP50 = cursor.getFloat(cursor.getColumnIndex("PPP50"))
                 reverseBean.ppP60 = cursor.getFloat(cursor.getColumnIndex("PPP60"))
                 reverseBean.ppP70 = cursor.getFloat(cursor.getColumnIndex("PPP70"))
+                reverseBean.j_ID = cursor.getInt(cursor.getColumnIndex("J_ID"))
                 //                    val FITLERTYPE = cursor.getString(cursor.getColumnIndex("FITLERTYPE"))
                 reverseBean.code = CODE
                 reverseBean.n = N
@@ -2405,7 +2425,7 @@ object DBUtils {
     fun getReasoningOCOOJudgeBeanByOCOOBean(
         is50: Boolean,
         ocooBean: ReverseKJsonBean
-    ): Triple<Boolean, String, ReasoningAllJudgeBean> {
+    ): Pair<Int, Triple<Boolean, String, ReasoningAllJudgeBean>> {
         switchDBName(Datas.REV_RESONING_DB)
         val judgeBean = ReasoningAllJudgeBean()
         val tbName = if (is50) Datas.ALL_OC_OO_50 else Datas.ALL_OC_OO_30
@@ -2454,6 +2474,7 @@ object DBUtils {
 
         var needContinue = false
         var updateSQL = ""
+        var judgeID = 0
 
         if (tabbleIsExist(tbName)) {
 
@@ -2466,6 +2487,7 @@ object DBUtils {
                 val fr = cursor.getFloat(cursor.getColumnIndex("FR"))
                 val rr = cursor.getFloat(cursor.getColumnIndex("RR"))
                 val size = cursor.getInt(cursor.getColumnIndex("SIZE"))
+                judgeID = cursor.getInt(cursor.getColumnIndex("_ID"))
                 judgeBean.fr = fr
                 judgeBean.rr = rr
                 judgeBean.size = size
@@ -2608,7 +2630,8 @@ object DBUtils {
             }
 
         }
-        return Triple(needContinue, updateSQL, judgeBean)
+
+        return Pair(judgeID,Triple(needContinue, updateSQL, judgeBean))
 
     }
 

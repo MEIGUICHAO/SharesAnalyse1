@@ -4148,6 +4148,7 @@ class NewApiViewModel : BaseViewModel() {
     fun reasoningAll() {
         val (mList, codelist) = getCHDDDateListAndCodeList()
         val foreachLimitList = getReasoningForeachLimitList()
+//        val mColdeList = DBUtils.getCodeListByTBName(Datas.All_Reasoning_50)
         codelist.forEach { code ->
             val mCHDDList = getCHDDCodeAllList(mList, code)
             (mActivity as NewApiActivity).setBtnReasoningAll("all_$code")
@@ -4160,6 +4161,9 @@ class NewApiViewModel : BaseViewModel() {
                         }
                         //TODO CESHI
 
+//                        if (mCHDDList[i].date.equals(code.d)) {
+//                            insertOCOOReasoning(i,mCHDDList,code.code.toString(),true)
+//                        }
                         insertAllReasoning(
                             false,
                             foreachLimitList,
@@ -4196,12 +4200,15 @@ class NewApiViewModel : BaseViewModel() {
         code: String,
         tbName: String
     ) {
-        val triple = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(is50, ocooBean)
+        val pair = DBUtils.getReasoningOCOOJudgeBeanByOCOOBean(is50, ocooBean)
+        val triple = pair.second
         if (triple.first) {
             val bean50 = DataSettingUtils.getOCOOReasoningRevBean(i, mCHDDList)
             bean50.rrate = triple.third.rr
             bean50.frate = triple.third.fr
             bean50.size = triple.third.size
+            bean50.j_ID = pair.first
+            LogUtil.d("j_ID-->${bean50.j_ID}")
             setReasoningRevBeanBasicInfo(bean50, code, mCHDDList, i, 0)
             DBUtils.insertOCOOReasoningBean(bean50, tbName, triple.second)
         }

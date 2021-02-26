@@ -137,10 +137,12 @@ object Datas {
     const val ALL_OC_OO_50 = "All_OC_OO_50"
     const val ALL_Reaoning_OC_OO_30 = "All_Reaoning_OC_OO_30"
     const val ALL_Reaoning_OC_OO_50 = "All_Reaoning_OC_OO_50"
+    const val All_Reasoning_30 = "All_Reasoning_30"
+    const val All_Reasoning_50 = "All_Reasoning_50"
 //    const val FR_RR_LIMIT = "AND FR > 0 AND FR < 0.5 AND RR > 0.2"
     const val REVERSE_DEBUG= false
     const val REVERSE_BEGIN_CODE = 2540
-    const val NEED_UPDATE_REV_= true
+    const val NEED_UPDATE_REV_= false
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
 
 
