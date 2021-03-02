@@ -4210,6 +4210,11 @@ class NewApiViewModel : BaseViewModel() {
             bean50.j_ID = pair.first
             LogUtil.d("j_ID-->${bean50.j_ID}")
             setReasoningRevBeanBasicInfo(bean50, code, mCHDDList, i, 0)
+            if (is50) {
+                (mActivity as NewApiActivity).setBtnGetAll50("OCOO_50_${code}_${mCHDDList[i].date}")
+            } else {
+                (mActivity as NewApiActivity).setBtnGetAll30("OCOO_30_${code}_${mCHDDList[i].date}")
+            }
             DBUtils.insertOCOOReasoningBean(bean50, tbName, triple.second)
         }
     }

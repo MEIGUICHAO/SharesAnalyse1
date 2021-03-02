@@ -287,6 +287,18 @@ class NewApiActivity : AppCompatActivity() {
         }
     }
 
+    fun setOCOO30(info: String) {
+        btnGetAllOCOO30.post {
+            btnGetAllOCOO30.setText(info)
+        }
+    }
+
+    fun setOCOO50(info: String) {
+        btnGetAllOCOO50.post {
+            btnGetAllOCOO50.setText(info)
+        }
+    }
+
     fun setBtnRevAllTb(info: String) {
         btnRevAllTb.post {
             btnRevAllTb.setText(info)
