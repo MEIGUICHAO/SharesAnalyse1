@@ -76,6 +76,11 @@ public class BaseUrlInterceptor implements Interceptor {
             // 然后返回一个response至此结束修改
             LogUtil.d("newBaseUrl:"+newBaseUrl.host());
             LogUtil.d("Url", "intercept: " + newFullUrl.toString());
+            if (newBaseUrl.host().equals("dcfm.eastmoney.com")) {
+                String url = newFullUrl.toString().replace("%28", "(").replace("%29", ")").replace("%25", "%");
+                LogUtil.d("Url", "intercept-->" + url.toString());
+                return chain.proceed(builder.url(url).build());
+            }
             return chain.proceed(builder.url(newFullUrl).build());
         }
         return chain.proceed(request);

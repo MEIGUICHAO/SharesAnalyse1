@@ -1009,7 +1009,11 @@ object DBUtils {
             insertSqlStr = reverseBean.insertTB(tbName)
             if (reverseBean is ReverseKJsonBean) {
                 val insertDerbySqlStr = reverseBean.insertDerbyTB(Datas.Derby + tbName)
-                db.execSQL(insertDerbySqlStr)
+                try {
+                    db.execSQL(insertDerbySqlStr)
+                } catch (e: java.lang.Exception) {
+
+                }
             }
             LogUtil.d("insertSqlStr:$insertSqlStr")
             db.execSQL(insertSqlStr)
@@ -2635,5 +2639,24 @@ object DBUtils {
 
     }
 
+    fun insertHolderBean(tbName: String,holderbean: HolderChangeBean) {
+        switchDBName(Datas.OTHER_DB)
+        val createSQL = holderbean.createTB(tbName)
+        LogUtil.d("createSQL-->$createSQL")
+        db.execSQL(createSQL)
+        if (tabbleIsExist(tbName)) {
+            val insertSQL = holderbean.insertTB(tbName)
+            LogUtil.d("insertSQL-->$insertSQL")
+            db.execSQL(insertSQL)
+        }
+        if (null != sqlCompleteListener) {
+            sqlCompleteListener!!.onComplete()
+        }
+    }
+
+    var sqlCompleteListener:SQLCompleteListener? = null
+    interface SQLCompleteListener {
+        fun onComplete()
+    }
 
 }

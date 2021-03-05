@@ -2,6 +2,7 @@ package com.mgc.sharesanalyse.net
 
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.entity.SinaCodeListBean
+import com.mgc.sharesanalyse.utils.DateUtils
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
@@ -39,6 +40,11 @@ interface RequestService {
     @GET("/data/feed/{path}")
     fun getWyStockData(@Path("path")code:String): Deferred<String>
 
+//    &filter=(securitycode%3D300059)
+    @Headers("urlname:${Datas.dfcfUrl}")
+    @GET("/em_mutisvcexpandinterface/api/js/get")
+    fun getHolerChangeData(@Query("filter")filter:String,@Query("type")type:String="HOLDERNUM",@Query("p")p:String="1",@Query("ps")ps:String="3"
+           ,@Query("sr")sr:String="-1",@Query("sty")sty:String="detail",@Query("st")st:String="EndDate",@Query("token")token:String="70f12f2f4f091e459a279469fe49eca5",@Query("_")ts:String="${System.currentTimeMillis()}"): Deferred<String>
 
     @Headers("urlname:${Datas.bwcUrl}","User-Agent:${Datas.UserAgent}","Content-Type:application/json")
     @POST("/api/v2/overbearfood/api_overbear_ordinary_data_list")

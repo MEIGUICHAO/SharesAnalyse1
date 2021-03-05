@@ -255,6 +255,12 @@ class NewApiActivity : AppCompatActivity() {
 //                viewModel.sortContinue30Map()
             }
         }
+        btnGetHolderChange.setOnClickListener {
+            App.getSinglePool().execute {
+                viewModel.hoderCodeIndex = 0
+                viewModel.getHolderChange()
+            }
+        }
     }
 
 
@@ -269,6 +275,11 @@ class NewApiActivity : AppCompatActivity() {
 //        viewModel.revOCOOJudgeResult()
     }
 
+    fun setBtnGetHolderChange(info: String) {
+        btnGetHolderChange.post {
+            btnGetHolderChange.setText(info)
+        }
+    }
     fun setBtnReasoningAll(info: String) {
         btnReasoningAll.post {
             btnReasoningAll.setText(info)

@@ -49,6 +49,7 @@ class NewApiViewModel : BaseViewModel() {
     val CHECK_DEAL_DETAIL = 3
     val CHECK_ALL_CODE = 4
     val CHECK_HQ_CODE = 5
+    val CHECK_HOLDER = 6
     var GetCodeIndex = 0
 
     init {
@@ -101,6 +102,14 @@ class NewApiViewModel : BaseViewModel() {
                             } else {
                                 getCurrentHq(code, (mActivity as NewApiActivity).lastDealDay)
                             }
+                        }
+
+                    }
+                    CHECK_HOLDER -> {
+                        val code = (msg.arg1 as Int) + 1
+                        LogUtil.d("hoderCodeIndex-->code:$code,curCode:$curCode")
+                        if (curCode == code) {
+                            getHolderChange()
                         }
 
                     }
@@ -1221,7 +1230,7 @@ class NewApiViewModel : BaseViewModel() {
     public fun reverseResult() {
         val (mList, codelist) = getCHDDDateListAndCodeList()
         codelist.forEach { code ->
-            if (!Datas.REVERSE_DEBUG||(Datas.REVERSE_DEBUG && code.toInt() > Datas.REVERSE_BEGIN_CODE)) {
+            if (!Datas.REVERSE_DEBUG || (Datas.REVERSE_DEBUG && code.toInt() > Datas.REVERSE_BEGIN_CODE)) {
                 mList.forEach {
                     val date = "20${it}01"
 //                if (date.toInt() >= 20201201) {
@@ -2624,7 +2633,7 @@ class NewApiViewModel : BaseViewModel() {
                 val targetBeanList = ArrayList<CodeHDDBean>()
                 if (mCHDDList.size > Datas.REV_DAYS) {
                     val targetBean = mCHDDList[Datas.REV_DAYS]
-                    val afterBean = mCHDDList[Datas.REV_DAYS-1]
+                    val afterBean = mCHDDList[Datas.REV_DAYS - 1]
                     val ROP = requestBean.p_MA_J.aacp
                     val TOP = targetBean.p_MA_J.aacp
 
@@ -2633,9 +2642,15 @@ class NewApiViewModel : BaseViewModel() {
                     if (ROP > TOP && ROP >= 1.3 * TOP && mCHDDList.size > 20) {
                         if (mCHDDList.size > (70 + Datas.REV_DAYS)) {
                             val revKJOCOOBean =
-                                DataSettingUtils.getRevKJOCOOBean(Datas.REV_DAYS,mCHDDList, code, targetBean, requestBean)
+                                DataSettingUtils.getRevKJOCOOBean(
+                                    Datas.REV_DAYS,
+                                    mCHDDList,
+                                    code,
+                                    targetBean,
+                                    requestBean
+                                )
                             for (x in Datas.REV_DAYS downTo 0) {
-                                if (mCHDDList[x].p_MA_J.aacp < TOP * 0.95 ) {
+                                if (mCHDDList[x].p_MA_J.aacp < TOP * 0.95) {
                                     needInsert = false
                                     break
                                 }
@@ -2659,8 +2674,8 @@ class NewApiViewModel : BaseViewModel() {
                                 Datas.REV_DAYS,
                                 targetBeanList,
                                 mCHDDList,
-                                Datas.REV_DAYS+1,
-                                Datas.REV_DAYS+1,
+                                Datas.REV_DAYS + 1,
+                                Datas.REV_DAYS + 1,
                                 afterBean,
                                 targetBean,
                                 requestBean,
@@ -2722,17 +2737,64 @@ class NewApiViewModel : BaseViewModel() {
     }
 
 
-
     private fun getForeachLimitList(): ArrayList<Array<Int>> {
         val foreachLimitList = arrayListOf(
-            arrayOf(6+Datas.REV_DAYS, 1+Datas.REV_DAYS, 2+Datas.REV_DAYS, 3+Datas.REV_DAYS, 5+Datas.REV_DAYS),//33
-            arrayOf(10+Datas.REV_DAYS, 3+Datas.REV_DAYS, 4+Datas.REV_DAYS, 5+Datas.REV_DAYS, 9+Datas.REV_DAYS),//55
-            arrayOf(20+Datas.REV_DAYS, 5+Datas.REV_DAYS, 9+Datas.REV_DAYS, 10+Datas.REV_DAYS, 19+Datas.REV_DAYS),//10
-            arrayOf(30+Datas.REV_DAYS, 10+Datas.REV_DAYS, 14+Datas.REV_DAYS, 15+Datas.REV_DAYS, 29+Datas.REV_DAYS),//15
-            arrayOf(40+Datas.REV_DAYS, 15+Datas.REV_DAYS, 19+Datas.REV_DAYS, 20+Datas.REV_DAYS, 39+Datas.REV_DAYS),//20
-            arrayOf(50+Datas.REV_DAYS, 20+Datas.REV_DAYS, 24+Datas.REV_DAYS, 25+Datas.REV_DAYS, 49+Datas.REV_DAYS),//25
-            arrayOf(60+Datas.REV_DAYS, 25+Datas.REV_DAYS, 29+Datas.REV_DAYS, 30+Datas.REV_DAYS, 59+Datas.REV_DAYS),//30
-            arrayOf(72+Datas.REV_DAYS, 30+Datas.REV_DAYS, 35+Datas.REV_DAYS, 36+Datas.REV_DAYS, 71+Datas.REV_DAYS)//36
+            arrayOf(
+                6 + Datas.REV_DAYS,
+                1 + Datas.REV_DAYS,
+                2 + Datas.REV_DAYS,
+                3 + Datas.REV_DAYS,
+                5 + Datas.REV_DAYS
+            ),//33
+            arrayOf(
+                10 + Datas.REV_DAYS,
+                3 + Datas.REV_DAYS,
+                4 + Datas.REV_DAYS,
+                5 + Datas.REV_DAYS,
+                9 + Datas.REV_DAYS
+            ),//55
+            arrayOf(
+                20 + Datas.REV_DAYS,
+                5 + Datas.REV_DAYS,
+                9 + Datas.REV_DAYS,
+                10 + Datas.REV_DAYS,
+                19 + Datas.REV_DAYS
+            ),//10
+            arrayOf(
+                30 + Datas.REV_DAYS,
+                10 + Datas.REV_DAYS,
+                14 + Datas.REV_DAYS,
+                15 + Datas.REV_DAYS,
+                29 + Datas.REV_DAYS
+            ),//15
+            arrayOf(
+                40 + Datas.REV_DAYS,
+                15 + Datas.REV_DAYS,
+                19 + Datas.REV_DAYS,
+                20 + Datas.REV_DAYS,
+                39 + Datas.REV_DAYS
+            ),//20
+            arrayOf(
+                50 + Datas.REV_DAYS,
+                20 + Datas.REV_DAYS,
+                24 + Datas.REV_DAYS,
+                25 + Datas.REV_DAYS,
+                49 + Datas.REV_DAYS
+            ),//25
+            arrayOf(
+                60 + Datas.REV_DAYS,
+                25 + Datas.REV_DAYS,
+                29 + Datas.REV_DAYS,
+                30 + Datas.REV_DAYS,
+                59 + Datas.REV_DAYS
+            ),//30
+            arrayOf(
+                72 + Datas.REV_DAYS,
+                30 + Datas.REV_DAYS,
+                35 + Datas.REV_DAYS,
+                36 + Datas.REV_DAYS,
+                71 + Datas.REV_DAYS
+            )//36
         )
         return foreachLimitList
     }
@@ -3901,7 +3963,7 @@ class NewApiViewModel : BaseViewModel() {
                 val (rangeMax, rangeMin) = DataSettingUtils.getRangeMaxMinByColumm(
                     it,
                     Datas.REVERSE_KJ_DB,
-                    "OC${dayList[dayList.size - 1]}",true
+                    "OC${dayList[dayList.size - 1]}", true
                 )
 //            FILTER_OC_OO_PROGRESS
 
@@ -3910,7 +3972,8 @@ class NewApiViewModel : BaseViewModel() {
 
 
                     LogUtil.d("getFilterAllByTbName!!!")
-                    val querySQL = "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}"
+                    val querySQL =
+                        "SELECT * FROM $it WHERE _ID in (select max(_ID) from $it group by CODE,DATE) AND OC${dayList[dayList.size - 1]} >=$i AND OC${dayList[dayList.size - 1]}<${(i + Datas.FILTER_OC_OO_PROGRESS)} ${Datas.debugEndstr} ${Datas.reasoning_debug_end_str}"
                     val list = DBUtils.getFilterAllByTbName(
                         Datas.REVERSE_KJ_DB,
                         querySQL,
@@ -4184,11 +4247,23 @@ class NewApiViewModel : BaseViewModel() {
 //        (mActivity as NewApiActivity).setBtnGetAll50("all_finish!!")
     }
 
-    private fun insertOCOOReasoning(i: Int, mCHDDList: java.util.ArrayList<CodeHDDBean>, code: String,is50: Boolean) {
+    private fun insertOCOOReasoning(
+        i: Int,
+        mCHDDList: java.util.ArrayList<CodeHDDBean>,
+        code: String,
+        is50: Boolean
+    ) {
         if (70 <= mCHDDList.size) {
             LogUtil.d("code-->${code},date-->${mCHDDList[i].date}")
-            val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i,mCHDDList)
-            insertOCOOReasoning5030Bean(is50, ocooBean, i, mCHDDList, code, if (is50)Datas.ALL_Reaoning_OC_OO_50 else Datas.ALL_Reaoning_OC_OO_30)
+            val ocooBean = DataSettingUtils.getInsertRevKJOCOOBean(i, mCHDDList)
+            insertOCOOReasoning5030Bean(
+                is50,
+                ocooBean,
+                i,
+                mCHDDList,
+                code,
+                if (is50) Datas.ALL_Reaoning_OC_OO_50 else Datas.ALL_Reaoning_OC_OO_30
+            )
         }
     }
 
@@ -4258,7 +4333,7 @@ class NewApiViewModel : BaseViewModel() {
                 if (continue50) {
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
-                    insertOCOOReasoning(i,mCHDDList,code,true)
+                    insertOCOOReasoning(i, mCHDDList, code, true)
                 }
 
                 if (continue30) {
@@ -4271,7 +4346,7 @@ class NewApiViewModel : BaseViewModel() {
                         fitlerType
                     )
                     DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    insertOCOOReasoning(i,mCHDDList,code,false)
+                    insertOCOOReasoning(i, mCHDDList, code, false)
                     /*--------------------------------------------------------------*/
 //                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 //                    if (continue30) {
@@ -4371,7 +4446,7 @@ class NewApiViewModel : BaseViewModel() {
                     (mActivity as NewApiActivity).setBtnGetAll50("all_50_code:${code},date:${mCHDDList[i].date}")
                     setReasoningRevBeanBasicInfo(allReasoning50Bean, code, mCHDDList, i, fitlerType)
                     DBUtils.insertReasoningAllTB(allReasoning50Bean, true)
-                    insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code,true)
+                    insertOCOOReasoning(mCHDDList.size - 1, mCHDDList, code, true)
                 }
                 if (continue30) {
 
@@ -4385,7 +4460,7 @@ class NewApiViewModel : BaseViewModel() {
                         fitlerType
                     )
                     DBUtils.insertReasoningAllTB(allReasoning30Bean, false)
-                    insertOCOOReasoning(mCHDDList.size - 1,mCHDDList,code,false)
+                    insertOCOOReasoning(mCHDDList.size - 1, mCHDDList, code, false)
 //                    continue30 = f36AddictionJudge(allReasoning30Bean, mCHDDList, i, continue30)
 //                    if (continue30) {
 //                        (mActivity as NewApiActivity).setBtnReasoningAll("all_30_code:${code},date:${mCHDDList[i].date}")
@@ -4701,7 +4776,7 @@ class NewApiViewModel : BaseViewModel() {
                     ) * 100).toKeep2()
                 )
             }
-            reasoningRevBean.p = pList[Datas.REV_DAYS-1]
+            reasoningRevBean.p = pList[Datas.REV_DAYS - 1]
             reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
                 (mCHDDList[i + 1].op - mCHDDList[i].cp),
                 mCHDDList[i].cp
@@ -4712,7 +4787,7 @@ class NewApiViewModel : BaseViewModel() {
             ) * 100).toKeep2()
             pList.sortFloatAsc()
             reasoningRevBean.lp = pList[0]
-            reasoningRevBean.mp = pList[Datas.REV_DAYS-1]
+            reasoningRevBean.mp = pList[Datas.REV_DAYS - 1]
 
             LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
 
@@ -4749,10 +4824,16 @@ class NewApiViewModel : BaseViewModel() {
 //                return@forEach
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 2*Datas.REV_DAYS ..mCHDDList.size - 1) {
+            for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
                 LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
                 if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    setReasoningPMpLpCpOpDdInfo(i - Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 30)
+                    setReasoningPMpLpCpOpDdInfo(
+                        i - Datas.REV_DAYS,
+                        mCHDDList,
+                        it,
+                        it.code.toString(),
+                        30
+                    )
                     DBUtils.updateReasoning(tb30, it)
                     (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
                 }
@@ -4763,10 +4844,16 @@ class NewApiViewModel : BaseViewModel() {
 //                return@forEach
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 2*Datas.REV_DAYS..mCHDDList.size - 1) {
+            for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
                 LogUtil.d("${it.code.toString()}--update_50--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
                 if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    setReasoningPMpLpCpOpDdInfo(i- Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 50)
+                    setReasoningPMpLpCpOpDdInfo(
+                        i - Datas.REV_DAYS,
+                        mCHDDList,
+                        it,
+                        it.code.toString(),
+                        50
+                    )
                     DBUtils.updateReasoning(tb50, it)
                     LogUtil.d("update_50")
                     (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
@@ -4778,10 +4865,16 @@ class NewApiViewModel : BaseViewModel() {
 //                return@forEach
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 2*Datas.REV_DAYS ..mCHDDList.size - 1) {
+            for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
                 LogUtil.d("${it.code.toString()}--update_OCOO_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
                 if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    setReasoningPMpLpCpOpDdInfo(i - Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 30)
+                    setReasoningPMpLpCpOpDdInfo(
+                        i - Datas.REV_DAYS,
+                        mCHDDList,
+                        it,
+                        it.code.toString(),
+                        30
+                    )
                     DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_30, it)
                     (mActivity as NewApiActivity).setBtnResoning("OCOO_30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
                 }
@@ -4792,10 +4885,16 @@ class NewApiViewModel : BaseViewModel() {
 //                return@forEach
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
-            for (i in mCHDDList.size - 2*Datas.REV_DAYS..mCHDDList.size - 1) {
+            for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
                 LogUtil.d("${it.code.toString()}--update_OCOO_50--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
                 if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    setReasoningPMpLpCpOpDdInfo(i- Datas.REV_DAYS, mCHDDList, it, it.code.toString(), 50)
+                    setReasoningPMpLpCpOpDdInfo(
+                        i - Datas.REV_DAYS,
+                        mCHDDList,
+                        it,
+                        it.code.toString(),
+                        50
+                    )
                     DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_50, it)
                     LogUtil.d("update_50")
                     (mActivity as NewApiActivity).setBtnResoning("OCOO_50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
@@ -4805,6 +4904,109 @@ class NewApiViewModel : BaseViewModel() {
 
         (mActivity as NewApiActivity).setBtnResoning("updateReasoning_Finish")
 
+    }
+
+    var hoderCodeIndex = -1
+    var holderTB ="${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYMM)}"
+    fun getHolderChange() {
+        if (hoderCodeIndex == 0) {
+            DBUtils.switchDBName(Datas.OTHER_DB)
+            DBUtils.dropTable(holderTB)
+            DBUtils.sqlCompleteListener = object : DBUtils.SQLCompleteListener {
+                override fun onComplete() {
+                    if (hoderCodeIndex < codeNameList.size) {
+                        Thread.sleep(500)
+                        getHolderChange()
+                    }
+                }
+
+            }
+        }
+        launch({
+            if (hoderCodeIndex < codeNameList.size) {
+                val code = codeNameList[hoderCodeIndex].split(splitTag)[0]
+                val name = codeNameList[hoderCodeIndex].split(splitTag)[1]
+                (mActivity as NewApiActivity).setBtnGetHolderChange("holder_$code")
+                var result = RetrofitManager.reqApi.getHolerChangeData("(securitycode%3D$code)")
+                var msg = mHandler.obtainMessage()
+                msg.what = CHECK_HOLDER
+                curCode = code.toInt()
+                msg.arg1 = code.toInt()
+                mHandler.sendMessageDelayed(msg, 10 * 1000)
+
+                var json = result.await()
+                if (json.equals("[]")) {
+                    hoderCodeIndex++
+                    getHolderChange()
+                    return@launch
+                }
+                var holderjsonbean = GsonHelper.parseArray(json, HolderChangeJsonBean::class.java)
+                val holderbean = HolderChangeBean()
+
+//            val holderNum = 0f
+//            val holderChangeNum = 0f
+//            val holderChangeRate = 0f
+//            val holderAvgAmount = 0f
+//            val marketCap = 0f
+//            val endDate: String? = null
+//            val noticeDate: String? = null
+//            val closePirce = 0f
+
+                if (holderjsonbean.size > 0) {
+                    holderbean.code = code.toInt()
+                    holderbean.name = name
+
+                    holderbean.holderNum =
+                        (holderjsonbean[0].holderNum.toFloat() / Datas.WAN).toKeep4()
+                    holderbean.holderChangeNum =
+                        (holderjsonbean[0].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                    holderbean.holderChangeRate =
+                        (holderjsonbean[0].holderNumChangeRate.toFloat()).toKeep2()
+                    holderbean.holderAvgAmount =
+                        (holderjsonbean[0].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                    holderbean.marketCap =
+                        (holderjsonbean[0].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                    holderbean.endDate = (holderjsonbean[0].endDate).split("T")[0].replace("-", "")
+                    holderbean.noticeDate =
+                        (holderjsonbean[0].noticeDate).split("T")[0].replace("-", "")
+                    holderbean.closePirce = holderjsonbean[0].closePrice.toFloat().toKeep2()
+                    if (holderjsonbean.size > 1) {
+                        holderbean.holderNum2 =
+                            (holderjsonbean[1].holderNum.toFloat() / Datas.WAN).toKeep4()
+                        holderbean.holderChangeNum2 =
+                            (holderjsonbean[1].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                        holderbean.holderChangeRate2 =
+                            (holderjsonbean[1].holderNumChangeRate.toFloat()).toKeep2()
+                        holderbean.holderAvgAmount2 =
+                            (holderjsonbean[1].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                        holderbean.marketCap2 =
+                            (holderjsonbean[1].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                        holderbean.endDate2 = (holderjsonbean[1].endDate).split("T")[0].replace("-", "")
+                        holderbean.noticeDate2 =
+                            (holderjsonbean[1].noticeDate).split("T")[0].replace("-", "")
+                        holderbean.closePirce2 = holderjsonbean[1].closePrice.toFloat().toKeep2()
+                    }
+                    if (holderjsonbean.size > 2) {
+                        holderbean.holderNum3 =
+                            (holderjsonbean[2].holderNum.toFloat() / Datas.WAN).toKeep4()
+                        holderbean.holderChangeNum3 =
+                            (holderjsonbean[2].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                        holderbean.holderChangeRate3 =
+                            (holderjsonbean[2].holderNumChangeRate.toFloat()).toKeep2()
+                        holderbean.holderAvgAmount3 =
+                            (holderjsonbean[2].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                        holderbean.marketCap3 =
+                            (holderjsonbean[2].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                        holderbean.endDate3 = (holderjsonbean[2].endDate).split("T")[0].replace("-", "")
+                        holderbean.noticeDate3 =
+                            (holderjsonbean[2].noticeDate).split("T")[0].replace("-", "")
+                        holderbean.closePirce3 = holderjsonbean[2].closePrice.toFloat().toKeep2()
+                    }
+                    DBUtils.insertHolderBean(holderTB, holderbean)
+                }
+                hoderCodeIndex++
+            }
+        })
     }
 
 
