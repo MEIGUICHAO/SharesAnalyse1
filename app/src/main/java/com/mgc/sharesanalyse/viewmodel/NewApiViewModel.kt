@@ -39,7 +39,7 @@ class NewApiViewModel : BaseViewModel() {
     var pathDate = ""
     var rd: Random? = null
 
-    var curCode = 1
+    var curCode = -1
     var curDate = 1
     var curDateStr = "1"
     var hqCurCode = "1"
@@ -4908,15 +4908,21 @@ class NewApiViewModel : BaseViewModel() {
 
     var hoderCodeIndex = -1
     var holderTB ="${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYMM)}"
+    var holderCode = -1
     fun getHolderChange() {
         if (hoderCodeIndex == 0) {
-            DBUtils.switchDBName(Datas.OTHER_DB)
-            DBUtils.dropTable(holderTB)
+            val holderLastCode = DBUtils.queryHolderTBLastCode(holderTB)
+            if (!holderLastCode.isNullOrEmpty()) {
+                holderCode = holderLastCode.toInt()
+            }
+//            DBUtils.dropTable(holderTB)
             DBUtils.sqlCompleteListener = object : DBUtils.SQLCompleteListener {
                 override fun onComplete() {
                     if (hoderCodeIndex < codeNameList.size) {
                         Thread.sleep(500)
                         getHolderChange()
+                    } else {
+                        curCode = -1
                     }
                 }
 
@@ -4925,23 +4931,26 @@ class NewApiViewModel : BaseViewModel() {
         launch({
             if (hoderCodeIndex < codeNameList.size) {
                 val code = codeNameList[hoderCodeIndex].split(splitTag)[0]
-                val name = codeNameList[hoderCodeIndex].split(splitTag)[1]
-                (mActivity as NewApiActivity).setBtnGetHolderChange("holder_$code")
-                var result = RetrofitManager.reqApi.getHolerChangeData("(securitycode%3D$code)")
-                var msg = mHandler.obtainMessage()
-                msg.what = CHECK_HOLDER
-                curCode = code.toInt()
-                msg.arg1 = code.toInt()
-                mHandler.sendMessageDelayed(msg, 10 * 1000)
+                if (code.toInt() > holderCode) {
+                    val name = codeNameList[hoderCodeIndex].split(splitTag)[1]
+                    (mActivity as NewApiActivity).setBtnGetHolderChange("holder_$code")
+                    var result = RetrofitManager.reqApi.getHolerChangeData("(securitycode%3D$code)")
+                    var msg = mHandler.obtainMessage()
+                    msg.what = CHECK_HOLDER
+                    curCode = code.toInt()
+                    msg.arg1 = code.toInt()
+                    mHandler.sendMessageDelayed(msg, 10 * 1000)
 
-                var json = result.await()
-                if (json.equals("[]")) {
-                    hoderCodeIndex++
-                    getHolderChange()
-                    return@launch
-                }
-                var holderjsonbean = GsonHelper.parseArray(json, HolderChangeJsonBean::class.java)
-                val holderbean = HolderChangeBean()
+                    var json = result.await()
+                    if (json.equals("[]")) {
+                        hoderCodeIndex++
+                        getHolderChange()
+                        return@launch
+                    }
+                    try {
+                        var holderjsonbean =
+                            GsonHelper.parseArray(json, HolderChangeJsonBean::class.java)
+                        val holderbean = HolderChangeBean()
 
 //            val holderNum = 0f
 //            val holderChangeNum = 0f
@@ -4952,59 +4961,74 @@ class NewApiViewModel : BaseViewModel() {
 //            val noticeDate: String? = null
 //            val closePirce = 0f
 
-                if (holderjsonbean.size > 0) {
-                    holderbean.code = code.toInt()
-                    holderbean.name = name
+                        if (holderjsonbean.size > 0) {
+                            holderbean.code = code.toInt()
+                            holderbean.name = name
 
-                    holderbean.holderNum =
-                        (holderjsonbean[0].holderNum.toFloat() / Datas.WAN).toKeep4()
-                    holderbean.holderChangeNum =
-                        (holderjsonbean[0].holderNumChange.toFloat() / Datas.WAN).toKeep4()
-                    holderbean.holderChangeRate =
-                        (holderjsonbean[0].holderNumChangeRate.toFloat()).toKeep2()
-                    holderbean.holderAvgAmount =
-                        (holderjsonbean[0].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
-                    holderbean.marketCap =
-                        (holderjsonbean[0].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
-                    holderbean.endDate = (holderjsonbean[0].endDate).split("T")[0].replace("-", "")
-                    holderbean.noticeDate =
-                        (holderjsonbean[0].noticeDate).split("T")[0].replace("-", "")
-                    holderbean.closePirce = holderjsonbean[0].closePrice.toFloat().toKeep2()
-                    if (holderjsonbean.size > 1) {
-                        holderbean.holderNum2 =
-                            (holderjsonbean[1].holderNum.toFloat() / Datas.WAN).toKeep4()
-                        holderbean.holderChangeNum2 =
-                            (holderjsonbean[1].holderNumChange.toFloat() / Datas.WAN).toKeep4()
-                        holderbean.holderChangeRate2 =
-                            (holderjsonbean[1].holderNumChangeRate.toFloat()).toKeep2()
-                        holderbean.holderAvgAmount2 =
-                            (holderjsonbean[1].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
-                        holderbean.marketCap2 =
-                            (holderjsonbean[1].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
-                        holderbean.endDate2 = (holderjsonbean[1].endDate).split("T")[0].replace("-", "")
-                        holderbean.noticeDate2 =
-                            (holderjsonbean[1].noticeDate).split("T")[0].replace("-", "")
-                        holderbean.closePirce2 = holderjsonbean[1].closePrice.toFloat().toKeep2()
+                            holderbean.holderNum =
+                                (holderjsonbean[0].holderNum.toFloat() / Datas.WAN).toKeep4()
+                            holderbean.holderChangeNum =
+                                (holderjsonbean[0].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                            holderbean.holderChangeRate =
+                                (holderjsonbean[0].holderNumChangeRate.toFloat()).toKeep2()
+                            holderbean.holderAvgAmount =
+                                (holderjsonbean[0].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                            holderbean.marketCap =
+                                (holderjsonbean[0].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                            holderbean.endDate =
+                                (holderjsonbean[0].endDate).split("T")[0].replace("-", "")
+                            holderbean.noticeDate =
+                                (holderjsonbean[0].noticeDate).split("T")[0].replace("-", "")
+                            holderbean.closePirce = holderjsonbean[0].closePrice.toFloat().toKeep2()
+                            if (holderjsonbean.size > 1) {
+                                holderbean.holderNum2 =
+                                    (holderjsonbean[1].holderNum.toFloat() / Datas.WAN).toKeep4()
+                                holderbean.holderChangeNum2 =
+                                    (holderjsonbean[1].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                                holderbean.holderChangeRate2 =
+                                    (holderjsonbean[1].holderNumChangeRate.toFloat()).toKeep2()
+                                holderbean.holderAvgAmount2 =
+                                    (holderjsonbean[1].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                                holderbean.marketCap2 =
+                                    (holderjsonbean[1].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                                holderbean.endDate2 =
+                                    (holderjsonbean[1].endDate).split("T")[0].replace("-", "")
+                                holderbean.noticeDate2 =
+                                    (holderjsonbean[1].noticeDate).split("T")[0].replace("-", "")
+                                holderbean.closePirce2 =
+                                    holderjsonbean[1].closePrice.toFloat().toKeep2()
+                            }
+                            if (holderjsonbean.size > 2) {
+                                holderbean.holderNum3 =
+                                    (holderjsonbean[2].holderNum.toFloat() / Datas.WAN).toKeep4()
+                                holderbean.holderChangeNum3 =
+                                    (holderjsonbean[2].holderNumChange.toFloat() / Datas.WAN).toKeep4()
+                                holderbean.holderChangeRate3 =
+                                    (holderjsonbean[2].holderNumChangeRate.toFloat()).toKeep2()
+                                holderbean.holderAvgAmount3 =
+                                    (holderjsonbean[2].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
+                                holderbean.marketCap3 =
+                                    (holderjsonbean[2].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
+                                holderbean.endDate3 =
+                                    (holderjsonbean[2].endDate).split("T")[0].replace("-", "")
+                                holderbean.noticeDate3 =
+                                    (holderjsonbean[2].noticeDate).split("T")[0].replace("-", "")
+                                holderbean.closePirce3 =
+                                    holderjsonbean[2].closePrice.toFloat().toKeep2()
+                            }
+                            DBUtils.insertHolderBean(holderTB, holderbean)
+                        }
+                        hoderCodeIndex++
+                    } catch (e: Exception) {
+
+                        hoderCodeIndex++
+                        getHolderChange()
                     }
-                    if (holderjsonbean.size > 2) {
-                        holderbean.holderNum3 =
-                            (holderjsonbean[2].holderNum.toFloat() / Datas.WAN).toKeep4()
-                        holderbean.holderChangeNum3 =
-                            (holderjsonbean[2].holderNumChange.toFloat() / Datas.WAN).toKeep4()
-                        holderbean.holderChangeRate3 =
-                            (holderjsonbean[2].holderNumChangeRate.toFloat()).toKeep2()
-                        holderbean.holderAvgAmount3 =
-                            (holderjsonbean[2].holderAvgCapitalisation.toFloat() / Datas.WAN).toKeep2()
-                        holderbean.marketCap3 =
-                            (holderjsonbean[2].totalCapitalisation.toFloat() / Datas.NUM_100M).toKeep2()
-                        holderbean.endDate3 = (holderjsonbean[2].endDate).split("T")[0].replace("-", "")
-                        holderbean.noticeDate3 =
-                            (holderjsonbean[2].noticeDate).split("T")[0].replace("-", "")
-                        holderbean.closePirce3 = holderjsonbean[2].closePrice.toFloat().toKeep2()
-                    }
-                    DBUtils.insertHolderBean(holderTB, holderbean)
+
+                } else {
+                    hoderCodeIndex++
+                    getHolderChange()
                 }
-                hoderCodeIndex++
             }
         })
     }

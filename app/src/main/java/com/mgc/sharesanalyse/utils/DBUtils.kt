@@ -2654,6 +2654,22 @@ object DBUtils {
         }
     }
 
+
+
+    fun queryHolderTBLastCode(tbName: String): String {
+        switchDBName(Datas.OTHER_DB)
+        var CODE = ""
+        if (tabbleIsExist(tbName)) {
+            var cursor = db.rawQuery("SELECT * FROM $tbName order by _ID desc", null)
+            if (null != cursor && cursor.moveToFirst()) {
+                CODE = cursor.getString(cursor.getColumnIndex("CODE"))
+                LogUtil.d("CODE:$CODE")
+            }
+            cursor.close()
+        }
+        return CODE
+    }
+
     var sqlCompleteListener:SQLCompleteListener? = null
     interface SQLCompleteListener {
         fun onComplete()
