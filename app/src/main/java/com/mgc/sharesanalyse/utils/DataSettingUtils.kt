@@ -4548,7 +4548,7 @@ object DataSettingUtils {
         requestBean: CodeHDDBean?
     ): ReverseKJsonBean {
         val revKJOCOOBean = ReverseKJsonBean()
-        val originOC = mCHDDList.getPPValueByAsc(index,0,2)
+        val originOC = mCHDDList.getPPValueByAsc(index,0,Datas.originValueCount)
         if (null != targetBean && null != requestBean) {
             revKJOCOOBean.code = code.toInt()
             revKJOCOOBean.n = targetBean.name
@@ -4621,7 +4621,7 @@ object DataSettingUtils {
         mCHDDList: ArrayList<CodeHDDBean>
     ): ReverseKJsonBean {
         val revKJOCOOBean = ReverseKJsonBean()
-        val originOC = mCHDDList.getPPValueByDesc(index,0,2)
+        val originOC = mCHDDList.getPPValueByDesc(index,0,Datas.originValueCount)
 
         revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,0,3), originOC)
         revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,4,5), originOC)
@@ -4688,7 +4688,7 @@ object DataSettingUtils {
         mCHDDList: ArrayList<CodeHDDBean>
     ): ReasoningRevBean {
         val revKJOCOOBean = ReasoningRevBean()
-        val originOC = mCHDDList.getPPValueByDesc(index,0,2)
+        val originOC = mCHDDList.getPPValueByDesc(index,0,Datas.originValueCount)
 
         revKJOCOOBean.oC3 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,0,3), originOC).toOCOORevJudgeMin()
         revKJOCOOBean.oC5 = getOCOOPercent(mCHDDList.getMaxValueInRangeByDesc(index,4,5), originOC).toOCOORevJudgeMin()

@@ -168,6 +168,9 @@ class NewApiActivity : AppCompatActivity() {
 //                DBUtils.dropTable(Datas.REV_OC_OO_30)
 //                DBUtils.dropTable(Datas.REV_OC_OO_50)
                 viewModel.reverseResult()
+                btnRevAllTb.post {
+                    btnRevAllTb.performClick()
+                }
             }
         }
         btnGapResult.setOnClickListener {
@@ -272,7 +275,7 @@ class NewApiActivity : AppCompatActivity() {
 
 //        DBUtils.dropTable(Datas.ALL_OC_OO_30)
 //        DBUtils.dropTable(Datas.ALL_OC_OO_50)
-//        viewModel.revOCOOJudgeResult()
+        viewModel.revOCOOJudgeResult()
     }
 
     fun setBtnGetHolderChange(info: String) {

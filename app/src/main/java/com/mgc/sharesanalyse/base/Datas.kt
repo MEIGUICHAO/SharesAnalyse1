@@ -123,7 +123,7 @@ object Datas {
     const val AA_FILTER_ = "AA_FILTER_"
     const val BB_FIL_COPY_ = "BB_FIL_COPY_"
     const val REV_FILTERDB = "REV_FILTERDB"
-    const val REV_DAYS = 20
+    const val REV_DAYS = 5
     const val FILTER_PROGRESS = 3
     const val FILTER_OC_OO_PROGRESS = 5
     const val FILTER_DERBY_PROGRESS = 5
@@ -132,8 +132,8 @@ object Datas {
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
     val debugSelectMaxMinStr = if (DEBUG) "WHERE (${DEBUG_Code.toReasoningCodeList()})" else ""
-    const val reasoning_debug = false
-    const val reasoning_debug_begin_day = 20201226
+    const val reasoning_debug = true
+    const val reasoning_debug_begin_day = 20201231
     const val reasoning_debug_end_day = 20210201
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""
     const val REV_OC_OO_10 = "AA_REV_OC_OO_10"
@@ -150,6 +150,7 @@ object Datas {
     const val REVERSE_BEGIN_CODE = 2540
     const val NEED_UPDATE_REV_= false
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
+    const val originValueCount = 0
 
 
 
