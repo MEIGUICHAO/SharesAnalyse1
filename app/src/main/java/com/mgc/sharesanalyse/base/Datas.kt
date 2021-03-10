@@ -150,7 +150,7 @@ object Datas {
     const val REVERSE_BEGIN_CODE = 2540
     const val NEED_UPDATE_REV_= false
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
-    const val originValueCount = 0
+    const val originValueCount = 2
 
 
 

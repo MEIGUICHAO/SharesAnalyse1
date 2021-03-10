@@ -12,6 +12,7 @@ import com.mgc.sharesanalyse.entity.*
 import com.mgc.sharesanalyse.entity.DealDetailAmountSizeBean.M100
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
+import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.Deferred
 import org.jsoup.Jsoup
 import java.text.DecimalFormat
@@ -106,11 +107,20 @@ class NewApiViewModel : BaseViewModel() {
 
                     }
                     CHECK_HOLDER -> {
-                        val code = (msg.arg1 as Int) + 1
-                        LogUtil.d("hoderCodeIndex-->code:$code,curCode:$curCode")
-                        if (curCode == code) {
-                            getHolderChange()
-                        }
+
+                        getHolderChange()
+//                        val code = (msg.arg1 as Int) + 1
+//                        if (curCode == code ) {
+//                            getHolderChange()
+//                        } else  {
+//                            Thread.sleep(500)
+//                            val arg2 = msg.obj as String
+//                            LogUtil.d("hoderCodeIndex-->code:$code,curCode:$curCode,arg2:$arg2")
+//                            val btnTxt = (mActivity as NewApiActivity).btnGetHolderChange.text.toString()
+//                            if (arg2.equals(btnTxt)) {
+//                                getHolderChange()
+//                            }
+//                        }
 
                     }
 
@@ -4907,7 +4917,7 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     var hoderCodeIndex = -1
-    var holderTB ="${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYMM)}"
+    var holderTB ="${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYYYMMDD)}"
     var holderCode = -1
     fun getHolderChange() {
         if (hoderCodeIndex == 0) {
@@ -4919,7 +4929,17 @@ class NewApiViewModel : BaseViewModel() {
             DBUtils.sqlCompleteListener = object : DBUtils.SQLCompleteListener {
                 override fun onComplete() {
                     if (hoderCodeIndex < codeNameList.size) {
-                        Thread.sleep(500)
+                        hoderCodeIndex++
+                        Thread.sleep(1000)
+                        val code = codeNameList[hoderCodeIndex].split(splitTag)[0]
+                        (mActivity as NewApiActivity).setBtnGetHolderChange("holder_$code")
+                        var msg = mHandler.obtainMessage()
+                        val btnTxt = (mActivity as NewApiActivity).btnGetHolderChange.text.toString()
+                        msg.what = CHECK_HOLDER
+                        curCode = code.toInt()
+                        msg.arg1 = code.toInt()
+                        msg.obj = btnTxt
+                        mHandler.sendMessageDelayed(msg, 10 * 1000)
                         getHolderChange()
                     } else {
                         curCode = -1
@@ -4933,15 +4953,11 @@ class NewApiViewModel : BaseViewModel() {
                 val code = codeNameList[hoderCodeIndex].split(splitTag)[0]
                 if (code.toInt() > holderCode) {
                     val name = codeNameList[hoderCodeIndex].split(splitTag)[1]
-                    (mActivity as NewApiActivity).setBtnGetHolderChange("holder_$code")
                     var result = RetrofitManager.reqApi.getHolerChangeData("(securitycode%3D$code)")
-                    var msg = mHandler.obtainMessage()
-                    msg.what = CHECK_HOLDER
-                    curCode = code.toInt()
-                    msg.arg1 = code.toInt()
-                    mHandler.sendMessageDelayed(msg, 10 * 1000)
+
 
                     var json = result.await()
+                    mHandler.removeMessages(CHECK_HOLDER)
                     if (json.equals("[]")) {
                         hoderCodeIndex++
                         getHolderChange()
@@ -5016,9 +5032,18 @@ class NewApiViewModel : BaseViewModel() {
                                 holderbean.closePirce3 =
                                     holderjsonbean[2].closePrice.toFloat().toKeep2()
                             }
-                            DBUtils.insertHolderBean(holderTB, holderbean)
+                            try {
+                                val cpList = arrayListOf(holderbean.closePirce,holderbean.closePirce2,holderbean.closePirce3)
+                                cpList.sortFloatAsc()
+                                val hlrate = ((cpList[1]-cpList[0])/cpList[0]*100).toKeep2()
+                                holderbean.hlRate = hlrate
+                                DBUtils.insertHolderBean(holderTB, holderbean)
+                            } catch (e: java.lang.Exception) {
+
+                                hoderCodeIndex++
+                                getHolderChange()
+                            }
                         }
-                        hoderCodeIndex++
                     } catch (e: Exception) {
 
                         hoderCodeIndex++
