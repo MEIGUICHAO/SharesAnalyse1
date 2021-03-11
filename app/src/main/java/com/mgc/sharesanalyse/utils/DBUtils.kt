@@ -1012,11 +1012,16 @@ object DBUtils {
                 try {
                     db.execSQL(insertDerbySqlStr)
                 } catch (e: java.lang.Exception) {
+                    LogUtil.d("e-->${e.toString()}")
 
                 }
             }
             LogUtil.d("insertSqlStr:$insertSqlStr")
-            db.execSQL(insertSqlStr)
+            try {
+                db.execSQL(insertSqlStr)
+            } catch (e: java.lang.Exception) {
+                LogUtil.d("e-->${e.toString()}")
+            }
         }
     }
 
