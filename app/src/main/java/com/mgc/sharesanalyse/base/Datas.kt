@@ -132,7 +132,7 @@ object Datas {
     const val REASONING_DEBUG_CODE = 11
     val debugEndstr = if (DEBUG) "AND (${DEBUG_Code.toReasoningCodeList()})" else ""
     val debugSelectMaxMinStr = if (DEBUG) "WHERE (${DEBUG_Code.toReasoningCodeList()})" else ""
-    const val reasoning_debug = true
+    const val reasoning_debug = false
     const val reasoning_debug_begin_day = 20201231
     const val reasoning_debug_end_day = 20910318
     val reasoning_debug_end_str = if (reasoning_debug) " AND DATE < $reasoning_debug_begin_day" else ""

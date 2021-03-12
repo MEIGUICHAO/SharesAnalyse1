@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.set
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mgc.sharesanalyse.base.Datas
 import com.mgc.sharesanalyse.base.RecyclerAdapter
@@ -13,7 +12,6 @@ import com.mgc.sharesanalyse.base.ViewHolder
 import com.mgc.sharesanalyse.base.sortDescReasoningByDate
 import com.mgc.sharesanalyse.entity.ReasoningRevBean
 import com.mgc.sharesanalyse.utils.DBUtils
-import com.mgc.sharesanalyse.utils.LogUtil
 import kotlinx.android.synthetic.main.act_reasoning_result.*
 
 class ReasoningActivity : AppCompatActivity() {
@@ -99,7 +97,7 @@ class ReasoningActivity : AppCompatActivity() {
             }
             val (fuCount, rCount) = getFuRRCount(filterList, requestP)
             var needContinue = true
-            result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
+            result = result + getBaseResult(it)
             if (type == 2 && type30Judge(fuCount, rCount, filterList)) {
                 needContinue = false
                 cliMap.put(pos,null)
@@ -124,13 +122,18 @@ class ReasoningActivity : AppCompatActivity() {
                 else -> 50.toFloat()
             }
             val (fuCount, rCount) = getFuRRCount(ocooList, requestP)
-            result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
+            result = result + getBaseResult(it)
             result = getResultStr(result, ocooList, fuCount, rCount)
         } else {
-            result = result + "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n"
+            result = result + getBaseResult(it)
         }
         result = result + "------------------------------------------------\n"
         return result
+    }
+
+    private fun getBaseResult(it: ReasoningRevBean): String {
+        return "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n" + "dd->${it.d_D},lp->${it.lp},mp->${it.mp},p->${it.p}\n"
+
     }
 
     private fun type30Judge(
