@@ -2360,12 +2360,14 @@ object DBUtils {
 
     fun getNullDDFromReasoningTB(tbName: String): ArrayList<ReasoningRevBean> {
         switchDBName(Datas.REV_RESONING_DB)
-
-        val cursor =
-            db.rawQuery(" SELECT * FROM $tbName WHERE D_D ='null'", null)
-
         val list = ArrayList<ReasoningRevBean>()
-        getReasoningRevBeanByCusorAndTb(cursor, tbName, list,true)
+
+        if (tabbleIsExist(tbName)) {
+            val cursor =
+                db.rawQuery(" SELECT * FROM $tbName WHERE D_D ='null'", null)
+
+            getReasoningRevBeanByCusorAndTb(cursor, tbName, list,true)
+        }
         return list
     }
 

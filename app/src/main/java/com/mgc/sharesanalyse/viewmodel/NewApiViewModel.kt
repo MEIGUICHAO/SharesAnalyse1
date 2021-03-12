@@ -4780,33 +4780,42 @@ class NewApiViewModel : BaseViewModel() {
         fitlerType: Int,
         isUpdateDD:Boolean = true
     ) {
+        var targetIndex = -1
         if (i + Datas.REV_DAYS < mCHDDList.size) {
             val pList = ArrayList<Float>()
             for (m in (i + 1)..(i + Datas.REV_DAYS)) {
-                pList.add(
-                    (BigDecimalUtils.safeDiv(
-                        (mCHDDList[m].cp - mCHDDList[i].cp),
-                        mCHDDList[i].cp
-                    ) * 100).toKeep2()
-                )
+                if (mCHDDList[m].date.toInt() > reasoningRevBean.d.toInt()) {
+                    if (targetIndex == -1) {
+                        targetIndex = m-1
+                        LogUtil.d("code->$code,targetIndex-->${mCHDDList[targetIndex].date},reasoningDate->${reasoningRevBean.d}")
+                    }
+                    pList.add(
+                        (BigDecimalUtils.safeDiv(
+                            (mCHDDList[m].cp - mCHDDList[targetIndex].cp),
+                            mCHDDList[targetIndex].cp
+                        ) * 100).toKeep2()
+                    )
+                }
             }
-            reasoningRevBean.p = pList[Datas.REV_DAYS - 1]
-            reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
-                (mCHDDList[i + 1].op - mCHDDList[i].cp),
-                mCHDDList[i].cp
-            ) * 100).toKeep2()
-            reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
-                (mCHDDList[i + 1].cp - mCHDDList[i].cp),
-                mCHDDList[i].cp
-            ) * 100).toKeep2()
-            pList.sortFloatAsc()
-            reasoningRevBean.lp = pList[0]
-            reasoningRevBean.mp = pList[Datas.REV_DAYS - 1]
+            if (pList.size > 0) {
+                reasoningRevBean.p = pList[pList.size - 1]
+                reasoningRevBean.after_O_P = (BigDecimalUtils.safeDiv(
+                    (mCHDDList[i + 1].op - mCHDDList[targetIndex].cp),
+                    mCHDDList[targetIndex].cp
+                ) * 100).toKeep2()
+                reasoningRevBean.after_C_P = (BigDecimalUtils.safeDiv(
+                    (mCHDDList[i + 1].cp - mCHDDList[targetIndex].cp),
+                    mCHDDList[targetIndex].cp
+                ) * 100).toKeep2()
+                pList.sortFloatAsc()
+                reasoningRevBean.lp = pList[0]
+                reasoningRevBean.mp = pList[pList.size - 1]
 
-            LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
+                LogUtil.d("code:${code},date:${mCHDDList[i].date},fitlerType:$fitlerType-->${reasoningRevBean.p},mp${reasoningRevBean.mp},lp${reasoningRevBean.lp}")
 
-            if (isUpdateDD) {
-                reasoningRevBean.d_D = mCHDDList[i + Datas.REV_DAYS].date
+                if (isUpdateDD) {
+                    reasoningRevBean.d_D = mCHDDList[i + Datas.REV_DAYS].date
+                }
             }
         }
     }
@@ -4841,22 +4850,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-
-                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    it.d_D = mCHDDList[i].date
-                }
-                if (i == mCHDDList.size - 1) {
-                    LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
-                    setReasoningPMpLpCpOpDdInfo(
-                        i - Datas.REV_DAYS,
-                        mCHDDList,
-                        it,
-                        it.code.toString(),
-                        30,false
-                    )
-                    DBUtils.updateReasoning(tb30, it)
-                    (mActivity as NewApiActivity).setBtnResoning("30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
-                }
+                setUpdateReasonigInfo(mCHDDList, i, it, tb30,30)
             }
         }
         r50List.forEach {
@@ -4865,22 +4859,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                LogUtil.d("${it.code.toString()}--update_50--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
-                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    it.d_D = mCHDDList[i].date
-                }
-                if (i == mCHDDList.size - 1) {
-                    setReasoningPMpLpCpOpDdInfo(
-                        i - Datas.REV_DAYS,
-                        mCHDDList,
-                        it,
-                        it.code.toString(),
-                        50,false
-                    )
-                    DBUtils.updateReasoning(tb50, it)
-                    LogUtil.d("update_50")
-                    (mActivity as NewApiActivity).setBtnResoning("50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
-                }
+                setUpdateReasonigInfo(mCHDDList, i, it, tb50,50)
             }
         }
         ocoo30List.forEach {
@@ -4889,23 +4868,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                LogUtil.d("${it.code.toString()}--update_OCOO_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
-                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    it.d_D = mCHDDList[i].date
-                }
-
-                if (i == mCHDDList.size - 1) {
-
-                    setReasoningPMpLpCpOpDdInfo(
-                        i - Datas.REV_DAYS,
-                        mCHDDList,
-                        it,
-                        it.code.toString(),
-                        30,false
-                    )
-                    DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_30, it)
-                    (mActivity as NewApiActivity).setBtnResoning("OCOO_30-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
-                }
+                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_30,30)
             }
         }
         ocoo50List.forEach {
@@ -4914,29 +4877,36 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                LogUtil.d("${it.code.toString()}--update_OCOO_50--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
-                if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
-                    it.d_D = mCHDDList[i].date
-                }
-
-                if (i == mCHDDList.size - 1) {
-
-                    setReasoningPMpLpCpOpDdInfo(
-                        i - Datas.REV_DAYS,
-                        mCHDDList,
-                        it,
-                        it.code.toString(),
-                        50,false
-                    )
-                    DBUtils.updateReasoning(Datas.ALL_Reaoning_OC_OO_50, it)
-                    LogUtil.d("update_50")
-                    (mActivity as NewApiActivity).setBtnResoning("OCOO_50-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
-                }
+                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_50,50)
             }
         }
 
         (mActivity as NewApiActivity).setBtnResoning("updateReasoning_Finish")
 
+    }
+
+    private fun setUpdateReasonigInfo(
+        mCHDDList: ArrayList<CodeHDDBean>,
+        i: Int,
+        it: ReasoningRevBean,
+        tb30: String,
+        fitlerType: Int
+    ) {
+        if (mCHDDList[i - Datas.REV_DAYS].date == it.d) {
+            it.d_D = mCHDDList[i].date
+        }
+        if (i == mCHDDList.size - 1) {
+            LogUtil.d("${it.code.toString()}--update_30--${mCHDDList[i - Datas.REV_DAYS].date}--${mCHDDList[i].date}")
+            setReasoningPMpLpCpOpDdInfo(
+                i - Datas.REV_DAYS,
+                mCHDDList,
+                it,
+                it.code.toString(),
+                fitlerType, false
+            )
+            DBUtils.updateReasoning(tb30, it)
+            (mActivity as NewApiActivity).setBtnResoning("$fitlerType-->code:${it.code},date:${mCHDDList[i - Datas.REV_DAYS].date}")
+        }
     }
 
     var hoderCodeIndex = -1
