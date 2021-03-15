@@ -1,8 +1,10 @@
 package com.mgc.sharesanalyse
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +16,7 @@ import com.mgc.sharesanalyse.entity.SinaDealDatailBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
+import kotlinx.android.synthetic.main.act_reasoning_result.*
 import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -252,11 +255,21 @@ class NewApiActivity : AppCompatActivity() {
 //            DBUtils.dropTable("All_Reasoning_30")
 //            DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_30)
 //            DBUtils.dropTable(Datas.ALL_Reaoning_OC_OO_50)
-            App.getSinglePool().execute {
-                viewModel.reasoningAll()
+
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("ReasoningAll?")
+            builder.setPositiveButton("yes",
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        App.getSinglePool().execute {
+                            viewModel.reasoningAll()
 //                viewModel.updateReasoningTB()
 //                viewModel.sortContinue30Map()
-            }
+                        }
+                    }
+
+                })
+            builder.create().show()
         }
         btnGetHolderChange.setOnClickListener {
             App.getSinglePool().execute {
