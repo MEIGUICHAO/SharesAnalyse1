@@ -44,9 +44,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-
     public static ViewHolder get(Context context, View convertView,
-                                                          ViewGroup parent, int layoutId, int position) {
+                                 ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
             View itemView = LayoutInflater.from(context).inflate(layoutId, parent,
                     false);
@@ -95,7 +94,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder setTextMidLine(int viewId) {
         TextView tv = getView(viewId);
-        tv.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG); //中划线
+        tv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
         return this;
     }
 
@@ -230,21 +229,21 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * 关于事件的
      */
     public ViewHolder setOnClickListener(int viewId,
-                                                                  View.OnClickListener listener) {
+                                         View.OnClickListener listener) {
         View view = getView(viewId);
         view.setOnClickListener(listener);
         return this;
     }
 
     public ViewHolder setOnTouchListener(int viewId,
-                                                                  View.OnTouchListener listener) {
+                                         View.OnTouchListener listener) {
         View view = getView(viewId);
         view.setOnTouchListener(listener);
         return this;
     }
 
     public ViewHolder setOnLongClickListener(int viewId,
-                                                                      View.OnLongClickListener listener) {
+                                             View.OnLongClickListener listener) {
         View view = getView(viewId);
         view.setOnLongClickListener(listener);
         return this;

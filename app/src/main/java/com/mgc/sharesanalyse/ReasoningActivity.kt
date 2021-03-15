@@ -1,11 +1,13 @@
 package com.mgc.sharesanalyse
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.SparseArray
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mgc.sharesanalyse.base.Datas
@@ -70,7 +72,7 @@ class ReasoningActivity : AppCompatActivity() {
                 } else {
                     vh.setText(R.id.tvResult, t)
                 }
-                vh.getView<TextView>(R.id.tvResult).setTextColor(if (cliMap[pos].isShowRed) ResUtil.getC(R.color.holo_red_light) else ResUtil.getC(R.color.text_C))
+                vh.getView<TextView>(R.id.tvResult).setTextColor(if (cliMap[pos].show==1) ResUtil.getC(R.color.blue) else (if (cliMap[pos].isShowRed) ResUtil.getC(R.color.holo_red_light) else ResUtil.getC(R.color.text_C)))
                 vh.setOnClickListener(R.id.tvResult,object:View.OnClickListener{
                     override fun onClick(v: View?) {
                         if (null != cliMap[pos] && type != 1) {
@@ -80,6 +82,24 @@ class ReasoningActivity : AppCompatActivity() {
                             intent.putExtra("TB", tb)
                             startActivity(intent)
                         }
+                    }
+
+                })
+                vh.setOnLongClickListener(R.id.tvResult,object : View.OnLongClickListener {
+                    override fun onLongClick(p0: View?): Boolean {
+                        val builder = AlertDialog.Builder(this@ReasoningActivity)
+                        builder.setMessage(if (cliMap[pos].show==0)"collect?" else "cancell collect?")
+                        builder.setPositiveButton("comfir",
+                            object : DialogInterface.OnClickListener {
+                                override fun onClick(p0: DialogInterface?, p1: Int) {
+                                    cliMap[pos].show = if (cliMap[pos].show==0) 1 else 0
+                                    DBUtils.updateReasoningShow(tb, cliMap[pos])
+                                    recycleView.adapter?.notifyItemChanged(pos)
+                                }
+
+                            })
+                        builder.create().show()
+                        return true
                     }
 
                 })

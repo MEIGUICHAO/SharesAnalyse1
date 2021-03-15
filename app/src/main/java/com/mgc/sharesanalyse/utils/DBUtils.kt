@@ -2387,6 +2387,14 @@ object DBUtils {
         db.execSQL(sql)
     }
 
+    fun updateReasoningShow(tbName: String, bean: ReasoningRevBean) {
+        switchDBName(Datas.REV_RESONING_DB)
+        val sql =
+            "UPDATE $tbName SET SHOW = ${bean.show} WHERE CODE=${bean.code} AND D = '${bean.d}'"
+        LogUtil.d("$sql")
+        db.execSQL(sql)
+    }
+
     fun insertOCOOBean(revKJOCOOBean: ReverseKJsonBean, tbName: String) {
         switchDBName(Datas.REVERSE_KJ_DB)
         if (!tabbleIsExist(tbName)) {
