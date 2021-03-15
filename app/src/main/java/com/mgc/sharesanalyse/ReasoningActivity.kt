@@ -2,8 +2,10 @@ package com.mgc.sharesanalyse
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.SparseArray
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mgc.sharesanalyse.base.Datas
@@ -12,6 +14,9 @@ import com.mgc.sharesanalyse.base.ViewHolder
 import com.mgc.sharesanalyse.base.sortDescReasoningByDate
 import com.mgc.sharesanalyse.entity.ReasoningRevBean
 import com.mgc.sharesanalyse.utils.DBUtils
+import com.mgc.sharesanalyse.utils.DateUtils
+import com.mgc.sharesanalyse.utils.FormatterEnum
+import com.mgc.sharesanalyse.utils.ResUtil
 import kotlinx.android.synthetic.main.act_reasoning_result.*
 
 class ReasoningActivity : AppCompatActivity() {
@@ -57,12 +62,15 @@ class ReasoningActivity : AppCompatActivity() {
         val adapter = object : RecyclerAdapter<String>(this, R.layout.item_tv, dataMap) {
             override fun convert(vh: ViewHolder, t: String?, pos: Int) {
                 if (null == dataMap[pos]) {
-                    val result = getShowResult(type, tb, cliMap[pos],pos)
+                    val pair  = getShowResult(type, tb, cliMap[pos],pos)
+                    val result = pair.first
+                    cliMap[pos].isShowRed = pair.second
                     dataMap.put(pos, result)
                     vh.setText(R.id.tvResult, result)
                 } else {
                     vh.setText(R.id.tvResult, t)
                 }
+                vh.getView<TextView>(R.id.tvResult).setTextColor(if (cliMap[pos].isShowRed) ResUtil.getC(R.color.holo_red_light) else ResUtil.getC(R.color.text_C))
                 vh.setOnClickListener(R.id.tvResult,object:View.OnClickListener{
                     override fun onClick(v: View?) {
                         if (null != cliMap[pos] && type != 1) {
@@ -87,7 +95,7 @@ class ReasoningActivity : AppCompatActivity() {
         tb: String,
         it: ReasoningRevBean,
         pos: Int
-    ): String {
+    ): Pair<String, Boolean> {
         var result = ""
         if (type == 2 || type == 3) {
             val (filterList, fList2, fList3) = DBUtils.getReasoningAllJudgeResult(tb, it)
@@ -98,16 +106,16 @@ class ReasoningActivity : AppCompatActivity() {
             val (fuCount, rCount) = getFuRRCount(filterList, requestP)
             var needContinue = true
             result = result + getBaseResult(it)
-            if (type == 2 && type30Judge(fuCount, rCount, filterList)) {
-                needContinue = false
-                cliMap.put(pos,null)
-            }
+//            if (type == 2 && type30Judge(fuCount, rCount, filterList)) {
+//                needContinue = false
+//                cliMap.put(pos,null)
+//            }
             if (needContinue) {
                 val (fu1Count, r1Count) = getFuRRCount(fList2, requestP)
-                if (type == 3 && fuCount * 2 >= filterList.size && fu1Count > 0) {
-                    needContinue = false
-                    cliMap.put(pos, null)
-                }
+//                if (type == 3 && fuCount * 2 >= filterList.size && fu1Count > 0) {
+//                    needContinue = false
+//                    cliMap.put(pos, null)
+//                }
                 if (needContinue) {
                     val (fu2Count, r2Count) = getFuRRCount(fList3, requestP)
                     result = getResultStr(result, filterList, fuCount, rCount)
@@ -127,12 +135,29 @@ class ReasoningActivity : AppCompatActivity() {
         } else {
             result = result + getBaseResult(it)
         }
+        val showRed = it.lp < 0 && it.p >= 0 && it.d_D.equals("null")
         result = result + "------------------------------------------------\n"
-        return result
+        return Pair(result,showRed)
     }
 
+    private var dayTS = 24 * 60 * 60 * 1000
+
     private fun getBaseResult(it: ReasoningRevBean): String {
-        return "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n" + "dd->${it.d_D},lp->${it.lp},mp->${it.mp},p->${it.p}\n"
+        var ddStr = ""
+        if (it.d_D.equals("null")) {
+            val workdayList = ArrayList<String>()
+            var dTimeStamp = DateUtils.parse(it.d,FormatterEnum.YYYYMMDD)
+            while (workdayList.size < Datas.REV_DAYS) {
+                dTimeStamp = dTimeStamp + dayTS
+                if (DateUtils.isWeekDay(dTimeStamp).first) {
+                    workdayList.add(DateUtils.format(dTimeStamp, FormatterEnum.MMDD))
+                }
+            }
+            val cp = DBUtils.queryCPByCodeAndDate(it.code.toString(),it.d)
+            ddStr = "R_D_D->${workdayList[workdayList.size-1]},CP->$cp,"
+        }
+
+        return "${it.n},c-->${it.code},d-->${it.d},p-->${it.p}\n" + "dd->${it.d_D},${ddStr}lp->${it.lp},mp->${it.mp},p->${it.p}\n"
 
     }
 

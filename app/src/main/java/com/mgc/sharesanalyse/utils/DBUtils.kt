@@ -2159,6 +2159,8 @@ object DBUtils {
             while (!cursor.isAfterLast) {
 
                 val bean = ReasoningRevBean()
+                val ID = cursor.getInt(cursor.getColumnIndex("_ID"))
+                val SHOW = cursor.getInt(cursor.getColumnIndex("SHOW"))
                 val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
                 val D = cursor.getString(cursor.getColumnIndex("D"))
                 val N = cursor.getString(cursor.getColumnIndex("N"))
@@ -2258,6 +2260,8 @@ object DBUtils {
                 bean.lp = LP
                 bean.after_O_P = AFTER_O_P
                 bean.after_C_P = AFTER_C_P
+                bean.id = ID
+                bean.show = SHOW
                 //                    bean.fitlertype = FITLERTYPE
                 list.add(bean)
                 cursor.moveToNext()
@@ -2274,6 +2278,8 @@ object DBUtils {
             while (!cursor.isAfterLast) {
 
                 val reverseBean = ReasoningRevBean()
+                val ID = cursor.getInt(cursor.getColumnIndex("_ID"))
+                val SHOW = cursor.getInt(cursor.getColumnIndex("SHOW"))
                 val CODE = cursor.getInt(cursor.getColumnIndex("CODE"))
                 val D = cursor.getString(cursor.getColumnIndex("D"))
                 val N = cursor.getString(cursor.getColumnIndex("N"))
@@ -2350,6 +2356,8 @@ object DBUtils {
                 reverseBean.lp = LP
                 reverseBean.after_O_P = AFTER_O_P
                 reverseBean.after_C_P = AFTER_C_P
+                reverseBean.id = ID
+                reverseBean.show = SHOW
                 //                    bean.fitlertype = FITLERTYPE
                 list.add(reverseBean)
                 cursor.moveToNext()
@@ -2664,12 +2672,28 @@ object DBUtils {
     }
 
 
+    fun queryCPByCodeAndDate(code: String,date: String): String {
+        switchDBName(code.toCodeHDD(date, FormatterEnum.YYYYMMDD))
+        val tbName = "${Datas.CHDD}${code.toCompleteCode()}"
+        var cp = ""
+        if (tabbleIsExist(tbName)) {
+            val querySQL = "select CP from $tbName where DATE = '${date}'"
+            val cursor = db.rawQuery(querySQL, null)
+            if (null != cursor && cursor.moveToFirst()) {
+                cp = cursor.getString(cursor.getColumnIndex("CP"))
+            }
+            cursor.close()
+        }
+
+        return cp
+    }
+
 
     fun queryHolderTBLastCode(tbName: String): String {
         switchDBName(Datas.OTHER_DB)
         var CODE = ""
         if (tabbleIsExist(tbName)) {
-            var cursor = db.rawQuery("SELECT * FROM $tbName order by _ID desc", null)
+            val cursor = db.rawQuery("SELECT * FROM $tbName order by _ID desc", null)
             if (null != cursor && cursor.moveToFirst()) {
                 CODE = cursor.getString(cursor.getColumnIndex("CODE"))
                 LogUtil.d("CODE:$CODE")

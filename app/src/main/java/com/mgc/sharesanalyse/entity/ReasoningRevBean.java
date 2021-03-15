@@ -6,6 +6,25 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 
 public class ReasoningRevBean implements Serializable {
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    private int ID;
+
+    public boolean isShowRed() {
+        return showRed;
+    }
+
+    public void setShowRed(boolean showRed) {
+        this.showRed = showRed;
+    }
+
+    private boolean showRed;
     private int CODE;
     private String N;
     private String D;
