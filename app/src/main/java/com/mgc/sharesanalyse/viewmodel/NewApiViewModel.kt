@@ -3828,7 +3828,7 @@ class NewApiViewModel : BaseViewModel() {
     private fun getReasoningForeachLimitListAndP50Bean(): Pair<ArrayList<Array<Int>>, P50FilterBBKJRangeBean?> {
         val foreachLimitList = getReasoningForeachLimitList()
         val json = DBUtils.getFilterResultJsonByType("50")
-        var p50FilterBBKJRangeBean:P50FilterBBKJRangeBean? = null
+        var p50FilterBBKJRangeBean: P50FilterBBKJRangeBean? = null
         if (!json.isNullOrEmpty()) {
             p50FilterBBKJRangeBean = GsonHelper.parse(json, P50FilterBBKJRangeBean::class.java)
         }
@@ -4778,7 +4778,7 @@ class NewApiViewModel : BaseViewModel() {
         reasoningRevBean: ReasoningRevBean,
         code: String,
         fitlerType: Int,
-        isUpdateDD:Boolean = true
+        isUpdateDD: Boolean = true
     ) {
         var targetIndex = -1
         if (i + Datas.REV_DAYS < mCHDDList.size) {
@@ -4786,7 +4786,7 @@ class NewApiViewModel : BaseViewModel() {
             for (m in (i + 1)..(i + Datas.REV_DAYS)) {
                 if (mCHDDList[m].date.toInt() > reasoningRevBean.d.toInt()) {
                     if (targetIndex == -1) {
-                        targetIndex = m-1
+                        targetIndex = m - 1
                         LogUtil.d("code->$code,targetIndex-->${mCHDDList[targetIndex].date},reasoningDate->${reasoningRevBean.d}")
                     }
                     pList.add(
@@ -4850,7 +4850,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                setUpdateReasonigInfo(mCHDDList, i, it, tb30,30)
+                setUpdateReasonigInfo(mCHDDList, i, it, tb30, 30)
             }
         }
         r50List.forEach {
@@ -4859,7 +4859,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                setUpdateReasonigInfo(mCHDDList, i, it, tb50,50)
+                setUpdateReasonigInfo(mCHDDList, i, it, tb50, 50)
             }
         }
         ocoo30List.forEach {
@@ -4868,7 +4868,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_30,30)
+                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_30, 30)
             }
         }
         ocoo50List.forEach {
@@ -4877,7 +4877,7 @@ class NewApiViewModel : BaseViewModel() {
 //            }
             val mCHDDList = getCHDDCodeAllList(mList, it.code.toString())
             for (i in mCHDDList.size - 2 * Datas.REV_DAYS..mCHDDList.size - 1) {
-                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_50,50)
+                setUpdateReasonigInfo(mCHDDList, i, it, Datas.ALL_Reaoning_OC_OO_50, 50)
             }
         }
 
@@ -4910,15 +4910,17 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     var hoderCodeIndex = -1
-    var holderTB ="${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYYYMMDD)}"
+    var holderTB = "${Datas.HOLDER_TB}${DateUtils.formatToDay(FormatterEnum.YYYYMMDD)}"
     var holderCode = -1
     fun getHolderChange() {
+//        DBUtils.switchDBName(Datas.OTHER_DB)
+//        DBUtils.dropTable(holderTB)
+//        return
         if (hoderCodeIndex == 0) {
             val holderLastCode = DBUtils.queryHolderTBLastCode(holderTB)
             if (!holderLastCode.isNullOrEmpty()) {
                 holderCode = holderLastCode.toInt()
             }
-//            DBUtils.dropTable(holderTB)
             DBUtils.sqlCompleteListener = object : DBUtils.SQLCompleteListener {
                 override fun onComplete() {
                     if (hoderCodeIndex < codeNameList.size) {
@@ -5026,10 +5028,31 @@ class NewApiViewModel : BaseViewModel() {
                                     holderjsonbean[2].closePrice.toFloat().toKeep2()
                             }
                             try {
-                                val cpList = arrayListOf(holderbean.closePirce,holderbean.closePirce2,holderbean.closePirce3)
+
+                                var curTS = System.currentTimeMillis()
+                                var date = ""
+                                while (date.isNullOrEmpty()) {
+                                    curTS = curTS - dayMillis
+                                    if (DateUtils.isWeekDay(curTS).first) {
+                                        date = DateUtils.format(curTS, FormatterEnum.YYYYMMDD)
+                                    }
+                                }
+                                val lastCP =
+                                    DBUtils.queryCPByCodeAndDate(holderbean.code.toString(), date)
+                                holderbean.lastCP = lastCP.toFloat()
+                                val cpList = arrayListOf(
+                                    holderbean.closePirce,
+                                    holderbean.closePirce2,
+                                    holderbean.closePirce3,
+                                    lastCP.toFloat()
+                                )
                                 cpList.sortFloatAsc()
-                                val hlrate = ((cpList[1]-cpList[0])/cpList[0]*100).toKeep2()
+                                val hlrate = ((cpList[1] - cpList[0]) / cpList[0] * 100).toKeep2()
                                 holderbean.hlRate = hlrate
+                                holderbean.lastP =
+                                    ((lastCP.toFloat() - holderbean.closePirce) / holderbean.closePirce * 100).toKeep2()
+
+
                                 DBUtils.insertHolderBean(holderTB, holderbean)
                             } catch (e: java.lang.Exception) {
 

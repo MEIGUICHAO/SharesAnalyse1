@@ -1,4 +1,4 @@
 
 holderTB->
-select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HOLDERCHANGERATE < -2 and (HOLDERCHANGERATE2<0 or HOLDERCHANGERATE3<0)
-select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HOLDERCHANGERATE < -2 and (HOLDERCHANGERATE2<0 or HOLDERCHANGERATE3<0) and HLRATE<10
+select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HC_R < -2 and (HC_R2<0 or HC_R3<0)
+select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HC_R < -2 and (HC_R2<0 or HC_R3<0) and HL_R<10
