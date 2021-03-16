@@ -5043,12 +5043,14 @@ class NewApiViewModel : BaseViewModel() {
                                 val cpList = arrayListOf(
                                     holderbean.closePirce,
                                     holderbean.closePirce2,
-                                    holderbean.closePirce3,
-                                    lastCP.toFloat()
+                                    holderbean.closePirce3
                                 )
                                 cpList.sortFloatAsc()
-                                val hlrate = ((cpList[1] - cpList[0]) / cpList[0] * 100).toKeep2()
+                                val hlrate = ((cpList[cpList.size - 1] - cpList[0]) / cpList[0] * 100).toKeep2()
                                 holderbean.hlRate = hlrate
+                                cpList.add(holderbean.lastCP)
+                                cpList.sortFloatAsc()
+                                holderbean.hL_R_A = ((cpList[cpList.size - 1] - cpList[0]) / cpList[0] * 100).toKeep2()
                                 holderbean.lastP =
                                     ((lastCP.toFloat() - holderbean.closePirce) / holderbean.closePirce * 100).toKeep2()
 

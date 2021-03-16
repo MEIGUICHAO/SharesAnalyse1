@@ -2,3 +2,4 @@
 holderTB->
 select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HC_R < -2 and (HC_R2<0 or HC_R3<0)
 select * from HOLDER_TB_2103 where ENDDATE > 20210201 and code > 603610 and HC_R < -2 and (HC_R2<0 or HC_R3<0) and HL_R<10
+select * from HOLDER_TB_20210316 where hl_r<10 and hc_r <0 and hc_r2 <0 and hc_r3 < 0 and last_p <10 and enddate>=20210226
