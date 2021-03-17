@@ -150,6 +150,7 @@ object Datas {
     const val REVERSE_DEBUG= false
     const val REVERSE_BEGIN_CODE = 2540
     const val NEED_UPDATE_REV_= false
+    const val SKIP_300000= true
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
     val originValueCount = if (REV_DAYS==10) 0 else 2
 

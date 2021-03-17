@@ -3809,19 +3809,21 @@ class NewApiViewModel : BaseViewModel() {
     }
 
     fun reasoningResult(isLive: Boolean, mCode: String = "") {
-        LogUtil.d("reasoningResult-->$mCode")
-        val (mList, codelist) = getCHDDDateListAndCodeList()
-        val (foreachLimitList, p50FilterBBKJRangeBean) = getReasoningForeachLimitListAndP50Bean()
-        if (isLive) {
-            getReasoningResult(mList, mCode, isLive, foreachLimitList, p50FilterBBKJRangeBean)
-        } else {
-            codelist.forEach { code ->
-                getReasoningResult(mList, code, isLive, foreachLimitList, p50FilterBBKJRangeBean)
+        if ((Datas.SKIP_300000 && (mCode.toInt() > 600000 || mCode.toInt() < 300000)) || !Datas.SKIP_300000) {
+            LogUtil.d("reasoningResult-->$mCode")
+            val (mList, codelist) = getCHDDDateListAndCodeList()
+            val (foreachLimitList, p50FilterBBKJRangeBean) = getReasoningForeachLimitListAndP50Bean()
+            if (isLive) {
+                getReasoningResult(mList, mCode, isLive, foreachLimitList, p50FilterBBKJRangeBean)
+            } else {
+                codelist.forEach { code ->
+                    getReasoningResult(mList, code, isLive, foreachLimitList, p50FilterBBKJRangeBean)
+                }
             }
-        }
-        if (!isLive) {
-            LogUtil.d("reasoningResult-->$isLive")
-            (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
+            if (!isLive) {
+                LogUtil.d("reasoningResult-->$isLive")
+                (mActivity as NewApiActivity).setBtnResoning("Resoning_Finish")
+            }
         }
     }
 
@@ -4934,7 +4936,7 @@ class NewApiViewModel : BaseViewModel() {
                         curCode = code.toInt()
                         msg.arg1 = code.toInt()
                         msg.obj = btnTxt
-                        mHandler.sendMessageDelayed(msg, 10 * 1000)
+                        mHandler.sendMessageDelayed(msg, 15 * 1000)
                         getHolderChange()
                     } else {
                         curCode = -1
