@@ -125,6 +125,7 @@ object Datas {
     const val REV_FILTERDB = "REV_FILTERDB"
 //    const val REV_DAYS = 10
     const val REV_DAYS = 20
+//    const val REV_DAYS = 5
     const val FILTER_PROGRESS = 3
     const val FILTER_OC_OO_PROGRESS = 5
     const val FILTER_DERBY_PROGRESS = 5
@@ -150,8 +151,9 @@ object Datas {
     const val REVERSE_DEBUG= false
     const val REVERSE_BEGIN_CODE = 2540
     const val NEED_UPDATE_REV_= false
+    const val IS_INTERVAL= false
     val FR_RR_LIMIT = if (NEED_UPDATE_REV_) "" else ""// AND RR > 0.2 AND FR < 0.4 AND SIZE > 1
-    val originValueCount = if (REV_DAYS==10) 0 else 2
+    val originValueCount = if (REV_DAYS==10||REV_DAYS==5) 0 else 2
 
 
 
