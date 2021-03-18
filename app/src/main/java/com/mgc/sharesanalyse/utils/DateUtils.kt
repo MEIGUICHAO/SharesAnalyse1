@@ -83,6 +83,16 @@ object DateUtils {
         return System.currentTimeMillis() > parse(date, FormatterEnum.YYYYMMDD__HH_MM_SS)
     }
 
+    fun ifAfterToday1700():Boolean {
+        var date = "${formatToDay(FormatterEnum.YYYYMMDD)} 17:02:00"
+        return System.currentTimeMillis() > parse(date, FormatterEnum.YYYYMMDD__HH_MM_SS)
+    }
+
+    fun ifBeforToday1800():Boolean {
+        var date = "${formatToDay(FormatterEnum.YYYYMMDD)} 18:02:00"
+        return System.currentTimeMillis() < parse(date, FormatterEnum.YYYYMMDD__HH_MM_SS)
+    }
+
 
     @SuppressLint("SimpleDateFormat")
     fun formatYesterDayTimeStamp(): Long {

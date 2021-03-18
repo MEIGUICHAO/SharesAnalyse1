@@ -16,12 +16,14 @@ import com.mgc.sharesanalyse.entity.SinaDealDatailBean
 import com.mgc.sharesanalyse.net.LoadState
 import com.mgc.sharesanalyse.utils.*
 import com.mgc.sharesanalyse.viewmodel.NewApiViewModel
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.act_reasoning_result.*
 import kotlinx.android.synthetic.main.activity_new_api.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import java.util.concurrent.TimeUnit
 
 class NewApiActivity : AppCompatActivity() {
 
@@ -276,6 +278,19 @@ class NewApiActivity : AppCompatActivity() {
                 viewModel.hoderCodeIndex = 0
                 viewModel.getHolderChange()
             }
+        }
+
+        if (Datas.IS_INTERVAL) {
+            RxTimerUtil.interval(TimeUnit.HOURS,1, object : RxTimerUtil.IRxNext {
+                override fun doNext(number: Long) {
+                    if (DateUtils.ifAfterToday1700()&&DateUtils.ifBeforToday1800()) {
+                        btnRequestHisHq.post {
+                            btnRequestHisHq.performClick()
+                        }
+                    }
+                }
+
+            })
         }
     }
 
